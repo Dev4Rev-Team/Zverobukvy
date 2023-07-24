@@ -89,6 +89,15 @@ class CustomCard @JvmOverloads constructor(
         backSideImageView.setImageResource(srcClose)
     }
 
+    /** pos - set position view
+     *  (pos:Int) -> Unit callback function
+     */
+    fun setOnClickCardListener(pos: Int, click: (pos: Int) -> Unit) {
+        setOnClickListener {
+            click(pos)
+        }
+    }
+
     companion object {
         private val SRC_CLOSE = R.drawable.ic_launcher_background
         private val SRC_OPEN = R.drawable.ic_launcher_foreground
