@@ -1,9 +1,6 @@
 package ru.gb.zverobukvy.presentation.customview
 
 import android.content.Context
-import android.os.Build
-import android.os.Bundle
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -61,7 +58,7 @@ class CustomCard @JvmOverloads constructor(
     private fun createImageView(
         context: Context,
         layoutParams: LayoutParams,
-        src: Int
+        src: Int,
     ): ImageView = ImageView(context).apply {
         setImageResource(src)
         this.layoutParams = layoutParams
@@ -73,24 +70,6 @@ class CustomCard @JvmOverloads constructor(
         val width = MeasureSpec.getSize(widthMeasureSpec)
         setMeasuredDimension(width, width)
     }
-    override fun onSaveInstanceState(): Parcelable {
-        val bundle = Bundle()
-        bundle.putBoolean(IS_OPEN_KEY,isOpen)
-        bundle.putParcelable(INSTANCE_STATE_KEY, super.onSaveInstanceState())
-        return bundle
-    }
-    override fun onRestoreInstanceState(state: Parcelable?) {
-        val bundle = state as Bundle
-        isOpen = bundle.getBoolean(IS_OPEN_KEY)
-        setOpenCard(isOpen)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE_KEY , Parcelable::class.java))
-        }else {
-            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE_KEY))
-        }
-    }
-
-
 
     private fun getVisibility(isOpen: Boolean) = if (isOpen) VISIBLE else INVISIBLE
 
@@ -110,10 +89,6 @@ class CustomCard @JvmOverloads constructor(
         private val SRC_OPEN = R.drawable.ic_launcher_foreground
         private const val IS_OPEN = false
         private const val DURATION_ANIMATION = 300
-
-        private const val IS_OPEN_KEY = "isOpenKey"
-        private const val INSTANCE_STATE_KEY = "instanceStateKey"
-
     }
 
 }
