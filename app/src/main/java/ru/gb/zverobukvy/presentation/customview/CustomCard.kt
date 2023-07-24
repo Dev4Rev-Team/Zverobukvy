@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
 import ru.gb.zverobukvy.R
 
@@ -43,8 +44,9 @@ class CustomCard @JvmOverloads constructor(
     private fun initContentView(context: Context) {
         val layoutParams = createLayoutParams()
 
-        frontSideImageView = createImageView(context, layoutParams, srcOpen)
-        backSideImageView = createImageView(context, layoutParams, srcClose)
+        frontSideImageView = createImageView(context, layoutParams)
+        backSideImageView = createImageView(context, layoutParams)
+        setSrc(srcOpen, srcClose)
         setOpenCard(isOpen)
 
         addView(frontSideImageView)
@@ -58,9 +60,7 @@ class CustomCard @JvmOverloads constructor(
     private fun createImageView(
         context: Context,
         layoutParams: LayoutParams,
-        src: Int,
     ): ImageView = ImageView(context).apply {
-        setImageResource(src)
         this.layoutParams = layoutParams
     }
 
@@ -82,6 +82,11 @@ class CustomCard @JvmOverloads constructor(
 
     fun setVisibilityCard(isVisibility: Boolean) {
         visibility = getVisibility(isVisibility)
+    }
+
+    fun setSrc(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
+        frontSideImageView.setImageResource(srcOpen)
+        backSideImageView.setImageResource(srcClose)
     }
 
     companion object {
