@@ -1,10 +1,13 @@
 package ru.gb.zverobukvy.presentation.customview
 
 import android.content.Context
+import android.os.Build
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
 import ru.gb.zverobukvy.R
 
 /**
@@ -14,7 +17,7 @@ class CustomCard @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0,
-) : FrameLayout(context, attrs, defStyle) {
+) : CardView(context, attrs, defStyle) {
 
     private var srcClose: Int = 0
     private var srcOpen: Int = 0
@@ -43,8 +46,9 @@ class CustomCard @JvmOverloads constructor(
     private fun initContentView(context: Context) {
         val layoutParams = createLayoutParams()
 
-        frontSideImageView = createImageView(context, layoutParams, srcOpen, isOpen)
-        backSideImageView = createImageView(context, layoutParams, srcClose, !isOpen)
+        frontSideImageView = createImageView(context, layoutParams, srcOpen)
+        backSideImageView = createImageView(context, layoutParams, srcClose)
+        setOpenCard(isOpen)
 
         addView(frontSideImageView)
         addView(backSideImageView)
@@ -57,19 +61,42 @@ class CustomCard @JvmOverloads constructor(
     private fun createImageView(
         context: Context,
         layoutParams: LayoutParams,
-        src: Int,
-        isOpen: Boolean,
+        src: Int
     ): ImageView = ImageView(context).apply {
         setImageResource(src)
         this.layoutParams = layoutParams
-        visibility = getVisibility(isOpen)
-        setBackgroundColor(context.getColor(androidx.appcompat.R.color.abc_background_cache_hint_selector_material_light))
     }
+
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        setMeasuredDimension(width, width)
+    }
+    override fun onSaveInstanceState(): Parcelable {
+        val bundle = Bundle()
+        bundle.putBoolean(IS_OPEN_KEY,isOpen)
+        bundle.putParcelable(INSTANCE_STATE_KEY, super.onSaveInstanceState())
+        return bundle
+    }
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val bundle = state as Bundle
+        isOpen = bundle.getBoolean(IS_OPEN_KEY)
+        setOpenCard(isOpen)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE_KEY , Parcelable::class.java))
+        }else {
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE_KEY))
+        }
+    }
+
+
 
     private fun getVisibility(isOpen: Boolean) = if (isOpen) VISIBLE else INVISIBLE
 
 
     fun setOpenCard(isOpen: Boolean) {
+        this.isOpen = isOpen
         frontSideImageView.visibility = getVisibility(isOpen)
         backSideImageView.visibility = getVisibility(!isOpen)
     }
@@ -79,10 +106,13 @@ class CustomCard @JvmOverloads constructor(
     }
 
     companion object {
-        val SRC_CLOSE = R.drawable.ic_launcher_background
-        val SRC_OPEN = R.drawable.ic_launcher_foreground
-        const val IS_OPEN = false
-        const val DURATION_ANIMATION = 300
+        private val SRC_CLOSE = R.drawable.ic_launcher_background
+        private val SRC_OPEN = R.drawable.ic_launcher_foreground
+        private const val IS_OPEN = false
+        private const val DURATION_ANIMATION = 300
+
+        private const val IS_OPEN_KEY = "isOpenKey"
+        private const val INSTANCE_STATE_KEY = "instanceStateKey"
 
     }
 
