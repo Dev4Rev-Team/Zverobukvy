@@ -3,7 +3,6 @@ package ru.gb.zverobukvy.presentation.customview
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
 import ru.gb.zverobukvy.R
@@ -54,7 +53,7 @@ class CustomCard @JvmOverloads constructor(
     }
 
     private fun createLayoutParams() = LayoutParams(
-        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
+        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
     )
 
     private fun createImageView(
