@@ -1,13 +1,14 @@
-package ru.gb.zverobukvy.model.data_source
+package ru.gb.zverobukvy.data.data_source
 
-import ru.gb.zverobukvy.model.dto.LetterCard
-import ru.gb.zverobukvy.model.dto.TypeCards.GREEN
-import ru.gb.zverobukvy.model.dto.TypeCards.VIOLET
-import ru.gb.zverobukvy.model.dto.TypeCards.BLUE
-import ru.gb.zverobukvy.model.dto.TypeCards.ORANGE
+import ru.gb.zverobukvy.data.data_source_impl.ILetterCardsDB
+import ru.gb.zverobukvy.domain.entity.LetterCard
+import ru.gb.zverobukvy.domain.entity.TypeCards.GREEN
+import ru.gb.zverobukvy.domain.entity.TypeCards.VIOLET
+import ru.gb.zverobukvy.domain.entity.TypeCards.BLUE
+import ru.gb.zverobukvy.domain.entity.TypeCards.ORANGE
 
 open class LetterCardsDB : ILetterCardsDB {
-    override fun readLetterCards(): List<LetterCard> =
+    override suspend fun readLetterCards(): List<LetterCard> =
         listOf(
             LetterCard(A, listOf(ORANGE, BLUE, GREEN, VIOLET)),
             LetterCard(B, listOf(BLUE, VIOLET)),

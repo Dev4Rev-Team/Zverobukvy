@@ -1,0 +1,30 @@
+package ru.gb.zverobukvy.presentation
+
+import androidx.lifecycle.LiveData
+import ru.gb.zverobukvy.domain.app_state.AnimalLettersChangingState
+import ru.gb.zverobukvy.domain.app_state.AnimalLettersEntireState
+import ru.gb.zverobukvy.domain.use_case.IAnimalLettersInteractor
+
+class AnimalLettersViewModel(private val animalLettersInteractor: IAnimalLettersInteractor):
+    IAnimalLettersViewModel {
+    override fun onActiveGame() {
+        TODO("Not yet implemented")
+    }
+
+    override fun getEntireGameStateLiveData(): LiveData<AnimalLettersEntireState> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getChangingGameStateLiveData(): SingleEventLiveData<AnimalLettersChangingState> {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClickLetterCard(positionSelectedLetterCard: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onEndGameByUser() {
+        TODO("Not yet implemented")
+    }
+
+}

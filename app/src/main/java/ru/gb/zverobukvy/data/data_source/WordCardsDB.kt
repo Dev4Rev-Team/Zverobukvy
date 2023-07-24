@@ -1,13 +1,14 @@
-package ru.gb.zverobukvy.model.data_source
+package ru.gb.zverobukvy.data.data_source
 
-import ru.gb.zverobukvy.model.dto.TypeCards.GREEN
-import ru.gb.zverobukvy.model.dto.TypeCards.VIOLET
-import ru.gb.zverobukvy.model.dto.TypeCards.BLUE
-import ru.gb.zverobukvy.model.dto.TypeCards.ORANGE
-import ru.gb.zverobukvy.model.dto.WordCard
+import ru.gb.zverobukvy.data.data_source_impl.IWordCardsDB
+import ru.gb.zverobukvy.domain.entity.TypeCards.GREEN
+import ru.gb.zverobukvy.domain.entity.TypeCards.VIOLET
+import ru.gb.zverobukvy.domain.entity.TypeCards.BLUE
+import ru.gb.zverobukvy.domain.entity.TypeCards.ORANGE
+import ru.gb.zverobukvy.domain.entity.WordCard
 
 open class WordCardsDB : IWordCardsDB {
-    override fun readWordCards(): List<WordCard> =
+    override suspend fun readWordCards(): List<WordCard> =
         listOf(
             WordCard(PIKE, listOf(VIOLET)),
             WordCard(GOAT, listOf(VIOLET)),

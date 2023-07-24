@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.model.repository
+package ru.gb.zverobukvy.data.repository_impl
 
 interface IAnimalLettersCardsRepository: ILetterCardsRepository, IWordCardsRepository {
 }
