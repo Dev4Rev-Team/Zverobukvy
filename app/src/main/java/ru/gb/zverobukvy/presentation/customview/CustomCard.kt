@@ -1,11 +1,16 @@
 package ru.gb.zverobukvy.presentation.customview
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
 import ru.gb.zverobukvy.R
+import java.io.IOException
+import java.io.InputStream
+
 
 /**
  * Card on the field
@@ -45,7 +50,7 @@ class CustomCard @JvmOverloads constructor(
 
         frontSideImageView = createImageView(context, layoutParams)
         backSideImageView = createImageView(context, layoutParams)
-        setSrc(srcOpen, srcClose)
+        setSrcFromRes(srcOpen, srcClose)
         setOpenCard(isOpen)
 
         addView(frontSideImageView)
@@ -83,10 +88,47 @@ class CustomCard @JvmOverloads constructor(
         visibility = getVisibility(isVisibility)
     }
 
-    fun setSrc(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
+    fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
         frontSideImageView.setImageResource(srcOpen)
         backSideImageView.setImageResource(srcClose)
     }
+
+    /**
+     * load from res drawable
+     */
+    fun setSrcFromRes(srcOpen: String, srcClose: String) {
+        setImageFromRes(frontSideImageView, srcOpen)
+        setImageFromRes(backSideImageView, srcClose)
+    }
+
+    private fun setImageFromRes(imageView: ImageView, src: String) {
+        getIdRes(src).let {
+            if (it != 0) {
+                imageView.setImageResource(it)
+            }
+        }
+    }
+
+    fun setSrcFromAssert(srcOpen: String, srcClose: String) {
+        setImageFromAssert(frontSideImageView, srcOpen)
+        setImageFromAssert(backSideImageView, srcClose)
+    }
+
+    private fun setImageFromAssert(ImageView: ImageView, src: String) {
+        try {
+            val ims: InputStream = context.assets.open("src")
+            val d = Drawable.createFromStream(ims, null)
+            ImageView.setImageDrawable(d)
+            ims.close()
+        } catch (ex: IOException) {
+            return
+        }
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun getIdRes(resource: String) =
+        resources.getIdentifier(resource, "drawable", context.packageName)
+
 
     /** pos - set position view
      *  (pos:Int) -> Unit callback function
