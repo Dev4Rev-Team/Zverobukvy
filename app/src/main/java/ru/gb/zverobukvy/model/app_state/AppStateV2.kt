@@ -24,93 +24,105 @@ sealed class Player(
     ) : Player(name, gameScore, color)
 }
 
-/** Супер состояние экрана
- */
-sealed interface SupperState {
+sealed interface State {
 
-    /** Полное состояние экрана, передается в случаях:
-     * 1. Начла игры
-     * 2. При пересоздании View
+    /** Супер состояние экрана
      */
-    data class StartGameState(
+    sealed interface SupperState : State {
 
-        /** Список всех карточек с буквами */
-        val lettersCards: List<LetterCard>,
+        /** Состояние загрузки/подготовки игры.
+         * Дает интерактору время на загрузку карточек из репозитория.
+         */
+        object LoadingGameState : SupperState
 
-        /** Слово для отгадывания */
-        val wordCard: WordCard,
-        /** Текущий счет */
-        val scores: List<Player>,
-        /** Ходящий игрок */
-        val walkingPlayer: Player,
-        /** Все подсвечиваемые буквы (Должен знать/хранить интерактор) */
-        val positionLetterInWord: List<Int>,
-    ) : SupperState
+        /** Полное состояние экрана, передается в случаях:
+         * 1. Начла игры
+         * 2. При пересоздании View
+         *
+         * @param lettersCards Список всех карточек с буквами
+         * (карточка сама содержит информацию о том, какой стороной она повернута)
+         *
+         * @param wordCard Слово для отгадывания
+         * @param scores Текущий счет
+         * @param nextWalkingPlayer Ходящий игрок
+         * @param positionLetterInWord Все подсвечиваемые буквы
+         */
+        data class StartGameState(
+            val lettersCards: List<LetterCard>,
+            val wordCard: WordCard,
+            val scores: List<Player>,
+            val nextWalkingPlayer: Player,
+            val positionLetterInWord: List<Int>,
+        ) : SupperState
 
-    /** Состояние окончания игры, если закончились загадываемые слова
-     * (исходит из Interactor)
+        /** Состояние запроса на прекращение игры, показ диалогового окна
+         * (исходит из ViewModel)
+         */
+        object IsEndGameState : SupperState
+
+        /** Отмена состояния [IsEndGameState], закрытие диалогового окна о закрытии игры
+         * (исходит из ViewModel)
+         */
+        object IsLoadGameState : SupperState
+
+        /** Состояние окончания игры
+         * (исходит из Interactor)
+         *
+         * @param scores Итоговый счет
+         */
+        data class EndGameState(
+            val scores: List<Player>,
+        ) : SupperState
+    }
+
+    /** Передает состояния частей экрана в процессе игры
      */
-    data class GuessedWordEndGame(
-        val flippedLetterCard: LetterCard,
-        val positionLetterInWord: Int,
-        val scores: List<Player>,
-    ) : SupperState
+    sealed class PlayerWayState : State {
 
-    /** Состояние запроса на прекращение игры
-     * (исходит из ViewModel)
-     */
-    object IsEndGame : SupperState
+        /** Состояние верно отгаданной карточки с буквой
+         *
+         * @param flippedLetterCard Карточка которую нужно перевернуть
+         * @param positionLetterInWord Отгаданная буква которую нужно подсветить
+         */
+        data class CorrectLetter(
+            val flippedLetterCard: LetterCard,
+            val positionLetterInWord: Int,
+        ) : PlayerWayState()
 
-    /** Состояние окончания игры, если пользователь нажал Back
-     * (исходит из Interactor)
-     */
-    data class BackPressedEndGame(
-        val scores: List<Player>,
-    ) : SupperState
-}
+        /** Состояния неверно выбранной карточки
+         *
+         * Действия :
+         * 1. Перевернуть выбранную карточку рубашкой вниз
+         * 2. Сообщить пользователю что карточка неверная
+         * 3. Перевернуть карточку обратно
+         *
+         * @param nextWalkingPlayer Следующего ходящего игрока
+         * @param invalidLetterCard Невалидную карточку
+         */
+        data class InvalidLetter(
+            val nextWalkingPlayer: Player,
+            val invalidLetterCard: LetterCard,
+        ) : PlayerWayState()
 
-/** Передает состояния частей экрана в процессе игры
- */
-sealed class PlayerWayState {
-
-    /** Включает в себя:
-     * 1. Карточку которую нужно перевернуть
-     * 2. Отгаданную букву которую нужно подсветить
-     */
-    data class CorrectLetter(
-        val flippedLetterCard: LetterCard,
-        val positionLetterInWord: Int,
-    ) : PlayerWayState()
-
-    /** Включает в себя:
-     * 1. Следующего ходящего игрока
-     * 2. Невалидную карточку
-     *
-     * Подразумевает :
-     * 1. Сигнал о том что предыдущая буква отгадана неверно??
-     * 2. Пререворачивание всех ранее открытых карточек рубашаками вверх
-     * 3. Очищение подсветки букв в загаданном слове
-     */
-    data class InvalidLetter(
-        val walkingPlayer: Player,
-        val invalidLetterCard: LetterCard,
-    ) : PlayerWayState()
-
-    /** Включает в себя:
-     * 1. Карточку которую нужно перевернуть
-     * 2. Отгаданную букву которую нужно подсветить
-     * 3. Новое загаданное слово
-     * 4. Обновленный счет игроков
-     *
-     * Подразумевает :
-     * 1. Пререворачивание всех ранее открытых карточек рубашаками вверх
-     * 2. Очищение подсветки букв в загаданном слове
-     * 3. Сохранение хода за отгадавшим игроком?
-     */
-    data class GuessedWord(
-        val flippedLetterCard: LetterCard,
-        val positionLetterInWord: Int,
-        val wordCard: WordCard,
-        val scores: List<Player>,
-    ) : PlayerWayState()
+        /** Состояние успешно отгаданного слова.
+         * Посылается после отправки [CorrectLetter] (?с задержкой?)
+         *
+         * Подразумевает :
+         * 1. Смену загадываемого слова
+         * 2. Пререворачивание всех ранее открытых карточек рубашаками вверх
+         * 3. Очищение подсветки букв в загаданном слове
+         * 4. Смену игрока
+         *
+         * @param positionLetterInWord Позиция отгаданной буквы в слове
+         * @param wordCard Новое загаданное слово
+         * @param nextWalkingPlayer Игрок к которому переходит ход
+         * @param scores Обновленный счет игроков
+         */
+        data class GuessedWord(
+            val positionLetterInWord: Int,
+            val wordCard: WordCard?,
+            val nextWalkingPlayer: Player?,
+            val scores: List<Player>,
+        ) : PlayerWayState()
+    }
 }
