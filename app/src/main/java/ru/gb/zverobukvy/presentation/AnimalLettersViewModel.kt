@@ -7,6 +7,7 @@ import ru.gb.zverobukvy.domain.use_case.IAnimalLettersInteractor
 
 class AnimalLettersViewModel(private val animalLettersInteractor: IAnimalLettersInteractor):
     IAnimalLettersViewModel {
+
     override fun onActiveGame() {
         TODO("Not yet implemented")
     }
@@ -20,6 +21,10 @@ class AnimalLettersViewModel(private val animalLettersInteractor: IAnimalLetters
     }
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onBackPressed() {
         TODO("Not yet implemented")
     }
 

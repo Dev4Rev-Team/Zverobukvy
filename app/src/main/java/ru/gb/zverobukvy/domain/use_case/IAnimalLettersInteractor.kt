@@ -1,11 +1,14 @@
 package ru.gb.zverobukvy.domain.use_case
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersEntireState
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersChangingState
+import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.TypeCards
 
+/**
+ Интерактор хранит и передает во viewModel (через StateFlow) полное состояние игры в виде объекта
+ GameState.
+ */
 interface IAnimalLettersInteractor {
     /**
     При создании интерактора в конструктор надо передать список выбранного уровня игры (цвета игры)
@@ -16,38 +19,30 @@ interface IAnimalLettersInteractor {
     val players: List<Player>
 
     /**
-    Метод для подписки viewModel на полное состояние игры.
-    Предполагается, что viewModel вызывает этот метод в блоке init {}. Т.к. StateFlow при создании
-    должен быть заполнен, каким-то начальным состоянием, то при непосредственной подписке viwModel получит это состояние.
-    Это будет полное состояние игры Loading.
-
+    Метод для подписки viewModel на состояние игры.
+    Предполагается, что viewModel вызывает этот метод в блоке init {}. При непосредственной подписке
+    viwModel получит состояние null, что должно соответствовать состоянию игры Loading. Далее после загрузки
+    данных из БД viewModel получит от интерактора начальное состояние игры, а по ходу игры будет получать
+    текущие полные состояния игры.
      */
-    fun subscribeToEntireGameState(): StateFlow<AnimalLettersEntireState>
+    fun subscribeToGameState(): StateFlow<GameState?>
 
     /**
-    Методы для подписки viewModel на изменения состояния игры по ходу игры.
-    Предполагается, что viewModel вызывает этот метод в блоке init {}. Т.к. StateFlow при создании
-    должен быть заполнен, каким-то начальным состоянием, то при подписке viwModel получит это состояние.
-    Предполагается, что это будет какое-то "пустое" состояние изменения игры,
-    по которому во view ничего изменять не надо.
+    Метод вызывается один раз при создании view, в этом методе интерактор, после обращения в БД,
+    испускает начальное состояние игры (все данные для полной отрисовки экрана игры)
      */
-    fun subscribeToChangingGameState(): StateFlow<AnimalLettersChangingState>
+    fun startGame()
 
     /**
-    Метод вызывается при создании или при пересоздании view, в этом методе интерактор испускает
-    полное состояние игры (все данные для полной отрисовки экрана игры)
-     */
-    fun activeGameState()
-
-    /**
-    Метод вызывается при выборе буквенной карточке, в этом методе интерактор испускает
-    изменения состояния игры (реакция на выбор буквенной карточки)
+    Метод вызывается при выборе буквенной карточки, в этом методе интерактор испускает
+    полное текущее состояния игры (реакция на выбор буквенной карточки), в том числе,
+    если все слова отгаданы, состояние, соответствующее завершению игры, т.е. isActive = false
      */
     fun selectionLetterCard()
 
     /**
     Метод вызывается при завершении игры пользователем, в этом методе интерактор испускает
-    полное состояние игры (конец игры)
+    полное текущее состояние игры, в котором isActive = false
      */
     fun endGameByUser()
 }

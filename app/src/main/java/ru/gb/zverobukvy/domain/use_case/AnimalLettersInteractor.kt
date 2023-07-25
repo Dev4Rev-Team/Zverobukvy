@@ -1,9 +1,9 @@
 package ru.gb.zverobukvy.domain.use_case
 
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.gb.zverobukvy.data.repository_impl.IAnimalLettersCardsRepository
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersChangingState
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersEntireState
+import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.TypeCards
@@ -19,19 +19,15 @@ class AnimalLettersInteractor(
     override val typesCards: List<TypeCards>,
     override val players: List<Player>
 ) : IAnimalLettersInteractor {
-    private var lettersField: MutableList<LetterCard>? = null
-
+    private var gameState: GameState? = null
     private var gamingWords: Queue<WordCard>? = null
+    private val gameStateFlow: MutableStateFlow<GameState?> = MutableStateFlow(gameState)
 
-    override fun subscribeToEntireGameState(): StateFlow<AnimalLettersEntireState> {
+    override fun subscribeToGameState(): StateFlow<GameState?> {
         TODO("Not yet implemented")
     }
 
-    override fun subscribeToChangingGameState(): StateFlow<AnimalLettersChangingState> {
-        TODO("Not yet implemented")
-    }
-
-    override fun activeGameState() {
+    override fun startGame() {
         TODO("Not yet implemented")
     }
 
