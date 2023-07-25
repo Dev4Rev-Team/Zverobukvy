@@ -66,6 +66,7 @@ class CustomCard @JvmOverloads constructor(
         layoutParams: LayoutParams,
     ): ImageView = ImageView(context).apply {
         this.layoutParams = layoutParams
+        scaleType = ImageView.ScaleType.CENTER_CROP
     }
 
 
