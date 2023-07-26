@@ -1,7 +1,7 @@
-package ru.gb.zverobukvy.data.repository_impl
+package ru.gb.zverobukvy.domain.repository
 
 import ru.gb.zverobukvy.domain.entity.LetterCard
 
-interface ILetterCardsRepository {
+interface LetterCardsRepository {
     suspend fun getLetterCards(): List<LetterCard>
 }

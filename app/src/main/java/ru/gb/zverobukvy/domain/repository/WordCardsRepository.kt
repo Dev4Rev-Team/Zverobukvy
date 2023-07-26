@@ -1,7 +1,7 @@
-package ru.gb.zverobukvy.data.repository_impl
+package ru.gb.zverobukvy.domain.repository
 
 import ru.gb.zverobukvy.domain.entity.WordCard
 
-interface IWordCardsRepository {
+interface WordCardsRepository {
     suspend fun getWordCards(): List<WordCard>
 }
