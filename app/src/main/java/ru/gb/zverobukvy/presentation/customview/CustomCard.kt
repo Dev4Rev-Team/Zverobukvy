@@ -1,11 +1,16 @@
 package ru.gb.zverobukvy.presentation.customview
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
 import ru.gb.zverobukvy.R
+import java.io.IOException
+import java.io.InputStream
+
 
 /**
  * Card on the field
@@ -16,13 +21,13 @@ class CustomCard @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : CardView(context, attrs, defStyle) {
 
-    private var srcClose: Int = 0
-    private var srcOpen: Int = 0
-    private var isOpen: Boolean = false
-    private var durationAnimation: Int = 0
+    private var srcClose: Int = SRC_CLOSE
+    private var srcOpen: Int = SRC_OPEN
+    private var isOpen: Boolean = IS_OPEN
+    private var durationAnimation: Int = DURATION_ANIMATION
 
-    private lateinit var frontSideImageView: ImageView
-    private lateinit var backSideImageView: ImageView
+    private lateinit var frontSideImageView: CustomViewImage
+    private lateinit var backSideImageView: CustomViewImage
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -42,10 +47,9 @@ class CustomCard @JvmOverloads constructor(
 
     private fun initContentView(context: Context) {
         val layoutParams = createLayoutParams()
-
         frontSideImageView = createImageView(context, layoutParams)
         backSideImageView = createImageView(context, layoutParams)
-        setSrc(srcOpen, srcClose)
+        setSrcFromRes(srcOpen, srcClose)
         setOpenCard(isOpen)
 
         addView(frontSideImageView)
@@ -59,8 +63,9 @@ class CustomCard @JvmOverloads constructor(
     private fun createImageView(
         context: Context,
         layoutParams: LayoutParams,
-    ): ImageView = ImageView(context).apply {
+    ): CustomViewImage = CustomViewImage(context).apply {
         this.layoutParams = layoutParams
+        scaleType = ImageView.ScaleType.CENTER_CROP
     }
 
 
@@ -83,10 +88,47 @@ class CustomCard @JvmOverloads constructor(
         visibility = getVisibility(isVisibility)
     }
 
-    fun setSrc(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
+    fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
         frontSideImageView.setImageResource(srcOpen)
         backSideImageView.setImageResource(srcClose)
     }
+
+    /**
+     * load from res drawable
+     */
+    fun setSrcFromRes(srcOpen: String, srcClose: String) {
+        setImageFromRes(frontSideImageView, srcOpen)
+        setImageFromRes(backSideImageView, srcClose)
+    }
+
+    private fun setImageFromRes(imageView: ImageView, src: String) {
+        getIdRes(src).let {
+            if (it != 0) {
+                imageView.setImageResource(it)
+            }
+        }
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun getIdRes(resource: String) =
+        resources.getIdentifier(resource, "drawable", context.packageName)
+
+    fun setSrcFromAssert(srcOpen: String, srcClose: String) {
+        setImageFromAssert(frontSideImageView, srcOpen)
+        setImageFromAssert(backSideImageView, srcClose)
+    }
+
+    private fun setImageFromAssert(ImageView: ImageView, src: String) {
+        try {
+            val ims: InputStream = context.assets.open(src)
+            val d = Drawable.createFromStream(ims, null)
+            ImageView.setImageDrawable(d)
+            ims.close()
+        } catch (ex: IOException) {
+            return
+        }
+    }
+
 
     /** pos - set position view
      *  (pos:Int) -> Unit callback function
