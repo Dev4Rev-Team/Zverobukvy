@@ -19,12 +19,11 @@ class CustomCardTable @JvmOverloads constructor(
     private var maxNumberOfCardsHorizontally = 0
     private var horizontalGap = 0
     private var verticalGap = 0
-    private lateinit var flow: Flow
+    private var flow: Flow? = null
     private var click: ((pos: Int) -> Unit)? = null
 
     init {
         initAttributes(context, attrs, defStyle)
-        initContentView(context)
     }
 
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
@@ -45,34 +44,62 @@ class CustomCardTable @JvmOverloads constructor(
         typedArray.recycle()
     }
 
-    private fun initContentView(context: Context) {
-        flow = Flow(context)
-        flow.setHorizontalGap(horizontalGap)
-        flow.setVerticalGap(verticalGap)
-        flow.setMaxElementsWrap(maxNumberOfCardsHorizontally)
-        flow.setWrapMode(Flow.WRAP_ALIGNED)
-        flow.setHorizontalStyle(Flow.CHAIN_PACKED)
+    private fun createNewFlow(countCard: Int) {
+        if (flow != null) {
+            removeAllViews()
+        }
+        flow = Flow(context).apply {
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            setHorizontalGap(horizontalGap)
+            setVerticalGap(verticalGap)
+            setMaxElementsWrap(
+                min(
+                    ceil(sqrt(countCard.toDouble())).toInt(),
+                    maxNumberOfCardsHorizontally
+                )
+            )
+            setWrapMode(Flow.WRAP_ALIGNED)
+            setHorizontalStyle(Flow.CHAIN_PACKED)
+            setVerticalStyle(Flow.CHAIN_PACKED)
+        }
         addView(flow)
-
     }
 
 
-    fun setListItem(list: List<Item>) {
+    fun setListItem(
+        list: List<LetterCard>,
+        srcClose: String,
+        factory: (() -> CustomCard)? = null,
+    ) {
         val countCard = list.count()
-        maxNumberOfCardsHorizontally =
-            min(ceil(sqrt(countCard.toDouble())).toInt(), MAX_NUMBER_OF_CARDS_HORIZONTALLY)
+        createNewFlow(countCard)
+
         repeat(countCard) { pos: Int ->
-            val customCard = CustomCard(context).apply {
-                setSrc(list[pos].url, 0)
+            val customCard = (factory?.run { invoke() } ?: CustomCard(context)).apply {
+                layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT)
+                id = generateViewId()
+
+                val letterCard = list[pos]
+                setOpenCard(letterCard.isVisible)
+                setSrcFromAssert(letterCard.url, srcClose)
+
                 setOnClickCardListener(pos) {
                     click?.run { invoke(it) }
                 }
             }
 
-            flow.addView(customCard)
+            this@CustomCardTable.addView(customCard, 1 + pos)
+            flow?.addView(customCard)
         }
     }
 
+    fun setCorrectLetterCard(card: LetterCard) {}
+
+    fun setInvalidLetterCard(card: LetterCard) {}
+
+    fun nextPlayer() {
+
+    }
 
     companion object {
         const val MAX_NUMBER_OF_CARDS_HORIZONTALLY = 5
@@ -80,7 +107,14 @@ class CustomCardTable @JvmOverloads constructor(
         const val VERTICAL_GAP = 24
     }
 
-    interface Item {
+    interface Card {
         val url: Int
     }
+
+    data class LetterCard(
+        val letter: Char,
+        var isVisible: Boolean = false,
+        val url: String,
+    )
+
 }
