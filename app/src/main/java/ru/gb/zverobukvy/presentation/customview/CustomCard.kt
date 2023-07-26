@@ -117,7 +117,7 @@ class CustomCard @JvmOverloads constructor(
 
     private fun setImageFromAssert(ImageView: ImageView, src: String) {
         try {
-            val ims: InputStream = context.assets.open("src")
+            val ims: InputStream = context.assets.open(src)
             val d = Drawable.createFromStream(ims, null)
             ImageView.setImageDrawable(d)
             ims.close()
