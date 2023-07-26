@@ -21,13 +21,13 @@ class CustomCard @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : CardView(context, attrs, defStyle) {
 
-    private var srcClose: Int = 0
-    private var srcOpen: Int = 0
-    private var isOpen: Boolean = false
-    private var durationAnimation: Int = 0
+    private var srcClose: Int = SRC_CLOSE
+    private var srcOpen: Int = SRC_OPEN
+    private var isOpen: Boolean = IS_OPEN
+    private var durationAnimation: Int = DURATION_ANIMATION
 
-    private lateinit var frontSideImageView: ImageView
-    private lateinit var backSideImageView: ImageView
+    private lateinit var frontSideImageView: CustomViewImage
+    private lateinit var backSideImageView: CustomViewImage
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -47,7 +47,6 @@ class CustomCard @JvmOverloads constructor(
 
     private fun initContentView(context: Context) {
         val layoutParams = createLayoutParams()
-
         frontSideImageView = createImageView(context, layoutParams)
         backSideImageView = createImageView(context, layoutParams)
         setSrcFromRes(srcOpen, srcClose)
@@ -64,7 +63,7 @@ class CustomCard @JvmOverloads constructor(
     private fun createImageView(
         context: Context,
         layoutParams: LayoutParams,
-    ): ImageView = ImageView(context).apply {
+    ): CustomViewImage = CustomViewImage(context).apply {
         this.layoutParams = layoutParams
         scaleType = ImageView.ScaleType.CENTER_CROP
     }
@@ -110,6 +109,10 @@ class CustomCard @JvmOverloads constructor(
         }
     }
 
+    @SuppressLint("DiscouragedApi")
+    private fun getIdRes(resource: String) =
+        resources.getIdentifier(resource, "drawable", context.packageName)
+
     fun setSrcFromAssert(srcOpen: String, srcClose: String) {
         setImageFromAssert(frontSideImageView, srcOpen)
         setImageFromAssert(backSideImageView, srcClose)
@@ -125,10 +128,6 @@ class CustomCard @JvmOverloads constructor(
             return
         }
     }
-
-    @SuppressLint("DiscouragedApi")
-    private fun getIdRes(resource: String) =
-        resources.getIdentifier(resource, "drawable", context.packageName)
 
 
     /** pos - set position view
