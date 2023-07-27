@@ -21,8 +21,9 @@
         android:id="@+id/flow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="set_list_button"
+        app:constraint_referenced_ids="set_list_button,correct_button,invalid_button,next_player_button,next_word_button"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:flow_wrapMode="aligned"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card_table" />
@@ -32,5 +33,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Set new list" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/correct_button"
+        android:text="event correct" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invalid_button"
+        android:text="event_invalid" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/next_player_button"
+        android:text="event next player" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/next_word_button"
+        android:text="event next word" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
