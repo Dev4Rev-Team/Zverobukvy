@@ -27,39 +27,39 @@ class TestCustomCardTableFragment : Fragment() {
     private fun initUI(binding: FragmentTestCustomCardTableBinding) {
         binding.setListButton.setOnClickListener {
             val letterCardList = listOf(
-                CustomCardTable.LetterCard('A', false, "img1.png"),
-                CustomCardTable.LetterCard('B', false, "img2.png"),
-                CustomCardTable.LetterCard('C', false, "img3.png"),
-                CustomCardTable.LetterCard('D', true, "img4.png"),
-                CustomCardTable.LetterCard('E', false, "img5.png"),
-                CustomCardTable.LetterCard('F', false, "img6.png"),
-                CustomCardTable.LetterCard('A', true, "img7.png"),
-                CustomCardTable.LetterCard('A', true, "img8.png"),
-                CustomCardTable.LetterCard('A', false, "img9.png"),
-                //                CustomCardTable.LetterCard('A', false, "img10.png"),
-                //                CustomCardTable.LetterCard('C', false, "img3.png"),
-                //                CustomCardTable.LetterCard('D', true, "img4.png"),
-                //                CustomCardTable.LetterCard('E', false, "img5.png"),
-                //                CustomCardTable.LetterCard('F', false, "img6.png"),
-                //                CustomCardTable.LetterCard('A', true, "img7.png"),
-                //                CustomCardTable.LetterCard('A', true, "img8.png"),
-                //                CustomCardTable.LetterCard('A', false, "img9.png"),
-                //                CustomCardTable.LetterCard('A', false, "img10.png"),
-                //                CustomCardTable.LetterCard('E', false, "img5.png"),
-                //                CustomCardTable.LetterCard('F', false, "img6.png"),
-                //                CustomCardTable.LetterCard('A', true, "img7.png"),
-                //                CustomCardTable.LetterCard('A', true, "img8.png"),
-                //                CustomCardTable.LetterCard('A', false, "img9.png"),
-                //                CustomCardTable.LetterCard('A', false, "img10.png"),
-                //                CustomCardTable.LetterCard('C', false, "img3.png"),
-                //                CustomCardTable.LetterCard('D', true, "img4.png"),
-                //                CustomCardTable.LetterCard('E', false, "img5.png"),
-                //                CustomCardTable.LetterCard('F', false, "img6.png"),
-                //                CustomCardTable.LetterCard('A', true, "img7.png"),
-                //                CustomCardTable.LetterCard('A', true, "img8.png"),
-                //                CustomCardTable.LetterCard('A', false, "img9.png"),
-                //                CustomCardTable.LetterCard('A', false, "img10.png"),
-                //                CustomCardTable.LetterCard('A', false, "img8.png")
+                LetterCard('A', false, "img7.png"),
+                LetterCard('B', false, "img2.png"),
+                LetterCard('C', false, "img3.png"),
+                LetterCard('D', true, "img4.png"),
+                LetterCard('E', false, "img5.png"),
+                LetterCard('F', false, "img6.png"),
+                LetterCard('V', true, "img7.png"),
+                LetterCard('A', true, "img8.png"),
+                LetterCard('A', false, "img9.png"),
+                //                LetterCard('A', false, "img10.png"),
+                //                LetterCard('C', false, "img3.png"),
+                //                LetterCard('D', true, "img4.png"),
+                //                LetterCard('E', false, "img5.png"),
+                //                LetterCard('F', false, "img6.png"),
+                //                LetterCard('A', true, "img7.png"),
+                //                LetterCard('A', true, "img8.png"),
+                //                LetterCard('A', false, "img9.png"),
+                //                LetterCard('A', false, "img10.png"),
+                //                LetterCard('E', false, "img5.png"),
+                //                LetterCard('F', false, "img6.png"),
+                //                LetterCard('A', true, "img7.png"),
+                //                LetterCard('A', true, "img8.png"),
+                //                LetterCard('A', false, "img9.png"),
+                //                LetterCard('A', false, "img10.png"),
+                //                LetterCard('C', false, "img3.png"),
+                //                LetterCard('D', true, "img4.png"),
+                //                LetterCard('E', false, "img5.png"),
+                //                LetterCard('F', false, "img6.png"),
+                //                LetterCard('A', true, "img7.png"),
+                //                LetterCard('A', true, "img8.png"),
+                //                LetterCard('A', false, "img9.png"),
+                //                LetterCard('A', false, "img10.png"),
+                //                LetterCard('A', false, "img8.png")
             )
             binding.cardTable.setListItem(letterCardList, "img1.png") {
                 CustomCard(requireContext()).apply {
@@ -67,6 +67,22 @@ class TestCustomCardTableFragment : Fragment() {
                     elevation = 3f
                 }
             }
+        }
+
+        binding.correctButton.setOnClickListener {
+            binding.cardTable.setCorrectLetterCard(LetterCard('V', false, "img7.png"))
+        }
+
+        binding.invalidButton.setOnClickListener {
+            binding.cardTable.setInvalidLetterCard(LetterCard('V', true, "img7.png"))
+        }
+
+        binding.nextPlayerButton.setOnClickListener {
+            binding.cardTable.nextPlayer()
+        }
+
+        binding.nextWordButton.setOnClickListener {
+            binding.cardTable.nextWord()
         }
     }
 
@@ -76,4 +92,10 @@ class TestCustomCardTableFragment : Fragment() {
         fun newInstance() =
             TestCustomCardTableFragment()
     }
+
+     data class LetterCard(
+         override val letter: Char, // equals
+         override var isVisible: Boolean = false,
+         override val url: String,
+    ): CustomCardTable.LetterCardUI
 }
