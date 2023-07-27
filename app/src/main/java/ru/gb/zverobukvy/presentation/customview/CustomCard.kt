@@ -84,9 +84,10 @@ class CustomCard @JvmOverloads constructor(
 
 
     fun setOpenCard(isOpen: Boolean) {
-        this.isOpen = isOpen
-        startAnimationFlip(isOpen)
-
+        if(isOpen != this.isOpen) {
+            this.isOpen = isOpen
+            startAnimationFlip(isOpen)
+        }
     }
 
     private fun startAnimationFlip(isOpen: Boolean) {
