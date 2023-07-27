@@ -21,9 +21,11 @@ class CustomCard @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : CardView(context, attrs, defStyle) {
 
+    var isOpen: Boolean = IS_OPEN
+        private set
+
     private var srcClose: Int = SRC_CLOSE
     private var srcOpen: Int = SRC_OPEN
-    private var isOpen: Boolean = IS_OPEN
     private var durationAnimation: Int = DURATION_ANIMATION
 
     private lateinit var frontSideImageView: CustomViewImage
