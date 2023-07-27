@@ -22,7 +22,7 @@ class CustomCardTable @JvmOverloads constructor(
     private var flow: Flow? = null
     private var click: ((pos: Int) -> Unit)? = null
     private var isClick = false
-    private var listLetterCards: List<LetterCard>? = null
+    private var listLetterCards: List<LetterCardUI>? = null
     private val listOfCardsOnTable = mutableListOf<CustomCard>()
     private val listOfInvalidCards = mutableListOf<CustomCard>()
 
@@ -71,7 +71,7 @@ class CustomCardTable @JvmOverloads constructor(
 
 
     fun setListItem(
-        list: List<LetterCard>,
+        list: List<LetterCardUI>,
         srcClose: String,
         factory: (() -> CustomCard)? = null,
     ) {
@@ -92,7 +92,7 @@ class CustomCardTable @JvmOverloads constructor(
 
                 setOnClickCardListener(pos) {
                     if (!isClick && !listOfCardsOnTable[pos].isOpen) {
-                        isClick = false
+                        isClick = true
                         updateView(pos)
                         click?.run { invoke(it) }
                     }
@@ -110,11 +110,11 @@ class CustomCardTable @JvmOverloads constructor(
         listOfCardsOnTable[pos].setOpenCard(true)
     }
 
-    fun setCorrectLetterCard(card: LetterCard) {
-        isClick = true
+    fun setCorrectLetterCard(card: LetterCardUI) {
+        isClick = false
     }
 
-    fun setInvalidLetterCard(letterCard: LetterCard) {
+    fun setInvalidLetterCard(letterCard: LetterCardUI) {
         listLetterCards?.indexOf(letterCard)?.let {
             listOfInvalidCards.add(listOfCardsOnTable[it])
         }
@@ -125,11 +125,12 @@ class CustomCardTable @JvmOverloads constructor(
         listOfInvalidCards.forEach {
             it.setOpenCard(false)
         }
-        isClick = true
+        listOfInvalidCards.clear()
+        isClick = false
     }
 
     fun nextWord() {
-        isClick = true
+        isClick = false
         listOfCardsOnTable.forEach { it.setOpenCard(false) }
     }
 
@@ -139,14 +140,9 @@ class CustomCardTable @JvmOverloads constructor(
         const val VERTICAL_GAP = 24
     }
 
-    interface Card {
-        val url: Int
+    interface LetterCardUI {
+        val letter: Char // equals
+        var isVisible: Boolean
+        val url: String
     }
-
-    data class LetterCard(
-        val letter: Char,
-        var isVisible: Boolean = false,
-        val url: String,
-    )
-
 }
