@@ -21,6 +21,10 @@ class CustomCardTable @JvmOverloads constructor(
     private var verticalGap = 0
     private var flow: Flow? = null
     private var click: ((pos: Int) -> Unit)? = null
+    private var isClick = false
+    private var listLetterCards: List<LetterCard>? = null
+    private val listOfCardsOnTable = mutableListOf<CustomCard>()
+    private val listOfInvalidCards = mutableListOf<CustomCard>()
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -71,6 +75,8 @@ class CustomCardTable @JvmOverloads constructor(
         srcClose: String,
         factory: (() -> CustomCard)? = null,
     ) {
+        listOfCardsOnTable.clear()
+        listLetterCards = list
         val countCard = list.count()
         createNewFlow(countCard)
 
@@ -84,21 +90,46 @@ class CustomCardTable @JvmOverloads constructor(
                 setSrcFromAssert(letterCard.url, srcClose)
 
                 setOnClickCardListener(pos) {
-                    click?.run { invoke(it) }
+                    if (!isClick) {
+                        isClick = false
+                        updateView(pos)
+                        click?.run { invoke(it) }
+                    }
+
                 }
             }
 
             this@CustomCardTable.addView(customCard, 1 + pos)
             flow?.addView(customCard)
+            listOfCardsOnTable.add(customCard)
         }
     }
 
-    fun setCorrectLetterCard(card: LetterCard) {}
+    private fun updateView(pos: Int) {
+        listOfCardsOnTable[pos].setOpenCard(true)
+    }
 
-    fun setInvalidLetterCard(card: LetterCard) {}
+    fun setCorrectLetterCard(card: LetterCard) {
+        isClick = true
+    }
+
+    fun setInvalidLetterCard(letterCard: LetterCard) {
+        listLetterCards?.indexOf(letterCard)?.let {
+            listOfInvalidCards.add(listOfCardsOnTable[it])
+        }
+        isClick = false
+    }
 
     fun nextPlayer() {
+        listOfInvalidCards.forEach {
+            it.setOpenCard(false)
+        }
+        isClick = true
+    }
 
+    fun nextWord() {
+        isClick = true
+        listOfCardsOnTable.forEach { it.setOpenCard(false) }
     }
 
     companion object {
