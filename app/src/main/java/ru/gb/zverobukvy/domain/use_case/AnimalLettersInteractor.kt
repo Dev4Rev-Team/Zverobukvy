@@ -2,21 +2,12 @@ package ru.gb.zverobukvy.domain.use_case
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.gb.zverobukvy.domain.entity.GameState
-import ru.gb.zverobukvy.domain.entity.Player
-import ru.gb.zverobukvy.domain.entity.TypeCards
 
 /**
  Интерактор хранит и передает во viewModel (через StateFlow) полное состояние игры в виде объекта
  GameState.
  */
 interface AnimalLettersInteractor {
-    /**
-    При создании интерактора в конструктор надо передать список выбранного уровня игры (цвета игры)
-    и список игроков
-     */
-    val typesCards: List<TypeCards>
-
-    val players: List<Player>
 
     /**
     Метод для подписки viewModel на состояние игры.
