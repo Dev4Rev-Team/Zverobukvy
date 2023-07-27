@@ -75,6 +75,7 @@ class CustomCardTable @JvmOverloads constructor(
         srcClose: String,
         factory: (() -> CustomCard)? = null,
     ) {
+        isClick = false
         listOfCardsOnTable.clear()
         listLetterCards = list
         val countCard = list.count()
@@ -90,7 +91,7 @@ class CustomCardTable @JvmOverloads constructor(
                 setSrcFromAssert(letterCard.url, srcClose)
 
                 setOnClickCardListener(pos) {
-                    if (!isClick) {
+                    if (!isClick && !listOfCardsOnTable[pos].isOpen) {
                         isClick = false
                         updateView(pos)
                         click?.run { invoke(it) }
