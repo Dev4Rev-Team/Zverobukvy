@@ -1,5 +1,7 @@
 package ru.gb.zverobukvy.presentation.customview
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -7,6 +9,7 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
+import androidx.core.animation.doOnEnd
 import ru.gb.zverobukvy.R
 import java.io.IOException
 import java.io.InputStream
@@ -82,9 +85,71 @@ class CustomCard @JvmOverloads constructor(
 
     fun setOpenCard(isOpen: Boolean) {
         this.isOpen = isOpen
-        frontSideImageView.visibility = getVisibility(isOpen)
-        backSideImageView.visibility = getVisibility(!isOpen)
+        startAnimationFlip(isOpen)
+
     }
+
+    private fun startAnimationFlip(isOpen: Boolean) {
+
+
+        val animatorSet = AnimatorSet()
+
+        val scaleUp = animationScale(this, 1f, SCALE).apply {
+            duration = durationAnimation.toLong() / 3
+        }
+        val rotation = animationRotation(this).apply {
+            duration = durationAnimation.toLong() / 3
+        }
+        val scaleNormal = animationScale(this, SCALE, 1f).apply {
+            duration = durationAnimation.toLong() / 3
+        }
+        //animatorSet.duration = durationAnimation.toLong()
+        animatorSet.playSequentially(scaleUp, rotation, scaleNormal)
+        animatorSet.start()
+
+//        val alphaBack1= ObjectAnimator.ofFloat(this, ALPHA, 0f, 1f)
+//        val rotationBack = ObjectAnimator.ofFloat(this, ROTATION_Y, 180f, 360f)
+//        val alphaBack2 = ObjectAnimator.ofFloat(this, ALPHA, 0f, 1f)
+//
+//        val setBack= AnimatorSet()
+//        setBack.play(alphaBack1).with(rotationBack)
+//        setBack.duration = durationAnimation.toLong()
+//        setBack.interpolator = DecelerateInterpolator()
+//        setBack.start()
+
+        val scale = context.resources.displayMetrics.density
+        cameraDistance = 8000 * scale
+//        frontSideImageView.visibility = getVisibility(isOpen)
+//        backSideImageView.visibility = getVisibility(!isOpen)
+    }
+
+    private fun animationScale(view: CustomCard, x1: Float, x2: Float): AnimatorSet {
+        val animatorSet = AnimatorSet()
+        val scaleX = ObjectAnimator.ofFloat(view, SCALE_X, x1, x2)
+        val scaleY = ObjectAnimator.ofFloat(view, SCALE_Y, x1, x2)
+        animatorSet.playTogether(scaleX, scaleY)
+        return animatorSet
+    }
+
+    private fun animationRotation(view: CustomCard): AnimatorSet {
+        val animatorSet = AnimatorSet()
+        val rotationClosing = ObjectAnimator.ofFloat(this, ROTATION_Y, 0f, 90f).apply {
+            doOnEnd {
+                if (isOpen) {
+                    frontSideImageView.alpha = 1f
+                    backSideImageView.alpha = 0f
+                } else {
+                    frontSideImageView.alpha = 0f
+                    backSideImageView.alpha = 1f
+                }
+            }
+            doOnEnd { }
+        }
+        val rotationOpening = ObjectAnimator.ofFloat(this, ROTATION_Y, 270f, 360f)
+        animatorSet.playSequentially(rotationClosing, rotationOpening)
+        return animatorSet
+    }
+
 
     fun setVisibilityCard(isVisibility: Boolean) {
         visibility = getVisibility(isVisibility)
@@ -145,7 +210,8 @@ class CustomCard @JvmOverloads constructor(
         private val SRC_CLOSE = R.drawable.ic_launcher_background
         private val SRC_OPEN = R.drawable.ic_launcher_foreground
         private const val IS_OPEN = false
-        private const val DURATION_ANIMATION = 300
+        private const val DURATION_ANIMATION = 250
+        private const val SCALE = 1.16f
     }
 
 }
