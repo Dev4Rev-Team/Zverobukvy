@@ -28,6 +28,7 @@ class CustomCardTable @JvmOverloads constructor(
 
     init {
         initAttributes(context, attrs, defStyle)
+        setPadding(PADDING,PADDING,PADDING,PADDING)
     }
 
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
@@ -118,7 +119,7 @@ class CustomCardTable @JvmOverloads constructor(
         listLetterCards?.indexOf(letterCard)?.let {
             listOfInvalidCards.add(listOfCardsOnTable[it])
         }
-        isClick = false
+        isClick = true
     }
 
     fun nextPlayer() {
@@ -135,9 +136,10 @@ class CustomCardTable @JvmOverloads constructor(
     }
 
     companion object {
-        const val MAX_NUMBER_OF_CARDS_HORIZONTALLY = 5
-        const val HORIZONTAL_GAP = 24
-        const val VERTICAL_GAP = 24
+        private const val MAX_NUMBER_OF_CARDS_HORIZONTALLY = 5
+        private const val HORIZONTAL_GAP = 24
+        private const val VERTICAL_GAP = 24
+        private const val PADDING = 8
     }
 
     interface LetterCardUI {
