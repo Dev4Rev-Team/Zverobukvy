@@ -5,9 +5,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import ru.gb.zverobukvy.R
-import kotlin.math.ceil
-import kotlin.math.min
-import kotlin.math.sqrt
+import kotlin.math.max
 
 class CustomCardTable @JvmOverloads constructor(
     context: Context,
@@ -16,9 +14,8 @@ class CustomCardTable @JvmOverloads constructor(
 
     ) : ConstraintLayout(context, attrs, defStyle) {
 
-    private var maxNumberOfCardsHorizontally = 0
-    private var horizontalGap = 0
-    private var verticalGap = 0
+    private var horizontalGap = HORIZONTAL_GAP
+    private var verticalGap = VERTICAL_GAP
     private var flow: Flow? = null
     private var click: ((pos: Int) -> Unit)? = null
     private var isClick = false
@@ -28,16 +25,19 @@ class CustomCardTable @JvmOverloads constructor(
 
     init {
         initAttributes(context, attrs, defStyle)
-        setPadding(PADDING,PADDING,PADDING,PADDING)
+        initContentView()
+    }
+
+    private fun initContentView() {
+        val padding = max(horizontalGap, verticalGap)
+        setPadding(padding, padding, padding, padding)
+        clipToPadding = false
+        clipChildren = false
     }
 
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.CustomCardTable, defStyle, 0)
-        maxNumberOfCardsHorizontally = typedArray.getInteger(
-            R.styleable.CustomCardTable_maxNumberOfCardsHorizontally,
-            MAX_NUMBER_OF_CARDS_HORIZONTALLY
-        )
         horizontalGap = typedArray.getInteger(
             R.styleable.CustomCardTable_horizontalGap,
             HORIZONTAL_GAP
@@ -58,10 +58,11 @@ class CustomCardTable @JvmOverloads constructor(
             setHorizontalGap(horizontalGap)
             setVerticalGap(verticalGap)
             setMaxElementsWrap(
-                min(
-                    ceil(sqrt(countCard.toDouble())).toInt(),
-                    maxNumberOfCardsHorizontally
-                )
+                when {
+                    countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_3 -> 3
+                    countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_4 -> 4
+                    else -> 5
+                }
             )
             setWrapMode(Flow.WRAP_ALIGNED)
             setHorizontalStyle(Flow.CHAIN_PACKED)
@@ -111,7 +112,7 @@ class CustomCardTable @JvmOverloads constructor(
         listOfCardsOnTable[pos].setOpenCard(true)
     }
 
-    fun setCorrectLetterCard(card: LetterCardUI) {
+    fun setCorrectLetterCard() {
         isClick = false
     }
 
@@ -135,15 +136,19 @@ class CustomCardTable @JvmOverloads constructor(
         listOfCardsOnTable.forEach { it.setOpenCard(false) }
     }
 
+    fun setOnClickListener(click: (pos: Int) -> Unit) {
+        this.click = click
+    }
+
     companion object {
-        private const val MAX_NUMBER_OF_CARDS_HORIZONTALLY = 5
+        private const val COUNT_CARDS_FOR_CARDS_HORIZONTALLY_3 = 12
+        private const val COUNT_CARDS_FOR_CARDS_HORIZONTALLY_4 = 20
         private const val HORIZONTAL_GAP = 24
         private const val VERTICAL_GAP = 24
-        private const val PADDING = 8
     }
 
     interface LetterCardUI {
-        val letter: Char // equals
+        val letter: Char
         var isVisible: Boolean
         val url: String
     }
