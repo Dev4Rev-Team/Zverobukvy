@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import ru.gb.zverobukvy.databinding.FragmentTestCustomCardTableBinding
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomCardTable
+import kotlin.random.Random
 
 class TestCustomCardTableFragment : Fragment() {
 
@@ -26,7 +28,7 @@ class TestCustomCardTableFragment : Fragment() {
 
     private fun initUI(binding: FragmentTestCustomCardTableBinding) {
         binding.setListButton.setOnClickListener {
-            val letterCardList = listOf(
+            val letterCardListTmp = listOf(
                 LetterCard('A', false, "img7.png"),
                 LetterCard('B', false, "img2.png"),
                 LetterCard('C', false, "img3.png"),
@@ -36,32 +38,16 @@ class TestCustomCardTableFragment : Fragment() {
                 LetterCard('V', true, "img7.png"),
                 LetterCard('A', true, "img8.png"),
                 LetterCard('A', false, "img9.png"),
-                LetterCard('A', false, "img10.png"),
-                LetterCard('C', false, "img3.png"),
-                LetterCard('D', true, "img4.png"),
-                LetterCard('E', false, "img5.png"),
-                LetterCard('F', false, "img6.png"),
-                LetterCard('A', true, "img7.png"),
-                LetterCard('A', true, "img8.png"),
-                LetterCard('A', false, "img9.png"),
-                LetterCard('A', false, "img10.png"),
-                LetterCard('E', false, "img5.png"),
-                LetterCard('F', false, "img6.png"),
-                LetterCard('A', true, "img7.png"),
-                LetterCard('A', true, "img8.png"),
-                LetterCard('A', false, "img9.png"),
-                LetterCard('A', false, "img10.png"),
-                LetterCard('C', false, "img3.png"),
-                LetterCard('D', true, "img4.png"),
-                LetterCard('E', false, "img5.png"),
-                LetterCard('F', false, "img6.png"),
-                LetterCard('A', true, "img7.png"),
-                LetterCard('A', true, "img8.png"),
-                LetterCard('A', false, "img9.png"),
-                LetterCard('A', false, "img10.png"),
-                LetterCard('A', false, "img8.png"),
-
             )
+
+            val countCard = binding.editTextNumber.text.toString().toInt()
+            val letterCardList = mutableListOf<LetterCard>()
+            repeat(countCard) {
+                letterCardList.add(
+                    letterCardListTmp[
+                            Random.nextInt(letterCardListTmp.size)])
+            }
+
             binding.cardTable.setListItem(letterCardList, "img1.png") {
                 CustomCard(requireContext()).apply {
                     radius = 50f
@@ -71,7 +57,7 @@ class TestCustomCardTableFragment : Fragment() {
         }
 
         binding.correctButton.setOnClickListener {
-            binding.cardTable.setCorrectLetterCard(LetterCard('V', false, "img7.png"))
+            binding.cardTable.setCorrectLetterCard()
         }
 
         binding.invalidButton.setOnClickListener {
@@ -85,6 +71,10 @@ class TestCustomCardTableFragment : Fragment() {
         binding.nextWordButton.setOnClickListener {
             binding.cardTable.nextWord()
         }
+
+        binding.cardTable.setOnClickListener {
+            Toast.makeText(requireContext(), "pos $it",Toast.LENGTH_SHORT).show()
+        }
     }
 
     companion object {
@@ -94,9 +84,9 @@ class TestCustomCardTableFragment : Fragment() {
             TestCustomCardTableFragment()
     }
 
-     data class LetterCard(
-         override val letter: Char, // equals
-         override var isVisible: Boolean = false,
-         override val url: String,
-    ): CustomCardTable.LetterCardUI
+    data class LetterCard(
+        override val letter: Char, // equals
+        override var isVisible: Boolean = false,
+        override val url: String,
+    ) : CustomCardTable.LetterCardUI
 }

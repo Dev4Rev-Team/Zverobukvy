@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CustomCardTable">
-        <attr name="maxNumberOfCardsHorizontally" format="integer" />
         <attr name="verticalGap" format="integer"/>
         <attr name="horizontalGap" format="integer" />
     </declare-styleable>

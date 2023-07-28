@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TestCustomCardTableFragment">
 
     <ru.gb.zverobukvy.presentation.customview.CustomCardTable
@@ -11,27 +11,40 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="8dp"
-
+        android:background="@color/gray_lite"
+        app:horizontalGap="24"
+        app:verticalGap="24"
         app:layout_constraintBottom_toTopOf="@id/flow"
+        app:layout_constraintDimensionRatio="W,5:7"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/gray_lite"
-        app:maxNumberOfCardsHorizontally="5"
-        app:layout_constraintDimensionRatio="W,5:7"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/flow"
         android:layout_width="0dp"
-        android:background="@color/gray_dark"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="set_list_button,correct_button,invalid_button,next_player_button,next_word_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:flow_wrapMode="aligned"
+        android:background="@color/gray_dark"
+        app:constraint_referenced_ids="edit_text_number,set_list_button,correct_button,invalid_button,next_player_button,next_word_button"
         app:flow_maxElementsWrap="2"
+        app:flow_wrapMode="aligned"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_table" />
+        app:layout_constraintTop_toBottomOf="@id/card_table">
+
+
+    </androidx.constraintlayout.helper.widget.Flow>
+
+    <EditText
+        android:id="@+id/edit_text_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:text="9"
+        tools:ignore="LabelFor" />
 
     <Button
         android:id="@+id/set_list_button"
@@ -40,27 +53,27 @@
         android:text="Set new list" />
 
     <Button
+        android:id="@+id/correct_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/correct_button"
         android:text="event correct" />
 
     <Button
+        android:id="@+id/invalid_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/invalid_button"
         android:text="event invalid" />
 
     <Button
+        android:id="@+id/next_player_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/next_player_button"
         android:text="event next player" />
 
     <Button
+        android:id="@+id/next_word_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/next_word_button"
         android:text="event next word" />
 
 
