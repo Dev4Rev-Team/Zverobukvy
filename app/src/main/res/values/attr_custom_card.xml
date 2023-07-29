@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomCard">
+        <attr name="srcOpen" format="reference" />
+        <attr name="srcClose" format="reference" />
+        <attr name="isOpen" format="boolean"/>
+        <attr name="durationAnimation" format="integer"/>
+    </declare-styleable>
+</resources>
