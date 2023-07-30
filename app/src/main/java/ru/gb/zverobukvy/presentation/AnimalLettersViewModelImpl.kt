@@ -1,11 +1,12 @@
 package ru.gb.zverobukvy.presentation
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersChangingState
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersEntireState
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractor
 
-class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLettersInteractor):
+class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLettersInteractor): ViewModel(),
     AnimalLettersViewModel {
 
     override fun onActiveGame() {
