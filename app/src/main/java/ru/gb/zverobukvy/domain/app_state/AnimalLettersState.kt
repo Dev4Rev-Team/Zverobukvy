@@ -124,6 +124,6 @@ sealed interface AnimalLettersState {
         data class NextGuessWord(
             val wordCard: WordCard,
             val nextWalkingPlayer: Player,
-        )
+        ) : ChangingState
     }
 }
