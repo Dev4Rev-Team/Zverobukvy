@@ -10,15 +10,30 @@ class CheckData {
      * Метод проверяет полный набор карточек-букв по следующим критериям:
      * - количество карточек-букв должно равняться количестсву букв в алфавите,
      * - каждая карточка-буква должна быть уникальной.
-     * @param lettersCards полный список карточек-букв
+     * @param letterCards полный список карточек-букв
      * @exception IllegalArgumentException
      */
-    fun checkLetterCardsFromRepository(lettersCards: List<LetterCard>) {
-        with(lettersCards) {
-            if (size != QUANTITY_LETTER_CARDS_FROM_REPOSITORY || size != distinctBy { it.letter }.size)
+    fun checkLetterCardsFromRepository(letterCards: List<LetterCard>) {
+        with(letterCards) {
+            if (size != QUANTITY_LETTER_CARDS_FROM_REPOSITORY || !checkUniquenessLettersCards(this))
                 throw IllegalArgumentException(LETTER_CARDS_IS_NOT_CORRECT)
         }
-        //TODO сделать проверку уникальности без учета регистра
+    }
+
+    /**
+     * Метод проверяет, содержит ли список карточек-букв только уникальные буквы без учета регистра
+     * @param letterCards список карточек-букв
+     * @return true - список карточек-букв уникальный, false - не уникальный
+     */
+    private fun checkUniquenessLettersCards(letterCards: List<LetterCard>): Boolean {
+        val uniquenessLetterCards = letterCards.onEach {
+            it.letter.lowercaseChar()
+        }.apply {
+            distinctBy {
+                it.letter
+            }
+        }
+        return letterCards.size == uniquenessLetterCards.size
     }
 
     /**
@@ -31,11 +46,40 @@ class CheckData {
      */
     fun checkWordCardsFromRepository(wordCards: List<WordCard>) {
         with(wordCards) {
-            if (size < MINIMUM_QUANTITY_WORD_CARDS_FROM_REPOSITORY || size != distinctBy { it.word }.size)
+            if (size < MINIMUM_QUANTITY_WORD_CARDS_FROM_REPOSITORY || !checkUniquenessWordCards(this))
+                throw IllegalArgumentException(WORD_CARDS_IS_NOT_CORRECT)
+            forEach {
+                checkUniquenessLettersInWordCard(it)
+            }
+        }
+    }
+
+    /**
+     * Метод проверяет, содержит ли список карточек-слов только уникальные слова без учета регистра
+     * @param wordCards список карточек-слов
+     * @return true - список карточек-слов уникальный, false - не уникальный
+     */
+    private fun checkUniquenessWordCards(wordCards: List<WordCard>): Boolean {
+        val uniquenessWordCards = wordCards.onEach {
+            it.word.lowercase()
+        }.apply {
+            distinctBy {
+                it.word
+            }
+        }
+        return wordCards.size == uniquenessWordCards.size
+    }
+
+    /**
+     * Метод проверяет,что в слове только уникальные буквы
+     * @param wordCard карточка-слово
+     * @exception IllegalArgumentException
+     */
+    private fun checkUniquenessLettersInWordCard(wordCard: WordCard) {
+        wordCard.word.lowercase().let {
+            if (it.length != it.toSet().size)
                 throw IllegalArgumentException(WORD_CARDS_IS_NOT_CORRECT)
         }
-        //TODO сделать проверку уникальности без учета регистра
-        //TODO сделать проверку на уникальность букв в слове без учета регистра
     }
 
     /**
