@@ -1,3 +1,7 @@
 package ru.gb.zverobukvy.domain.entity
 
-data class Player(val name: String, var scoreInCurrentGame: Int = 0)
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class Player(val name: String, var scoreInCurrentGame: Int = 0): Parcelable
