@@ -3,6 +3,7 @@ package ru.gb.zverobukvy.presentation.game_zverobukvy
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.data.data_source.LetterCardsDB
@@ -11,11 +12,13 @@ import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
 import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.databinding.FragmentGameZverobukvyBinding
+import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
 import ru.gb.zverobukvy.presentation.AnimalLettersViewModel
 import ru.gb.zverobukvy.presentation.AnimalLettersViewModelImpl
+import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
@@ -51,23 +54,40 @@ class GameZverobukvyFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner){
-//            when(it){
-//                is AnimalLettersChangingState.CorrectLetter -> TODO()
-//                is AnimalLettersChangingState.GuessedWord -> TODO()
-//                is AnimalLettersChangingState.InvalidLetter -> TODO()
-//                is AnimalLettersChangingState.NextPlayer -> TODO()
-//            }
-//        }
-//
-//        viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner){
-//            when (it) {
-//                is AnimalLettersEntireState.EndGameState -> TODO()
-//                is AnimalLettersEntireState.IsEndGameState -> TODO()
-//                is AnimalLettersEntireState.LoadingGameState -> TODO()
-//                is AnimalLettersEntireState.StartGameState -> TODO()
-//            }
-//        }
+        viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner){
+            when(it){
+                is AnimalLettersState.ChangingState.CorrectLetter -> TODO()
+                is AnimalLettersState.ChangingState.GuessedWord -> TODO()
+                is AnimalLettersState.ChangingState.InvalidLetter -> TODO()
+                is AnimalLettersState.ChangingState.NextGuessWord -> TODO()
+                is AnimalLettersState.ChangingState.NextPlayer -> TODO()
+            }
+        }
+
+        viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner){
+            when (it) {
+                is AnimalLettersState.EntireState.EndGameState -> TODO()
+                is AnimalLettersState.EntireState.IsEndGameState -> TODO()
+                is AnimalLettersState.EntireState.LoadingGameState -> {
+                    Toast.makeText(requireContext(), "LoadingGameState", Toast.LENGTH_SHORT).show()
+                }
+
+                is AnimalLettersState.EntireState.StartGameState -> {
+                    binding.table.setListItem(it.lettersCards, "GOLDFINCH.jpg") {
+                        CustomCard(requireContext())
+                    }
+
+                    binding.card.setSrcFromAssert(
+                        it.wordCard.faceImageName,
+                        it.wordCard.faceImageName
+                    )
+
+                    binding.table.setOnClickListener { pos ->
+                        viewModel.onClickLetterCard(pos)
+                    }
+                }
+            }
+        }
 
 //        viewModel.onActiveGame()
     }
