@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.presentation
 
 import androidx.lifecycle.LiveData
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +12,10 @@ import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.ChangingState
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.EntireState
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
+
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractor
 import java.util.LinkedList
+
 
 class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLettersInteractor) :
     AnimalLettersViewModel, ViewModel() {
@@ -177,6 +180,7 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
             card != oldCards[cardIndex]
         }.ifEmpty { null }
     }
+
 
     override fun onActiveGame() {
         if (isEndGameDialog) {
