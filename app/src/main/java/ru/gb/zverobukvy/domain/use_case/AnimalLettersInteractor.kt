@@ -2,21 +2,13 @@ package ru.gb.zverobukvy.domain.use_case
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.gb.zverobukvy.domain.entity.GameState
-import ru.gb.zverobukvy.domain.entity.Player
-import ru.gb.zverobukvy.domain.entity.TypeCards
 
 /**
  Интерактор хранит и передает во viewModel (через StateFlow) полное состояние игры в виде объекта
  GameState.
+ * @exception IllegalArgumentException, если в конструктор переданы не корректные данные
  */
 interface AnimalLettersInteractor {
-    /**
-    При создании интерактора в конструктор надо передать список выбранного уровня игры (цвета игры)
-    и список игроков
-     */
-    val typesCards: List<TypeCards>
-
-    val players: List<Player>
 
     /**
     Метод для подписки viewModel на состояние игры.
@@ -30,6 +22,7 @@ interface AnimalLettersInteractor {
     /**
     Метод вызывается один раз при создании view, в этом методе интерактор, после обращения в БД,
     испускает начальное состояние игры (все данные для полной отрисовки экрана игры)
+     * @exception IllegalArgumentException, если из репозитория пришли не корректные данные
      */
     suspend fun startGame()
 
@@ -37,8 +30,16 @@ interface AnimalLettersInteractor {
     Метод вызывается при выборе буквенной карточки, в этом методе интерактор испускает
     полное текущее состояния игры (реакция на выбор буквенной карточки), в том числе,
     если все слова отгаданы, состояние, соответствующее завершению игры, т.е. isActive = false
+     * @param positionSelectedLetterCard позиция выбранной карточки-буквы
+     * * @exception IllegalArgumentException, если передана не корректная positionSelectedLetterCard
      */
     fun selectionLetterCard(positionSelectedLetterCard: Int)
+
+    /**
+     Метод вызывается после того, как отгадано слово, для получения состояни со следующим
+     отгадываемым словом.
+     */
+    fun getNextWordCard()
 
     /**
     Метод вызывается при завершении игры пользователем, в этом методе интерактор испускает

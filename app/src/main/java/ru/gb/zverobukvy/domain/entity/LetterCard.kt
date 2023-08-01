@@ -4,5 +4,11 @@ data class LetterCard(
     val letter: Char,
     override val typesCards: List<TypeCards>,
     var isVisible: Boolean = false,
-    val url: String
-) : Card
+    val faceImageName: String,
+    val backImageName: String = BACK_IMAGE_NAME
+) : Card {
+    companion object {
+        const val BACK_IMAGE_NAME = "BACK_IMAGE.jpg"
+    }
+}
+
