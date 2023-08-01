@@ -8,7 +8,7 @@ data class LetterCard(
     val backImageName: String = BACK_IMAGE_NAME
 ) : Card {
     companion object {
-        const val BACK_IMAGE_NAME = "back_image.png"
+        const val BACK_IMAGE_NAME = "BACK_IMAGE.jpg"
     }
 }
 
