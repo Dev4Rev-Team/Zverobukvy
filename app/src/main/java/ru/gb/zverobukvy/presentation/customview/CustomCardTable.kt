@@ -90,7 +90,7 @@ class CustomCardTable @JvmOverloads constructor(
 
                 val letterCard = list[pos]
                 setOpenCard(letterCard.isVisible)
-                setSrcFromAssert(letterCard.url, srcClose)
+                setSrcFromAssert(letterCard.faceImageName, srcClose)
 
                 setOnClickCardListener(pos) {
                     if (!isClick && !listOfCardsOnTable[pos].isOpen) {
@@ -150,6 +150,7 @@ class CustomCardTable @JvmOverloads constructor(
     interface LetterCardUI {
         val letter: Char
         var isVisible: Boolean
-        val url: String
+        val faceImageName: String
+        val backImageName: String
     }
 }
