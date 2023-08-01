@@ -4,5 +4,5 @@ data class WordCard(
     val word: String,
     override val typesCards: List<TypeCards>,
     val positionsGuessedLetters: MutableList<Int> = mutableListOf(),
-    val url: String
+    val faceImageName: String
 ) : Card
