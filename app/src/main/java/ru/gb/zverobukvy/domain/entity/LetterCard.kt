@@ -10,7 +10,7 @@ data class LetterCard(
     override val backImageName: String = BACK_IMAGE_NAME
 ) : Card, CustomCardTable.LetterCardUI {
     companion object {
-        const val BACK_IMAGE_NAME = "BACK_IMAGE.jpg"
+        const val BACK_IMAGE_NAME = "BACK_IMAGE.webp"
     }
 }
 
