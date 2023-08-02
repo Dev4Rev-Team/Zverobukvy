@@ -25,16 +25,8 @@ class CheckData {
      * @param letterCards список карточек-букв
      * @return true - список карточек-букв уникальный, false - не уникальный
      */
-    private fun checkUniquenessLettersCards(letterCards: List<LetterCard>): Boolean {
-        val uniquenessLetterCards = letterCards.onEach {
-            it.letter.lowercaseChar()
-        }.apply {
-            distinctBy {
-                it.letter
-            }
-        }
-        return letterCards.size == uniquenessLetterCards.size
-    }
+    private fun checkUniquenessLettersCards(letterCards: List<LetterCard>) =
+        letterCards.size == letterCards.distinctBy { it.letter.lowercaseChar() }.size
 
     /**
      * Метод проверяет полный набор карточек-слов по следующим критериям:
@@ -59,16 +51,8 @@ class CheckData {
      * @param wordCards список карточек-слов
      * @return true - список карточек-слов уникальный, false - не уникальный
      */
-    private fun checkUniquenessWordCards(wordCards: List<WordCard>): Boolean {
-        val uniquenessWordCards = wordCards.onEach {
-            it.word.lowercase()
-        }.apply {
-            distinctBy {
-                it.word
-            }
-        }
-        return wordCards.size == uniquenessWordCards.size
-    }
+    private fun checkUniquenessWordCards(wordCards: List<WordCard>) =
+        wordCards.size == wordCards.distinctBy { it.word.lowercase() }.size
 
     /**
      * Метод проверяет,что в слове только уникальные буквы
