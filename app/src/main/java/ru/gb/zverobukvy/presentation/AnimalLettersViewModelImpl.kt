@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
@@ -20,22 +21,40 @@ import java.util.LinkedList
 class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLettersInteractor) :
     AnimalLettersViewModel, ViewModel() {
 
-    /** true - показывается диалог об окончании игры, false - диалог скрыт */
+    /** Флаг показа диалогового окна о закрытии игры :
+     * - true - показывается диалог об окончании игры
+     * - false - диалог скрыт
+     */
     private var isEndGameDialog: Boolean = false
-    /** true - Произошло нажатие на букву/Обрабатывается событие нажатия
-     * + новые нажатия не обрабатываются */
+
+    /** Флаг для события нажатия на карточку с буквой :
+     * - true - Произошло нажатие на букву/Обрабатывается событие нажатия (новые нажатия не обрабатываются)
+     * - false - Новые нажатия снова обрабатываются
+     */
     private var isCardClick: Boolean = false
+
+    /** Хранит идентификатор последней нажатой карточки
+     */
     private var mLastClickCardPosition: Int = INIT_CARD_CLICK_POSITION
 
-    /** Последне пришедшее из интерактора состояние */
+    /** Последне пришедшее из интерактора состояние
+     */
     private var mGameState: GameState? = null
-    /** Последне загруженое во View [EntireState] (исключая [EntireState.IsEndGameState]*/
+
+    /** Последне загруженое во View [EntireState], исключая [EntireState.IsEndGameState]
+     */
     private var mViewState: EntireState? = null
 
+    /** LiveData для отправки состояний экрана целиком [EntireState]
+     */
     private val entireLiveData = MutableLiveData<EntireState>()
 
+    /** LiveData для отправки состояний частичных изменений экрана [ChangingState]
+     */
     private val changingLiveData = SingleEventLiveData<ChangingState>()
 
+    /** Инициализация viewModel :
+     */
     init {
         viewModelScope.launch {
 
@@ -68,17 +87,21 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
     }
 
     /** Метод конвертирует разницу состояний (+ [mLastClickCardPosition])
-     * в список из одного или нескольких [AnimalLettersState].
+     * в список из одного или двух [AnimalLettersState].
      * * Вторым состоянием может быть только [EntireState.EndGameState]
      */
     private fun convert(oldState: GameState?, newState: GameState?): List<AnimalLettersState> {
 
-        /** Срабатывает сразу после подписки на данные в Interactor */
+        /** Проверка на Null newState :
+         * Срабатывает сразу после подписки на данные в Interactor
+         */
         if (newState == null) {
             return listOf(EntireState.LoadingGameState)
         }
 
-        /** Срабатывает при первой отправке notNull данных из Interactor */
+        /** Проверка на Null oldState :
+         * Срабатывает при первой отправке notNull данных из Interactor
+         */
         if (oldState == null) {
             return listOf(
                 EntireState.StartGameState(
@@ -90,20 +113,31 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
             )
         }
 
-        /** Список для хранения нескольких стэйтов */
+        /** Список для хранения нескольких стэйтов
+         * Подразумевается возможность совмещения [EntireState.EndGameState] и одного из :
+         * [ChangingState.CorrectLetter], [ChangingState.InvalidLetter], [ChangingState.GuessedWord]
+         * или [ChangingState.NextGuessWord]
+         *
+         * TODO : Теоретически возможно совмещение [EntireState.EndGameState] и с двумя первыми проверками
+         */
         val stateList = LinkedList<AnimalLettersState>()
 
-        /** Ловим событие окончания игры */
+        /** Ловим событие окончания игры [EntireState.EndGameState]
+         */
         if (!newState.isActive) {
             stateList.addFirst(EntireState.EndGameState(newState.players))
         }
 
+        // Получаем карточки с загаданными словами из двух состояний
         val newWordCard = newState.gameField.gamingWordCard!!
         val oldWordCard = oldState.gameField.gamingWordCard!!
 
-        /** Событие смены слова */
+        /** Проверяем равенство загадываемых слов :
+         * Ловим событие [ChangingState.NextGuessWord]
+         */
         if (newWordCard.word != oldWordCard.word) {
 
+            // Получаем из нового состояния звгадываемое слово и ходящего игрока
             val nextWord = newState.gameField.gamingWordCard
             val nextPlayer = newState.walkingPlayer
 
@@ -121,8 +155,9 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
 
         if (isCardClick) {
 
+            // Получем последнюю нажатую карточку
             val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
-
+            // Вычисляем позицию последней подсвеченой буквы в загаданном слове
             val positionGuessedLetters = positionGuessedLetters(
                 oldWordCard.positionsGuessedLetters,
                 newWordCard.positionsGuessedLetters
@@ -142,7 +177,8 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
                             newState.isActive
                         )
                     )
-                } else { /** Событие корректно отгаданной буквы */
+                } else {
+                    /** Событие корректно отгаданной буквы */
                     isCardClick = false
 
                     stateList.addFirst(
@@ -153,7 +189,8 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
                     )
                 }
 
-            } else { /** Событие неверно отгаданной буквы */
+            } else {
+                /** Событие неверно отгаданной буквы */
                 isCardClick = false
 
                 stateList.addFirst(ChangingState.InvalidLetter(lastClickCard))
@@ -241,6 +278,11 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
         animalLettersInteractor.endGameByUser()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel(COROUTINE_SCOPE_CANCEL)
+    }
+
     companion object {
         const val INIT_CARD_CLICK_POSITION = -1
 
@@ -250,5 +292,8 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_INDEX_INCORRECT = "Индекс вышел за пределы корректных значений"
         const val ERROR_INCORRECT_TYPE_OF_APP_STATE = "Некорректный тип AnimalLetterState"
+
+
+        const val COROUTINE_SCOPE_CANCEL = "in viewModel.onCleared()"
     }
 }
