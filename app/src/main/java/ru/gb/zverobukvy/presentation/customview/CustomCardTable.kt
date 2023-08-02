@@ -74,7 +74,6 @@ class CustomCardTable @JvmOverloads constructor(
 
     fun setListItem(
         list: List<LetterCardUI>,
-        srcClose: String,
         factory: (() -> CustomCard)? = null,
     ) {
         isClick = false
@@ -90,7 +89,7 @@ class CustomCardTable @JvmOverloads constructor(
 
                 val letterCard = list[pos]
                 setOpenCard(letterCard.isVisible)
-                setSrcFromAssert(letterCard.faceImageName, srcClose)
+                setSrcFromAssert(letterCard.faceImageName, letterCard.backImageName)
 
                 setOnClickCardListener(pos) {
                     if (!isClick && !listOfCardsOnTable[pos].isOpen) {

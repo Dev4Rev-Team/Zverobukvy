@@ -54,37 +54,47 @@ class GameZverobukvyFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner){
-            when(it){
-                is AnimalLettersState.ChangingState.CorrectLetter -> TODO()
-                is AnimalLettersState.ChangingState.GuessedWord -> TODO()
-                is AnimalLettersState.ChangingState.InvalidLetter -> TODO()
-                is AnimalLettersState.ChangingState.NextGuessWord -> TODO()
-                is AnimalLettersState.ChangingState.NextPlayer -> TODO()
+        viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
+            when (it) {
+                is AnimalLettersState.ChangingState.CorrectLetter -> {
+                    binding.table.setCorrectLetterCard()
+                }
+
+                is AnimalLettersState.ChangingState.GuessedWord -> {//TODO
+                    Toast.makeText(requireContext(), "GuessedWord", Toast.LENGTH_SHORT).show()
+                }
+
+                is AnimalLettersState.ChangingState.InvalidLetter -> {
+                    binding.table.setInvalidLetterCard(it.invalidLetterCard)
+                }
+
+                is AnimalLettersState.ChangingState.NextGuessWord -> {
+                    binding.table.nextWord()
+                }
+
+                is AnimalLettersState.ChangingState.NextPlayer -> {
+                    binding.table.nextPlayer()
+                }
             }
         }
 
-        viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner){
+        viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is AnimalLettersState.EntireState.EndGameState -> TODO()
-                is AnimalLettersState.EntireState.IsEndGameState -> TODO()
-                is AnimalLettersState.EntireState.LoadingGameState -> {
+                is AnimalLettersState.EntireState.EndGameState -> { //TODO
+                    Toast.makeText(requireContext(), "Валим", Toast.LENGTH_SHORT).show()
+                }
+
+                is AnimalLettersState.EntireState.IsEndGameState -> {//TODO
+                    Toast.makeText(requireContext(), "Let's go", Toast.LENGTH_SHORT).show()
+                }
+
+                is AnimalLettersState.EntireState.LoadingGameState -> {//TODO
                     Toast.makeText(requireContext(), "LoadingGameState", Toast.LENGTH_SHORT).show()
                 }
 
                 is AnimalLettersState.EntireState.StartGameState -> {
-                    binding.table.setListItem(it.lettersCards, "GOLDFINCH.jpg") {
-                        CustomCard(requireContext())
-                    }
-
-                    binding.card.setSrcFromAssert(
-                        it.wordCard.faceImageName,
-                        it.wordCard.faceImageName
-                    )
-
-                    binding.table.setOnClickListener { pos ->
-                        viewModel.onClickLetterCard(pos)
-                    }
+                    initWordCard(it)
+                    initTable(it)
                 }
             }
         }
@@ -92,11 +102,35 @@ class GameZverobukvyFragment :
 //        viewModel.onActiveGame()
     }
 
+    private fun initTable(startGameState: AnimalLettersState.EntireState.StartGameState) {
+        binding.table.apply {
+            setListItem(startGameState.lettersCards) {
+                CustomCard(requireContext()).apply {
+                    radius = CARD_RADIUS
+                }
+            }
+            setOnClickListener { pos ->
+                viewModel.onClickLetterCard(pos)
+            }
+        }
+    }
+
+    private fun initWordCard(startGameState: AnimalLettersState.EntireState.StartGameState) {
+        binding.card.apply {
+            setSrcFromAssert(
+                startGameState.wordCard.faceImageName,
+                startGameState.wordCard.faceImageName
+            )
+            radius = CARD_RADIUS
+        }
+    }
+
     @Parcelize
     data class GameStart(val typesCards: List<TypeCards>, val players: List<Player>) : Parcelable
 
     companion object {
         const val GAME_START = "GAME_START"
+        const val CARD_RADIUS = 48f
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) =
