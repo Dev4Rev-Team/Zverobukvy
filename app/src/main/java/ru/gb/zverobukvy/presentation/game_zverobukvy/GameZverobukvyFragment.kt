@@ -102,6 +102,10 @@ class GameZverobukvyFragment :
 //        viewModel.onActiveGame()
     }
 
+    override fun onBackPressed(): Boolean {
+        return false
+    }
+
     private fun initTable(startGameState: AnimalLettersState.EntireState.StartGameState) {
         binding.table.apply {
             setListItem(startGameState.lettersCards) {
