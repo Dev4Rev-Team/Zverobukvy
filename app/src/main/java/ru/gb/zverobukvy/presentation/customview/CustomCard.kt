@@ -2,7 +2,6 @@ package ru.gb.zverobukvy.presentation.customview
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -34,6 +33,7 @@ class CustomCard @JvmOverloads constructor(
 
     private lateinit var frontSideImageView: CustomViewImage
     private lateinit var backSideImageView: CustomViewImage
+    private lateinit var frontBackgroundImageView: CustomViewImage
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -55,9 +55,12 @@ class CustomCard @JvmOverloads constructor(
         val layoutParams = createLayoutParams()
         frontSideImageView = createImageView(context, layoutParams)
         backSideImageView = createImageView(context, layoutParams)
+        frontBackgroundImageView = createImageView(context, layoutParams)
+
         setSrcFromRes(srcOpen, srcClose)
         setOpenDisplay(isOpen)
 
+        addView(frontBackgroundImageView)
         addView(frontSideImageView)
         addView(backSideImageView)
     }
@@ -146,30 +149,10 @@ class CustomCard @JvmOverloads constructor(
         visibility = getVisibility(isVisibility)
     }
 
-    fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
+    private fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
         frontSideImageView.setImageResource(srcOpen)
         backSideImageView.setImageResource(srcClose)
     }
-
-    /**
-     * load from res drawable
-     */
-    fun setSrcFromRes(srcOpen: String, srcClose: String) {
-        setImageFromRes(frontSideImageView, srcOpen)
-        setImageFromRes(backSideImageView, srcClose)
-    }
-
-    private fun setImageFromRes(imageView: ImageView, src: String) {
-        getIdRes(src).let {
-            if (it != 0) {
-                imageView.setImageResource(it)
-            }
-        }
-    }
-
-    @SuppressLint("DiscouragedApi")
-    private fun getIdRes(resource: String) =
-        resources.getIdentifier(resource, "drawable", context.packageName)
 
     fun setSrcFromAssert(srcOpen: String, srcClose: String) {
         setImageFromAssert(frontSideImageView, srcOpen)
@@ -187,6 +170,9 @@ class CustomCard @JvmOverloads constructor(
         }
     }
 
+    fun setSrcOpenBackgroundFromAssert(srcOpenBackground: String) {
+        setImageFromAssert(frontBackgroundImageView, srcOpenBackground)
+    }
 
     /** pos - set position view
      *  (pos:Int) -> Unit callback function

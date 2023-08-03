@@ -107,6 +107,8 @@ class GameZverobukvyFragment :
             setListItem(startGameState.lettersCards) {
                 CustomCard(requireContext()).apply {
                     radius = CARD_RADIUS
+                    //TODO
+                    setSrcOpenBackgroundFromAssert("FACE.webp")
                 }
             }
             setOnClickListener { pos ->
