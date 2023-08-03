@@ -124,6 +124,7 @@ class GameZverobukvyFragment :
                 startGameState.wordCard.faceImageName
             )
             radius = CARD_RADIUS
+            setSrcOpenBackgroundFromAssert("FACE.webp")
         }
     }
 
