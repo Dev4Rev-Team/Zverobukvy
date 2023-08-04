@@ -115,23 +115,29 @@ class AnimalLettersInteractorImpl(
 
     override fun getNextWordCard() {
         gameStateFlow.value?.let { currentGameState ->
-            gameStateFlow.value = currentGameState.apply {
-                gameField.lettersField.forEach { it.isVisible = false }
-                // в данной ситуации очередь карточек-слов не может быть пустой
-                gameField.gamingWordCard = gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
-                walkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer).also {
+            // gameStateFlow обновляет value, т.к. отличается walkingPlayer
+            gameStateFlow.value = currentGameState.copy(
+                gameField = currentGameState.gameField.apply {
+                    lettersField.forEach { it.isVisible = false }
+                    // в данной ситуации очередь карточек-слов не может быть пустой
+                    gamingWordCard =
+                        gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
+                },
+                walkingPlayer = getNextWalkingPlayer(
+                    currentGameState.players,
+                    currentWalkingPlayer
+                ).also {
                     currentWalkingPlayer = it
                 }
-            }
+            )
         }
     }
 
     override fun endGameByUser() {
-        gameStateFlow.value = gameStateFlow.value?.apply {
-            isActive = false
-        }
-            // если gameState == null, значит завершение игры инициировано пользователем, во время
-            //загрузки данных из репозитория
+        // gameStateFlow обновляет value, т.к. отличается isActive
+        gameStateFlow.value = gameStateFlow.value?.copy(isActive = false)
+                // если gameState == null, значит завершение игры инициировано пользователем, во время
+                //загрузки данных из репозитория
             ?: GameState(
                 GameField(
                     listOf(),
@@ -180,11 +186,13 @@ class AnimalLettersInteractorImpl(
      * @return текущее состояние игры с учетом перехода хода к следующему игроку
      */
     private fun selectionWrongLetterCard(currentGameState: GameState) {
-        gameStateFlow.value = currentGameState.apply {
+        // gameStateFlow обновляет value, т.к. отличается walkingPlayer
+        // TODO когда один игрок
+        gameStateFlow.value = currentGameState.copy(
             walkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer).also {
                 currentWalkingPlayer = it
             }
-        }
+        )
     }
 
     /**
@@ -227,12 +235,23 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
-        gameStateFlow.value = currentGameState.apply {
-            gameField.lettersField[positionCorrectLetterCard].isVisible = true
-            gameField.gamingWordCard?.positionsGuessedLetters?.add(
-                positionCorrectLetterCardInGamingWordCard
+        // gameStateFlow обновляет value, т.к. отличается gameField (lettersField)
+        gameStateFlow.value = currentGameState.copy(
+            gameField = GameField(
+                lettersField = mutableListOf<LetterCard>().apply {
+                    addAll(currentGameState.gameField.lettersField)
+                    this[positionCorrectLetterCard] =
+                        currentGameState.gameField.lettersField[positionCorrectLetterCard].copy(
+                            isVisible = true
+                        )
+                },
+                gamingWordCard = currentGameState.gameField.gamingWordCard?.apply {
+                    positionsGuessedLetters.add(
+                        positionCorrectLetterCardInGamingWordCard
+                    )
+                }
             )
-        }
+        )
     }
 
     /**
@@ -246,15 +265,20 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
-        gameStateFlow.value = currentGameState.apply {
-            gameField.lettersField[positionCorrectLetterCard].isVisible = true
-            gameField.gamingWordCard?.positionsGuessedLetters?.add(
-                positionCorrectLetterCardInGamingWordCard
-            )
-            players[players.indexOf(walkingPlayer)].scoreInCurrentGame++
-            walkingPlayer = null
+        // gameStateFlow обновляет value, т.к. отличается walkingPlayer и isActive
+        gameStateFlow.value = currentGameState.copy(
+            gameField = currentGameState.gameField.apply {
+                lettersField[positionCorrectLetterCard].isVisible = true
+                gamingWordCard?.positionsGuessedLetters?.add(
+                    positionCorrectLetterCardInGamingWordCard
+                )
+            },
+            players = currentGameState.players.apply {
+                this[indexOf(currentWalkingPlayer)].scoreInCurrentGame++
+            },
+            walkingPlayer = null,
             isActive = false
-        }
+        )
     }
 
     /**
@@ -268,15 +292,19 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
-        gameStateFlow.value = currentGameState.apply {
-            gameField.lettersField[positionCorrectLetterCard].isVisible = true
-            gameField.gamingWordCard?.positionsGuessedLetters?.add(
-                positionCorrectLetterCardInGamingWordCard
-            )
-            players[players.indexOf(walkingPlayer)].scoreInCurrentGame++
+        // gameStateFlow обновляет value, т.к. отличается walkingPlayer
+        gameStateFlow.value = currentGameState.copy(
+            gameField = currentGameState.gameField.apply {
+                lettersField[positionCorrectLetterCard].isVisible = true
+                gamingWordCard?.positionsGuessedLetters?.add(
+                    positionCorrectLetterCardInGamingWordCard
+                )
+            },
+            players = currentGameState.players.apply {
+                this[indexOf(currentWalkingPlayer)].scoreInCurrentGame++
+            },
             walkingPlayer = null
-            isActive = true
-        }
+        )
     }
 
     /**
