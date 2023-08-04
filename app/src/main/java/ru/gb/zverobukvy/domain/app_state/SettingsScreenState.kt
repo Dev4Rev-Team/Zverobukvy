@@ -54,13 +54,13 @@ sealed interface SettingsScreenState {
 
     sealed interface ScreenState {
 
-        /**
-         * Состояние для диалогового окна удаления игрока
-         */
-        data class QueryRemovePlayer(
-            val playerBeingRemoved: Player,
-            val positionPlayerBeingRemoved: Int
-        ): ScreenState
+//        /**
+//         * Состояние для диалогового окна удаления игрока
+//         */
+//        data class QueryRemovePlayer(
+//            val playerBeingRemoved: Player,
+//            val positionPlayerBeingRemoved: Int
+//        ): ScreenState
 
         /**
          * Состояние для информационных сообщений:

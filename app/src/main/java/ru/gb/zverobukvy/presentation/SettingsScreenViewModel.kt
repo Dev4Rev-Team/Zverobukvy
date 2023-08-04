@@ -4,6 +4,8 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 
 interface SettingsScreenViewModel {
 
+    //TODO преференсы
+
     /**
      * Метод вызывается при создании или пересоздании view, до подписки на liveData.
      * В этом методе viewModel запрашивает список игроков в интеракторе и формирует состояния
