@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game_mode_classic_name">Зверобуквы</string>
+    <string name="game_mode_classic_name_description_short">Помогает детям легко запоминать алфавит без утомительных занятий</string>
+    <string name="game_mode_classic_name_description">Описание режима игры Зверобуквы</string>
+
+    <string name="game_mode_modern_name">Мемори 4+</string>
+    <string name="game_mode_modern_name_description_short">Помогает детям тренировать память</string>
+    <string name="game_mode_modern_name_description">Описание режима игры Мемори</string>
+</resources>

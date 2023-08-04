@@ -1,5 +1,18 @@
 <resources>
-    <string name="app_name">Zverobukvy</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Зверобуквы</string>
+    <!--Строки в интерфейсе-->
+    <string name="oolor_text">Цвет</string>
+    <string name="points_text">Счет</string>
+    <string name="move_text">Ход</string>
+    <string name="username_default">Игрок</string>
+    <string name="username_user1">Игрок 1</string>
+    <string name="username_user2">Игрок 2</string>
+    <string name="username_computer">Компьютер</string>
+    <!--Фрейм с настройками игры-->
+    <string name="main_menu_fragment_game_mode_header_text">Режим игры</string>
+    <string name="main_menu_fragment_game_cards_header_text">Наборы карточек</string>
+    <string name="main_menu_fragment_play_game_text_button">Играть</string>
+    <string name="space">" "</string>
+    <string name="choose">✓</string>
+
 </resources>
