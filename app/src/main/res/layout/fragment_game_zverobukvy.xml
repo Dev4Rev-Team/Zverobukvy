@@ -39,4 +39,23 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.32" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/next_player_button"
+        android:text="next player"
+        android:visibility="invisible"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/next_word"
+        android:text="next word"
+        android:visibility="invisible"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
