@@ -29,15 +29,15 @@ class TestCustomCardTableFragment : Fragment() {
     private fun initUI(binding: FragmentTestCustomCardTableBinding) {
         binding.setListButton.setOnClickListener {
             val letterCardListTmp = listOf(
-                LetterCard('A', false, "img7.png"),
-                LetterCard('B', false, "img2.png"),
-                LetterCard('C', false, "img3.png"),
-                LetterCard('D', true, "img4.png"),
-                LetterCard('E', false, "img5.png"),
-                LetterCard('F', false, "img6.png"),
-                LetterCard('V', true, "img7.png"),
-                LetterCard('A', true, "img8.png"),
-                LetterCard('A', false, "img9.png"),
+                LetterCard('A', false, "img7.png", "img3.png"),
+                LetterCard('B', false, "img2.png", "img3.png"),
+                LetterCard('C', false, "img3.png", "img3.png"),
+                LetterCard('D', true, "img4.png", "img3.png"),
+                LetterCard('E', false, "img5.png", "img3.png"),
+                LetterCard('F', false, "img6.png", "img3.png"),
+                LetterCard('V', true, "img7.png", "img3.png"),
+                LetterCard('A', true, "img8.png", "img3.png"),
+                LetterCard('A', false, "img9.png", "img3.png"),
             )
 
             val countCard = binding.editTextNumber.text.toString().toInt()
@@ -45,10 +45,11 @@ class TestCustomCardTableFragment : Fragment() {
             repeat(countCard) {
                 letterCardList.add(
                     letterCardListTmp[
-                            Random.nextInt(letterCardListTmp.size)])
+                            Random.nextInt(letterCardListTmp.size)]
+                )
             }
 
-            binding.cardTable.setListItem(letterCardList, "img1.png") {
+            binding.cardTable.setListItem(letterCardList) {
                 CustomCard(requireContext()).apply {
                     radius = 50f
                     elevation = 3f
@@ -61,7 +62,9 @@ class TestCustomCardTableFragment : Fragment() {
         }
 
         binding.invalidButton.setOnClickListener {
-            binding.cardTable.setInvalidLetterCard(LetterCard('V', true, "img7.png"))
+            binding.cardTable.setInvalidLetterCard(
+                LetterCard('V', true, "img7.png", "img3.png")
+            )
         }
 
         binding.nextPlayerButton.setOnClickListener {
@@ -73,7 +76,7 @@ class TestCustomCardTableFragment : Fragment() {
         }
 
         binding.cardTable.setOnClickListener {
-            Toast.makeText(requireContext(), "pos $it",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "pos $it", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -87,6 +90,7 @@ class TestCustomCardTableFragment : Fragment() {
     data class LetterCard(
         override val letter: Char, // equals
         override var isVisible: Boolean = false,
-        override val url: String,
+        override val faceImageName: String,
+        override val backImageName: String,
     ) : CustomCardTable.LetterCardUI
 }
