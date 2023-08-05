@@ -1,6 +1,8 @@
 package ru.gb.zverobukvy.presentation.game_zverobukvy
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 import android.view.View
 import android.widget.Toast
@@ -61,8 +63,10 @@ class GameZverobukvyFragment :
                 }
 
                 is AnimalLettersState.ChangingState.GuessedWord -> {//TODO
-                    nextWord()
-                    Toast.makeText(requireContext(), "GuessedWord", Toast.LENGTH_SHORT).show()
+                    if (it.hasNextWord) {
+                        nextWord()
+                        Toast.makeText(requireContext(), "GuessedWord", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 is AnimalLettersState.ChangingState.InvalidLetter -> {
@@ -72,9 +76,9 @@ class GameZverobukvyFragment :
                 is AnimalLettersState.ChangingState.NextGuessWord -> {
                     binding.table.nextWord()
                     binding.WordCustomCard.setSrcFromAssert(
-                            it.wordCard.faceImageName,
-                            it.wordCard.faceImageName
-                        )
+                        it.wordCard.faceImageName,
+                        it.wordCard.faceImageName
+                    )
 
                 }
 
@@ -87,7 +91,14 @@ class GameZverobukvyFragment :
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersState.EntireState.EndGameState -> { //TODO
-                    Toast.makeText(requireContext(), "Валим", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Game over", Toast.LENGTH_SHORT).show()
+                    Handler(Looper.myLooper()!!).postDelayed(
+                        {
+                            parentFragmentManager.popBackStack()
+                        },
+                        1500
+                    )
+
                 }
 
                 is AnimalLettersState.EntireState.IsEndGameState -> {//TODO
