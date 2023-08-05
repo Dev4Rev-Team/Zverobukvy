@@ -12,7 +12,6 @@ import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.ChangingState
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.EntireState
 import ru.gb.zverobukvy.domain.entity.GameState
-import ru.gb.zverobukvy.domain.entity.LetterCard
 
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractor
 import java.util.LinkedList
@@ -57,33 +56,73 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
      */
     init {
         viewModelScope.launch {
-
             animalLettersInteractor.startGame()
+            animalLettersInteractor.subscribeToGameState().collect(::collectGameState)
+        }
+    }
 
-            animalLettersInteractor.subscribeToGameState().collect { newState ->
-                val viewState = convert(mGameState, newState)
+    /** Метод собирает изменения из Interactor и отправляет их во View
+     *
+     * @param newState Обновленное состояние игры из Interactor
+     */
+    private suspend fun collectGameState(newState: GameState?) {
+        mGameState.also { oldState ->
 
-                viewState.forEachIndexed { index, state ->
-                    /** Проверяем возможные ошибки в логике конвертации */
-                    if (index > 1)
-                        throw IllegalStateException(ERROR_INDEX_INCORRECT)
-                    if (index == 1 && state !is EntireState.EndGameState)
-                        throw IllegalStateException(ERROR_INCORRECT_TYPE_OF_APP_STATE)
+            val viewState = convert(oldState, newState)
 
+            checkingCorrectnessOfConversion(viewState)
 
-                    if (state is EntireState) {
-                        mViewState = state
-                        entireLiveData.value = mViewState
-                    } else {
-                        changingLiveData.value = state as ChangingState
-                    }
-
-                    if (index != viewState.lastIndex) delay(STATE_DELAY)
-                }
-
-                mGameState = newState
+            viewState.forEachIndexed { index, state ->
+                updateViewModels(state)
+                if (index != viewState.lastIndex) delay(STATE_DELAY)
             }
         }
+
+        updateMGameState(newState)
+    }
+
+    /** Метод обновляет значение сохраняемого во viewModel GameState - [mGameState]
+     *
+     * @param newState Новое состояние игры/GameState
+     */
+    private fun updateMGameState(newState: GameState?) {
+        mGameState = newState?.copy(
+            gameField = newState.gameField.copy(
+                gamingWordCard = newState.gameField.gamingWordCard?.copy(
+                    positionsGuessedLetters = ArrayList(newState.gameField.gamingWordCard!!.positionsGuessedLetters)
+                )
+            )
+        )
+    }
+
+    /** Метод обновляет значение одной из viewModels в зависимости от типа входящего [AnimalLettersState]
+     * и сохраняет его во viewModel если тип == [EntireState]
+     *
+     * @param state Состояние экрана для отправки во View
+     */
+    private fun updateViewModels(state: AnimalLettersState) {
+        if (state is EntireState) {
+            mViewState = state
+            entireLiveData.value = mViewState
+        } else {
+            changingLiveData.value = state as ChangingState
+        }
+    }
+
+    /** Метод проверяет результат конвертации на наличие логических ошибок
+     *
+     * @param viewState Результат конвертации для проверки
+     *
+     * @exception IllegalStateException если проверка провалена
+     */
+    private fun checkingCorrectnessOfConversion(
+        viewState: List<AnimalLettersState>
+    ) {
+        if (viewState.size > 2)
+            throw IllegalStateException(ERROR_INDEX_INCORRECT)
+
+        if (viewState.size > 1 && viewState[1] !is EntireState.EndGameState)
+            throw IllegalStateException(ERROR_INCORRECT_TYPE_OF_APP_STATE)
     }
 
     /** Метод конвертирует разницу состояний (+ [mLastClickCardPosition])
@@ -96,7 +135,7 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
          * Срабатывает сразу после подписки на данные в Interactor
          */
         if (newState == null) {
-            return listOf(EntireState.LoadingGameState)
+            throw IllegalStateException(ERROR_NULL_ARRIVED_GAME_STATE)
         }
 
         /** Проверка на Null oldState :
@@ -181,7 +220,7 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
                     /** Событие корректно отгаданной буквы */
                     isCardClick = false
 
-                    stateList.addFirst(
+                     stateList.addFirst(
                         ChangingState.CorrectLetter(
                             lastClickCard,
                             positionGuessedLetters
@@ -202,22 +241,10 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
     }
 
     private fun positionGuessedLetters(oldPositions: List<Int>, newPositions: List<Int>): Int? {
-        val position = newPositions.filter { index ->
-            !oldPositions.contains(index)
-        }.ifEmpty { null }
-
-        return position?.first()
+         return newPositions.firstOrNull{
+            !oldPositions.contains(it)
+        }
     }
-
-    private fun cardsDiff(
-        oldCards: List<LetterCard>,
-        newCards: List<LetterCard>,
-    ): List<LetterCard>? {
-        return newCards.filterIndexed { cardIndex, card ->
-            card != oldCards[cardIndex]
-        }.ifEmpty { null }
-    }
-
 
     override fun onActiveGame() {
         if (isEndGameDialog) {
@@ -239,8 +266,8 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
         if (!isCardClick) {
             isCardClick = true
-            animalLettersInteractor.selectionLetterCard(positionSelectedLetterCard)
             mLastClickCardPosition = positionSelectedLetterCard
+            animalLettersInteractor.selectionLetterCard(positionSelectedLetterCard)
         }
 
     }
@@ -292,6 +319,7 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_INDEX_INCORRECT = "Индекс вышел за пределы корректных значений"
         const val ERROR_INCORRECT_TYPE_OF_APP_STATE = "Некорректный тип AnimalLetterState"
+        const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null "
 
 
         const val COROUTINE_SCOPE_CANCEL = "in viewModel.onCleared()"

@@ -88,10 +88,6 @@ class GameZverobukvyFragment :
                     Toast.makeText(requireContext(), "Let's go", Toast.LENGTH_SHORT).show()
                 }
 
-                is AnimalLettersState.EntireState.LoadingGameState -> {//TODO
-                    Toast.makeText(requireContext(), "LoadingGameState", Toast.LENGTH_SHORT).show()
-                }
-
                 is AnimalLettersState.EntireState.StartGameState -> {
                     initWordCard(it)
                     initTable(it)

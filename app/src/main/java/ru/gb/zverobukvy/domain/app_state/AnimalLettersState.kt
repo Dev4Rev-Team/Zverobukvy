@@ -7,10 +7,6 @@ import ru.gb.zverobukvy.domain.entity.WordCard
 sealed interface AnimalLettersState {
 
     sealed interface EntireState : AnimalLettersState {
-        /** Состояние загрузки/подготовки игры.
-         * Дает интерактору время на загрузку карточек из репозитория.
-         */
-        object LoadingGameState : EntireState
 
         /** Полное состояние экрана, передается в случаях:
          * 1. Начала игры
