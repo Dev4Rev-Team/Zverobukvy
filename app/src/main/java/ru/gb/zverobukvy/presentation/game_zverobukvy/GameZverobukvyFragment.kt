@@ -61,11 +61,12 @@ class GameZverobukvyFragment :
                 }
 
                 is AnimalLettersState.ChangingState.GuessedWord -> {//TODO
+                    nextWord()
                     Toast.makeText(requireContext(), "GuessedWord", Toast.LENGTH_SHORT).show()
                 }
 
                 is AnimalLettersState.ChangingState.InvalidLetter -> {
-                    binding.table.setInvalidLetterCard(it.invalidLetterCard)
+                    nextPlayer(it)
                 }
 
                 is AnimalLettersState.ChangingState.NextGuessWord -> {
@@ -95,7 +96,36 @@ class GameZverobukvyFragment :
             }
         }
 
-//        viewModel.onActiveGame()
+
+        viewModel.onActiveGame()
+    }
+
+    private fun nextPlayer(state: AnimalLettersState.ChangingState.InvalidLetter) {
+        binding.nextPlayerButton.let { button ->
+            button.setOnClickListener {
+                button.visibility = View.INVISIBLE
+                binding.table.setInvalidLetterCard(state.invalidLetterCard)
+                viewModel.onClickNextWalkingPlayer()
+            }
+            button.visibility = View.VISIBLE
+        }
+    }
+
+
+    private fun nextWord() {
+        binding.nextWord.let { button ->
+            button.setOnClickListener {
+                button.visibility = View.INVISIBLE
+                //TODO binding.table.nextWord()
+                viewModel.onClickNextWord()
+            }
+            button.visibility = View.VISIBLE
+        }
+
+    }
+
+    override fun onBackPressed(): Boolean {
+        return false
     }
 
     private fun initTable(startGameState: AnimalLettersState.EntireState.StartGameState) {
