@@ -3,7 +3,7 @@ package ru.gb.zverobukvy.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
 
@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
         val gameStart =
             GameZverobukvyFragment.GameStart(
                 listOf(TypeCards.BLUE, TypeCards.GREEN), listOf(
-                    Player("Nik1", 0),
-                    Player("Nik2", 0)
+                    PlayerInGame("Nik1", 0),
+                    PlayerInGame("Nik2", 0)
                 )
             )
 

@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PlayerInSettings(
-    val name: String,
+    val player: Player,
     var isSelectedForGame: Boolean = false,
     var inEditingState: Boolean = false
 ) : Parcelable

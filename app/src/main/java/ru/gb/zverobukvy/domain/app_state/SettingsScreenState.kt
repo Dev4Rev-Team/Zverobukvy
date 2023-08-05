@@ -1,17 +1,12 @@
 package ru.gb.zverobukvy.domain.app_state
 
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
 
 sealed interface SettingsScreenState {
 
     sealed interface PlayersScreenState {
-
-        /**
-         * Состояние загрузки, дает время интерактору на получение списка игроков из БД
-         */
-        object LoadingPlayers : PlayersScreenState
 
         /**
          * Состояние для отрисовки всего списка игроков: при создании или пересоздании view.
@@ -54,14 +49,6 @@ sealed interface SettingsScreenState {
 
     sealed interface ScreenState {
 
-//        /**
-//         * Состояние для диалогового окна удаления игрока
-//         */
-//        data class QueryRemovePlayer(
-//            val playerBeingRemoved: Player,
-//            val positionPlayerBeingRemoved: Int
-//        ): ScreenState
-
         /**
          * Состояние для информационных сообщений:
          * - некорректное или повторяющееся имя игрока при редактировании данных игрока;
@@ -77,7 +64,7 @@ sealed interface SettingsScreenState {
          */
         data class StartGame(
             val typesCardsSelectedForGame: List<TypeCards>,
-            val playersSelectedForGame: List<Player>
+            val playersSelectedForGame: List<PlayerInGame>
         ) : ScreenState
     }
 }
