@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         val gameStart =
             GameZverobukvyFragment.GameStart(
-                listOf(TypeCards.BLUE, TypeCards.GREEN), listOf(
+                listOf(TypeCards.ORANGE), listOf(
                     Player("Nik1", 0),
                     Player("Nik2", 0)
                 )

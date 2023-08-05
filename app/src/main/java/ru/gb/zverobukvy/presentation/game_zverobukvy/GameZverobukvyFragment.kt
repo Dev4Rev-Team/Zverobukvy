@@ -71,6 +71,11 @@ class GameZverobukvyFragment :
 
                 is AnimalLettersState.ChangingState.NextGuessWord -> {
                     binding.table.nextWord()
+                    binding.WordCustomCard.setSrcFromAssert(
+                            it.wordCard.faceImageName,
+                            it.wordCard.faceImageName
+                        )
+
                 }
 
                 is AnimalLettersState.ChangingState.NextPlayer -> {
@@ -113,7 +118,7 @@ class GameZverobukvyFragment :
 
 
     private fun nextWord() {
-        binding.nextWord.let { button ->
+        binding.nextWordButton.let { button ->
             button.setOnClickListener {
                 button.visibility = View.INVISIBLE
                 //TODO binding.table.nextWord()
@@ -144,7 +149,7 @@ class GameZverobukvyFragment :
     }
 
     private fun initWordCard(startGameState: AnimalLettersState.EntireState.StartGameState) {
-        binding.card.apply {
+        binding.WordCustomCard.apply {
             setSrcFromAssert(
                 startGameState.wordCard.faceImageName,
                 startGameState.wordCard.faceImageName
