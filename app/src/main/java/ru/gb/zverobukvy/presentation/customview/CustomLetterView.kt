@@ -1,12 +1,12 @@
 package ru.gb.zverobukvy.presentation.customview
 
+import android.animation.AnimatorSet
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.widget.TextViewCompat
+import androidx.core.animation.doOnStart
 
 class CustomLetterView @JvmOverloads constructor(
     context: Context,
@@ -14,7 +14,8 @@ class CustomLetterView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : CardView(context, attrs, defStyle) {
 
-    private lateinit var textView: TextView
+    private lateinit var layoutBackground: FrameLayout
+    private lateinit var textView: CustomTextView
     private var padding = 8
     private var char: Char = ' '
     val colorTrue = Color.GREEN
@@ -26,22 +27,21 @@ class CustomLetterView @JvmOverloads constructor(
 
     private fun initContentView() {
         setPadding(padding, padding, padding, padding)
-
         val layoutParams = createLayoutParams()
-        textView = TextView(context).apply {
+        layoutBackground = FrameLayout(context).apply {
             this.layoutParams = layoutParams
-            TextViewCompat.setAutoSizeTextTypeWithDefaults(
-                this,
-                TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM
-            );
+        }
+        textView = CustomTextView(context).apply {
+            this.layoutParams = layoutParams
             text = char.toString()
         }
 
+        addView(layoutBackground)
         addView(textView)
     }
 
-    private fun createLayoutParams() = FrameLayout.LayoutParams(
-        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+    private fun createLayoutParams() = LayoutParams(
+        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
     )
 
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
@@ -60,14 +60,30 @@ class CustomLetterView @JvmOverloads constructor(
         textView.text = char.toString()
     }
 
-    fun setTrue(){
-        setBackgroundColor(colorTrue)
+    fun setTrue(isAnimation: Boolean = true) {
+        layoutBackground.setBackgroundColor(colorTrue)
+        if (isAnimation) {
+            val animatorSet = AnimatorSet()
+            val scaleUp = createScaleAnimation(this, 1f, 1.2f).apply {
+                duration = DURATION_ANIMATION.toLong()
+            }
+            val scaleDown = createScaleAnimation(this, 1.2f, 1f).apply {
+                duration = DURATION_ANIMATION.toLong()
+            }
+            animatorSet.playSequentially(scaleUp, scaleDown)
+            animatorSet.doOnStart { bringToFront() }
+            animatorSet.start()
+        }
     }
 
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        setMeasuredDimension(width, width)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+        setMeasuredDimension(height, height)
+    }
+
+    companion object {
+        private const val DURATION_ANIMATION = 250
     }
 }
