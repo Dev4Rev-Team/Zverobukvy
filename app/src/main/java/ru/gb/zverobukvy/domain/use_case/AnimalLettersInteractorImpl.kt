@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.gb.zverobukvy.domain.entity.GameField
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
 import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
@@ -46,11 +46,11 @@ import java.util.Queue
 class AnimalLettersInteractorImpl(
     private val animalLettersCardsRepository: AnimalLettersCardsRepository,
     private val typesCards: List<TypeCards>,
-    private var players: List<Player>
+    private var players: List<PlayerInGame>
 ) : AnimalLettersInteractor {
     private val checkData = CheckData()
     private val gamingWords: Queue<WordCard> = LinkedList()
-    private var currentWalkingPlayer: Player
+    private var currentWalkingPlayer: PlayerInGame
     private val gameStateFlow: MutableStateFlow<GameState?> = MutableStateFlow(null)
 
     /**
@@ -401,7 +401,7 @@ class AnimalLettersInteractorImpl(
      * @param currentWalkingPlayer текущий игрок
      * @return следующий игрок
      */
-    private fun getNextWalkingPlayer(players: List<Player>, currentWalkingPlayer: Player): Player {
+    private fun getNextWalkingPlayer(players: List<PlayerInGame>, currentWalkingPlayer: PlayerInGame): PlayerInGame {
         players.indexOf(currentWalkingPlayer).let {
             if (it < players.size - 1)
                 return players[it + 1]

@@ -15,7 +15,7 @@ import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.databinding.FragmentGameZverobukvyBinding
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
 import ru.gb.zverobukvy.presentation.AnimalLettersViewModel
@@ -171,7 +171,7 @@ class GameZverobukvyFragment :
     }
 
     @Parcelize
-    data class GameStart(val typesCards: List<TypeCards>, val players: List<Player>) : Parcelable
+    data class GameStart(val typesCards: List<TypeCards>, val players: List<PlayerInGame>) : Parcelable
 
     companion object {
         const val GAME_START = "GAME_START"
