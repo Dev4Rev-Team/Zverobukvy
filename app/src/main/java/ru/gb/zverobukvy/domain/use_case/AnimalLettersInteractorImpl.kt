@@ -2,13 +2,14 @@ package ru.gb.zverobukvy.domain.use_case
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
 import ru.gb.zverobukvy.domain.entity.GameField
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
+import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
+import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
 
@@ -66,10 +67,13 @@ class AnimalLettersInteractorImpl(
         currentWalkingPlayer = players.first()
     }
 
-    override fun subscribeToGameState(): StateFlow<GameState?> =
-        gameStateFlow
+    override fun subscribeToGameState(): StateFlow<GameState?> {
+        Timber.d("subscribeToGameState")
+        return gameStateFlow
+    }
 
     override suspend fun startGame() {
+        Timber.d("startGame")
         gamingWords.addAll(getGamingWords(typesCards)) // формируется очередь карточек-слов
         // начальное состояние игры
         gameStateFlow.value = GameState(
@@ -85,6 +89,7 @@ class AnimalLettersInteractorImpl(
     }
 
     override fun selectionLetterCard(positionSelectedLetterCard: Int) {
+        Timber.d("selectionLetterCard")
         gameStateFlow.value?.run {
             // проверяется, что пришла корректная позиция выбранной-карточки
             checkData.checkPositionSelectedLetterCard(
@@ -114,6 +119,7 @@ class AnimalLettersInteractorImpl(
     }
 
     override fun getNextWordCard() {
+        Timber.d("getNextWordCard")
         gameStateFlow.value?.let { currentGameState ->
             // gameStateFlow обновляет value, т.к. отличается gameField и walkingPlayer
             gameStateFlow.value = currentGameState.copy(
@@ -136,6 +142,7 @@ class AnimalLettersInteractorImpl(
     }
 
     override fun endGameByUser() {
+        Timber.d("endGameByUser")
         // gameStateFlow обновляет value, т.к. отличается isActive
         gameStateFlow.value = gameStateFlow.value?.copy(isActive = false)
                 // если gameState == null, значит завершение игры инициировано пользователем, во время
@@ -162,6 +169,7 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
+        Timber.d("selectionCorrectLetterCard")
         // в данной ситуации gamingWordCard не может быть null
         currentGameState.gameField.gamingWordCard?.let {
             // выбранная буква последняя в отгадываемом слове
@@ -188,6 +196,7 @@ class AnimalLettersInteractorImpl(
      * @return текущее состояние игры с учетом перехода хода к следующему игроку
      */
     private fun selectionWrongLetterCard(currentGameState: GameState) {
+        Timber.d("selectionWrongLetterCard")
         // gameStateFlow обновляет value, т.к. отличается walkingPlayer
         // TODO когда один игрок
         gameStateFlow.value = currentGameState.copy(
@@ -209,6 +218,7 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
+        Timber.d("selectionLastCorrectLetterCardInGamingWordCard")
         // нет больше карточек-слов для игры
         if (isLastGamingWordCard())
             guessedLastGamingWordCard(
@@ -237,6 +247,7 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
+        Timber.d("selectionNotLastCorrectLetterCardInGamingWordCard")
         // gameStateFlow обновляет value, т.к. отличается gameField
         gameStateFlow.value = currentGameState.copy(
             gameField = GameField(
@@ -263,6 +274,7 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
+        Timber.d("guessedLastGamingWordCard")
         // gameStateFlow обновляет value, т.к. отличается gameField, players, walkingPlayer и isActive
         gameStateFlow.value = currentGameState.copy(
             gameField = GameField(
@@ -292,6 +304,7 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
+        Timber.d("guessedNotLastGamingWordCard")
         // gameStateFlow обновляет value, т.к. отличается gameField, player и walkingPlayer
         gameStateFlow.value = currentGameState.copy(
             gameField = GameField(
