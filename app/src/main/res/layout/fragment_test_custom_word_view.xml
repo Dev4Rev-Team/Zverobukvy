@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".TestCustomWordViewFragment">
+
+    <ru.gb.zverobukvy.presentation.customview.CustomWordView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/custom_word_view"
+        app:layout_constraintDimensionRatio="6:1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/flow"
+        app:layout_constraintTop_toBottomOf="@id/custom_word_view"
+        app:constraint_referenced_ids="set_word_button,new_pos_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/set_word_button"
+        android:text="Set word" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/new_pos_button"
+        android:text="New position in word guessed" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
