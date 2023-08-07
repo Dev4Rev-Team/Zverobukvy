@@ -20,8 +20,9 @@ class DealCards {
             for (i in allCards.indices) {
                 allCards[i].typesCards.forEach {
                     if (typesCards.contains(it)) {
+                        if(kitCards.contains(allCards[i]))
+                            return@forEach
                         kitCards.add(allCards[i])
-                        return@forEach
                     }
                 }
             }

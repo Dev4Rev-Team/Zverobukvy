@@ -2,13 +2,14 @@ package ru.gb.zverobukvy.domain.use_case
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
 import ru.gb.zverobukvy.domain.entity.GameField
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
+import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
+import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
 
@@ -66,10 +67,13 @@ class AnimalLettersInteractorImpl(
         currentWalkingPlayer = players.first()
     }
 
-    override fun subscribeToGameState(): StateFlow<GameState?> =
-        gameStateFlow
+    override fun subscribeToGameState(): StateFlow<GameState?> {
+        Timber.d("subscribeToGameState")
+        return gameStateFlow
+    }
 
     override suspend fun startGame() {
+        Timber.d("startGame")
         gamingWords.addAll(getGamingWords(typesCards)) // формируется очередь карточек-слов
         // начальное состояние игры
         gameStateFlow.value = GameState(
@@ -85,6 +89,7 @@ class AnimalLettersInteractorImpl(
     }
 
     override fun selectionLetterCard(positionSelectedLetterCard: Int) {
+        Timber.d("selectionLetterCard")
         gameStateFlow.value?.run {
             // проверяется, что пришла корректная позиция выбранной-карточки
             checkData.checkPositionSelectedLetterCard(
@@ -114,24 +119,34 @@ class AnimalLettersInteractorImpl(
     }
 
     override fun getNextWordCard() {
+        Timber.d("getNextWordCard")
         gameStateFlow.value?.let { currentGameState ->
-            gameStateFlow.value = currentGameState.apply {
-                gameField.lettersField.forEach { it.isVisible = false }
-                // в данной ситуации очередь карточек-слов не может быть пустой
-                gameField.gamingWordCard = gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
-                walkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer).also {
+            // gameStateFlow обновляет value, т.к. отличается gameField и walkingPlayer
+            gameStateFlow.value = currentGameState.copy(
+                gameField = GameField(
+                    lettersField = mutableListOf<LetterCard>().apply {
+                        addAll(currentGameState.gameField.lettersField)
+                        forEach { it.isVisible = false }
+                    },
+                    // в данной ситуации очередь карточек-слов не может быть пустой
+                    gamingWordCard = gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
+                ),
+                walkingPlayer = getNextWalkingPlayer(
+                    currentGameState.players,
+                    currentWalkingPlayer
+                ).also {
                     currentWalkingPlayer = it
                 }
-            }
+            )
         }
     }
 
     override fun endGameByUser() {
-        gameStateFlow.value = gameStateFlow.value?.apply {
-            isActive = false
-        }
-            // если gameState == null, значит завершение игры инициировано пользователем, во время
-            //загрузки данных из репозитория
+        Timber.d("endGameByUser")
+        // gameStateFlow обновляет value, т.к. отличается isActive
+        gameStateFlow.value = gameStateFlow.value?.copy(isActive = false)
+                // если gameState == null, значит завершение игры инициировано пользователем, во время
+                //загрузки данных из репозитория
             ?: GameState(
                 GameField(
                     listOf(),
@@ -154,6 +169,7 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
+        Timber.d("selectionCorrectLetterCard")
         // в данной ситуации gamingWordCard не может быть null
         currentGameState.gameField.gamingWordCard?.let {
             // выбранная буква последняя в отгадываемом слове
@@ -180,11 +196,14 @@ class AnimalLettersInteractorImpl(
      * @return текущее состояние игры с учетом перехода хода к следующему игроку
      */
     private fun selectionWrongLetterCard(currentGameState: GameState) {
-        gameStateFlow.value = currentGameState.apply {
+        Timber.d("selectionWrongLetterCard")
+        // gameStateFlow обновляет value, т.к. отличается walkingPlayer
+        // TODO когда один игрок
+        gameStateFlow.value = currentGameState.copy(
             walkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer).also {
                 currentWalkingPlayer = it
             }
-        }
+        )
     }
 
     /**
@@ -199,6 +218,7 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
+        Timber.d("selectionLastCorrectLetterCardInGamingWordCard")
         // нет больше карточек-слов для игры
         if (isLastGamingWordCard())
             guessedLastGamingWordCard(
@@ -227,12 +247,20 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
-        gameStateFlow.value = currentGameState.apply {
-            gameField.lettersField[positionCorrectLetterCard].isVisible = true
-            gameField.gamingWordCard?.positionsGuessedLetters?.add(
-                positionCorrectLetterCardInGamingWordCard
+        Timber.d("selectionNotLastCorrectLetterCardInGamingWordCard")
+        // gameStateFlow обновляет value, т.к. отличается gameField
+        gameStateFlow.value = currentGameState.copy(
+            gameField = GameField(
+                lettersField = changeLetterFieldAfterCorrectLetterCard(
+                    currentGameState.gameField.lettersField,
+                    positionCorrectLetterCard
+                ),
+                gamingWordCard = changeGamingWordCardAfterCorrectLetterCard(
+                    currentGameState.gameField.gamingWordCard,
+                    positionCorrectLetterCardInGamingWordCard
+                )
             )
-        }
+        )
     }
 
     /**
@@ -246,15 +274,23 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
-        gameStateFlow.value = currentGameState.apply {
-            gameField.lettersField[positionCorrectLetterCard].isVisible = true
-            gameField.gamingWordCard?.positionsGuessedLetters?.add(
-                positionCorrectLetterCardInGamingWordCard
-            )
-            players[players.indexOf(walkingPlayer)].scoreInCurrentGame++
-            walkingPlayer = null
+        Timber.d("guessedLastGamingWordCard")
+        // gameStateFlow обновляет value, т.к. отличается gameField, players, walkingPlayer и isActive
+        gameStateFlow.value = currentGameState.copy(
+            gameField = GameField(
+                lettersField = changeLetterFieldAfterCorrectLetterCard(
+                    currentGameState.gameField.lettersField,
+                    positionCorrectLetterCard
+                ),
+                gamingWordCard = changeGamingWordCardAfterCorrectLetterCard(
+                    currentGameState.gameField.gamingWordCard,
+                    positionCorrectLetterCardInGamingWordCard
+                )
+            ),
+            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players),
+            walkingPlayer = null,
             isActive = false
-        }
+        )
     }
 
     /**
@@ -268,16 +304,71 @@ class AnimalLettersInteractorImpl(
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
-        gameStateFlow.value = currentGameState.apply {
-            gameField.lettersField[positionCorrectLetterCard].isVisible = true
-            gameField.gamingWordCard?.positionsGuessedLetters?.add(
-                positionCorrectLetterCardInGamingWordCard
-            )
-            players[players.indexOf(walkingPlayer)].scoreInCurrentGame++
+        Timber.d("guessedNotLastGamingWordCard")
+        // gameStateFlow обновляет value, т.к. отличается gameField, player и walkingPlayer
+        gameStateFlow.value = currentGameState.copy(
+            gameField = GameField(
+                lettersField = changeLetterFieldAfterCorrectLetterCard(
+                    currentGameState.gameField.lettersField,
+                    positionCorrectLetterCard
+                ),
+                gamingWordCard = changeGamingWordCardAfterCorrectLetterCard(
+                    currentGameState.gameField.gamingWordCard,
+                    positionCorrectLetterCardInGamingWordCard
+                )
+            ),
+            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players),
             walkingPlayer = null
-            isActive = true
-        }
+        )
     }
+
+    /**
+     * Метод создает список игроков для формирования gameState после успешно отгаданного слова:
+     * увеличивается счет соответствующего игрока
+     * @param currentPlayers текущий список игроков
+     * @return измененный список игроков
+     */
+    private fun changePlayersAfterGuessedGamingWordCard(currentPlayers: List<Player>) =
+        mutableListOf<Player>().apply {
+            addAll(currentPlayers)
+            this[indexOf(currentWalkingPlayer)].scoreInCurrentGame++
+        }
+
+    /**
+     * Метод создает отгадываемую карточку-слово для формирования gameState после отгаданной буквы:
+     * добавляется позиция отгаданной буквы в список отгаданных буков в слове
+     * @param currentGamingWordCard текущая отгадываемая буква-слово
+     * @param positionCorrectLetterCardInGamingWordCard позиция отгаданной буквы в слове
+     * @return измененная карточка-слово
+     */
+    private fun changeGamingWordCardAfterCorrectLetterCard(
+        currentGamingWordCard: WordCard?,
+        positionCorrectLetterCardInGamingWordCard: Int
+    ) = currentGamingWordCard?.copy(
+        positionsGuessedLetters = mutableListOf<Int>().apply {
+            addAll(currentGamingWordCard.positionsGuessedLetters)
+            add(positionCorrectLetterCardInGamingWordCard)
+        }
+    )
+
+    /**
+     * Метод создает список карточек-букв для формирования gameState после отгаданной буквы:
+     * isVisible = true для соответствующей буквы
+     * @param currentLetterField текущий список карточек-букв
+     * @param positionCorrectLetterCard позиция отгаданной буквы
+     * @return измененный список карточек-букв
+     */
+    private fun changeLetterFieldAfterCorrectLetterCard(
+        currentLetterField: List<LetterCard>,
+        positionCorrectLetterCard: Int
+    ): List<LetterCard> =
+        mutableListOf<LetterCard>().apply {
+            addAll(currentLetterField)
+            this[positionCorrectLetterCard] =
+                currentLetterField[positionCorrectLetterCard].copy(
+                    isVisible = true
+                )
+        }
 
     /**
      * @param gamingWordCard разгадываемая карточка-слово

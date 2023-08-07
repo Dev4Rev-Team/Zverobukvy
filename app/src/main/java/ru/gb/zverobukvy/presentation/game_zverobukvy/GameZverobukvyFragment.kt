@@ -1,6 +1,8 @@
 package ru.gb.zverobukvy.presentation.game_zverobukvy
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 import android.view.View
 import android.widget.Toast
@@ -54,42 +56,118 @@ class GameZverobukvyFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner){
-            when(it){
-                is AnimalLettersState.ChangingState.CorrectLetter -> TODO()
-                is AnimalLettersState.ChangingState.GuessedWord -> TODO()
-                is AnimalLettersState.ChangingState.InvalidLetter -> TODO()
-                is AnimalLettersState.ChangingState.NextGuessWord -> TODO()
-                is AnimalLettersState.ChangingState.NextPlayer -> TODO()
-            }
-        }
-
-        viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner){
+        viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is AnimalLettersState.EntireState.EndGameState -> TODO()
-                is AnimalLettersState.EntireState.IsEndGameState -> TODO()
-                is AnimalLettersState.EntireState.LoadingGameState -> {
-                    Toast.makeText(requireContext(), "LoadingGameState", Toast.LENGTH_SHORT).show()
+                is AnimalLettersState.ChangingState.CorrectLetter -> {
+                    binding.table.setCorrectLetterCard()
                 }
 
-                is AnimalLettersState.EntireState.StartGameState -> {
-                    binding.table.setListItem(it.lettersCards, "GOLDFINCH.jpg") {
-                        CustomCard(requireContext())
+                is AnimalLettersState.ChangingState.GuessedWord -> {//TODO
+                    if (it.hasNextWord) {
+                        nextWord()
+                        Toast.makeText(requireContext(), "GuessedWord", Toast.LENGTH_SHORT).show()
                     }
+                }
 
-                    binding.card.setSrcFromAssert(
+                is AnimalLettersState.ChangingState.InvalidLetter -> {
+                    nextPlayer(it)
+                }
+
+                is AnimalLettersState.ChangingState.NextGuessWord -> {
+                    binding.table.nextWord()
+                    binding.WordCustomCard.setSrcFromAssert(
                         it.wordCard.faceImageName,
                         it.wordCard.faceImageName
                     )
 
-                    binding.table.setOnClickListener { pos ->
-                        viewModel.onClickLetterCard(pos)
-                    }
+                }
+
+                is AnimalLettersState.ChangingState.NextPlayer -> {
+                    binding.table.nextPlayer()
                 }
             }
         }
 
-//        viewModel.onActiveGame()
+        viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
+            when (it) {
+                is AnimalLettersState.EntireState.EndGameState -> { //TODO
+                    Toast.makeText(requireContext(), "Game over", Toast.LENGTH_SHORT).show()
+                    Handler(Looper.myLooper()!!).postDelayed(
+                        {
+                            parentFragmentManager.popBackStack()
+                        },
+                        1500
+                    )
+
+                }
+
+                is AnimalLettersState.EntireState.IsEndGameState -> {//TODO
+                    Toast.makeText(requireContext(), "Let's go", Toast.LENGTH_SHORT).show()
+                }
+
+                is AnimalLettersState.EntireState.StartGameState -> {
+                    initWordCard(it)
+                    initTable(it)
+                }
+            }
+        }
+
+
+        viewModel.onActiveGame()
+    }
+
+    private fun nextPlayer(state: AnimalLettersState.ChangingState.InvalidLetter) {
+        binding.nextPlayerButton.let { button ->
+            button.setOnClickListener {
+                button.visibility = View.INVISIBLE
+                binding.table.setInvalidLetterCard(state.invalidLetterCard)
+                viewModel.onClickNextWalkingPlayer()
+            }
+            button.visibility = View.VISIBLE
+        }
+    }
+
+
+    private fun nextWord() {
+        binding.nextWordButton.let { button ->
+            button.setOnClickListener {
+                button.visibility = View.INVISIBLE
+                //TODO binding.table.nextWord()
+                viewModel.onClickNextWord()
+            }
+            button.visibility = View.VISIBLE
+        }
+
+    }
+
+    override fun onBackPressed(): Boolean {
+        return false
+    }
+
+    private fun initTable(startGameState: AnimalLettersState.EntireState.StartGameState) {
+        binding.table.apply {
+            setListItem(startGameState.lettersCards) {
+                CustomCard(requireContext()).apply {
+                    radius = CARD_RADIUS
+                    //TODO
+                    setSrcOpenBackgroundFromAssert("FACE.webp")
+                }
+            }
+            setOnClickListener { pos ->
+                viewModel.onClickLetterCard(pos)
+            }
+        }
+    }
+
+    private fun initWordCard(startGameState: AnimalLettersState.EntireState.StartGameState) {
+        binding.WordCustomCard.apply {
+            setSrcFromAssert(
+                startGameState.wordCard.faceImageName,
+                startGameState.wordCard.faceImageName
+            )
+            radius = CARD_RADIUS
+            setSrcOpenBackgroundFromAssert("FACE.webp")
+        }
     }
 
     @Parcelize
@@ -97,6 +175,7 @@ class GameZverobukvyFragment :
 
     companion object {
         const val GAME_START = "GAME_START"
+        const val CARD_RADIUS = 48f
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) =
