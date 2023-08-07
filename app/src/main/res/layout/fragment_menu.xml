@@ -10,8 +10,10 @@
         android:id="@+id/flow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="custom_card_button,custom_card_table_button"
+        app:constraint_referenced_ids="custom_card_button,custom_card_table_button,custom_letter_view,custom_word_view"
         app:flow_horizontalGap="24dp"
+        app:flow_maxElementsWrap="2"
+        app:flow_wrapMode="aligned"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -28,5 +30,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Test CustomCardTable" />
+
+    <Button
+        android:id="@+id/custom_letter_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test CustomLetterView" />
+
+    <Button
+        android:id="@+id/custom_word_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test CustomWordView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

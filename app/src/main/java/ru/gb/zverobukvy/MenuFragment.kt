@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ru.gb.zverobukvy.databinding.FragmentMenuBinding
-import ru.gb.zverobukvy.presentation.customview.CustomCardTable
 
 class MenuFragment : Fragment() {
 
@@ -17,22 +16,31 @@ class MenuFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
 
         val binding = FragmentMenuBinding.inflate(inflater, container, false)
         binding.customCardButton.setOnClickListener {
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment, TestCustomCardFragment.newInstance())
-            transaction.addToBackStack("ok")
-            transaction.commit()
+            goTo(TestCustomCardFragment.newInstance())
         }
         binding.customCardTableButton.setOnClickListener {
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment, TestCustomCardTableFragment.newInstance())
-            transaction.addToBackStack("ok")
-            transaction.commit()
+            goTo(TestCustomCardTableFragment.newInstance())
         }
+        binding.customLetterView.setOnClickListener {
+            goTo(TestCustomLetterViewFragment.newInstance())
+        }
+
+        binding.customWordView.setOnClickListener {
+            goTo(TestCustomWordViewFragment.newInstance())
+        }
+
         return binding.root
+    }
+
+    private fun goTo(fragment: Fragment) {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment, fragment)
+        transaction.addToBackStack("ok")
+        transaction.commit()
     }
 
     companion object {
