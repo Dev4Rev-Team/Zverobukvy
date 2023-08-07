@@ -1,14 +1,13 @@
 package ru.gb.zverobukvy.presentation.customview
 
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
-import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import ru.gb.zverobukvy.R
 import java.io.IOException
@@ -31,9 +30,8 @@ class CustomCard @JvmOverloads constructor(
     private var srcOpen: Int = SRC_OPEN
     private var durationAnimation: Int = DURATION_ANIMATION
 
-    private lateinit var frontSideImageView: CustomViewImage
-    private lateinit var backSideImageView: CustomViewImage
-    private lateinit var frontBackgroundImageView: CustomViewImage
+    private lateinit var frontSideImageView: CustomImageView
+    private lateinit var backSideImageView: CustomImageView
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -55,12 +53,9 @@ class CustomCard @JvmOverloads constructor(
         val layoutParams = createLayoutParams()
         frontSideImageView = createImageView(context, layoutParams)
         backSideImageView = createImageView(context, layoutParams)
-        frontBackgroundImageView = createImageView(context, layoutParams)
-
         setSrcFromRes(srcOpen, srcClose)
         setOpenDisplay(isOpen)
 
-        addView(frontBackgroundImageView)
         addView(frontSideImageView)
         addView(backSideImageView)
     }
@@ -72,11 +67,10 @@ class CustomCard @JvmOverloads constructor(
     private fun createImageView(
         context: Context,
         layoutParams: LayoutParams,
-    ): CustomViewImage = CustomViewImage(context).apply {
+    ): CustomImageView = CustomImageView(context).apply {
         this.layoutParams = layoutParams
         scaleType = ImageView.ScaleType.CENTER_CROP
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -85,7 +79,6 @@ class CustomCard @JvmOverloads constructor(
     }
 
     private fun getVisibility(isVisible: Boolean) = if (isVisible) VISIBLE else INVISIBLE
-
 
     fun setOpenCard(isOpen: Boolean) {
         if (isOpen != this.isOpen) {
@@ -97,14 +90,16 @@ class CustomCard @JvmOverloads constructor(
     private fun startAnimationFlip() {
         val animatorSet = AnimatorSet()
 
-        val scaleUp = animationScale(this, 1f, SCALE).apply {
-            duration = (durationAnimation * 0.1).toLong()
+        val scaleUp = createScaleAnimation(this, NORMAL, SCALE).apply {
+            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_UP).toLong()
         }
-        val rotation = animationRotation(this).apply {
-            duration = (durationAnimation * 0.8).toLong()
+        val rotation = createFlipAnimation(this) {
+            setOpenDisplay(isOpen)
+        }.apply {
+            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_FLIP).toLong()
         }
-        val scaleNormal = animationScale(this, SCALE, 1f).apply {
-            duration = (durationAnimation * 0.1).toLong()
+        val scaleNormal = createScaleAnimation(this, SCALE, NORMAL).apply {
+            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_DOWN).toLong()
         }
 
         animatorSet.playSequentially(scaleUp, rotation, scaleNormal)
@@ -112,26 +107,6 @@ class CustomCard @JvmOverloads constructor(
         animatorSet.start()
 
         cameraDistance = 7500 * context.resources.displayMetrics.density
-    }
-
-    private fun animationScale(view: CustomCard, x1: Float, x2: Float): AnimatorSet {
-        val animatorSet = AnimatorSet()
-        val scaleX = ObjectAnimator.ofFloat(view, SCALE_X, x1, x2)
-        val scaleY = ObjectAnimator.ofFloat(view, SCALE_Y, x1, x2)
-        animatorSet.playTogether(scaleX, scaleY)
-        return animatorSet
-    }
-
-    private fun animationRotation(view: CustomCard): AnimatorSet {
-        val animatorSet = AnimatorSet()
-        val rotationClosing = ObjectAnimator.ofFloat(view, ROTATION_Y, 0f, 90f).apply {
-            doOnEnd {
-                setOpenDisplay(isOpen)
-            }
-        }
-        val rotationOpening = ObjectAnimator.ofFloat(view, ROTATION_Y, 270f, 360f)
-        animatorSet.playSequentially(rotationClosing, rotationOpening)
-        return animatorSet
     }
 
     private fun setOpenDisplay(isOpen: Boolean) {
@@ -144,15 +119,34 @@ class CustomCard @JvmOverloads constructor(
         }
     }
 
-
     fun setVisibilityCard(isVisibility: Boolean) {
         visibility = getVisibility(isVisibility)
     }
 
-    private fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
+    fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
         frontSideImageView.setImageResource(srcOpen)
         backSideImageView.setImageResource(srcClose)
     }
+
+    /**
+     * load from res drawable
+     */
+    fun setSrcFromRes(srcOpen: String, srcClose: String) {
+        setImageFromRes(frontSideImageView, srcOpen)
+        setImageFromRes(backSideImageView, srcClose)
+    }
+
+    private fun setImageFromRes(imageView: ImageView, src: String) {
+        getIdRes(src).let {
+            if (it != 0) {
+                imageView.setImageResource(it)
+            }
+        }
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun getIdRes(resource: String) =
+        resources.getIdentifier(resource, "drawable", context.packageName)
 
     fun setSrcFromAssert(srcOpen: String, srcClose: String) {
         setImageFromAssert(frontSideImageView, srcOpen)
@@ -170,12 +164,9 @@ class CustomCard @JvmOverloads constructor(
         }
     }
 
-    fun setSrcOpenBackgroundFromAssert(srcOpenBackground: String) {
-        setImageFromAssert(frontBackgroundImageView, srcOpenBackground)
-    }
 
     /** pos - set position view
-     *  (pos:Int) -> Unit callback function
+     *
      */
     fun setOnClickCardListener(pos: Int, click: (pos: Int) -> Unit) {
         setOnClickListener {
@@ -189,6 +180,10 @@ class CustomCard @JvmOverloads constructor(
         private const val IS_OPEN = false
         private const val DURATION_ANIMATION = 250
         private const val SCALE = 1.08f
+        private const val NORMAL = 1f
+        private const val PERCENTAGE_OF_ANIMATION_TIME_UP = 0.1f
+        private const val PERCENTAGE_OF_ANIMATION_TIME_FLIP = 0.8f
+        private const val PERCENTAGE_OF_ANIMATION_TIME_DOWN = 0.1f
     }
 
 }
