@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import androidx.cardview.widget.CardView
 import androidx.core.animation.doOnStart
 
+
 class CustomLetterView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -18,7 +19,7 @@ class CustomLetterView @JvmOverloads constructor(
     private lateinit var textView: CustomTextView
     private var padding = 8
     private var char: Char = ' '
-    val colorTrue = Color.GREEN
+    var colorTrue = Color.GREEN
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -61,17 +62,20 @@ class CustomLetterView @JvmOverloads constructor(
     }
 
     fun setTrue(isAnimation: Boolean = true) {
-        layoutBackground.setBackgroundColor(colorTrue)
         if (isAnimation) {
             val animatorSet = AnimatorSet()
             val scaleUp = createScaleAnimation(this, 1f, 1.2f).apply {
                 duration = DURATION_ANIMATION.toLong()
+                doOnStart {
+                    layoutBackground.setBackgroundColor(colorTrue)
+                }
             }
             val scaleDown = createScaleAnimation(this, 1.2f, 1f).apply {
                 duration = DURATION_ANIMATION.toLong()
             }
             animatorSet.playSequentially(scaleUp, scaleDown)
             animatorSet.doOnStart { bringToFront() }
+            animatorSet.startDelay = START_DELAY_ANIMATION.toLong()
             animatorSet.start()
         }
     }
@@ -85,5 +89,6 @@ class CustomLetterView @JvmOverloads constructor(
 
     companion object {
         private const val DURATION_ANIMATION = 250
+        private const val START_DELAY_ANIMATION = 300
     }
 }

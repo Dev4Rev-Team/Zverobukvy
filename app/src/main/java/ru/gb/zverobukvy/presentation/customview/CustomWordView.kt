@@ -60,7 +60,7 @@ class CustomWordView @JvmOverloads constructor(
                 layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, 0)
                 id = generateViewId()
 
-                setChar(word.word[pos])
+                setChar(word.word[pos].uppercaseChar())
                 if (word.positionsGuessedLetters.contains(pos)) {
                     setTrue(false)
                 }
