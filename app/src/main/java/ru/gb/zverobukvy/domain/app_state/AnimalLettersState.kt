@@ -39,6 +39,7 @@ sealed interface AnimalLettersState {
          */
         data class EndGameState(
             val players: List<Player>,
+            val gameTime: String,
         ) : EntireState
     }
 
@@ -66,17 +67,26 @@ sealed interface AnimalLettersState {
         ) : ChangingState
 
         /** Передача хода следующему игроку.
+         * Вызывается после [CloseInvalidLetter] и [NextGuessWord], если в игре болеее одного игрока
+         *
+         * Действия :
+         * 1. Передать ход следующему игроку
+         *
+         * @param nextWalkingPlayer Следующего ходящего игрока
+         */
+        data class NextPlayer(
+            val nextWalkingPlayer: Player,
+        ) : ChangingState
+
+        /** Команда к перевороту неверной карточки.
          * Вызывается после [InvalidLetter]
          *
          * Действия :
          * 1. Перевернуть карточку обратно
-         * 2. Передать ход следующему игроку
          *
-         * @param nextWalkingPlayer Следующего ходящего игрока
          * @param invalidLetterCard Невалидную карточку
          */
-        data class NextPlayer(
-            val nextWalkingPlayer: Player,
+        data class CloseInvalidLetter(
             val invalidLetterCard: LetterCard,
         ) : ChangingState
 
@@ -92,7 +102,7 @@ sealed interface AnimalLettersState {
          * слово и игрока. При нажатии на кнопку приходит состояние [NextGuessWord]
          *  * Если [hasNextWord] == false, следом приходит состояние [EntireState.EndGameState]
          *
-         * @see ru.gb.zverobukvy.presentation.AnimalLettersViewModel.onClickNextWord
+         * @see ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyViewModel.onClickNextWord
          *
          * @param correctLetterCard Карточка, которую нужно перевернуть
          * @param positionLetterInWord Отгаданная буква, которую нужно подсветить
@@ -112,14 +122,11 @@ sealed interface AnimalLettersState {
          * 1. Пререворачивание всех ранее открытых карточек рубашаками вверх
          * 2. Очищение подсветки букв в загаданном слове
          * 3. Смену слова
-         * 4. Смену игрока
          *
          * @param wordCard Новое загаданное слово
-         * @param nextWalkingPlayer Игрок к которому переходит ход
          */
         data class NextGuessWord(
             val wordCard: WordCard,
-            val nextWalkingPlayer: Player,
         ) : ChangingState
     }
 }

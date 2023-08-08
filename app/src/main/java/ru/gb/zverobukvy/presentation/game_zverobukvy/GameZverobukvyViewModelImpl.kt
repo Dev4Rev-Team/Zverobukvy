@@ -1,24 +1,28 @@
-package ru.gb.zverobukvy.presentation
+package ru.gb.zverobukvy.presentation.game_zverobukvy
 
 import androidx.lifecycle.LiveData
-
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.gb.zverobukvy.data.stopwatch.GameStopwatchImpl
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.ChangingState
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.EntireState
 import ru.gb.zverobukvy.domain.entity.GameState
-
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractor
+import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
+import ru.gb.zverobukvy.presentation.SingleEventLiveData
 import java.util.LinkedList
 
 
-class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLettersInteractor) :
-    AnimalLettersViewModel, ViewModel() {
+class GameZverobukvyViewModelImpl(
+    private val animalLettersInteractor: AnimalLettersInteractor,
+    private val gameStopwatch: GameStopwatch = GameStopwatchImpl(),
+) :
+    GameZverobukvyViewModel, ViewModel() {
 
     /** Флаг показа диалогового окна о закрытии игры :
      * - true - показывается диалог об окончании игры
@@ -70,7 +74,7 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
 
             val viewState = convert(oldState, newState)
 
-            checkingCorrectnessOfConversion(viewState)
+            //checkingCorrectnessOfConversion(viewState)
 
             viewState.forEachIndexed { index, state ->
                 updateViewModels(state)
@@ -116,12 +120,18 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
      * @exception IllegalStateException если проверка провалена
      */
     private fun checkingCorrectnessOfConversion(
-        viewState: List<AnimalLettersState>
+        viewState: List<AnimalLettersState>,
     ) {
-        if (viewState.size > 2)
+        if (viewState.size > 3)
             throw IllegalStateException(ERROR_INDEX_INCORRECT)
 
-        if (viewState.size > 1 && viewState[1] !is EntireState.EndGameState)
+        if ((viewState.size > 1) &&
+            (viewState[1] !is EntireState.EndGameState || viewState[1] !is ChangingState.NextPlayer)
+        )
+            throw IllegalStateException(ERROR_INCORRECT_TYPE_OF_APP_STATE)
+
+        if (viewState.size > 2 && viewState[2] !is EntireState.EndGameState
+        )
             throw IllegalStateException(ERROR_INCORRECT_TYPE_OF_APP_STATE)
     }
 
@@ -164,7 +174,12 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
         /** Ловим событие окончания игры [EntireState.EndGameState]
          */
         if (!newState.isActive) {
-            stateList.addFirst(EntireState.EndGameState(newState.players))
+            stateList.addFirst(
+                EntireState.EndGameState(
+                    newState.players,
+                    gameStopwatch.getGameRunningTime()
+                )
+            )
         }
 
         // Получаем карточки с загаданными словами из двух состояний
@@ -180,11 +195,18 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
             val nextWord = newState.gameField.gamingWordCard
             val nextPlayer = newState.walkingPlayer
 
-            if (nextPlayer != null && nextWord != null) {
+            if (nextPlayer != null) {
+                stateList.addFirst(
+                    ChangingState.NextPlayer(
+                        nextPlayer
+                    )
+                )
+            }
+
+            if (nextWord != null) {
                 stateList.addFirst(
                     ChangingState.NextGuessWord(
-                        newState.gameField.gamingWordCard!!,
-                        newState.walkingPlayer!!
+                        newWordCard
                     )
                 )
             } else {
@@ -220,7 +242,7 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
                     /** Событие корректно отгаданной буквы */
                     isCardClick = false
 
-                     stateList.addFirst(
+                    stateList.addFirst(
                         ChangingState.CorrectLetter(
                             lastClickCard,
                             positionGuessedLetters
@@ -241,7 +263,7 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
     }
 
     private fun positionGuessedLetters(oldPositions: List<Int>, newPositions: List<Int>): Int? {
-         return newPositions.firstOrNull{
+        return newPositions.firstOrNull {
             !oldPositions.contains(it)
         }
     }
@@ -277,13 +299,14 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
             val nextWalkingPlayer = gameState.walkingPlayer
             val invalidLetterCard = gameState.gameField.lettersField[mLastClickCardPosition]
 
+            changingLiveData.value = ChangingState.CloseInvalidLetter(
+                invalidLetterCard
+            )
+
             if (nextWalkingPlayer != null) {
                 changingLiveData.value = ChangingState.NextPlayer(
-                    nextWalkingPlayer,
-                    invalidLetterCard
+                    nextWalkingPlayer
                 )
-            } else {
-                throw IllegalStateException(ERROR_NEXT_PLAYER_NOT_FOUND)
             }
         }
     }
@@ -294,15 +317,25 @@ class AnimalLettersViewModelImpl(private val animalLettersInteractor: AnimalLett
 
     override fun onBackPressed() {
         entireLiveData.value = EntireState.IsEndGameState
+        gameStopwatch.stop()
         isEndGameDialog = true
     }
 
     override fun onLoadGame() {
+        gameStopwatch.start()
         isEndGameDialog = false
     }
 
     override fun onEndGameByUser() {
         animalLettersInteractor.endGameByUser()
+    }
+
+    override fun onResume() {
+        gameStopwatch.start()
+    }
+
+    override fun onPause() {
+        gameStopwatch.stop()
     }
 
     override fun onCleared() {

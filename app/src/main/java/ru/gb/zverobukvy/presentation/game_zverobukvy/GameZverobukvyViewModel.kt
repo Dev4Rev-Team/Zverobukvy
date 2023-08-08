@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation
+package ru.gb.zverobukvy.presentation.game_zverobukvy
 
 import androidx.lifecycle.LiveData
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
@@ -11,7 +11,7 @@ entireStateLiveData. После этого обновляет текущее п�
 Т.е. во viewModel должна быть реализована логика преобразования данных, полученных от интерактора,
 в данные необходимые для view.
  */
-interface AnimalLettersViewModel {
+interface GameZverobukvyViewModel {
     /**
     Метод вызывается при создании или при пересоздании view, в этом методе viewModel присваивает
     entireStateLiveData полное состояние игры (все данные для полной отрисовки экрана игры).
@@ -73,4 +73,18 @@ interface AnimalLettersViewModel {
     entireGameStateLiveData состояние игры - завершение игры.
      */
     fun onEndGameByUser()
+
+    /**
+     Метод вызывается когда игра выходит из состояния паузы, никакихновых состояний viewModel не отправляет.
+
+     * @see onPause
+     */
+    fun onResume()
+
+    /**
+    Метод вызывается когда игра становится на паузу, никакихновых состояний viewModel не отправляет.
+
+     * @see onResume
+     */
+    fun onPause()
 }
