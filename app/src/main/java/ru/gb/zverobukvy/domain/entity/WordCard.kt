@@ -1,8 +1,10 @@
 package ru.gb.zverobukvy.domain.entity
 
+import ru.gb.zverobukvy.presentation.customview.CustomWordView
+
 data class WordCard(
-    val word: String,
+    override val word: String,
     override val typesCards: List<TypeCards>,
-    val positionsGuessedLetters: MutableList<Int> = mutableListOf(),
+    override val positionsGuessedLetters: MutableList<Int> = mutableListOf(),
     val faceImageName: String
-) : Card
+) : Card, CustomWordView.WordCardUI
