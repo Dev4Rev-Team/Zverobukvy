@@ -21,8 +21,6 @@ class MainMenuFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_main_menu, container, false)
     }
 
-
-
     companion object {
         @JvmStatic
         fun newInstance() =

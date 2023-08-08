@@ -28,13 +28,6 @@ interface SettingsScreenViewModel {
     fun onChangedSelectingPlayer(positionPlayer: Int)
 
     /**
-     * Метод вызывается при запросе на удаление игрока, например длительном нажатии на item игрока.
-     * ViewModel формирует состояние QueryRemovePlayer, по которому во view открывается диалоговое
-     * окно.
-     */
-    fun onQueryRemovePlayer(positionPlayer: Int)
-
-    /**
      * Метод вызывается при удаление игрока: нажатие соответствующей кнопки на редактируемом
      * item игрока и последующее подтверждение в диалоговом окне.
      * ViewModel удаляет игрока из списка игроков, информирует об этом репозпитоий для внесения
