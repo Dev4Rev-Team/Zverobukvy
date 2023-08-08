@@ -21,6 +21,8 @@ import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
 import ru.gb.zverobukvy.presentation.AnimalLettersViewModel
 import ru.gb.zverobukvy.presentation.AnimalLettersViewModelImpl
 import ru.gb.zverobukvy.presentation.customview.CustomCard
+import ru.gb.zverobukvy.presentation.customview.CustomLetterView
+import ru.gb.zverobukvy.presentation.customview.CustomWordView
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
@@ -30,7 +32,7 @@ class GameZverobukvyFragment :
     private var gameStart: GameStart? = null
 
     private val viewModel: AnimalLettersViewModel by lazy {
-        ViewModelProvider(this, viewModelProviderFactoryOf {
+        ViewModelProvider(requireActivity(), viewModelProviderFactoryOf {
             val letterCardsDB: LetterCardsDB = LetterCardsDBImpl()
             val wordCardsDB: WordCardsDB = WordCardsDBImpl()
             val animalLettersCardsRepository =
@@ -55,14 +57,17 @@ class GameZverobukvyFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.onActiveGame()
 
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersState.ChangingState.CorrectLetter -> {
+                    binding.wordView.setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.setCorrectLetterCard()
                 }
 
                 is AnimalLettersState.ChangingState.GuessedWord -> {//TODO
+                    binding.wordView.setPositionLetterInWord(it.positionLetterInWord)
                     if (it.hasNextWord) {
                         nextWord()
                         Toast.makeText(requireContext(), "GuessedWord", Toast.LENGTH_SHORT).show()
@@ -75,10 +80,8 @@ class GameZverobukvyFragment :
 
                 is AnimalLettersState.ChangingState.NextGuessWord -> {
                     binding.table.nextWord()
-                    binding.WordCustomCard.setSrcFromAssert(
-                        it.wordCard.faceImageName,
-                        it.wordCard.faceImageName
-                    )
+                    setPictureWord(it.wordCard.faceImageName)
+                    setWord(it.wordCard)
 
                 }
 
@@ -106,14 +109,28 @@ class GameZverobukvyFragment :
                 }
 
                 is AnimalLettersState.EntireState.StartGameState -> {
-                    initWordCard(it)
+                    initPictureWord(it)
                     initTable(it)
+                    setWord(it.wordCard)
                 }
             }
         }
 
+    }
 
-        viewModel.onActiveGame()
+    private fun setPictureWord(urlPicture: String) {
+        binding.wordCustomCard.setSrcFromAssert(
+            urlPicture,
+            urlPicture
+        )
+    }
+
+    private fun setWord(wordCard: CustomWordView.WordCardUI) {
+        binding.wordView.setWord(wordCard) {
+            CustomLetterView(requireContext()).apply {
+                radius = CARD_RADIUS
+            }
+        }
     }
 
     private fun nextPlayer(state: AnimalLettersState.ChangingState.InvalidLetter) {
@@ -159,15 +176,12 @@ class GameZverobukvyFragment :
         }
     }
 
-    private fun initWordCard(startGameState: AnimalLettersState.EntireState.StartGameState) {
-        binding.WordCustomCard.apply {
-            setSrcFromAssert(
-                startGameState.wordCard.faceImageName,
-                startGameState.wordCard.faceImageName
-            )
+    private fun initPictureWord(startGameState: AnimalLettersState.EntireState.StartGameState) {
+        binding.wordCustomCard.apply {
             radius = CARD_RADIUS
             setSrcOpenBackgroundFromAssert("FACE.webp")
         }
+        setPictureWord(startGameState.wordCard.faceImageName)
     }
 
     @Parcelize
