@@ -1,5 +1,7 @@
 package ru.gb.zverobukvy.presentation
 
+import androidx.lifecycle.LiveData
+import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.TypeCards
 
 interface SettingsScreenViewModel {
@@ -18,6 +20,16 @@ interface SettingsScreenViewModel {
         typesCardsSelectedForGameFromPreference: List<TypeCards>,
         namesPlayersSelectedForGameFromPreference: List<String>
     )
+
+    /**
+    Метод для подписки view на состояние списка игроков на экране настроек.
+     */
+    fun getLiveDataPlayersScreenState(): LiveData<SettingsScreenState.PlayersScreenState>
+
+    /**
+    Метод для подписки viewна состояние экрана настроек.
+     */
+    fun getLiveDataScreenState(): SingleEventLiveData<SettingsScreenState.ScreenState>
 
     /**
      * Метод вызывается при выборе или отмене выбора игрока для участия в игре, например, по клику
