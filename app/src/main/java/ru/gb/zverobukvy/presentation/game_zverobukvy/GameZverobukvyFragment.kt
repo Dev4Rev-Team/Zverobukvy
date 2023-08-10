@@ -18,8 +18,6 @@ import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
-import ru.gb.zverobukvy.presentation.AnimalLettersViewModel
-import ru.gb.zverobukvy.presentation.AnimalLettersViewModelImpl
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
@@ -31,8 +29,9 @@ class GameZverobukvyFragment :
     ViewBindingFragment<FragmentGameZverobukvyBinding>(FragmentGameZverobukvyBinding::inflate) {
     private var gameStart: GameStart? = null
 
-    private val viewModel: AnimalLettersViewModel by lazy {
+    private val viewModel: GameZverobukvyViewModel by lazy {
         ViewModelProvider(requireActivity(), viewModelProviderFactoryOf {
+
             val letterCardsDB: LetterCardsDB = LetterCardsDBImpl()
             val wordCardsDB: WordCardsDB = WordCardsDBImpl()
             val animalLettersCardsRepository =
@@ -42,8 +41,8 @@ class GameZverobukvyFragment :
                 gameStart!!.typesCards,
                 gameStart!!.players
             )
-            AnimalLettersViewModelImpl(game)
-        })[AnimalLettersViewModelImpl::class.java]
+            GameZverobukvyViewModelImpl(game)
+        })[GameZverobukvyViewModelImpl::class.java]
     }
 
 
@@ -85,9 +84,11 @@ class GameZverobukvyFragment :
 
                 }
 
-                is AnimalLettersState.ChangingState.NextPlayer -> {
+                is AnimalLettersState.ChangingState.CloseInvalidLetter -> {
                     binding.table.nextPlayer()
                 }
+
+                is AnimalLettersState.ChangingState.NextPlayer -> TODO()
             }
         }
 
