@@ -36,6 +36,16 @@ class GameZverobukvyViewModelImpl(
      */
     private var isCardClick: Boolean = false
 
+    /** Флаг для события отгаданного слова :
+     * - true - Слово отгадано, ожидается ответ игрока
+     */
+    private var isGuessedWord: Boolean = false
+
+    /** Флаг для события перехода хода :
+     * - true - Ожидается смена игрока
+     */
+    private var isWaitingNextPlayer: Boolean = false
+
     /** Хранит идентификатор последней нажатой карточки
      */
     private var mLastClickCardPosition: Int = INIT_CARD_CLICK_POSITION
@@ -158,6 +168,8 @@ class GameZverobukvyViewModelImpl(
                     newState.gameField.gamingWordCard!!,
                     newState.players,
                     newState.walkingPlayer!!,
+                    isGuessedWord,
+                    isWaitingNextPlayer,
                 )
             )
         }
@@ -202,8 +214,9 @@ class GameZverobukvyViewModelImpl(
                     )
                 )
             }
-
             if (nextWord != null) {
+                isGuessedWord = false
+
                 stateList.addFirst(
                     ChangingState.NextGuessWord(
                         newWordCard
@@ -229,6 +242,7 @@ class GameZverobukvyViewModelImpl(
                 if (newWordCard.word.length == newWordCard.positionsGuessedLetters.size) {
                     /** Событие отгаданного слова */
                     isCardClick = false
+                    if (newState.isActive) isGuessedWord = true
 
                     stateList.addFirst(
                         ChangingState.GuessedWord(
@@ -253,6 +267,7 @@ class GameZverobukvyViewModelImpl(
             } else {
                 /** Событие неверно отгаданной буквы */
                 isCardClick = false
+                isWaitingNextPlayer = true
 
                 stateList.addFirst(ChangingState.InvalidLetter(lastClickCard))
             }
@@ -269,12 +284,30 @@ class GameZverobukvyViewModelImpl(
     }
 
     override fun onActiveGame() {
-        if (isEndGameDialog) {
-            entireLiveData.value = mViewState
-            entireLiveData.value = EntireState.IsEndGameState
-        } else {
-            entireLiveData.value = mViewState
+        mGameState?.let { state ->
+            val guessesWord = state.gameField.gamingWordCard
+            val walkingPlayer = state.walkingPlayer
+
+            if (guessesWord != null && walkingPlayer != null) {
+                entireLiveData.value = EntireState.StartGameState(
+                    state.gameField.lettersField.apply {
+                        if (isWaitingNextPlayer) {
+                            this[mLastClickCardPosition].isVisible = true
+                        }
+                    },
+                    state.gameField.gamingWordCard!!,
+                    state.players,
+                    state.walkingPlayer!!,
+                    isGuessedWord,
+                    isWaitingNextPlayer,
+                )
+            } else {
+                throw IllegalStateException(ERROR_STATE_RESTORE)
+            }
         }
+
+        if (isEndGameDialog)
+            entireLiveData.value = EntireState.IsEndGameState
     }
 
     override fun getEntireGameStateLiveData(): LiveData<EntireState> {
@@ -295,6 +328,8 @@ class GameZverobukvyViewModelImpl(
     }
 
     override fun onClickNextWalkingPlayer() {
+        isWaitingNextPlayer = false
+
         mGameState?.let { gameState ->
             val nextWalkingPlayer = gameState.walkingPlayer
             val invalidLetterCard = gameState.gameField.lettersField[mLastClickCardPosition]
@@ -353,6 +388,7 @@ class GameZverobukvyViewModelImpl(
         const val ERROR_INDEX_INCORRECT = "Индекс вышел за пределы корректных значений"
         const val ERROR_INCORRECT_TYPE_OF_APP_STATE = "Некорректный тип AnimalLetterState"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null "
+        const val ERROR_STATE_RESTORE = "Проблема в логике восстановления состояния эерана"
 
 
         const val COROUTINE_SCOPE_CANCEL = "in viewModel.onCleared()"
