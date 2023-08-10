@@ -4,6 +4,7 @@
     <string name="oolor_text">Цвет</string>
     <string name="points_text">Счет</string>
     <string name="move_text">Ход</string>
+    <string name="players_text">Игроки</string>
     <string name="username_default">Игрок</string>
     <string name="username_user1">Игрок 1</string>
     <string name="username_user2">Игрок 2</string>
@@ -12,6 +13,8 @@
     <string name="main_menu_fragment_game_mode_header_text">Режим игры</string>
     <string name="main_menu_fragment_game_cards_header_text">Наборы карточек</string>
     <string name="main_menu_fragment_play_game_text_button">Играть</string>
+    <string name="main_menu_fragment_add_player_text">Добавить игрока</string>
+    <string name="main_menu_fragment_open_rules_text">Изучить правила</string>
     <string name="space">" "</string>
     <string name="choose">✓</string>
 
