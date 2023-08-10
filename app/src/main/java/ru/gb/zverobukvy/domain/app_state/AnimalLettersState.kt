@@ -1,7 +1,7 @@
 package ru.gb.zverobukvy.domain.app_state
 
 import ru.gb.zverobukvy.domain.entity.LetterCard
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.WordCard
 
 sealed interface AnimalLettersState {
@@ -25,8 +25,8 @@ sealed interface AnimalLettersState {
         data class StartGameState(
             val lettersCards: List<LetterCard>,
             val wordCard: WordCard,
-            val players: List<Player>,
-            val nextWalkingPlayer: Player,
+            val players: List<PlayerInGame>,
+            val nextWalkingPlayer: PlayerInGame,
             val nextWordBtnVisible: Boolean,
             val nextPlayerBtnVisible: Boolean,
         ) : EntireState
@@ -42,7 +42,7 @@ sealed interface AnimalLettersState {
          * @param players Список игроков
          */
         data class EndGameState(
-            val players: List<Player>,
+            val players: List<PlayerInGame>,
             val gameTime: String,
         ) : EntireState
     }
@@ -79,7 +79,7 @@ sealed interface AnimalLettersState {
          * @param nextWalkingPlayer Следующего ходящего игрока
          */
         data class NextPlayer(
-            val nextWalkingPlayer: Player,
+            val nextWalkingPlayer: PlayerInGame,
         ) : ChangingState
 
         /** Команда к перевороту неверной карточки.
@@ -116,7 +116,7 @@ sealed interface AnimalLettersState {
         data class GuessedWord(
             val correctLetterCard: LetterCard,
             val positionLetterInWord: Int,
-            val players: List<Player>,
+            val players: List<PlayerInGame>,
             val hasNextWord: Boolean,
         ) : ChangingState
 
