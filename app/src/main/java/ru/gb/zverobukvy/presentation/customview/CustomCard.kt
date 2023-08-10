@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
+import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import ru.gb.zverobukvy.R
 import java.io.IOException
@@ -30,9 +31,9 @@ class CustomCard @JvmOverloads constructor(
     private var srcOpen: Int = SRC_OPEN
     private var durationAnimation: Int = DURATION_ANIMATION
 
-    private lateinit var frontSideImageView: CustomViewImage
-    private lateinit var backSideImageView: CustomViewImage
-    private lateinit var frontBackgroundImageView: CustomViewImage
+    private lateinit var frontSideImageView: CustomImageView
+    private lateinit var backSideImageView: CustomImageView
+    private lateinit var frontBackgroundImageView: CustomImageView
 
     init {
         initAttributes(context, attrs, defStyle)
