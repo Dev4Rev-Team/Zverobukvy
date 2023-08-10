@@ -19,12 +19,16 @@ sealed interface AnimalLettersState {
          * @param players Список игроков
          * (игрок сам содержит информацию о его счете)
          * @param nextWalkingPlayer Ходящий игрок
+         * @param nextWordBtnVisible true - Показать кнопку с переходом к следующему слову
+         * @param nextPlayerBtnVisible true - показать кнопку о переходе к следующему игроку
          */
         data class StartGameState(
             val lettersCards: List<LetterCard>,
             val wordCard: WordCard,
             val players: List<Player>,
             val nextWalkingPlayer: Player,
+            val nextWordBtnVisible: Boolean,
+            val nextPlayerBtnVisible: Boolean,
         ) : EntireState
 
         /** Состояние запроса на прекращение игры, показ диалогового окна
