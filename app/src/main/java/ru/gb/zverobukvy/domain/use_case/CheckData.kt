@@ -1,7 +1,7 @@
 package ru.gb.zverobukvy.domain.use_case
 
 import ru.gb.zverobukvy.domain.entity.LetterCard
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
 
@@ -82,7 +82,7 @@ class CheckData {
      * @exception IllegalArgumentException
      * @return список игроков
      */
-    fun checkPlayers(players: List<Player>): List<Player> {
+    fun checkPlayers(players: List<PlayerInGame>): List<PlayerInGame> {
         with(players) {
             if (isEmpty())
                 throw IllegalArgumentException(PLAYERS_IS_NOT_CORRECT)
