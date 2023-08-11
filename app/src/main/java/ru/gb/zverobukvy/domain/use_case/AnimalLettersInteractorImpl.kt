@@ -328,8 +328,8 @@ class AnimalLettersInteractorImpl(
      * @param currentPlayers текущий список игроков
      * @return измененный список игроков
      */
-    private fun changePlayersAfterGuessedGamingWordCard(currentPlayers: List<Player>) =
-        mutableListOf<Player>().apply {
+    private fun changePlayersAfterGuessedGamingWordCard(currentPlayers: List<PlayerInGame>) =
+        mutableListOf<PlayerInGame>().apply {
             addAll(currentPlayers)
             this[indexOf(currentWalkingPlayer)].scoreInCurrentGame++
         }

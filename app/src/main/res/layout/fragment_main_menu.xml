@@ -5,129 +5,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.main_menu.view.MainMenuFragment">
+    android:background="#D0E1FB"
+    tools:context=".presentation.main_menu.view.MainMenuFragment"
+    >
 
-    <TextView
-        android:id="@+id/fragment_choose_game_mode_textView_app_name"
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/fragment_main_menu_guideline_sector_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="32dp"
-        android:fontFamily="@font/wild_honey"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="100dp" />
+
+    <TextView
+        android:id="@+id/fragment_main_menu_text_view_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="50sp"
+        android:textSize="42sp"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_menu_guideline_sector_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/fragment_choose_game_mode_cardView_player2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:backgroundTint="@color/color_blue"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_textView_choose_cards"
+
+    <TextView
+        android:id="@+id/fragment_main_menu_text_view_players"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:text="@string/players_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fragment_choose_game_mode_cardView_player1"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_player2">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_main_menu_guideline_sector_header" />
 
-    </androidx.cardview.widget.CardView>
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_main_menu_recycler_view_players"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_menu_button_add_player"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_main_menu_guideline_sector_header">
+
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <Button
+        android:id="@+id/fragment_main_menu_button_add_player"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cornerRadius="6dp"
+        android:text="@string/main_menu_fragment_add_player_text"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_menu_guideline_sector_recycle_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_main_menu_recycler_view_players" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/fragment_main_menu_guideline_sector_recycle_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_textView_gamemode_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.513"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_choose_gamemode">
-
-        <RadioButton
-            android:id="@+id/fragment_choose_game_mode_radio_button_gamemode_zverobukvy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/game_mode_classic_name" />
-
-        <RadioButton
-            android:id="@+id/fragment_choose_game_mode_radio_button_gamemode_memory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/game_mode_modern_name" />
-
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/fragment_choose_game_mode_button_play_game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="@string/main_menu_fragment_play_game_text_button"
-        app:cornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/fragment_choose_game_mode_cardView_player1"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:backgroundTint="@color/color_red"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_textView_choose_cards"
-        app:layout_constraintEnd_toStartOf="@+id/fragment_choose_game_mode_cardView_player2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_player1">
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/players_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/fragment_choose_game_mode_textView_app_name"/>
+        app:layout_constraintGuide_percent="0.65" />
 
     <TextView
-        android:id="@+id/fragment_choose_game_mode_textView_player1"
+        android:id="@+id/fragment_main_menu_text_view_cards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/username_user1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_cardView_player1"
-        app:layout_constraintEnd_toStartOf="@+id/fragment_choose_game_mode_textView_player2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_app_name" />
-
-    <TextView
-        android:id="@+id/fragment_choose_game_mode_textView_player2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/username_user2"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_cardView_player2"
+        android:textSize="16sp"
+        android:text="@string/main_menu_fragment_game_cards_header_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fragment_choose_game_mode_textView_player1"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_app_name" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_main_menu_guideline_sector_recycle_view" />
 
     <ToggleButton
-        android:id="@+id/fragment_choose_game_mode_toggle_button_blue"
+        android:id="@+id/fragment_main_menu_toggle_button_blue"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:backgroundTint="@color/color_card_blue"
         android:textColor="@color/white"
         android:textOff="@string/space"
         android:textOn="@string/choose"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_textView_choose_gamemode"
-        app:layout_constraintEnd_toStartOf="@+id/fragment_choose_game_mode_toggle_button_violet"
-        app:layout_constraintStart_toEndOf="@+id/fragment_choose_game_mode_toggle_button_green"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_choose_cards" />
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_menu_guideline_sector_game_cards"
+        app:layout_constraintEnd_toStartOf="@+id/fragment_main_menu_toggle_button_violet"
+        app:layout_constraintStart_toEndOf="@+id/fragment_main_menu_toggle_button_green"
+        app:layout_constraintTop_toTopOf="@+id/fragment_main_menu_guideline_sector_recycle_view" />
 
     <ToggleButton
-        android:id="@+id/fragment_choose_game_mode_toggle_button_orange"
+        android:id="@+id/fragment_main_menu_toggle_button_orange"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="32dp"
@@ -136,26 +109,26 @@
         android:textColor="@color/white"
         android:textOff="@string/space"
         android:textOn="@string/choose"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_textView_choose_gamemode"
-        app:layout_constraintEnd_toStartOf="@+id/fragment_choose_game_mode_toggle_button_green"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_menu_guideline_sector_game_cards"
+        app:layout_constraintEnd_toStartOf="@+id/fragment_main_menu_toggle_button_green"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_choose_cards" />
+        app:layout_constraintTop_toTopOf="@+id/fragment_main_menu_guideline_sector_recycle_view" />
 
     <ToggleButton
-        android:id="@+id/fragment_choose_game_mode_toggle_button_green"
+        android:id="@+id/fragment_main_menu_toggle_button_green"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:backgroundTint="@color/color_card_green"
         android:textColor="@color/white"
         android:textOff="@string/space"
         android:textOn="@string/choose"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_textView_choose_gamemode"
-        app:layout_constraintEnd_toStartOf="@+id/fragment_choose_game_mode_toggle_button_blue"
-        app:layout_constraintStart_toEndOf="@+id/fragment_choose_game_mode_toggle_button_orange"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_choose_cards" />
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_menu_guideline_sector_game_cards"
+        app:layout_constraintEnd_toStartOf="@+id/fragment_main_menu_toggle_button_blue"
+        app:layout_constraintStart_toEndOf="@+id/fragment_main_menu_toggle_button_orange"
+        app:layout_constraintTop_toTopOf="@+id/fragment_main_menu_guideline_sector_recycle_view" />
 
     <ToggleButton
-        android:id="@+id/fragment_choose_game_mode_toggle_button_violet"
+        android:id="@+id/fragment_main_menu_toggle_button_violet"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="32dp"
@@ -163,45 +136,43 @@
         android:textColor="@color/white"
         android:textOff="@string/space"
         android:textOn="@string/choose"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_textView_choose_gamemode"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_menu_guideline_sector_game_cards"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fragment_choose_game_mode_toggle_button_blue"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_choose_cards" />
+        app:layout_constraintStart_toEndOf="@+id/fragment_main_menu_toggle_button_blue"
+        app:layout_constraintTop_toTopOf="@+id/fragment_main_menu_guideline_sector_recycle_view" />
 
-    <TextView
-        android:id="@+id/fragment_choose_game_mode_textView_choose_cards"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/fragment_main_menu_guideline_sector_game_cards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_menu_fragment_game_cards_header_text"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_textView_choose_gamemode"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_textView_app_name"
-        app:layout_constraintVertical_bias="0.65" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="149dp" />
 
-    <TextView
-        android:id="@+id/fragment_choose_game_mode_textView_choose_gamemode"
+
+    <Button
+        android:id="@+id/fragment_main_menu_button_rules"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_menu_fragment_game_mode_header_text"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/white"
+        android:text="@string/main_menu_fragment_open_rules_text"
+        android:textColor="@color/black"
+        app:cornerRadius="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_choose_game_mode_toggle_button_orange" />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_main_menu_button_play" />
 
-    <TextView
-        android:id="@+id/fragment_choose_game_mode_textView_gamemode_description"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/fragment_main_menu_button_play"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/game_mode_classic_name_description_short"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_choose_game_mode_button_play_game"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        android:backgroundTint="#445D79"
+        app:cornerRadius="6dp"
+        android:text="@string/main_menu_fragment_play_game_text_button"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_menu_button_rules"
+        app:layout_constraintEnd_toEndOf="@+id/fragment_main_menu_button_rules"
+        app:layout_constraintStart_toStartOf="@+id/fragment_main_menu_button_rules"
+        app:layout_constraintTop_toTopOf="@+id/fragment_main_menu_guideline_sector_game_cards" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

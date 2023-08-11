@@ -9,7 +9,7 @@ abstract class BaseAdapter: RecyclerView.Adapter<BaseViewHolder>() {
     protected var players: List<PlayerInSettings?> = listOf()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setPlayers(newPlayers: List<PlayerInSettings?>){
+    fun setNewPlayers(newPlayers: List<PlayerInSettings?>){
         players = newPlayers
         notifyDataSetChanged()
     }

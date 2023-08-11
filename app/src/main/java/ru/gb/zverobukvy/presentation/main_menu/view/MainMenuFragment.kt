@@ -78,22 +78,22 @@ class MainMenuFragment :
     private fun initTypesCardsToggleButtons(typesCardsSelectedForGame: List<TypeCards>) {
         binding.run {
             initTypeCardToggleButton(
-                fragmentChooseGameModeToggleButtonOrange,
+                fragmentMainMenuToggleButtonOrange,
                 TypeCards.ORANGE,
                 typesCardsSelectedForGame.contains(TypeCards.ORANGE)
             )
             initTypeCardToggleButton(
-                fragmentChooseGameModeToggleButtonGreen,
+                fragmentMainMenuToggleButtonGreen,
                 TypeCards.GREEN,
                 typesCardsSelectedForGame.contains(TypeCards.GREEN)
             )
             initTypeCardToggleButton(
-                fragmentChooseGameModeToggleButtonBlue,
+                fragmentMainMenuToggleButtonBlue,
                 TypeCards.BLUE,
                 typesCardsSelectedForGame.contains(TypeCards.BLUE)
             )
             initTypeCardToggleButton(
-                fragmentChooseGameModeToggleButtonViolet,
+                fragmentMainMenuToggleButtonViolet,
                 TypeCards.VIOLET,
                 typesCardsSelectedForGame.contains(TypeCards.VIOLET)
             )
@@ -118,7 +118,7 @@ class MainMenuFragment :
     }
 
     private fun initRecycleView() {
-        binding.playersRecyclerView.run {
+        binding.fragmentMainMenuRecyclerViewPlayers.run {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = playersAdapter
         }
@@ -173,7 +173,7 @@ class MainMenuFragment :
                 playersScreenState.positionChangedPlayer
             )
 
-            is SettingsScreenState.PlayersScreenState.PlayersState -> playersAdapter.setPlayers(
+            is SettingsScreenState.PlayersScreenState.PlayersState -> playersAdapter.setNewPlayers(
                 playersScreenState.playersInSettings
             )
 

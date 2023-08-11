@@ -13,17 +13,17 @@ class EditPlayerViewHolder(
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
             viewBinding.run {
-                namePlayerEditText.setText(playerInSetting.player.name)
-                saveChangedPlayerButton.setOnClickListener {
+                itemEditPlayerInSettingsTextEditPlayerName.setText(playerInSetting.player.name)
+                itemEditPlayerInSettingsImageButtonSave.setOnClickListener {
                     saveChangedPlayerClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
                         playerInSetting.player.name
                     )
                 }
-                cancelChangedPlayerButton.setOnClickListener {
+                itemEditPlayerInSettingsImageButtonCancel.setOnClickListener {
                     cancelChangedPlayerClickListener(this@EditPlayerViewHolder.adapterPosition)
                 }
-                removePlayerFab.setOnClickListener {
+                itemEditPlayerInSettingsImageButtonCancel.setOnClickListener {
                     queryRemovePlayersClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
                         playerInSetting.player.name
