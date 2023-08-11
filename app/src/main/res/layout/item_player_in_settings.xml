@@ -13,7 +13,7 @@
         android:layout_margin="8dp">
 
         <TextView
-            android:id="@+id/item_edit_player_in_settings_text_edit_player_name"
+            android:id="@+id/item_player_in_settings_text_view_player_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
