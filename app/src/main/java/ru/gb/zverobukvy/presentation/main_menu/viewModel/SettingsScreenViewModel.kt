@@ -1,8 +1,9 @@
-package ru.gb.zverobukvy.presentation
+package ru.gb.zverobukvy.presentation.main_menu.viewModel
 
 import androidx.lifecycle.LiveData
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.presentation.SingleEventLiveData
 
 interface SettingsScreenViewModel {
 

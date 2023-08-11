@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.main_menu
+package ru.gb.zverobukvy.presentation.main_menu.preferences
 
 import ru.gb.zverobukvy.domain.entity.TypeCards
 

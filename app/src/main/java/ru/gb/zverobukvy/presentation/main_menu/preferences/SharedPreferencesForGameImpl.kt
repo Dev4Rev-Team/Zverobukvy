@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.main_menu
+package ru.gb.zverobukvy.presentation.main_menu.preferences
 
 import android.app.Activity
 import android.content.Context
@@ -24,7 +24,7 @@ class SharedPreferencesForGameImpl(activity: Activity) : SharedPreferencesForGam
     }
 
     override fun readNamesPlayersSelectedForGame(): List<String> =
-        (sharedPreferencesForGame.getStringSet(KEY_PLAYERS, null)
+        (sharedPreferencesForGame.getStringSet(KEY_NAMES_PLAYERS, null)
             ?: namesPlayersSelectedForGame).toList()
 
     override fun updateNamesPlayersSelectedForGame(newNamesPlayersSelectedForGame: List<String>) {
@@ -34,7 +34,7 @@ class SharedPreferencesForGameImpl(activity: Activity) : SharedPreferencesForGam
     override fun savePreferencesForGame() {
         sharedPreferencesForGame.edit()
             .putStringSet(KEY_TYPES_CARDS, colorsTypesCardsSelectedForGame)
-            .putStringSet(KEY_PLAYERS, namesPlayersSelectedForGame)
+            .putStringSet(KEY_NAMES_PLAYERS, namesPlayersSelectedForGame)
             .apply()
     }
 
@@ -57,7 +57,7 @@ class SharedPreferencesForGameImpl(activity: Activity) : SharedPreferencesForGam
 
     companion object {
         private const val KEY_TYPES_CARDS = "KeyTypesCards"
-        private const val KEY_PLAYERS = "KeyPlayers"
+        private const val KEY_NAMES_PLAYERS = "KeyNamesPlayers"
         private const val COLOR_ORANGE = "orange"
         private const val COLOR_GREEN = "green"
         private const val COLOR_VIOLET = "violet"

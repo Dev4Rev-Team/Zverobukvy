@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Зверобуквы</string>
     <!--Строки в интерфейсе-->
-    <string name="oolor_text">Цвет</string>
+    <string name="color_text">Цвет</string>
     <string name="points_text">Счет</string>
     <string name="move_text">Ход</string>
     <string name="username_default">Игрок</string>
@@ -14,5 +14,8 @@
     <string name="main_menu_fragment_play_game_text_button">Играть</string>
     <string name="space">" "</string>
     <string name="choose">✓</string>
+    <string name="ok">"Да"</string>
+    <string name="cancel">"Отмена"</string>
+    <string name="save">"Сохранить"</string>
 
 </resources>

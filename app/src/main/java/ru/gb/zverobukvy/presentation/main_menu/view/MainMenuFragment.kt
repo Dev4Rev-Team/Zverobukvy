@@ -1,30 +1,45 @@
-package ru.gb.zverobukvy.presentation.main_menu
+package ru.gb.zverobukvy.presentation.main_menu.view
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
+import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
+import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.presentation.SettingsScreenViewModel
+import ru.gb.zverobukvy.domain.repository.PlayersRepository
 import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
-import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
-import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.preferences.SharedPreferencesForGameImpl
+import ru.gb.zverobukvy.presentation.main_menu.view.list_players.adapter.PlayersAdapter
+import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.AddPlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.EditPlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.PlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModel
+import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
+import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
-    //TODO реализовать инициализацию viewModel
-    private lateinit var viewModel: SettingsScreenViewModel
+    private val viewModel: SettingsScreenViewModel by lazy {
+        ViewModelProvider(this, viewModelProviderFactoryOf {
+            val playersRepository: PlayersRepository =
+                AnimalLettersCardsRepositoryImpl(LetterCardsDBImpl(), WordCardsDBImpl())
+            SettingsScreenViewModelImpl(playersRepository)
+        })[SettingsScreenViewModelImpl::class.java]
+    }
+
     private val sharedPreferencesForGame: SharedPreferencesForGameImpl =
         SharedPreferencesForGameImpl(requireActivity())
+
     private val playersAdapter = PlayersAdapter(
         PlayerClickListenerOwner(::clickPlayer, ::clickEditMenuPlayer),
         EditPlayerClickListenerOwner(
@@ -186,7 +201,14 @@ class MainMenuFragment :
     }
 
     private fun clickQueryRemovePlayer(position: Int, name: String) {
-        //TODO alertDialog на удаление игрока
+        RemovePlayerDialogFragment {
+            viewModel.onRemovePlayer(position)
+        }.also {
+            it.arguments = Bundle().apply {
+                putString(RemovePlayerDialogFragment.KEY_NAME_PLAYER, name)
+            }
+            it.show(requireActivity().supportFragmentManager, TAG_REMOVE_PLAYER_DIALOG_FRAGMENT)
+        }
     }
 
     private fun clickAddPlayer() {
@@ -195,6 +217,7 @@ class MainMenuFragment :
 
     companion object {
         private const val TAG_ANIMAL_LETTERS_FRAGMENT = "AnimalLettersFragment"
+        private const val TAG_REMOVE_PLAYER_DIALOG_FRAGMENT = "RemovePlayerDialogFragment"
 
         @JvmStatic
         fun newInstance() =

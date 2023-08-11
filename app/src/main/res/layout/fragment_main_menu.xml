@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.main_menu.MainMenuFragment">
+    tools:context=".presentation.main_menu.view.MainMenuFragment">
 
     <TextView
         android:id="@+id/fragment_choose_game_mode_textView_app_name"
