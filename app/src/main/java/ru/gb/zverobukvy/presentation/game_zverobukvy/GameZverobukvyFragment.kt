@@ -1,8 +1,6 @@
 package ru.gb.zverobukvy.presentation.game_zverobukvy
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.Parcelable
 import android.view.View
 import android.widget.Toast
@@ -21,6 +19,8 @@ import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
+import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsOverDialogData
+import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsOverDialogFragment
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
@@ -86,6 +86,7 @@ class GameZverobukvyFragment :
 
                 is AnimalLettersState.ChangingState.CloseInvalidLetter -> {
                     binding.table.nextPlayer()
+                    setPlayer(it.nextWalkingPlayer.name)
                 }
 
                 is AnimalLettersState.ChangingState.NextPlayer -> TODO()
@@ -96,13 +97,16 @@ class GameZverobukvyFragment :
             when (it) {
                 is AnimalLettersState.EntireState.EndGameState -> { //TODO
                     Toast.makeText(requireContext(), "Game over", Toast.LENGTH_SHORT).show()
-                    Handler(Looper.myLooper()!!).postDelayed(
-                        {
-                            parentFragmentManager.popBackStack()
-                        },
-                        1500
-                    )
-
+//                    Handler(Looper.myLooper()!!).postDelayed(
+//                        {
+//                            parentFragmentManager.popBackStack()
+//                        },
+//                        1500
+//                    )
+                    val players = GameIsOverDialogData.map(it.players)
+                    val data = GameIsOverDialogData(players, ("18 мин "))
+                    GameIsOverDialogFragment.instance(data)
+                        .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
                 }
 
                 is AnimalLettersState.EntireState.IsEndGameState -> {//TODO
@@ -113,10 +117,15 @@ class GameZverobukvyFragment :
                     initPictureWord(it)
                     initTable(it)
                     setWord(it.wordCard)
+                    setPlayer(it.nextWalkingPlayer.name)
                 }
             }
         }
 
+    }
+
+    private fun setPlayer(name: String) {
+        binding.playerTextView.text = name
     }
 
     private fun setPictureWord(urlPicture: String) {
@@ -159,6 +168,8 @@ class GameZverobukvyFragment :
     }
 
     override fun onBackPressed(): Boolean {
+        viewModel.onBackPressed()
+        viewModel.onEndGameByUser()
         return false
     }
 
