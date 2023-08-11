@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
+import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import ru.gb.zverobukvy.R
 import java.io.IOException
@@ -30,9 +31,9 @@ class CustomCard @JvmOverloads constructor(
     private var srcOpen: Int = SRC_OPEN
     private var durationAnimation: Int = DURATION_ANIMATION
 
-    private lateinit var frontSideImageView: CustomViewImage
-    private lateinit var backSideImageView: CustomViewImage
-    private lateinit var frontBackgroundImageView: CustomViewImage
+    private lateinit var frontSideImageView: CustomImageView
+    private lateinit var backSideImageView: CustomImageView
+    private lateinit var frontBackgroundImageView: CustomImageView
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -113,26 +114,6 @@ class CustomCard @JvmOverloads constructor(
         animatorSet.start()
 
         cameraDistance = 7500 * context.resources.displayMetrics.density
-    }
-
-    private fun animationScale(view: CustomCard, x1: Float, x2: Float): AnimatorSet {
-        val animatorSet = AnimatorSet()
-        val scaleX = ObjectAnimator.ofFloat(view, SCALE_X, x1, x2)
-        val scaleY = ObjectAnimator.ofFloat(view, SCALE_Y, x1, x2)
-        animatorSet.playTogether(scaleX, scaleY)
-        return animatorSet
-    }
-
-    private fun animationRotation(view: CustomCard): AnimatorSet {
-        val animatorSet = AnimatorSet()
-        val rotationClosing = ObjectAnimator.ofFloat(view, ROTATION_Y, 0f, 90f).apply {
-            doOnEnd {
-                setOpenDisplay(isOpen)
-            }
-        }
-        val rotationOpening = ObjectAnimator.ofFloat(view, ROTATION_Y, 270f, 360f)
-        animatorSet.playSequentially(rotationClosing, rotationOpening)
-        return animatorSet
     }
 
     private fun setOpenDisplay(isOpen: Boolean) {

@@ -8,8 +8,9 @@ import androidx.viewbinding.ViewBinding
 
 abstract class ViewBindingFragment<T : ViewBinding>(
     private val inflateBinding: (
-        inflater: LayoutInflater, parent: ViewGroup?, attachToParent: Boolean
-    ) -> T
+        inflater: LayoutInflater,
+        parent: ViewGroup?, attachToParent: Boolean,
+    ) -> T,
 ) : BackPressedFragment() {
 
     private var _binding: T? = null
@@ -18,7 +19,7 @@ abstract class ViewBindingFragment<T : ViewBinding>(
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = inflateBinding(inflater, container, false)
         return binding.root
