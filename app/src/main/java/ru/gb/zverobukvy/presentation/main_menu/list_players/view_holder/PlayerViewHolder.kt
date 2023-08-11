@@ -13,7 +13,7 @@ class PlayerViewHolder(
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
             viewBinding.run {
-                namePlayerTextView.text = it.player.name
+                itemPlayerInSettingsTextViewPlayerName.text = it.player.name
                 if (it.isSelectedForGame)
                     playerCardView.setBackgroundColor(itemView.context.getColor(R.color.color_card_green))
                 else
@@ -21,7 +21,7 @@ class PlayerViewHolder(
                 playerCardView.setOnClickListener {
                     itemPlayerClickListener(this@PlayerViewHolder.adapterPosition)
                 }
-                editMenuFab.setOnClickListener {
+                itemPlayerInSettingsImageButtonEdit.setOnClickListener {
                     editMenuClickListener(this@PlayerViewHolder.adapterPosition)
                 }
             }

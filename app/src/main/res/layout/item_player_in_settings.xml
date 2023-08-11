@@ -13,14 +13,14 @@
         android:layout_margin="8dp">
 
         <TextView
-            android:id="@+id/item_edit_player_in_settings_text_view_player_name"
+            android:id="@+id/item_edit_player_in_settings_text_edit_player_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/username_default"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item_editplayer_in_settings_image_button_edit"
+            app:layout_constraintEnd_toStartOf="@+id/item_player_in_settings_image_button_edit"
             app:layout_constraintStart_toEndOf="@+id/item_edit_player_in_settings_card_view_player_color"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,18 +36,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/item_editplayer_in_settings_image_button_edit"
+            android:id="@+id/item_player_in_settings_image_button_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/item_editplayer_in_settings_image_button_delete"
+            app:layout_constraintEnd_toStartOf="@id/item_player_in_settings_image_button_delete"
             app:layout_constraintTop_toTopOf="parent"
             android:backgroundTint="@color/white"
             app:srcCompat="@drawable/ic_edit" />
 
         <ImageButton
-            android:id="@+id/item_editplayer_in_settings_image_button_delete"
+            android:id="@+id/item_player_in_settings_image_button_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

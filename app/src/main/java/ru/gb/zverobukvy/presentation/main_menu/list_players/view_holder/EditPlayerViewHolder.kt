@@ -7,28 +7,28 @@ class EditPlayerViewHolder(
     override val viewBinding: ItemEditPlayerInSettingsBinding,
     private val saveChangedPlayerClickListener: (Int, String) -> Unit,
     private val cancelChangedPlayerClickListener: (Int) -> Unit,
-    private val queryRemovePlayersClickListener: (Int, String) -> Unit
+//    private val queryRemovePlayersClickListener: (Int, String) -> Unit
 ) :
     BaseViewHolder(viewBinding) {
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
             viewBinding.run {
-                namePlayerEditText.setText(playerInSetting.player.name)
-                saveChangedPlayerButton.setOnClickListener {
+                itemEditPlayerInSettingsTextViewPlayerName.setText(playerInSetting.player.name)
+                itemEditPlayerInSettingsImageButtonSave.setOnClickListener {
                     saveChangedPlayerClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
                         playerInSetting.player.name
                     )
                 }
-                cancelChangedPlayerButton.setOnClickListener {
+                itemEditPlayerInSettingsImageButtonCancel.setOnClickListener {
                     cancelChangedPlayerClickListener(this@EditPlayerViewHolder.adapterPosition)
                 }
-                removePlayerFab.setOnClickListener {
-                    queryRemovePlayersClickListener(
-                        this@EditPlayerViewHolder.adapterPosition,
-                        playerInSetting.player.name
-                    )
-                }
+//                removePlayerFab.setOnClickListener {
+//                    queryRemovePlayersClickListener(
+//                        this@EditPlayerViewHolder.adapterPosition,
+//                        playerInSetting.player.name
+//                    )
+//                }
             }
         }
     }
