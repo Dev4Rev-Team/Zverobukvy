@@ -85,11 +85,13 @@ class GameZverobukvyFragment :
                 }
 
                 is AnimalLettersState.ChangingState.CloseInvalidLetter -> {
+
+                }
+
+                is AnimalLettersState.ChangingState.NextPlayer -> {
                     binding.table.nextPlayer()
                     setPlayer(it.nextWalkingPlayer.name)
                 }
-
-                is AnimalLettersState.ChangingState.NextPlayer -> TODO()
             }
         }
 
