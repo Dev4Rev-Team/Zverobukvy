@@ -18,7 +18,7 @@ class AnimalLettersCardsRepositoryImpl(
     override suspend fun getWordCards(): List<WordCard> =
         wordCardsDB.readWordCards()
 
-    override suspend fun getPlayers(): List<Player> =
+    override suspend fun getPlayers(namesPlayers: List<String>): List<Player> =
         //TODO реализовать запрос в БД
         listOf(Player("Игрок 1"), Player("Игрок 2"), Player("Игрок 3"))
 }
