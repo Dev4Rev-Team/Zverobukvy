@@ -2,6 +2,7 @@ package ru.gb.zverobukvy.domain.use_case
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import ru.gb.zverobukvy.domain.entity.GameField
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
@@ -69,7 +70,7 @@ class AnimalLettersInteractorImpl(
 
     override fun subscribeToGameState(): StateFlow<GameState?> {
         Timber.d("subscribeToGameState")
-        return gameStateFlow
+        return gameStateFlow.asStateFlow()
     }
 
     override suspend fun startGame() {
@@ -198,7 +199,11 @@ class AnimalLettersInteractorImpl(
     private fun selectionWrongLetterCard(currentGameState: GameState) {
         Timber.d("selectionWrongLetterCard")
         // gameStateFlow обновляет value, т.к. отличается walkingPlayer
-        // TODO когда один игрок
+        // когда один игрок, педварительно обнуляем walkingPlayer в текущем состоянии gameStateFlow
+        if (currentGameState.players.size == 1)
+            currentGameState.apply {
+                walkingPlayer = null
+            }
         gameStateFlow.value = currentGameState.copy(
             walkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer).also {
                 currentWalkingPlayer = it
@@ -401,7 +406,10 @@ class AnimalLettersInteractorImpl(
      * @param currentWalkingPlayer текущий игрок
      * @return следующий игрок
      */
-    private fun getNextWalkingPlayer(players: List<PlayerInGame>, currentWalkingPlayer: PlayerInGame): PlayerInGame {
+    private fun getNextWalkingPlayer(
+        players: List<PlayerInGame>,
+        currentWalkingPlayer: PlayerInGame
+    ): PlayerInGame {
         players.indexOf(currentWalkingPlayer).let {
             if (it < players.size - 1)
                 return players[it + 1]

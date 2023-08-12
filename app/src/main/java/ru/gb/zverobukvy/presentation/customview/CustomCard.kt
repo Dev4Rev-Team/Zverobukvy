@@ -31,9 +31,9 @@ class CustomCard @JvmOverloads constructor(
     private var srcOpen: Int = SRC_OPEN
     private var durationAnimation: Int = DURATION_ANIMATION
 
-    private lateinit var frontSideImageView: CustomViewImage
-    private lateinit var backSideImageView: CustomViewImage
-    private lateinit var frontBackgroundImageView: CustomViewImage
+    private lateinit var frontSideImageView: CustomImageView
+    private lateinit var backSideImageView: CustomImageView
+    private lateinit var frontBackgroundImageView: CustomImageView
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -72,7 +72,7 @@ class CustomCard @JvmOverloads constructor(
     private fun createImageView(
         context: Context,
         layoutParams: LayoutParams,
-    ): CustomViewImage = CustomViewImage(context).apply {
+    ): CustomImageView = CustomImageView(context).apply {
         this.layoutParams = layoutParams
         scaleType = ImageView.ScaleType.CENTER_CROP
     }
@@ -97,14 +97,16 @@ class CustomCard @JvmOverloads constructor(
     private fun startAnimationFlip() {
         val animatorSet = AnimatorSet()
 
-        val scaleUp = animationScale(this, 1f, SCALE).apply {
-            duration = (durationAnimation * 0.1).toLong()
+        val scaleUp = createScaleAnimation(this, NORMAL, SCALE).apply {
+            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_UP).toLong()
         }
-        val rotation = animationRotation(this).apply {
-            duration = (durationAnimation * 0.8).toLong()
+        val rotation = createFlipAnimation(this) {
+            setOpenDisplay(isOpen)
+        }.apply {
+            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_FLIP).toLong()
         }
-        val scaleNormal = animationScale(this, SCALE, 1f).apply {
-            duration = (durationAnimation * 0.1).toLong()
+        val scaleNormal = createScaleAnimation(this, SCALE, NORMAL).apply {
+            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_DOWN).toLong()
         }
 
         animatorSet.playSequentially(scaleUp, rotation, scaleNormal)
@@ -149,7 +151,7 @@ class CustomCard @JvmOverloads constructor(
         visibility = getVisibility(isVisibility)
     }
 
-    private fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
+    fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
         frontSideImageView.setImageResource(srcOpen)
         backSideImageView.setImageResource(srcClose)
     }
@@ -175,7 +177,7 @@ class CustomCard @JvmOverloads constructor(
     }
 
     /** pos - set position view
-     *  (pos:Int) -> Unit callback function
+     *
      */
     fun setOnClickCardListener(pos: Int, click: (pos: Int) -> Unit) {
         setOnClickListener {
@@ -189,6 +191,10 @@ class CustomCard @JvmOverloads constructor(
         private const val IS_OPEN = false
         private const val DURATION_ANIMATION = 250
         private const val SCALE = 1.08f
+        private const val NORMAL = 1f
+        private const val PERCENTAGE_OF_ANIMATION_TIME_UP = 0.1f
+        private const val PERCENTAGE_OF_ANIMATION_TIME_FLIP = 0.8f
+        private const val PERCENTAGE_OF_ANIMATION_TIME_DOWN = 0.1f
     }
 
 }
