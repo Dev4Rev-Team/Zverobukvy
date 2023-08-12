@@ -3,7 +3,6 @@ package ru.gb.zverobukvy.presentation.game_zverobukvy
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.data.data_source.LetterCardsDB
@@ -61,35 +60,33 @@ class GameZverobukvyFragment :
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersState.ChangingState.CorrectLetter -> {
-                    binding.wordView.setPositionLetterInWord(it.positionLetterInWord)
+                    setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.setCorrectLetterCard()
                 }
 
-                is AnimalLettersState.ChangingState.GuessedWord -> {//TODO
-                    binding.wordView.setPositionLetterInWord(it.positionLetterInWord)
+                is AnimalLettersState.ChangingState.GuessedWord -> {
+                    setPositionLetterInWord(it.positionLetterInWord)
                     if (it.hasNextWord) {
-                        nextWord()
-                        Toast.makeText(requireContext(), "GuessedWord", Toast.LENGTH_SHORT).show()
+                        requestNextWord()
                     }
                 }
 
                 is AnimalLettersState.ChangingState.InvalidLetter -> {
-                    nextPlayer(it)
+                    requestNextPlayer(it)
                 }
 
                 is AnimalLettersState.ChangingState.NextGuessWord -> {
-                    binding.table.nextWord()
-                    setPictureWord(it.wordCard.faceImageName)
+                    setPictureOfWord(it.wordCard.faceImageName)
                     setWord(it.wordCard)
+                    closeTable()
 
                 }
 
                 is AnimalLettersState.ChangingState.CloseInvalidLetter -> {
-
+                    closeInvalidCard()
                 }
 
                 is AnimalLettersState.ChangingState.NextPlayer -> {
-                    binding.table.nextPlayer()
                     setPlayer(it.nextWalkingPlayer.name)
                 }
             }
@@ -97,40 +94,58 @@ class GameZverobukvyFragment :
 
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is AnimalLettersState.EntireState.EndGameState -> { //TODO
-                    Toast.makeText(requireContext(), "Game over", Toast.LENGTH_SHORT).show()
-//                    Handler(Looper.myLooper()!!).postDelayed(
-//                        {
-//                            parentFragmentManager.popBackStack()
-//                        },
-//                        1500
-//                    )
+                is AnimalLettersState.EntireState.EndGameState -> {
                     val players = GameIsOverDialogData.map(it.players)
                     val data = GameIsOverDialogData(players, ("18 мин "))
                     GameIsOverDialogFragment.instance(data)
                         .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
                 }
 
-                is AnimalLettersState.EntireState.IsEndGameState -> {//TODO
-                    Toast.makeText(requireContext(), "Let's go", Toast.LENGTH_SHORT).show()
+                is AnimalLettersState.EntireState.IsEndGameState -> {
+                    viewModel.onEndGameByUser()
                 }
 
                 is AnimalLettersState.EntireState.StartGameState -> {
-                    initPictureWord(it)
-                    initTable(it)
-                    setWord(it.wordCard)
                     setPlayer(it.nextWalkingPlayer.name)
+                    initPictureWord(it)
+                    setWord(it.wordCard)
+                    initTable(it)
                 }
             }
         }
 
+        initView()
+    }
+
+    private fun closeInvalidCard() {
+        binding.table.nextPlayer()
+    }
+
+    private fun closeTable() {
+        binding.table.nextWord()
+    }
+
+    private fun initView() {
+        binding.nextWordButton.setOnClickListener {
+            it.visibility = View.INVISIBLE
+            viewModel.onClickNextWord()
+        }
+
+        GameIsOverDialogFragment.setOnListenerClose(this) {
+            parentFragmentManager.popBackStack()
+        }
+
+    }
+
+    private fun setPositionLetterInWord(pos: Int) {
+        binding.wordView.setPositionLetterInWord(pos)
     }
 
     private fun setPlayer(name: String) {
         binding.playerTextView.text = name
     }
 
-    private fun setPictureWord(urlPicture: String) {
+    private fun setPictureOfWord(urlPicture: String) {
         binding.wordCustomCard.setSrcFromAssert(
             urlPicture,
             urlPicture
@@ -145,7 +160,7 @@ class GameZverobukvyFragment :
         }
     }
 
-    private fun nextPlayer(state: AnimalLettersState.ChangingState.InvalidLetter) {
+    private fun requestNextPlayer(state: AnimalLettersState.ChangingState.InvalidLetter) {
         binding.nextPlayerButton.let { button ->
             button.setOnClickListener {
                 button.visibility = View.INVISIBLE
@@ -156,22 +171,12 @@ class GameZverobukvyFragment :
         }
     }
 
-
-    private fun nextWord() {
-        binding.nextWordButton.let { button ->
-            button.setOnClickListener {
-                button.visibility = View.INVISIBLE
-                //TODO binding.table.nextWord()
-                viewModel.onClickNextWord()
-            }
-            button.visibility = View.VISIBLE
-        }
-
+    private fun requestNextWord() {
+        binding.nextWordButton.visibility = View.VISIBLE
     }
 
     override fun onBackPressed(): Boolean {
         viewModel.onBackPressed()
-        viewModel.onEndGameByUser()
         return false
     }
 
@@ -193,16 +198,19 @@ class GameZverobukvyFragment :
     private fun initPictureWord(startGameState: AnimalLettersState.EntireState.StartGameState) {
         binding.wordCustomCard.apply {
             radius = CARD_RADIUS
+            //TODO
             setSrcOpenBackgroundFromAssert("FACE.webp")
         }
-        setPictureWord(startGameState.wordCard.faceImageName)
+        setPictureOfWord(startGameState.wordCard.faceImageName)
     }
 
     @Parcelize
-    data class GameStart(val typesCards: List<TypeCards>, val players: List<PlayerInGame>) : Parcelable
+    data class GameStart(val typesCards: List<TypeCards>, val players: List<PlayerInGame>) :
+        Parcelable
 
     companion object {
         const val GAME_START = "GAME_START"
+        //Y
         const val CARD_RADIUS = 48f
 
         @JvmStatic

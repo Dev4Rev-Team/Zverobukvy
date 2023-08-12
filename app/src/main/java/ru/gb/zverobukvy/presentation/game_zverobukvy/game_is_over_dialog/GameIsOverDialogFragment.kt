@@ -1,10 +1,12 @@
 package ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverBinding
 import ru.gb.zverobukvy.utility.parcelable
@@ -51,14 +53,29 @@ class GameIsOverDialogFragment :
         }
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        parentFragmentManager.setFragmentResult(EVENT_CLOSE, bundleOf(EVENT_CLOSE to EVENT_CLOSE))
+        super.onDismiss(dialog)
+    }
+
     companion object {
         const val TAG = "GameIsOverDialogFragment"
+        const val EVENT_CLOSE = "GameIsOverDialogFragmentEventClose"
         private const val DATE = "DATE"
 
         @JvmStatic
         fun instance(data: GameIsOverDialogData): GameIsOverDialogFragment {
             val arg = bundleOf(DATE to data)
             return GameIsOverDialogFragment().apply { arguments = arg }
+        }
+
+        fun setOnListenerClose(fragment: Fragment, f: (() -> Unit)?) {
+            fragment.parentFragmentManager.setFragmentResultListener(
+                EVENT_CLOSE,
+                fragment
+            ) { _, _ ->
+                f?.invoke()
+            }
         }
     }
 
