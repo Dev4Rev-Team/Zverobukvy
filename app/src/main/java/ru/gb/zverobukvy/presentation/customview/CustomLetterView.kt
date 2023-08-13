@@ -67,7 +67,7 @@ class CustomLetterView @JvmOverloads constructor(
             val scaleUp = createScaleAnimation(this, 1f, 1.2f).apply {
                 duration = DURATION_ANIMATION.toLong()
                 doOnStart {
-                    layoutBackground.setBackgroundColor(colorTrue)
+                    setBackground()
                 }
             }
             val scaleDown = createScaleAnimation(this, 1.2f, 1f).apply {
@@ -77,7 +77,13 @@ class CustomLetterView @JvmOverloads constructor(
             animatorSet.doOnStart { bringToFront() }
             animatorSet.startDelay = START_DELAY_ANIMATION.toLong()
             animatorSet.start()
+        }else{
+            setBackground()
         }
+    }
+
+    private fun setBackground() {
+        layoutBackground.setBackgroundColor(colorTrue)
     }
 
 

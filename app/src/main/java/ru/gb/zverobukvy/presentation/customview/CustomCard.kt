@@ -116,26 +116,6 @@ class CustomCard @JvmOverloads constructor(
         cameraDistance = 7500 * context.resources.displayMetrics.density
     }
 
-    private fun animationScale(view: CustomCard, x1: Float, x2: Float): AnimatorSet {
-        val animatorSet = AnimatorSet()
-        val scaleX = ObjectAnimator.ofFloat(view, SCALE_X, x1, x2)
-        val scaleY = ObjectAnimator.ofFloat(view, SCALE_Y, x1, x2)
-        animatorSet.playTogether(scaleX, scaleY)
-        return animatorSet
-    }
-
-    private fun animationRotation(view: CustomCard): AnimatorSet {
-        val animatorSet = AnimatorSet()
-        val rotationClosing = ObjectAnimator.ofFloat(view, ROTATION_Y, 0f, 90f).apply {
-            doOnEnd {
-                setOpenDisplay(isOpen)
-            }
-        }
-        val rotationOpening = ObjectAnimator.ofFloat(view, ROTATION_Y, 270f, 360f)
-        animatorSet.playSequentially(rotationClosing, rotationOpening)
-        return animatorSet
-    }
-
     private fun setOpenDisplay(isOpen: Boolean) {
         if (isOpen) {
             frontSideImageView.alpha = 1f
