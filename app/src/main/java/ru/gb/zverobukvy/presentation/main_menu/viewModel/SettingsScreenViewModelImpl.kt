@@ -45,7 +45,7 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
                         }
                     }
                 })
-
+            players.add(null)
             liveDataPlayersScreenState.value =
                 SettingsScreenState.PlayersScreenState.PlayersState(players)
         }
@@ -94,7 +94,7 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
 
     override fun onChangedPlayer(positionPlayer: Int, newNamePlayer: String) {
         players[positionPlayer]?.apply {
-            //TODO player = Player(newNamePlayer)
+            player.name = newNamePlayer
             inEditingState = false
         }
 
@@ -123,12 +123,12 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
             isSelectedForGame = true,
             inEditingState = true
         )
-        players.add(player)
+        players.add(players.size - 1, player)
 
         liveDataPlayersScreenState.value =
             SettingsScreenState.PlayersScreenState.AddPlayerState(
                 players,
-                players.size - 1
+                players.size - 2
             )
     }
 

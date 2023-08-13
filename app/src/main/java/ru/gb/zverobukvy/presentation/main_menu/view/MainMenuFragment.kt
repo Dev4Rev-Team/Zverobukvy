@@ -108,7 +108,7 @@ class MainMenuFragment :
         isChecked: Boolean,
     ) {
         toggleButton.apply {
-            // check(isChecked)
+            setChecked(isChecked)
             setOnCheckedChangeListener { _, _ ->
                 viewModel.onClickTypeCards(typeCard)//TODO прокинутmь и состояние чекбокса
             }
