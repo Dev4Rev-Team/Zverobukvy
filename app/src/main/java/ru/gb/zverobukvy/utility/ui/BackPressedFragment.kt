@@ -1,7 +1,6 @@
 package ru.gb.zverobukvy.utility.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 
@@ -11,9 +10,6 @@ abstract class BackPressedFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.let {
             it.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    //TODO
-                    Toast.makeText(requireContext(), "pressBack", Toast.LENGTH_SHORT).show()
-
                     if (onBackPressed()) {
                         isEnabled = false
                         it.onBackPressed()
