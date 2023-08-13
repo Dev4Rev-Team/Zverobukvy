@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
 import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
-import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
+import ru.gb.zverobukvy.data.data_source.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -37,8 +37,10 @@ class MainMenuFragment :
         })[SettingsScreenViewModelImpl::class.java]
     }
 
-    private val sharedPreferencesForGame: SharedPreferencesForGameImpl =
+    //TODO перенести в viewModel
+    private val sharedPreferencesForGame: SharedPreferencesForGameImpl by lazy {
         SharedPreferencesForGameImpl(requireActivity())
+    }
 
     private val playersAdapter = PlayersAdapter(
         PlayerClickListenerOwner(::clickPlayer, ::clickEditMenuPlayer),
@@ -61,7 +63,7 @@ class MainMenuFragment :
                 namesPlayersSelectedForGame
             )
             getLiveDataScreenState().observe(viewLifecycleOwner) {
-                renderSettingsScreenState(it)
+                         renderSettingsScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
                 renderPlayersScreenState(it)
@@ -103,18 +105,21 @@ class MainMenuFragment :
     private fun initTypeCardToggleButton(
         toggleButton: ToggleButton,
         typeCard: TypeCards,
-        isChecked: Boolean
+        isChecked: Boolean,
     ) {
         toggleButton.apply {
-            check(isChecked)
+            // check(isChecked)
             setOnCheckedChangeListener { _, _ ->
-                viewModel.onClickTypeCards(typeCard)
+                viewModel.onClickTypeCards(typeCard)//TODO прокинутmь и состояние чекбокса
             }
         }
+
     }
 
     private fun initPlayGameButton() {
-        viewModel.onStartGame()
+        binding.fragmentMainMenuButtonPlay.setOnClickListener {
+            viewModel.onStartGame()
+        }
     }
 
     private fun initRecycleView() {
@@ -136,7 +141,7 @@ class MainMenuFragment :
 
     private fun openAnimalLettersFragment(
         typesCardsSelectedForGame: List<TypeCards>,
-        playersSelectedForGame: List<PlayerInGame>
+        playersSelectedForGame: List<PlayerInGame>,
     ) {
         requireActivity().supportFragmentManager.beginTransaction()
             .add(
@@ -197,6 +202,7 @@ class MainMenuFragment :
     }
 
     private fun clickCancelChangedPlayer(position: Int) {
+        //TODO
         viewModel.onCancelChangedPlayer(position)
     }
 
@@ -216,7 +222,8 @@ class MainMenuFragment :
     }
 
     companion object {
-        private const val TAG_ANIMAL_LETTERS_FRAGMENT = "AnimalLettersFragment"
+        private const val TAG_ANIMAL_LETTERS_FRAGMENT =
+            "AnimalLettersFragment" //TODO use GameZverobukvyFragment.GAME_START
         private const val TAG_REMOVE_PLAYER_DIALOG_FRAGMENT = "RemovePlayerDialogFragment"
 
         @JvmStatic

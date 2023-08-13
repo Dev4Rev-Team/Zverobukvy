@@ -3,6 +3,8 @@ package ru.gb.zverobukvy.presentation.main_menu.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -16,7 +18,8 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     SettingsScreenViewModel, ViewModel() {
     private val typesCardsSelectedForGame: MutableList<TypeCards> = mutableListOf()
 
-    private val playersSelectedForGame: MutableList<PlayerInSettings?> = mutableListOf()
+    private val playersSelectedForGame: MutableList<String> = mutableListOf()
+    private val players: MutableList<PlayerInSettings?> = mutableListOf()
 
     private val liveDataPlayersScreenState =
         MutableLiveData<SettingsScreenState.PlayersScreenState>()
@@ -25,34 +28,27 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
 
     override fun onLaunch(
         typesCardsSelectedForGameFromPreference: List<TypeCards>,
-        namesPlayersSelectedForGameFromPreference: List<String>
+        namesPlayersSelectedForGameFromPreference: List<String>,
     ) {
         Timber.d("onLaunch")
         typesCardsSelectedForGame.addAll(typesCardsSelectedForGameFromPreference)
-        //TODO реализовать формирование List<PlayerInSettings> с использованием
+        //TODO реализовать формирование List<String> с использованием
         // namesPlayersSelectedForGameFromPreference и с запросом к репозиторию
-        playersSelectedForGame.addAll(
-            listOf(
-                PlayerInSettings(
-                    Player("Игрок 1"),
-                    isSelectedForGame = true,
-                    inEditingState = false
-                ),
-                PlayerInSettings(
-                    Player("Игрок 2"),
-                    isSelectedForGame = false,
-                    inEditingState = false
-                ),
-                PlayerInSettings(
-                    Player("Игрок 3"),
-                    isSelectedForGame = false,
-                    inEditingState = false
-                ),
-                null
-            )
-        )
-        liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.PlayersState(playersSelectedForGame)
+        playersSelectedForGame.addAll(listOf("Игрок 1", "Игрок 2", "Игрок 3"))
+
+        viewModelScope.launch {
+            players.addAll(
+                playersRepository.getPlayers(listOf()).map {
+                    mapToPlayerInSettings(it).apply {
+                        if (playersSelectedForGame.contains(player.name)) {
+                            isSelectedForGame = true
+                        }
+                    }
+                })
+
+            liveDataPlayersScreenState.value =
+                SettingsScreenState.PlayersScreenState.PlayersState(players)
+        }
     }
 
     override fun getLiveDataPlayersScreenState(): LiveData<SettingsScreenState.PlayersScreenState> {
@@ -66,42 +62,97 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     }
 
     override fun onChangedSelectingPlayer(positionPlayer: Int) {
-        TODO("Not yet implemented")
+        players[positionPlayer]?.apply {
+            isSelectedForGame = !isSelectedForGame
+        }
+
+        liveDataPlayersScreenState.value =
+            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+                players,
+                positionPlayer
+            )
     }
 
     override fun onRemovePlayer(positionPlayer: Int) {
-        TODO("Not yet implemented")
+        players.removeAt(positionPlayer)
+
+        liveDataPlayersScreenState.value =
+            SettingsScreenState.PlayersScreenState.RemovePlayerState(players, positionPlayer)
     }
 
     override fun onQueryChangedPlayer(positionPlayer: Int) {
-        TODO("Not yet implemented")
+        players[positionPlayer]?.apply {
+            inEditingState = true
+        }
+
+        liveDataPlayersScreenState.value =
+            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+                players,
+                positionPlayer
+            )
     }
 
     override fun onChangedPlayer(positionPlayer: Int, newNamePlayer: String) {
-        TODO("Not yet implemented")
+        players[positionPlayer]?.apply {
+            //TODO player = Player(newNamePlayer)
+            inEditingState = false
+        }
+
+        liveDataPlayersScreenState.value =
+            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+                players,
+                positionPlayer
+            )
     }
 
     override fun onCancelChangedPlayer(positionPlayer: Int) {
-        TODO("Not yet implemented")
+        players[positionPlayer]?.apply {
+            inEditingState = false
+        }
+
+        liveDataPlayersScreenState.value =
+            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+                players,
+                positionPlayer
+            )
     }
 
     override fun onAddPlayer() {
-        TODO("Not yet implemented")
+        val player = PlayerInSettings(
+            Player("new"),
+            isSelectedForGame = true,
+            inEditingState = true
+        )
+        players.add(player)
+
+        liveDataPlayersScreenState.value =
+            SettingsScreenState.PlayersScreenState.AddPlayerState(
+                players,
+                players.size - 1
+            )
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
-        TODO("Not yet implemented")
+        if (typesCardsSelectedForGame.contains(typeCards)) {
+            typesCardsSelectedForGame.remove(typeCards)
+        } else {
+            typesCardsSelectedForGame.add(typeCards)
+        }
     }
 
     override fun onStartGame() {
         Timber.d("onStart")
-        val players: MutableList<PlayerInGame> = mutableListOf()
+        val playersForGame: MutableList<PlayerInGame> = mutableListOf()
         //TODO сделать рефакторинг
-        playersSelectedForGame.forEach {
-            if(it!=null)
-                players.add(PlayerInGame(it.player.name))
+        players.forEach {
+            if (it != null && it.isSelectedForGame)
+                playersForGame.add(PlayerInGame(it.player.name))
         }
         liveDataScreenState.value =
-            SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, players)
+            SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
+    }
+
+    companion object {
+        fun mapToPlayerInSettings(player: Player) = PlayerInSettings(player)
     }
 }
