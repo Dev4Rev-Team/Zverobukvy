@@ -1,5 +1,7 @@
 package ru.gb.zverobukvy.presentation
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.gb.zverobukvy.R
@@ -12,6 +14,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE)
 
         val gameStart =
             GameZverobukvyFragment.GameStart(
@@ -31,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG_TO_FRAGMENT = "GameZverobukvyFragment"
+        lateinit var sharedPreferences: SharedPreferences
     }
 
 }

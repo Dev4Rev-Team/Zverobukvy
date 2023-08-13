@@ -1,15 +1,13 @@
 package ru.gb.zverobukvy.presentation.main_menu.preferences
 
-import android.app.Activity
-import android.content.Context
 import android.content.SharedPreferences
 import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.presentation.MainActivity
 
-class SharedPreferencesForGameImpl(activity: Activity) : SharedPreferencesForGame {
+class SharedPreferencesForGameImpl: SharedPreferencesForGame {
     private var colorsTypesCardsSelectedForGame: Set<String> = setOf()
     private var namesPlayersSelectedForGame: Set<String> = setOf()
-    private val sharedPreferencesForGame: SharedPreferences =
-        activity.getPreferences(Context.MODE_PRIVATE)
+    private val sharedPreferencesForGame: SharedPreferences = MainActivity.sharedPreferences
 
     override fun readTypesCardsSelectedForGame(): List<TypeCards> =
         (sharedPreferencesForGame.getStringSet(KEY_TYPES_CARDS, null)

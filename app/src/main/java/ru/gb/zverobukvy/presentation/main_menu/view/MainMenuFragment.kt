@@ -38,7 +38,7 @@ class MainMenuFragment :
     }
 
     private val sharedPreferencesForGame: SharedPreferencesForGameImpl =
-        SharedPreferencesForGameImpl(requireActivity())
+        SharedPreferencesForGameImpl()
 
     private val playersAdapter = PlayersAdapter(
         PlayerClickListenerOwner(::clickPlayer, ::clickEditMenuPlayer),
@@ -67,6 +67,11 @@ class MainMenuFragment :
                 renderPlayersScreenState(it)
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sharedPreferencesForGame.savePreferencesForGame()
     }
 
     private fun initView(typesCardsSelectedForGame: List<TypeCards>) {
