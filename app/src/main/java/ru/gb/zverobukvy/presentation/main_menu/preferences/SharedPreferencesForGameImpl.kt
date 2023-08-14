@@ -1,37 +1,44 @@
 package ru.gb.zverobukvy.presentation.main_menu.preferences
 
-import android.app.Activity
-import android.content.Context
 import android.content.SharedPreferences
 import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.presentation.MainActivity
+import timber.log.Timber
 
-class SharedPreferencesForGameImpl(activity: Activity) : SharedPreferencesForGame {
+class SharedPreferencesForGameImpl: SharedPreferencesForGame {
     private var colorsTypesCardsSelectedForGame: Set<String> = setOf()
     private var namesPlayersSelectedForGame: Set<String> = setOf()
-    private val sharedPreferencesForGame: SharedPreferences =
-        activity.getPreferences(Context.MODE_PRIVATE)
+    private val sharedPreferencesForGame: SharedPreferences = MainActivity.sharedPreferences
 
-    override fun readTypesCardsSelectedForGame(): List<TypeCards> =
-        (sharedPreferencesForGame.getStringSet(KEY_TYPES_CARDS, null)
+    override fun readTypesCardsSelectedForGame(): List<TypeCards> {
+        Timber.d("readTypesCardsSelectedForGame")
+        return (sharedPreferencesForGame.getStringSet(KEY_TYPES_CARDS, null)
             ?: colorsTypesCardsSelectedForGame).toList().map {
             mapTypeCardFromColor(it)
         }
+    }
+
 
     override fun updateTypesCardsSelectedForGame(newTypesCardsSelectedForGame: List<TypeCards>) {
+        Timber.d("updateTypesCardsSelectedForGame")
         colorsTypesCardsSelectedForGame = newTypesCardsSelectedForGame.map{
             mapColorFromTypeCard(it)
         }.toSet()
     }
 
-    override fun readNamesPlayersSelectedForGame(): List<String> =
-        (sharedPreferencesForGame.getStringSet(KEY_NAMES_PLAYERS, null)
+    override fun readNamesPlayersSelectedForGame(): List<String> {
+        Timber.d("readNamesPlayersSelectedForGame")
+        return (sharedPreferencesForGame.getStringSet(KEY_NAMES_PLAYERS, null)
             ?: namesPlayersSelectedForGame).toList()
+    }
 
     override fun updateNamesPlayersSelectedForGame(newNamesPlayersSelectedForGame: List<String>) {
+        Timber.d("updateNamesPlayersSelectedForGame")
         namesPlayersSelectedForGame = newNamesPlayersSelectedForGame.toSet()
     }
 
     override fun savePreferencesForGame() {
+        Timber.d("savePreferencesForGame")
         sharedPreferencesForGame.edit()
             .putStringSet(KEY_TYPES_CARDS, colorsTypesCardsSelectedForGame)
             .putStringSet(KEY_NAMES_PLAYERS, namesPlayersSelectedForGame)

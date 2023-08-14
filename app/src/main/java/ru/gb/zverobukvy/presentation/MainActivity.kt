@@ -1,5 +1,7 @@
 package ru.gb.zverobukvy.presentation
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.gb.zverobukvy.R
@@ -10,6 +12,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE)
 
 //        val gameStart =
 //            GameZverobukvyFragment.GameStart(
@@ -31,12 +35,13 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.container, toFragment, TAG_TO_FRAGMENT)
+            .replace(R.id.container, toFragment, MainMenuFragment.TAG_MAIN_MENU_FRAGMENT)
             .addToBackStack(TAG_TO_FRAGMENT).commit()
     }
 
     companion object {
         private const val TAG_TO_FRAGMENT = "GameZverobukvyFragment"
+        lateinit var sharedPreferences: SharedPreferences
     }
 
 }

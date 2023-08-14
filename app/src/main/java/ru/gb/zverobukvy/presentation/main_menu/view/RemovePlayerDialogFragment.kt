@@ -6,14 +6,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import ru.gb.zverobukvy.R
 
-class RemovePlayerDialogFragment (private val removePlayerClickListener: () -> Unit) : DialogFragment() {
+class RemovePlayerDialogFragment: DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
                 .setTitle(TITLE_REMOVE_PLAYER)
                 .setIcon(R.drawable.baseline_delete_24)
                 .setMessage(createMessage(arguments?.getString(KEY_NAME_PLAYER)))
                 .setPositiveButton(R.string.ok) { _, _ ->
-                    removePlayerClickListener()
+                    //TODO реализовать передачу результата во фрагмент для вызова необходимого метода во фрагменте
                 }
                 .setNegativeButton(R.string.cancel) { _, _ ->
                     dismissAllowingStateLoss()
