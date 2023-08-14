@@ -1,13 +1,9 @@
 package ru.gb.zverobukvy.presentation
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
+import ru.gb.zverobukvy.presentation.main_menu.view.MainMenuFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -15,17 +11,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sharedPreferences = getPreferences(Context.MODE_PRIVATE)
+//        val gameStart =
+//            GameZverobukvyFragment.GameStart(
+//                listOf(TypeCards.BLUE, TypeCards.GREEN), listOf(
+//                    PlayerInGame("Nik1", 0),
+//                    PlayerInGame("Nik2", 0)
+//                )
+//            )
+//
+//        val toFragment = GameZverobukvyFragment.newInstance(gameStart)
+//
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.container, toFragment, TAG_TO_FRAGMENT)
+//            .addToBackStack(TAG_TO_FRAGMENT).commit()
 
-        val gameStart =
-            GameZverobukvyFragment.GameStart(
-                listOf(TypeCards.BLUE, TypeCards.GREEN), listOf(
-                    PlayerInGame("Nik1", 0),
-                    PlayerInGame("Nik2", 0)
-                )
-            )
 
-        val toFragment = GameZverobukvyFragment.newInstance(gameStart)
+        val toFragment = MainMenuFragment.newInstance()
 
         supportFragmentManager
             .beginTransaction()
@@ -35,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG_TO_FRAGMENT = "GameZverobukvyFragment"
-        lateinit var sharedPreferences: SharedPreferences
     }
 
 }
