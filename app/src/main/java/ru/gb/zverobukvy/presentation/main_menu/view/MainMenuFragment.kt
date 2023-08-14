@@ -14,6 +14,7 @@ import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
+import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.PlayersRepository
 import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
@@ -26,6 +27,7 @@ import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModel
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
+import timber.log.Timber
 
 class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
@@ -71,7 +73,15 @@ class MainMenuFragment :
 
     override fun onPause() {
         super.onPause()
+        Timber.d("onPause")
+        updateTypesCardsSelectedForGame()
         sharedPreferencesForGame.savePreferencesForGame()
+    }
+
+    override fun onBackPressed(): Boolean {
+        Timber.d("onBackPressed")
+        requireActivity().finish()
+        return super.onBackPressed()
     }
 
     private fun initView(typesCardsSelectedForGame: List<TypeCards>) {
@@ -111,7 +121,7 @@ class MainMenuFragment :
         isChecked: Boolean
     ) {
         toggleButton.apply {
-            check(isChecked)
+            setChecked(isChecked)
             setOnCheckedChangeListener { _, _ ->
                 viewModel.onClickTypeCards(typeCard)
             }
@@ -119,7 +129,9 @@ class MainMenuFragment :
     }
 
     private fun initPlayGameButton() {
-        viewModel.onStartGame()
+        binding.fragmentMainMenuButtonPlay.setOnClickListener {
+            viewModel.onStartGame()
+        }
     }
 
     private fun initRecycleView() {
@@ -131,11 +143,18 @@ class MainMenuFragment :
 
     private fun renderSettingsScreenState(settingsScreenState: SettingsScreenState.ScreenState) {
         when (settingsScreenState) {
-            is SettingsScreenState.ScreenState.ErrorState -> showError(settingsScreenState.error)
-            is SettingsScreenState.ScreenState.StartGame -> openAnimalLettersFragment(
-                settingsScreenState.typesCardsSelectedForGame,
-                settingsScreenState.playersSelectedForGame
-            )
+            is SettingsScreenState.ScreenState.ErrorState -> {
+                Timber.d("ErrorState")
+                showError(settingsScreenState.error)
+            }
+
+            is SettingsScreenState.ScreenState.StartGame -> {
+                Timber.d("StartGame")
+                openAnimalLettersFragment(
+                    settingsScreenState.typesCardsSelectedForGame,
+                    settingsScreenState.playersSelectedForGame
+                )
+            }
         }
     }
 
@@ -168,25 +187,72 @@ class MainMenuFragment :
 
     private fun renderPlayersScreenState(playersScreenState: SettingsScreenState.PlayersScreenState) {
         when (playersScreenState) {
-            is SettingsScreenState.PlayersScreenState.AddPlayerState -> playersAdapter.addPlayer(
-                playersScreenState.playersInSettings,
-                playersScreenState.positionAddPlayer
-            )
+            is SettingsScreenState.PlayersScreenState.AddPlayerState -> {
+                Timber.d("AddPlayerState")
+                onAddPlayer(
+                    playersScreenState.playersInSettings,
+                    playersScreenState.positionAddPlayer
+                )
+            }
 
-            is SettingsScreenState.PlayersScreenState.ChangedPlayerState -> playersAdapter.changedPlayer(
-                playersScreenState.playersInSettings,
-                playersScreenState.positionChangedPlayer
-            )
+            is SettingsScreenState.PlayersScreenState.ChangedPlayerState -> {
+                Timber.d("ChangedPlayerState")
+                onChangedPlayer(
+                    playersScreenState.playersInSettings,
+                    playersScreenState.positionChangedPlayer
+                )
+            }
 
-            is SettingsScreenState.PlayersScreenState.PlayersState -> playersAdapter.setNewPlayers(
-                playersScreenState.playersInSettings
-            )
+            is SettingsScreenState.PlayersScreenState.PlayersState -> {
+                Timber.d("PlayersState")
+                onNewPlayers(playersScreenState.playersInSettings)
+            }
 
-            is SettingsScreenState.PlayersScreenState.RemovePlayerState -> playersAdapter.removePlayer(
-                playersScreenState.playersInSettings,
-                playersScreenState.positionRemovePlayer
-            )
+            is SettingsScreenState.PlayersScreenState.RemovePlayerState -> {
+                Timber.d("RemovePlayerState")
+                onRemovePlayer(
+                    playersScreenState.playersInSettings,
+                    playersScreenState.positionRemovePlayer
+                )
+            }
         }
+    }
+
+    private fun onChangedPlayer(newPlayers: List<PlayerInSettings?>, positionChangedPlayer: Int) {
+        playersAdapter.changedPlayer(newPlayers, positionChangedPlayer)
+        sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
+            extractNamesPlayersSelectedForGame(newPlayers)
+        )
+    }
+
+    private fun onAddPlayer(newPlayers: List<PlayerInSettings?>, positionAddPlayer: Int) {
+        playersAdapter.addPlayer(newPlayers, positionAddPlayer)
+        sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
+            extractNamesPlayersSelectedForGame(newPlayers)
+        )
+    }
+
+    private fun onRemovePlayer(newPlayers: List<PlayerInSettings?>, positionRemovePlayer: Int) {
+        playersAdapter.removePlayer(newPlayers, positionRemovePlayer)
+        sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
+            extractNamesPlayersSelectedForGame(newPlayers)
+        )
+    }
+
+    private fun onNewPlayers(newPlayers: List<PlayerInSettings?>) {
+        playersAdapter.setNewPlayers(newPlayers)
+        sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
+            extractNamesPlayersSelectedForGame(newPlayers)
+        )
+    }
+
+    private fun extractNamesPlayersSelectedForGame(players: List<PlayerInSettings?>): List<String> {
+        val namesPlayersSelectedForGame = mutableListOf<String>()
+        players.forEach {
+            if (it != null && it.isSelectedForGame)
+                namesPlayersSelectedForGame.add(it.player.name)
+        }
+        return namesPlayersSelectedForGame
     }
 
     private fun clickPlayer(position: Int) {
@@ -206,9 +272,7 @@ class MainMenuFragment :
     }
 
     private fun clickQueryRemovePlayer(position: Int, name: String) {
-        RemovePlayerDialogFragment {
-            viewModel.onRemovePlayer(position)
-        }.also {
+        RemovePlayerDialogFragment().let {
             it.arguments = Bundle().apply {
                 putString(RemovePlayerDialogFragment.KEY_NAME_PLAYER, name)
             }
@@ -220,9 +284,25 @@ class MainMenuFragment :
         viewModel.onAddPlayer()
     }
 
+    private fun updateTypesCardsSelectedForGame() {
+        val typesCardsSelectedForGame = mutableListOf<TypeCards>()
+        binding.run {
+            if(fragmentMainMenuToggleButtonOrange.isChecked)
+                typesCardsSelectedForGame.add(TypeCards.ORANGE)
+            if(fragmentMainMenuToggleButtonBlue.isChecked)
+                typesCardsSelectedForGame.add(TypeCards.BLUE)
+            if(fragmentMainMenuToggleButtonGreen.isChecked)
+                typesCardsSelectedForGame.add(TypeCards.GREEN)
+            if(fragmentMainMenuToggleButtonViolet.isChecked)
+                typesCardsSelectedForGame.add(TypeCards.VIOLET)
+        }
+        sharedPreferencesForGame.updateTypesCardsSelectedForGame(typesCardsSelectedForGame)
+    }
+
     companion object {
         private const val TAG_ANIMAL_LETTERS_FRAGMENT = "AnimalLettersFragment"
         private const val TAG_REMOVE_PLAYER_DIALOG_FRAGMENT = "RemovePlayerDialogFragment"
+        const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
 
         @JvmStatic
         fun newInstance() =
