@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.data.data_source.LetterCardsDB
 import ru.gb.zverobukvy.data.data_source.WordCardsDB
+import ru.gb.zverobukvy.data.data_source.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
 import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
-import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.databinding.FragmentGameZverobukvyBinding
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -22,6 +22,7 @@ import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsO
 import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsOverDialogFragment
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
+import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 class GameZverobukvyFragment :
@@ -29,7 +30,7 @@ class GameZverobukvyFragment :
     private var gameStart: GameStart? = null
 
     private val viewModel: GameZverobukvyViewModel by lazy {
-        ViewModelProvider(requireActivity(), viewModelProviderFactoryOf {
+        ViewModelProvider(this, viewModelProviderFactoryOf {
 
             val letterCardsDB: LetterCardsDB = LetterCardsDBImpl()
             val wordCardsDB: WordCardsDB = WordCardsDBImpl()
@@ -185,7 +186,7 @@ class GameZverobukvyFragment :
             setListItem(startGameState.lettersCards) {
                 CustomCard(requireContext()).apply {
                     radius = CARD_RADIUS
-                    //TODO
+                    enableClickAnimation()
                     setSrcOpenBackgroundFromAssert("FACE.webp")
                 }
             }
@@ -210,6 +211,7 @@ class GameZverobukvyFragment :
 
     companion object {
         const val GAME_START = "GAME_START"
+
         //Y
         const val CARD_RADIUS = 48f
 
