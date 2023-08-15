@@ -20,10 +20,10 @@ class EditPlayerViewHolder(
                         playerInSetting.player.name
                     )
                 }
-                deleteImageButton.setOnClickListener {
+                saveImageButton.setOnClickListener {
                     cancelChangedPlayerClickListener(this@EditPlayerViewHolder.adapterPosition)
                 }
-                deleteImageButton.setOnClickListener {
+                deleteButton.setOnClickListener {
                     queryRemovePlayersClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
                         playerInSetting.player.name

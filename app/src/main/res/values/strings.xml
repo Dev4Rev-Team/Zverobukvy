@@ -20,5 +20,7 @@
     <string name="ok">"Да"</string>
     <string name="cancel">"Отмена"</string>
     <string name="save">"Сохранить"</string>
+    <string name="player_state_ready">Готов</string>
+    <string name="player_state_not_ready">Не готов</string>
 
 </resources>

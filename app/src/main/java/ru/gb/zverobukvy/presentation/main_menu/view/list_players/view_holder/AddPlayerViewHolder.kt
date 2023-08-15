@@ -8,7 +8,7 @@ class AddPlayerViewHolder(
     private val addPlayerClickListener: () -> Unit) :
     BaseViewHolder(viewBinding) {
     override fun bindView(playerInSetting: PlayerInSettings?) {
-        viewBinding.addPlayerButton.setOnClickListener {
+        viewBinding.addPlayerCardView.setOnClickListener {
             addPlayerClickListener()
         }
     }

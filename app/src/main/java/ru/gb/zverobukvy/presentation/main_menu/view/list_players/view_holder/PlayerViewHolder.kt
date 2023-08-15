@@ -1,8 +1,10 @@
 package ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder
 
+import android.widget.Toast
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
+import kotlin.coroutines.coroutineContext
 
 class PlayerViewHolder(
     override val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
@@ -14,15 +16,20 @@ class PlayerViewHolder(
         playerInSetting?.let {
             viewBinding.run {
                 playerNameTextView.text = it.player.name
-                if (it.isSelectedForGame)
-                    playerCardView.setBackgroundColor(itemView.context.getColor(R.color.color_card_green))
-                else
-                    playerCardView.setBackgroundColor(itemView.context.getColor(R.color.color_card_blue))
+                if (it.isSelectedForGame) {
+                    playerStateTextView.setText(R.string.player_state_ready)
+                    playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_green_pastel))
+                } else {
+                    playerStateTextView.setText(R.string.player_state_not_ready)
+                    playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_red_pastel))
+                }
                 playerCardView.setOnClickListener {
                     itemPlayerClickListener(this@PlayerViewHolder.adapterPosition)
                 }
                 editImageButton.setOnClickListener {
                     editMenuClickListener(this@PlayerViewHolder.adapterPosition)
+                }
+                deleteButton.setOnClickListener { //TODO Delete player card
                 }
             }
         }
