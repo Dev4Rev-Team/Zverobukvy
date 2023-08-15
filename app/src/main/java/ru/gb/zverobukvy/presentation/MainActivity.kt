@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.presentation.main_menu.view.MainMenuFragment
+import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         val toFragment = MainMenuFragment.newInstance()
 
+       if (savedInstanceState==null)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, toFragment, MainMenuFragment.TAG_MAIN_MENU_FRAGMENT)

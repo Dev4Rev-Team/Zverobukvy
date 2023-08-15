@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder
+package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
 import ru.gb.zverobukvy.databinding.ItemEditPlayerInSettingsBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
@@ -17,7 +17,7 @@ class EditPlayerViewHolder(
                 itemEditPlayerInSettingsImageButtonSave.setOnClickListener {
                     saveChangedPlayerClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
-                        playerInSetting.player.name
+                        itemEditPlayerInSettingsTextEditPlayerName.text.toString()
                     )
                 }
                 itemEditPlayerInSettingsImageButtonCancel.setOnClickListener {
@@ -26,7 +26,7 @@ class EditPlayerViewHolder(
                 itemEditPlayerInSettingsImageButtonCancel.setOnClickListener {
                     queryRemovePlayersClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
-                        playerInSetting.player.name
+                        itemEditPlayerInSettingsTextEditPlayerName.text.toString()
                     )
                 }
             }

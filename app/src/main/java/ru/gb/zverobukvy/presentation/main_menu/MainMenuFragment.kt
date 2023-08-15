@@ -1,9 +1,11 @@
-package ru.gb.zverobukvy.presentation.main_menu.view
+package ru.gb.zverobukvy.presentation.main_menu
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,10 +21,10 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.PlayersRepository
 import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
 import ru.gb.zverobukvy.presentation.main_menu.preferences.SharedPreferencesForGameImpl
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.adapter.PlayersAdapter
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.AddPlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.EditPlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.PlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
+import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModel
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
@@ -30,7 +32,8 @@ import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
 class MainMenuFragment :
-    ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
+    ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate),
+    FragmentResultListener {
     private val viewModel: SettingsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             val playersRepository: PlayersRepository =
@@ -54,6 +57,7 @@ class MainMenuFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setRemovePlayerDialogFragmentListener()
         val typesCardsSelectedForGame = sharedPreferencesForGame.readTypesCardsSelectedForGame()
         val namesPlayersSelectedForGame = sharedPreferencesForGame.readNamesPlayersSelectedForGame()
         initView(typesCardsSelectedForGame)
@@ -69,6 +73,11 @@ class MainMenuFragment :
                 renderPlayersScreenState(it)
             }
         }
+    }
+
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
+        if (requestKey == KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT)
+            viewModel.onRemovePlayer(result.getInt(RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER))
     }
 
     override fun onPause() {
@@ -272,10 +281,11 @@ class MainMenuFragment :
     }
 
     private fun clickQueryRemovePlayer(position: Int, name: String) {
-        RemovePlayerDialogFragment().let {
-            it.arguments = Bundle().apply {
-                putString(RemovePlayerDialogFragment.KEY_NAME_PLAYER, name)
-            }
+        RemovePlayerDialogFragment().also {
+            it.arguments = bundleOf(
+                RemovePlayerDialogFragment.KEY_NAME_PLAYER to name,
+                RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER to position
+            )
             it.show(requireActivity().supportFragmentManager, TAG_REMOVE_PLAYER_DIALOG_FRAGMENT)
         }
     }
@@ -287,22 +297,32 @@ class MainMenuFragment :
     private fun updateTypesCardsSelectedForGame() {
         val typesCardsSelectedForGame = mutableListOf<TypeCards>()
         binding.run {
-            if(fragmentMainMenuToggleButtonOrange.isChecked)
+            if (fragmentMainMenuToggleButtonOrange.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.ORANGE)
-            if(fragmentMainMenuToggleButtonBlue.isChecked)
+            if (fragmentMainMenuToggleButtonBlue.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.BLUE)
-            if(fragmentMainMenuToggleButtonGreen.isChecked)
+            if (fragmentMainMenuToggleButtonGreen.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.GREEN)
-            if(fragmentMainMenuToggleButtonViolet.isChecked)
+            if (fragmentMainMenuToggleButtonViolet.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.VIOLET)
         }
         sharedPreferencesForGame.updateTypesCardsSelectedForGame(typesCardsSelectedForGame)
     }
 
+    private fun setRemovePlayerDialogFragmentListener(){
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT,
+            viewLifecycleOwner,
+            this@MainMenuFragment
+        )
+    }
+
     companion object {
-        private const val TAG_ANIMAL_LETTERS_FRAGMENT = "AnimalLettersFragment"
+        private const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
         private const val TAG_REMOVE_PLAYER_DIALOG_FRAGMENT = "RemovePlayerDialogFragment"
         const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
+        const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
+            "KeyResultFromRemovePlayerDialogFragment"
 
         @JvmStatic
         fun newInstance() =
