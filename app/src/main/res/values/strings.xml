@@ -22,5 +22,7 @@
     <string name="save">"Сохранить"</string>
     <string name="player_state_ready">Готов</string>
     <string name="player_state_not_ready">Не готов</string>
+    <string name="game_end_text">Игра завершена</string>
+    <string name="game_time_text">Время игры</string>
 
 </resources>
