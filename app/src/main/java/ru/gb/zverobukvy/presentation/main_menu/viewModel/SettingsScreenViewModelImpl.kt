@@ -20,6 +20,8 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
 
     private val playersSelectedForGame: MutableList<String> = mutableListOf()
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
+    private var lastEditablePlayer: PlayerInSettings? = null
+
 
     private val liveDataPlayersScreenState =
         MutableLiveData<SettingsScreenState.PlayersScreenState>()
@@ -62,6 +64,7 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     }
 
     override fun onChangedSelectingPlayer(positionPlayer: Int) {
+        closeEditablePlayer()
         players[positionPlayer]?.apply {
             isSelectedForGame = !isSelectedForGame
         }
@@ -81,21 +84,14 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     }
 
     override fun onQueryChangedPlayer(positionPlayer: Int) {
-        players[positionPlayer]?.apply {
-            inEditingState = true
-        }
-
-        liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
-                players,
-                positionPlayer
-            )
+        closeEditablePlayer()
+        openEditablePlayer(positionPlayer)
     }
 
     override fun onChangedPlayer(positionPlayer: Int, newNamePlayer: String) {
+        closeEditablePlayer()
         players[positionPlayer]?.apply {
             player.name = newNamePlayer
-            inEditingState = false
         }
 
         liveDataPlayersScreenState.value =
@@ -106,24 +102,17 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     }
 
     override fun onCancelChangedPlayer(positionPlayer: Int) {
-        players[positionPlayer]?.apply {
-            inEditingState = false
-        }
-
-        liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
-                players,
-                positionPlayer
-            )
+        closeEditablePlayer()
     }
 
     override fun onAddPlayer() {
+        closeEditablePlayer()
         val player = PlayerInSettings(
-            Player("new"),
-            isSelectedForGame = true,
-            inEditingState = true
+            Player("new ${players.size}"),
+            isSelectedForGame = true
         )
-        players.add(players.size - 1, player)
+        val newPosition = players.size - 1
+        players.add(newPosition, player)
 
         liveDataPlayersScreenState.value =
             SettingsScreenState.PlayersScreenState.AddPlayerState(
@@ -133,6 +122,7 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
+        closeEditablePlayer()
         if (typesCardsSelectedForGame.contains(typeCards)) {
             typesCardsSelectedForGame.remove(typeCards)
         } else {
@@ -141,15 +131,48 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     }
 
     override fun onStartGame() {
+        closeEditablePlayer()
         Timber.d("onStart")
         val playersForGame: MutableList<PlayerInGame> = mutableListOf()
-        //TODO сделать рефакторинг
+
         players.forEach {
             if (it != null && it.isSelectedForGame)
                 playersForGame.add(PlayerInGame(it.player.name))
         }
-        liveDataScreenState.value =
-            SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
+        if (typesCardsSelectedForGame.size > 0) {
+            liveDataScreenState.value =
+                SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
+        } else {
+            liveDataScreenState.value =
+                SettingsScreenState.ScreenState.ErrorState("Not_selected_card")
+        }
+    }
+
+    private fun openEditablePlayer(positionPlayer: Int) {
+        closeEditablePlayer()
+
+        players[positionPlayer]?.apply {
+            inEditingState = true
+            this@SettingsScreenViewModelImpl.lastEditablePlayer = this
+        }
+
+        liveDataPlayersScreenState.value =
+            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+                players,
+                positionPlayer
+            )
+    }
+
+    private fun closeEditablePlayer() {
+        lastEditablePlayer?.let {
+            it.inEditingState = false
+            liveDataPlayersScreenState.value =
+                SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+                    players, players.indexOf(it)
+                )
+
+        }
+        lastEditablePlayer = null
     }
 
     companion object {
