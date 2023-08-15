@@ -17,10 +17,8 @@ class PlayerViewHolder(
             viewBinding.run {
                 playerNameTextView.text = it.player.name
                 if (it.isSelectedForGame) {
-                    playerStateTextView.setText(R.string.player_state_ready)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_green_pastel))
                 } else {
-                    playerStateTextView.setText(R.string.player_state_not_ready)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_red_pastel))
                 }
                 playerCardView.setOnClickListener {
@@ -29,8 +27,7 @@ class PlayerViewHolder(
                 editImageButton.setOnClickListener {
                     editMenuClickListener(this@PlayerViewHolder.adapterPosition)
                 }
-                deleteButton.setOnClickListener { //TODO Delete player card
-                }
+
             }
         }
     }
