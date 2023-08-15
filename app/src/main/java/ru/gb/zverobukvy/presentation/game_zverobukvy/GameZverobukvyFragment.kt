@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.data.data_source.LetterCardsDB
 import ru.gb.zverobukvy.data.data_source.WordCardsDB
-import ru.gb.zverobukvy.data.data_source.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
 import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
+import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.databinding.FragmentGameZverobukvyBinding
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -18,7 +18,7 @@ import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
-import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsOverDialogData
+import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.DataGameIsOverDialog
 import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsOverDialogFragment
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
@@ -96,8 +96,8 @@ class GameZverobukvyFragment :
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersState.EntireState.EndGameState -> {
-                    val players = GameIsOverDialogData.map(it.players)
-                    val data = GameIsOverDialogData(players, ("18 мин "))
+                    val players = DataGameIsOverDialog.map(it.players)
+                    val data = DataGameIsOverDialog(players, ("18 мин "))
                     GameIsOverDialogFragment.instance(data)
                         .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
                 }

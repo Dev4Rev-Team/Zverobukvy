@@ -32,7 +32,7 @@ class GameIsOverDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val data: GameIsOverDialogData? = arguments?.parcelable(DATE)
+        val data: DataGameIsOverDialog? = arguments?.parcelable(DATE)
         binding.playersRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             data?.let {
@@ -64,7 +64,7 @@ class GameIsOverDialogFragment :
         private const val DATE = "DATE"
 
         @JvmStatic
-        fun instance(data: GameIsOverDialogData): GameIsOverDialogFragment {
+        fun instance(data: DataGameIsOverDialog): GameIsOverDialogFragment {
             val arg = bundleOf(DATE to data)
             return GameIsOverDialogFragment().apply { arguments = arg }
         }
