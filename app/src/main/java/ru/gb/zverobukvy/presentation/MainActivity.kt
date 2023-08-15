@@ -15,33 +15,14 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE)
 
-//        val gameStart =
-//            GameZverobukvyFragment.GameStart(
-//                listOf(TypeCards.BLUE, TypeCards.GREEN), listOf(
-//                    PlayerInGame("Nik1", 0),
-//                    PlayerInGame("Nik2", 0)
-//                )
-//            )
-//
-//        val toFragment = GameZverobukvyFragment.newInstance(gameStart)
-//
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.container, toFragment, TAG_TO_FRAGMENT)
-//            .addToBackStack(TAG_TO_FRAGMENT).commit()
-
-
-        val toFragment = MainMenuFragment.newInstance()
-
        if (savedInstanceState==null)
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.container, toFragment, MainMenuFragment.TAG_MAIN_MENU_FRAGMENT)
-            .addToBackStack(TAG_TO_FRAGMENT).commit()
+            .replace(R.id.container, MainMenuFragment.newInstance(), MainMenuFragment.TAG_MAIN_MENU_FRAGMENT)
+            .commitAllowingStateLoss()
     }
 
     companion object {
-        private const val TAG_TO_FRAGMENT = "GameZverobukvyFragment"
         lateinit var sharedPreferences: SharedPreferences
     }
 
