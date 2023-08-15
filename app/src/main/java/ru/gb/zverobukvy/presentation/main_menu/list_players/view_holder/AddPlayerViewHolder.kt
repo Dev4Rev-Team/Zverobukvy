@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder
+package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
 import ru.gb.zverobukvy.databinding.ItemAddPlayerInSettingsBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings

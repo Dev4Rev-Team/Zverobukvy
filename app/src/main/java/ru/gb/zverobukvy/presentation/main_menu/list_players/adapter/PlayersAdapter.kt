@@ -1,17 +1,17 @@
-package ru.gb.zverobukvy.presentation.main_menu.view.list_players.adapter
+package ru.gb.zverobukvy.presentation.main_menu.list_players.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.gb.zverobukvy.databinding.ItemAddPlayerInSettingsBinding
 import ru.gb.zverobukvy.databinding.ItemEditPlayerInSettingsBinding
 import ru.gb.zverobukvy.databinding.ItemPlayerInSettingsBinding
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.AddPlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder.AddPlayerViewHolder
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder.BaseViewHolder
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.EditPlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder.EditPlayerViewHolder
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.PlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder.PlayerViewHolder
+import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.AddPlayerViewHolder
+import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.BaseViewHolder
+import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.EditPlayerViewHolder
+import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.PlayerViewHolder
 
 class PlayersAdapter(
     private val playerClickListenerOwner: PlayerClickListenerOwner,
