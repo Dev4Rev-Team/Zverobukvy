@@ -142,7 +142,7 @@ class GameZverobukvyFragment :
     }
 
     private fun setPlayer(name: String) {
-        binding.playerTextView.text = name
+        binding.playerNameTextView.text = name
     }
 
     private fun setPictureOfWord(urlPicture: String) {

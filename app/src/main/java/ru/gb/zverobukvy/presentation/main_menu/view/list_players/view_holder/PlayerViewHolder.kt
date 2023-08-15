@@ -1,11 +1,11 @@
 package ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder
 
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.databinding.ItemPlayerInSettingsBinding
+import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 
 class PlayerViewHolder(
-    override val viewBinding: ItemPlayerInSettingsBinding,
+    override val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
     private val itemPlayerClickListener: (Int) -> Unit,
     private val editMenuClickListener: (Int) -> Unit
 ) :

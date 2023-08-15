@@ -2,9 +2,9 @@ package ru.gb.zverobukvy.presentation.main_menu.view.list_players.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import ru.gb.zverobukvy.databinding.ItemAddPlayerInSettingsBinding
-import ru.gb.zverobukvy.databinding.ItemEditPlayerInSettingsBinding
-import ru.gb.zverobukvy.databinding.ItemPlayerInSettingsBinding
+import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeAddBinding
+import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
+import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.gb.zverobukvy.presentation.main_menu.view.list_players.click_listener_owner.AddPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder.AddPlayerViewHolder
 import ru.gb.zverobukvy.presentation.main_menu.view.list_players.view_holder.BaseViewHolder
@@ -23,7 +23,7 @@ class PlayersAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             NOT_EDIT_ITEM_TYPE -> PlayerViewHolder(
-                ItemPlayerInSettingsBinding.inflate(
+                FragmentMainMenuItemPlayerModeViewBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 ),
                 playerClickListenerOwner.itemPlayerClickListener,
@@ -31,7 +31,7 @@ class PlayersAdapter(
             )
 
             EDIT_ITEM_TYPE -> EditPlayerViewHolder(
-                ItemEditPlayerInSettingsBinding.inflate(
+                FragmentMainMenuItemPlayerModeEditBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 ),
                 editPlayerClickListenerOwner.saveChangedPlayerClickListener,
@@ -40,7 +40,7 @@ class PlayersAdapter(
             )
 
             ADD_ITEM_TYPE -> AddPlayerViewHolder(
-                ItemAddPlayerInSettingsBinding.inflate(
+                FragmentMainMenuItemPlayerModeAddBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -49,7 +49,7 @@ class PlayersAdapter(
             )
 
             else -> AddPlayerViewHolder(
-                ItemAddPlayerInSettingsBinding.inflate(
+                FragmentMainMenuItemPlayerModeAddBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
