@@ -1,6 +1,9 @@
-package ru.gb.zverobukvy.presentation
+package ru.gb.zverobukvy.presentation.main_menu.viewModel
 
+import androidx.lifecycle.LiveData
+import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.presentation.SingleEventLiveData
 
 interface SettingsScreenViewModel {
 
@@ -20,19 +23,22 @@ interface SettingsScreenViewModel {
     )
 
     /**
+    Метод для подписки view на состояние списка игроков на экране настроек.
+     */
+    fun getLiveDataPlayersScreenState(): LiveData<SettingsScreenState.PlayersScreenState>
+
+    /**
+    Метод для подписки viewна состояние экрана настроек.
+     */
+    fun getLiveDataScreenState(): SingleEventLiveData<SettingsScreenState.ScreenState>
+
+    /**
      * Метод вызывается при выборе или отмене выбора игрока для участия в игре, например, по клику
      * на item игрока. ViewModel изменяет значение isSelectedForGame для данного игрока и формирует
      * состояние ChangedPlayer, по которому во view в адаптер передается новый список игроков и
      * изменяется выделение соответствующего item игрока.
      */
     fun onChangedSelectingPlayer(positionPlayer: Int)
-
-    /**
-     * Метод вызывается при запросе на удаление игрока, например длительном нажатии на item игрока.
-     * ViewModel формирует состояние QueryRemovePlayer, по которому во view открывается диалоговое
-     * окно.
-     */
-    fun onQueryRemovePlayer(positionPlayer: Int)
 
     /**
      * Метод вызывается при удаление игрока: нажатие соответствующей кнопки на редактируемом

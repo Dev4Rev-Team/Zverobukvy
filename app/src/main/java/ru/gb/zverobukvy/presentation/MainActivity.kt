@@ -1,11 +1,11 @@
 package ru.gb.zverobukvy.presentation
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
+import ru.gb.zverobukvy.presentation.main_menu.view.MainMenuFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -13,24 +13,35 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val gameStart =
-            GameZverobukvyFragment.GameStart(
-                listOf(TypeCards.BLUE, TypeCards.GREEN), listOf(
-                    PlayerInGame("Nik1", 0),
-                    PlayerInGame("Nik2", 0)
-                )
-            )
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE)
 
-        val toFragment = GameZverobukvyFragment.newInstance(gameStart)
+//        val gameStart =
+//            GameZverobukvyFragment.GameStart(
+//                listOf(TypeCards.BLUE, TypeCards.GREEN), listOf(
+//                    PlayerInGame("Nik1", 0),
+//                    PlayerInGame("Nik2", 0)
+//                )
+//            )
+//
+//        val toFragment = GameZverobukvyFragment.newInstance(gameStart)
+//
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.container, toFragment, TAG_TO_FRAGMENT)
+//            .addToBackStack(TAG_TO_FRAGMENT).commit()
+
+
+        val toFragment = MainMenuFragment.newInstance()
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.container, toFragment, TAG_TO_FRAGMENT)
+            .replace(R.id.container, toFragment, MainMenuFragment.TAG_MAIN_MENU_FRAGMENT)
             .addToBackStack(TAG_TO_FRAGMENT).commit()
     }
 
     companion object {
         private const val TAG_TO_FRAGMENT = "GameZverobukvyFragment"
+        lateinit var sharedPreferences: SharedPreferences
     }
 
 }

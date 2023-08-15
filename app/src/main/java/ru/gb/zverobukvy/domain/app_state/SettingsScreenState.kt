@@ -12,14 +12,14 @@ sealed interface SettingsScreenState {
          * Состояние для отрисовки всего списка игроков: при создании или пересоздании view.
          */
         data class PlayersState(
-            val playersInSettings: List<PlayerInSettings>
+            val playersInSettings: List<PlayerInSettings?>
         ) : PlayersScreenState
 
         /**
          * Состояние для добавления item нового игрока
          */
         data class AddPlayerState(
-            val playersInSettings: List<PlayerInSettings>,
+            val playersInSettings: List<PlayerInSettings?>,
             val positionAddPlayer: Int
         ) : PlayersScreenState
 
@@ -27,7 +27,7 @@ sealed interface SettingsScreenState {
          * Состояние для удаления игрока
          */
         data class RemovePlayerState(
-            val playersInSettings: List<PlayerInSettings>,
+            val playersInSettings: List<PlayerInSettings?>,
             val positionRemovePlayer: Int
         ) : PlayersScreenState
 
@@ -42,7 +42,7 @@ sealed interface SettingsScreenState {
          * (inEditingState=false).
          */
         data class ChangedPlayerState(
-            val playersInSettings: List<PlayerInSettings>,
+            val playersInSettings: List<PlayerInSettings?>,
             val positionChangedPlayer: Int
         ) : PlayersScreenState
     }
