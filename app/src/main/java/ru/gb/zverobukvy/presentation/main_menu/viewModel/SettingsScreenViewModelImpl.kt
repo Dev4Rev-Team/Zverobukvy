@@ -108,7 +108,7 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     override fun onAddPlayer() {
         closeEditablePlayer()
         val player = PlayerInSettings(
-            Player("new"),
+            Player("new ${players.size}"),
             isSelectedForGame = true
         )
         val newPosition = players.size - 1
@@ -134,16 +134,17 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
         closeEditablePlayer()
         Timber.d("onStart")
         val playersForGame: MutableList<PlayerInGame> = mutableListOf()
-        //TODO сделать рефакторинг
+
         players.forEach {
             if (it != null && it.isSelectedForGame)
                 playersForGame.add(PlayerInGame(it.player.name))
         }
-        if(typesCardsSelectedForGame.size > 0){
+        if (typesCardsSelectedForGame.size > 0) {
             liveDataScreenState.value =
                 SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
-        }else{
-            liveDataScreenState.value = SettingsScreenState.ScreenState.ErrorState("Not_selected_card")
+        } else {
+            liveDataScreenState.value =
+                SettingsScreenState.ScreenState.ErrorState("Not_selected_card")
         }
     }
 
@@ -152,7 +153,7 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
 
         players[positionPlayer]?.apply {
             inEditingState = true
-            lastEditablePlayer = this
+            this@SettingsScreenViewModelImpl.lastEditablePlayer = this
         }
 
         liveDataPlayersScreenState.value =
