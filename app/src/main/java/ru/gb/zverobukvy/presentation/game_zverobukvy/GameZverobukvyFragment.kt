@@ -18,10 +18,11 @@ import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
-import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsOverDialogData
+import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.DataGameIsOverDialog
 import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsOverDialogFragment
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
+import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 class GameZverobukvyFragment :
@@ -29,7 +30,7 @@ class GameZverobukvyFragment :
     private var gameStart: GameStart? = null
 
     private val viewModel: GameZverobukvyViewModel by lazy {
-        ViewModelProvider(requireActivity(), viewModelProviderFactoryOf {
+        ViewModelProvider(this, viewModelProviderFactoryOf {
 
             val letterCardsDB: LetterCardsDB = LetterCardsDBImpl()
             val wordCardsDB: WordCardsDB = WordCardsDBImpl()
@@ -95,8 +96,8 @@ class GameZverobukvyFragment :
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersState.EntireState.EndGameState -> {
-                    val players = GameIsOverDialogData.map(it.players)
-                    val data = GameIsOverDialogData(players, ("18 мин "))
+                    val players = DataGameIsOverDialog.map(it.players)
+                    val data = DataGameIsOverDialog(players, ("18 мин "))
                     GameIsOverDialogFragment.instance(data)
                         .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
                 }
@@ -185,7 +186,7 @@ class GameZverobukvyFragment :
             setListItem(startGameState.lettersCards) {
                 CustomCard(requireContext()).apply {
                     radius = CARD_RADIUS
-                    //TODO
+                    enableClickAnimation()
                     setSrcOpenBackgroundFromAssert("FACE.webp")
                 }
             }
@@ -210,6 +211,7 @@ class GameZverobukvyFragment :
 
     companion object {
         const val GAME_START = "GAME_START"
+
         //Y
         const val CARD_RADIUS = 48f
 
