@@ -20,7 +20,7 @@
     <string name="ok">"Да"</string>
     <string name="cancel">"Отмена"</string>
     <string name="save">"Сохранить"</string>
-    <string name="main_menu_fragment_not_selected_card">Not selected card</string>
-    <string name="main_menu_fragment_no_players_selected">No players selected</string>
+    <string name="main_menu_fragment_no_card_selected">The card is not selected</string>
+    <string name="main_menu_fragment_no_player_selected">The player is not selected</string>
 
 </resources>

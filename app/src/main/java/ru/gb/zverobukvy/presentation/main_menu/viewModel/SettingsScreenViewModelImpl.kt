@@ -142,9 +142,9 @@ class SettingsScreenViewModelImpl(
         val playersForGame = findPlayersForGame()
 
         if (typesCardsSelectedForGame.size == 0) {
-            sendError(StringEnum.MAIN_MENU_FRAGMENT_NOT_SELECTED_CARD)
+            sendError(StringEnum.MAIN_MENU_FRAGMENT_NO_CARD_SELECTED)
         } else if (playersForGame.size == 0) {
-            sendError(StringEnum.MAIN_MENU_FRAGMENT_NO_PLAYERS_SELECTED)
+            sendError(StringEnum.MAIN_MENU_FRAGMENT_NO_PLAYER_SELECTED)
         } else {
             liveDataScreenState.value =
                 SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
