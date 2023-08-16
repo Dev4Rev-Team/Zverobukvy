@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
+import ru.gb.zverobukvy.data.resources_provider.StringEnum
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -14,7 +16,10 @@ import ru.gb.zverobukvy.domain.repository.PlayersRepository
 import ru.gb.zverobukvy.presentation.SingleEventLiveData
 import timber.log.Timber
 
-class SettingsScreenViewModelImpl(private val playersRepository: PlayersRepository) :
+class SettingsScreenViewModelImpl(
+    private val playersRepository: PlayersRepository,
+    private val resourcesProvider: ResourcesProvider,
+) :
     SettingsScreenViewModel, ViewModel() {
     private val typesCardsSelectedForGame: MutableList<TypeCards> = mutableListOf()
 
@@ -131,21 +136,35 @@ class SettingsScreenViewModelImpl(private val playersRepository: PlayersReposito
     }
 
     override fun onStartGame() {
-        closeEditablePlayer()
-        Timber.d("onStart")
-        val playersForGame: MutableList<PlayerInGame> = mutableListOf()
+        Timber.d("onStartGame")
 
+        closeEditablePlayer()
+        val playersForGame = findPlayersForGame()
+
+        if (typesCardsSelectedForGame.size == 0) {
+            sendError(StringEnum.MAIN_MENU_FRAGMENT_NOT_SELECTED_CARD)
+        } else if (playersForGame.size == 0) {
+            sendError(StringEnum.MAIN_MENU_FRAGMENT_NO_PLAYERS_SELECTED)
+        } else {
+            liveDataScreenState.value =
+                SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
+        }
+    }
+
+    private fun findPlayersForGame():MutableList<PlayerInGame> {
+        val playersForGame: MutableList<PlayerInGame> = mutableListOf()
         players.forEach {
             if (it != null && it.isSelectedForGame)
                 playersForGame.add(PlayerInGame(it.player.name))
         }
-        if (typesCardsSelectedForGame.size > 0) {
-            liveDataScreenState.value =
-                SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
-        } else {
-            liveDataScreenState.value =
-                SettingsScreenState.ScreenState.ErrorState("Not_selected_card")
-        }
+        return playersForGame
+    }
+
+    private fun sendError(stringEnum: StringEnum) {
+        liveDataScreenState.value =
+            SettingsScreenState.ScreenState.ErrorState(
+                resourcesProvider.getString(stringEnum)
+            )
     }
 
     private fun openEditablePlayer(positionPlayer: Int) {
