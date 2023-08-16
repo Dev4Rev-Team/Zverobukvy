@@ -31,6 +31,7 @@
 Э EH
 Ю YU
 Я YA
+Щука PIKE 
 Козёл GOAT
 Пень STUMP
 Хомяк HAMSTER
