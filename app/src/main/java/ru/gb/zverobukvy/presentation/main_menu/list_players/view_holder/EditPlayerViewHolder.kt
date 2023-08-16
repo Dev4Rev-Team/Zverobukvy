@@ -17,7 +17,7 @@ class EditPlayerViewHolder(
                 saveImageButton.setOnClickListener {
                     saveChangedPlayerClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
-                        itemEditPlayerInSettingsTextEditPlayerName.text.toString()
+                        playerNameTextInputView.text.toString()
                     )
                 }
                 saveImageButton.setOnClickListener {
@@ -26,7 +26,7 @@ class EditPlayerViewHolder(
                 deleteButton.setOnClickListener {
                     queryRemovePlayersClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
-                        itemEditPlayerInSettingsTextEditPlayerName.text.toString()
+                        playerNameTextInputView.text.toString()
                     )
                 }
             }
