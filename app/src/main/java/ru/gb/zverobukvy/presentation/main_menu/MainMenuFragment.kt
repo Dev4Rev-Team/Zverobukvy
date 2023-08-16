@@ -236,7 +236,7 @@ class MainMenuFragment :
 
     private fun onAddPlayer(newPlayers: List<PlayerInSettings?>, positionAddPlayer: Int) {
         playersAdapter.addPlayer(newPlayers, positionAddPlayer)
-        with(binding.fragmentMainMenuRecyclerViewPlayers){
+        with(binding.playersRecyclerView){
             adapter?.let {
                 scrollToPosition(it.itemCount - 1)
             }
@@ -312,6 +312,14 @@ class MainMenuFragment :
                 typesCardsSelectedForGame.add(TypeCards.VIOLET)
         }
         sharedPreferencesForGame.updateTypesCardsSelectedForGame(typesCardsSelectedForGame)
+    }
+
+    private fun setRemovePlayerDialogFragmentListener(){
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT,
+            viewLifecycleOwner,
+            this@MainMenuFragment
+        )
     }
 
     companion object {
