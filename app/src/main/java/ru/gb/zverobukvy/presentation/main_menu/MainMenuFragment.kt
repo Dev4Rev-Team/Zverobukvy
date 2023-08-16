@@ -236,6 +236,11 @@ class MainMenuFragment :
 
     private fun onAddPlayer(newPlayers: List<PlayerInSettings?>, positionAddPlayer: Int) {
         playersAdapter.addPlayer(newPlayers, positionAddPlayer)
+        with(binding.fragmentMainMenuRecyclerViewPlayers){
+            adapter?.let {
+                scrollToPosition(it.itemCount - 1)
+            }
+        }
         sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
             extractNamesPlayersSelectedForGame(newPlayers)
         )
