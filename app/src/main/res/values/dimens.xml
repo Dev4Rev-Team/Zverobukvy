@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_menu_card_corner_radius">8dp</dimen>
+    <dimen name="main_menu_card_vertical_margin">4dp</dimen>
+    <dimen name="main_menu_toggle_button_width">40dp</dimen>
+    <dimen name="main_menu_toggle_button_height">60dp</dimen>
+</resources>
