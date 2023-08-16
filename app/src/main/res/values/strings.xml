@@ -17,8 +17,14 @@
     <string name="main_menu_fragment_open_rules_text">Изучить правила</string>
     <string name="space">" "</string>
     <string name="choose">✓</string>
-    <string name="ok">"Да"</string>
+    <string name="ok">OK</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
     <string name="cancel">"Отмена"</string>
     <string name="save">"Сохранить"</string>
+    <string name="player_state_ready">Хочет играть</string>
+    <string name="player_state_not_ready">Не играет</string>
+    <string name="game_end_text">Игра завершена</string>
+    <string name="game_time_text">Время игры</string>
 
 </resources>
