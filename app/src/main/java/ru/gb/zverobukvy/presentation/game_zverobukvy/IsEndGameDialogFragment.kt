@@ -1,6 +1,9 @@
 package ru.gb.zverobukvy.presentation.game_zverobukvy
 
 import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -52,11 +55,14 @@ class IsEndGameDialogFragment : ViewBindingDialogFragment<DialogFragmentIsEndGam
         dialog?.window?.attributes = dialog?.window?.attributes?.apply {
             gravity = Gravity.BOTTOM
             // flags = flags and WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()
-            dimAmount = 0.5f
+            dimAmount = 0.3f
             width = WindowManager.LayoutParams.MATCH_PARENT
             height = WindowManager.LayoutParams.WRAP_CONTENT
-        }
 
+        }
+        dialog?.window?.setBackgroundDrawable(
+            InsetDrawable(ColorDrawable(Color.TRANSPARENT), 48)
+        )
     }
 
     companion object {
