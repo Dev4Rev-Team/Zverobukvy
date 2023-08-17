@@ -104,22 +104,22 @@ class MainMenuFragment :
     private fun initTypesCardsToggleButtons(typesCardsSelectedForGame: List<TypeCards>) {
         binding.run {
             initTypeCardToggleButton(
-                fragmentMainMenuToggleButtonOrange,
+                orangeToggleButton,
                 TypeCards.ORANGE,
                 typesCardsSelectedForGame.contains(TypeCards.ORANGE)
             )
             initTypeCardToggleButton(
-                fragmentMainMenuToggleButtonGreen,
+                greenToggleButton,
                 TypeCards.GREEN,
                 typesCardsSelectedForGame.contains(TypeCards.GREEN)
             )
             initTypeCardToggleButton(
-                fragmentMainMenuToggleButtonBlue,
+                blueToggleButton,
                 TypeCards.BLUE,
                 typesCardsSelectedForGame.contains(TypeCards.BLUE)
             )
             initTypeCardToggleButton(
-                fragmentMainMenuToggleButtonViolet,
+                violetToggleButton,
                 TypeCards.VIOLET,
                 typesCardsSelectedForGame.contains(TypeCards.VIOLET)
             )
@@ -140,13 +140,13 @@ class MainMenuFragment :
     }
 
     private fun initPlayGameButton() {
-        binding.fragmentMainMenuButtonPlay.setOnClickListener {
+        binding.playButton.setOnClickListener {
             viewModel.onStartGame()
         }
     }
 
     private fun initRecycleView() {
-        binding.fragmentMainMenuRecyclerViewPlayers.run {
+        binding.playersRecyclerView.run {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = playersAdapter
         }
@@ -238,6 +238,11 @@ class MainMenuFragment :
 
     private fun onAddPlayer(newPlayers: List<PlayerInSettings?>, positionAddPlayer: Int) {
         playersAdapter.addPlayer(newPlayers, positionAddPlayer)
+        with(binding.playersRecyclerView){
+            adapter?.let {
+                scrollToPosition(it.itemCount - 1)
+            }
+        }
         sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
             extractNamesPlayersSelectedForGame(newPlayers)
         )
@@ -299,13 +304,13 @@ class MainMenuFragment :
     private fun updateTypesCardsSelectedForGame() {
         val typesCardsSelectedForGame = mutableListOf<TypeCards>()
         binding.run {
-            if (fragmentMainMenuToggleButtonOrange.isChecked)
+            if (orangeToggleButton.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.ORANGE)
-            if (fragmentMainMenuToggleButtonBlue.isChecked)
+            if (blueToggleButton.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.BLUE)
-            if (fragmentMainMenuToggleButtonGreen.isChecked)
+            if (greenToggleButton.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.GREEN)
-            if (fragmentMainMenuToggleButtonViolet.isChecked)
+            if (violetToggleButton.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.VIOLET)
         }
         sharedPreferencesForGame.updateTypesCardsSelectedForGame(typesCardsSelectedForGame)

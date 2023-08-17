@@ -24,7 +24,7 @@ class GameIsOverDialogFragment :
         savedInstanceState: Bundle?,
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding.root.setOnClickListener {
+        binding.okButton.setOnClickListener {
             dismiss()
         }
         return binding.root
