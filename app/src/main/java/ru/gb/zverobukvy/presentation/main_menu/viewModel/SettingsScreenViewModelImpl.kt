@@ -39,6 +39,11 @@ class SettingsScreenViewModelImpl(
     ) {
         Timber.d("onLaunch")
         typesCardsSelectedForGame.addAll(typesCardsSelectedForGameFromPreference)
+        //TODO
+//        if (typesCardsSelectedForGame.size == 0) {
+//            typesCardsSelectedForGame.add(TypeCards.ORANGE)
+//        }
+
         //TODO реализовать формирование List<String> с использованием
         // namesPlayersSelectedForGameFromPreference и с запросом к репозиторию
         playersSelectedForGame.addAll(listOf("Игрок 1", "Игрок 2", "Игрок 3"))
@@ -151,7 +156,7 @@ class SettingsScreenViewModelImpl(
         }
     }
 
-    private fun findPlayersForGame():MutableList<PlayerInGame> {
+    private fun findPlayersForGame(): MutableList<PlayerInGame> {
         val playersForGame: MutableList<PlayerInGame> = mutableListOf()
         players.forEach {
             if (it != null && it.isSelectedForGame)
