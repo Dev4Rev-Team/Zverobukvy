@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:text="@string/no"
         app:layout_constraintEnd_toStartOf="@+id/yes_button"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -30,7 +29,6 @@
         android:text="@string/yes"
         app:layout_constraintBottom_toBottomOf="@+id/no_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/no_button"
         app:layout_constraintTop_toTopOf="@+id/no_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
