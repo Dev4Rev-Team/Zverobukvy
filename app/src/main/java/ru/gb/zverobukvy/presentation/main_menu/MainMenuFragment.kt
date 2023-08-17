@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
+import ru.gb.zverobukvy.data.data_source_impl.LocalDataSourceImpl
 import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
+import ru.gb.zverobukvy.data.room.PlayersDatabase
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -37,7 +39,8 @@ class MainMenuFragment :
     private val viewModel: SettingsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             val playersRepository: PlayersRepository =
-                AnimalLettersCardsRepositoryImpl(LetterCardsDBImpl(), WordCardsDBImpl())
+                AnimalLettersCardsRepositoryImpl(LetterCardsDBImpl(), WordCardsDBImpl(), LocalDataSourceImpl(
+                    PlayersDatabase.getPlayersDatabase()))
             SettingsScreenViewModelImpl(playersRepository)
         })[SettingsScreenViewModelImpl::class.java]
     }
