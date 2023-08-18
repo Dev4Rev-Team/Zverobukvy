@@ -39,6 +39,8 @@ class MainMenuFragment :
                 AnimalLettersCardsRepositoryImpl(LetterCardsDBImpl(), WordCardsDBImpl())
             val resourcesProvider = ResourcesProvider(requireContext())
             SettingsScreenViewModelImpl(playersRepository, resourcesProvider)
+
+            SettingsScreenViewModelImpl(playersRepository, ResourcesProvider(requireContext()))
         })[SettingsScreenViewModelImpl::class.java]
     }
 

@@ -46,11 +46,11 @@ class SettingsScreenViewModelImpl(
 
         //TODO реализовать формирование List<String> с использованием
         // namesPlayersSelectedForGameFromPreference и с запросом к репозиторию
-        playersSelectedForGame.addAll(listOf("Игрок 1", "Игрок 2", "Игрок 3"))
+        //playersSelectedForGame.addAll(listOf("Игрок 1", "Игрок 2", "Игрок 3"))
 
         viewModelScope.launch {
             players.addAll(
-                playersRepository.getPlayers(listOf()).map {
+                playersRepository.getPlayers().map {
                     mapToPlayerInSettings(it).apply {
                         if (playersSelectedForGame.contains(player.name)) {
                             isSelectedForGame = true
