@@ -13,6 +13,7 @@ import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
 import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
+import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -38,7 +39,8 @@ class MainMenuFragment :
         ViewModelProvider(this, viewModelProviderFactoryOf {
             val playersRepository: PlayersRepository =
                 AnimalLettersCardsRepositoryImpl(LetterCardsDBImpl(), WordCardsDBImpl())
-            SettingsScreenViewModelImpl(playersRepository)
+            val resourcesProvider = ResourcesProvider(requireContext())
+            SettingsScreenViewModelImpl(playersRepository, resourcesProvider)
         })[SettingsScreenViewModelImpl::class.java]
     }
 
@@ -302,19 +304,19 @@ class MainMenuFragment :
     private fun updateTypesCardsSelectedForGame() {
         val typesCardsSelectedForGame = mutableListOf<TypeCards>()
         binding.run {
-            if(orangeToggleButton.isChecked)
+            if (orangeToggleButton.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.ORANGE)
-            if(blueToggleButton.isChecked)
+            if (blueToggleButton.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.BLUE)
-            if(greenToggleButton.isChecked)
+            if (greenToggleButton.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.GREEN)
-            if(violetToggleButton.isChecked)
+            if (violetToggleButton.isChecked)
                 typesCardsSelectedForGame.add(TypeCards.VIOLET)
         }
         sharedPreferencesForGame.updateTypesCardsSelectedForGame(typesCardsSelectedForGame)
     }
 
-    private fun setRemovePlayerDialogFragmentListener(){
+    private fun setRemovePlayerDialogFragmentListener() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
             KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT,
             viewLifecycleOwner,
