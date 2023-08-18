@@ -1,10 +1,10 @@
 package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
-import ru.gb.zverobukvy.databinding.ItemEditPlayerInSettingsBinding
+import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 
 class EditPlayerViewHolder(
-    override val viewBinding: ItemEditPlayerInSettingsBinding,
+    override val viewBinding: FragmentMainMenuItemPlayerModeEditBinding,
     private val saveChangedPlayerClickListener: (Int, String) -> Unit,
     private val cancelChangedPlayerClickListener: (Int) -> Unit,
     private val queryRemovePlayersClickListener: (Int, String) -> Unit
@@ -13,20 +13,20 @@ class EditPlayerViewHolder(
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
             viewBinding.run {
-                itemEditPlayerInSettingsTextEditPlayerName.setText(playerInSetting.player.name)
-                itemEditPlayerInSettingsImageButtonSave.setOnClickListener {
+                playerNameTextInputView.setText(playerInSetting.player.name)
+                saveImageButton.setOnClickListener {
                     saveChangedPlayerClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
-                        itemEditPlayerInSettingsTextEditPlayerName.text.toString()
+                        playerNameTextInputView.text.toString()
                     )
                 }
-                itemEditPlayerInSettingsImageButtonCancel.setOnClickListener {
+                saveImageButton.setOnClickListener {
                     cancelChangedPlayerClickListener(this@EditPlayerViewHolder.adapterPosition)
                 }
-                itemEditPlayerInSettingsImageButtonCancel.setOnClickListener {
+                deleteButton.setOnClickListener {
                     queryRemovePlayersClickListener(
                         this@EditPlayerViewHolder.adapterPosition,
-                        itemEditPlayerInSettingsTextEditPlayerName.text.toString()
+                        playerNameTextInputView.text.toString()
                     )
                 }
             }

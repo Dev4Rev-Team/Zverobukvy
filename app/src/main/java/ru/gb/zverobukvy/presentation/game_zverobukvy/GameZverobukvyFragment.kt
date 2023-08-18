@@ -100,13 +100,14 @@ class GameZverobukvyFragment :
             when (it) {
                 is AnimalLettersState.EntireState.EndGameState -> {
                     val players = DataGameIsOverDialog.map(it.players)
-                    val data = DataGameIsOverDialog(players, ("18 мин "))
+                    val data = DataGameIsOverDialog(players, it.gameTime)
                     GameIsOverDialogFragment.instance(data)
                         .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
                 }
 
                 is AnimalLettersState.EntireState.IsEndGameState -> {
-                    viewModel.onEndGameByUser()
+                    IsEndGameDialogFragment.instance()
+                        .show(parentFragmentManager, IsEndGameDialogFragment.TAG)
                 }
 
                 is AnimalLettersState.EntireState.StartGameState -> {
@@ -119,6 +120,16 @@ class GameZverobukvyFragment :
         }
 
         initView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
+    override fun onPause() {
+        viewModel.onPause()
+        super.onPause()
     }
 
     private fun closeInvalidCard() {
@@ -139,6 +150,17 @@ class GameZverobukvyFragment :
             parentFragmentManager.popBackStack()
         }
 
+        IsEndGameDialogFragment.setOnListenerYes(this) {
+            viewModel.onEndGameByUser()
+        }
+
+        IsEndGameDialogFragment.setOnListenerNo(this) {
+            viewModel.onLoadGame()
+        }
+
+        binding.backToMenuImageButton.setOnClickListener {
+            viewModel.onBackPressed()
+        }
     }
 
     private fun setPositionLetterInWord(pos: Int) {
@@ -146,7 +168,7 @@ class GameZverobukvyFragment :
     }
 
     private fun setPlayer(name: String) {
-        binding.playerTextView.text = name
+        binding.playerNameTextView.text = name
     }
 
     private fun setPictureOfWord(urlPicture: String) {

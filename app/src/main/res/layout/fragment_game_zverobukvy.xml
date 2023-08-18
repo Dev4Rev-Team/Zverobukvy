@@ -4,85 +4,142 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D0E1FB"
     android:clickable="true"
-    android:background="@color/white"
-    tools:context=".presentation.game_zverobukvy.GameZverobukvyFragment"
-    android:focusable="true">
+    tools:context=".presentation.game_zverobukvy.GameZverobukvyFragment">
 
-    <TextView
-        android:id="@+id/title_player"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ходит"
-        android:textSize="16dp"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        android:layout_margin="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/player_text_view"
+    <ImageButton
+        android:id="@+id/back_to_menu_image_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/background_white"
+        android:elevation="8dp"
+        android:src="@drawable/ic_arrow_left"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/player_text_view"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/player_name_card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@id/title_player"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/title_player"
-        tools:text="payer1" />
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="4dp"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/player_avatar_card_view"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:backgroundTint="@color/color_violet_pastel"
+                app:cardCornerRadius="8000dp">
+
+                <ImageView
+                    android:id="@+id/player_avatar_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/avatar_cat" />
+            </androidx.cardview.widget.CardView>
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:id="@+id/player_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="@string/username_default"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/sector_menu_guidline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="60dp" />
 
     <ru.gb.zverobukvy.presentation.customview.CustomCard
         android:id="@+id/word_custom_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@id/guideline_field_word_custom_card"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_player" />
+        app:layout_constraintTop_toTopOf="@+id/sector_menu_guidline" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_field_word_custom_card"
+        android:id="@+id/sector_word_card_image_guidline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.19" />
-
+        app:layout_constraintGuide_percent="0.27" />
 
     <ru.gb.zverobukvy.presentation.customview.CustomWordView
         android:id="@+id/word_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/guideline_field_word_view"
         app:layout_constraintDimensionRatio="6:1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline_field_word_custom_card" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/word_guidline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sector_word_card_image_guidline">
 
+    </ru.gb.zverobukvy.presentation.customview.CustomWordView>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_field_word_view"
+        android:id="@+id/word_guidline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.32" />
+        app:layout_constraintGuide_percent="0.39" />
 
     <ru.gb.zverobukvy.presentation.customview.CustomCardTable
         android:id="@+id/table"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:horizontalGap="24"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/word_cards_table_guidline"
         app:layout_constraintDimensionRatio="5:7"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline_field_word_view"
+        app:layout_constraintTop_toTopOf="@+id/word_guidline"
         app:layout_constraintVertical_bias="0.5"
         app:verticalGap="24" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/word_cards_table_guidline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="20dp" />
 
     <Button
         android:id="@+id/next_player_button"
@@ -100,7 +157,64 @@
         android:text="next word"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_play_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Игра на паузе"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/word_cards_table_guidline" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_level1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/color_orange_pastel"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_level2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/color_green_pastel"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_level3"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/color_blue_pastel"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_level4"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:backgroundTint="@color/color_violet_pastel"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
