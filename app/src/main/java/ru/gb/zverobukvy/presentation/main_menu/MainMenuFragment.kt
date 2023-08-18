@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,8 +32,7 @@ import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
 class MainMenuFragment :
-    ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate),
-    FragmentResultListener {
+    ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
     private val viewModel: SettingsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             val playersRepository: PlayersRepository =
@@ -47,15 +45,12 @@ class MainMenuFragment :
     private val sharedPreferencesForGame: SharedPreferencesForGameImpl =
         SharedPreferencesForGameImpl()
 
-    private val playersAdapter = PlayersAdapter(
-        PlayerClickListenerOwner(::clickPlayer, ::clickEditMenuPlayer),
-        EditPlayerClickListenerOwner(
-            ::clickSaveChangedPlayer,
-            ::clickCancelChangedPlayer,
-            ::clickQueryRemovePlayer
-        ),
-        AddPlayerClickListenerOwner { clickAddPlayer() }
-    )
+    private val playersAdapter =
+        PlayersAdapter(PlayerClickListenerOwner(::clickPlayer, ::clickEditMenuPlayer),
+            EditPlayerClickListenerOwner(
+                ::clickSaveChangedPlayer, ::clickCancelChangedPlayer, ::clickQueryRemovePlayer
+            ),
+            AddPlayerClickListenerOwner { clickAddPlayer() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,8 +60,7 @@ class MainMenuFragment :
         initView(typesCardsSelectedForGame)
         viewModel.run {
             onLaunch(
-                typesCardsSelectedForGame,
-                namesPlayersSelectedForGame
+                typesCardsSelectedForGame, namesPlayersSelectedForGame
             )
             getLiveDataScreenState().observe(viewLifecycleOwner) {
                 renderSettingsScreenState(it)
@@ -75,11 +69,6 @@ class MainMenuFragment :
                 renderPlayersScreenState(it)
             }
         }
-    }
-
-    override fun onFragmentResult(requestKey: String, result: Bundle) {
-        if (requestKey == KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT)
-            viewModel.onRemovePlayer(result.getInt(RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER))
     }
 
     override fun onPause() {
@@ -114,9 +103,7 @@ class MainMenuFragment :
                 typesCardsSelectedForGame.contains(TypeCards.GREEN)
             )
             initTypeCardToggleButton(
-                blueToggleButton,
-                TypeCards.BLUE,
-                typesCardsSelectedForGame.contains(TypeCards.BLUE)
+                blueToggleButton, TypeCards.BLUE, typesCardsSelectedForGame.contains(TypeCards.BLUE)
             )
             initTypeCardToggleButton(
                 violetToggleButton,
@@ -127,9 +114,7 @@ class MainMenuFragment :
     }
 
     private fun initTypeCardToggleButton(
-        toggleButton: ToggleButton,
-        typeCard: TypeCards,
-        isChecked: Boolean,
+        toggleButton: ToggleButton, typeCard: TypeCards, isChecked: Boolean
     ) {
         toggleButton.apply {
             setChecked(isChecked)
@@ -170,29 +155,20 @@ class MainMenuFragment :
     }
 
     private fun openAnimalLettersFragment(
-        typesCardsSelectedForGame: List<TypeCards>,
-        playersSelectedForGame: List<PlayerInGame>,
+        typesCardsSelectedForGame: List<TypeCards>, playersSelectedForGame: List<PlayerInGame>
     ) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .add(
-                R.id.container,
-                GameZverobukvyFragment.newInstance(
-                    GameZverobukvyFragment.GameStart(
-                        typesCardsSelectedForGame,
-                        playersSelectedForGame
-                    )
-                ),
-                TAG_ANIMAL_LETTERS_FRAGMENT
-            )
-            .addToBackStack(null)
-            .commitAllowingStateLoss()
+        requireActivity().supportFragmentManager.beginTransaction().add(
+            R.id.container, GameZverobukvyFragment.newInstance(
+                GameZverobukvyFragment.GameStart(
+                    typesCardsSelectedForGame, playersSelectedForGame
+                )
+            ), TAG_ANIMAL_LETTERS_FRAGMENT
+        ).addToBackStack(null).commitAllowingStateLoss()
     }
 
     private fun showError(error: String) {
         Toast.makeText(
-            requireContext(),
-            error,
-            Toast.LENGTH_LONG
+            requireContext(), error, Toast.LENGTH_LONG
         ).show()
     }
 
@@ -201,16 +177,14 @@ class MainMenuFragment :
             is SettingsScreenState.PlayersScreenState.AddPlayerState -> {
                 Timber.d("AddPlayerState")
                 onAddPlayer(
-                    playersScreenState.playersInSettings,
-                    playersScreenState.positionAddPlayer
+                    playersScreenState.playersInSettings, playersScreenState.positionAddPlayer
                 )
             }
 
             is SettingsScreenState.PlayersScreenState.ChangedPlayerState -> {
                 Timber.d("ChangedPlayerState")
                 onChangedPlayer(
-                    playersScreenState.playersInSettings,
-                    playersScreenState.positionChangedPlayer
+                    playersScreenState.playersInSettings, playersScreenState.positionChangedPlayer
                 )
             }
 
@@ -222,8 +196,7 @@ class MainMenuFragment :
             is SettingsScreenState.PlayersScreenState.RemovePlayerState -> {
                 Timber.d("RemovePlayerState")
                 onRemovePlayer(
-                    playersScreenState.playersInSettings,
-                    playersScreenState.positionRemovePlayer
+                    playersScreenState.playersInSettings, playersScreenState.positionRemovePlayer
                 )
             }
         }
@@ -238,7 +211,7 @@ class MainMenuFragment :
 
     private fun onAddPlayer(newPlayers: List<PlayerInSettings?>, positionAddPlayer: Int) {
         playersAdapter.addPlayer(newPlayers, positionAddPlayer)
-        with(binding.playersRecyclerView){
+        with(binding.playersRecyclerView) {
             adapter?.let {
                 scrollToPosition(it.itemCount - 1)
             }
@@ -265,8 +238,7 @@ class MainMenuFragment :
     private fun extractNamesPlayersSelectedForGame(players: List<PlayerInSettings?>): List<String> {
         val namesPlayersSelectedForGame = mutableListOf<String>()
         players.forEach {
-            if (it != null && it.isSelectedForGame)
-                namesPlayersSelectedForGame.add(it.player.name)
+            if (it != null && it.isSelectedForGame) namesPlayersSelectedForGame.add(it.player.name)
         }
         return namesPlayersSelectedForGame
     }
@@ -304,24 +276,22 @@ class MainMenuFragment :
     private fun updateTypesCardsSelectedForGame() {
         val typesCardsSelectedForGame = mutableListOf<TypeCards>()
         binding.run {
-            if (orangeToggleButton.isChecked)
-                typesCardsSelectedForGame.add(TypeCards.ORANGE)
-            if (blueToggleButton.isChecked)
-                typesCardsSelectedForGame.add(TypeCards.BLUE)
-            if (greenToggleButton.isChecked)
-                typesCardsSelectedForGame.add(TypeCards.GREEN)
-            if (violetToggleButton.isChecked)
-                typesCardsSelectedForGame.add(TypeCards.VIOLET)
+            if (orangeToggleButton.isChecked) typesCardsSelectedForGame.add(TypeCards.ORANGE)
+            if (blueToggleButton.isChecked) typesCardsSelectedForGame.add(TypeCards.BLUE)
+            if (greenToggleButton.isChecked) typesCardsSelectedForGame.add(TypeCards.GREEN)
+            if (violetToggleButton.isChecked) typesCardsSelectedForGame.add(TypeCards.VIOLET)
         }
         sharedPreferencesForGame.updateTypesCardsSelectedForGame(typesCardsSelectedForGame)
     }
 
     private fun setRemovePlayerDialogFragmentListener() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT,
-            viewLifecycleOwner,
-            this@MainMenuFragment
-        )
+            KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT, viewLifecycleOwner
+        ) { requestKey, result ->
+            if (requestKey == KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT) viewModel.onRemovePlayer(
+                result.getInt(RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER)
+            )
+        }
     }
 
     companion object {
@@ -332,7 +302,6 @@ class MainMenuFragment :
             "KeyResultFromRemovePlayerDialogFragment"
 
         @JvmStatic
-        fun newInstance() =
-            MainMenuFragment()
+        fun newInstance() = MainMenuFragment()
     }
 }

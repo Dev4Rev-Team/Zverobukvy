@@ -1,10 +1,8 @@
 package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
-import android.widget.Toast
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
-import kotlin.coroutines.coroutineContext
 
 class PlayerViewHolder(
     override val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
