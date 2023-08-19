@@ -9,7 +9,7 @@ class LetterCardsMapper: EntitiesMapper<List<LetterCard>, List<LetterCardInDatab
         entity.forEach {
             letterCards.add(
                 LetterCard(
-                    letter = it.letter,
+                    letter = it.letter.first(),
                     typesCards = ExtractTypesCardsHelper.extractTypesCards(it.colorCards),
                     faceImageName = it.faceImageName,
                     backImageName = it.backImageName

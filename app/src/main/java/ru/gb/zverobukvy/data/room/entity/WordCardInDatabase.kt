@@ -8,11 +8,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "words", indices = [Index(value = ["word", "face"], unique = true)])
 class WordCardInDatabase (
-    @field:PrimaryKey
     @field:ColumnInfo(name = "word")
     val word: String,
     @Embedded
     val colorCards: ColorCards,
     @field:ColumnInfo(name = "face")
-    val faceImageName: String
+    val faceImageName: String,
+    @field:PrimaryKey(autoGenerate = true)
+    val id: Long = 0
 ): DataEntity
