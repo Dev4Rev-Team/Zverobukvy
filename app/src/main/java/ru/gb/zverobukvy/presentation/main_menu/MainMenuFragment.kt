@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
+import ru.gb.zverobukvy.data.data_source_impl.LocalDataSourceImpl
 import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
+import ru.gb.zverobukvy.data.room.PlayersDatabase
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -20,11 +22,11 @@ import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.PlayersRepository
 import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
-import ru.gb.zverobukvy.presentation.main_menu.preferences.SharedPreferencesForGameImpl
 import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
+import ru.gb.zverobukvy.presentation.main_menu.preferences.SharedPreferencesForGameImpl
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModel
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
@@ -35,10 +37,18 @@ class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
     private val viewModel: SettingsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
+
             val playersRepository: PlayersRepository =
-                AnimalLettersCardsRepositoryImpl(LetterCardsDBImpl(), WordCardsDBImpl())
+                AnimalLettersCardsRepositoryImpl(
+                    LetterCardsDBImpl(),
+                    WordCardsDBImpl(),
+                    LocalDataSourceImpl(PlayersDatabase.getPlayersDatabase())
+                )
+
             val resourcesProvider = ResourcesProvider(requireContext())
             SettingsScreenViewModelImpl(playersRepository, resourcesProvider)
+
+            SettingsScreenViewModelImpl(playersRepository, ResourcesProvider(requireContext()))
         })[SettingsScreenViewModelImpl::class.java]
     }
 
