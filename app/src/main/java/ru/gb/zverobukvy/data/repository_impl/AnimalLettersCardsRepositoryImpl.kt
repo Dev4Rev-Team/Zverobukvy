@@ -1,8 +1,9 @@
 package ru.gb.zverobukvy.data.repository_impl
 
-import ru.gb.zverobukvy.data.data_source.LetterCardsDB
 import ru.gb.zverobukvy.data.data_source.LocalDataSource
-import ru.gb.zverobukvy.data.data_source.WordCardsDB
+import ru.gb.zverobukvy.data.mapper.EntitiesMapper
+import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase
+import ru.gb.zverobukvy.data.room.entity.WordCardInDatabase
 import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.WordCard
@@ -10,24 +11,20 @@ import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
 import ru.gb.zverobukvy.domain.repository.PlayersRepository
 
 class AnimalLettersCardsRepositoryImpl (
-    private val letterCardsDB: LetterCardsDB,
-    private val wordCardsDB: WordCardsDB,
-    private val localDataSource: LocalDataSource
+    private val localDataSource: LocalDataSource,
+    private val letterCardsMapper: EntitiesMapper<List<LetterCard>, List<LetterCardInDatabase>>,
+    private val wordCardsMapper: EntitiesMapper<List <WordCard>, List<WordCardInDatabase> >
 ) : AnimalLettersCardsRepository, PlayersRepository {
     override suspend fun getLetterCards(): List<LetterCard> =
-        letterCardsDB.readLetterCards()
+        letterCardsMapper.mapToDomain(localDataSource.getLetterCards())
 
     override suspend fun getWordCards(): List<WordCard> =
-        wordCardsDB.readWordCards()
+        wordCardsMapper.mapToDomain(localDataSource.getWordCards())
 
     override suspend fun getPlayers(): List<Player> = localDataSource.getPlayers()
 
     override suspend fun deletePlayer(player: Player) {
         localDataSource.deletePlayer(player)
-    }
-
-    override suspend fun insertPlayers(players: List<Player>) {
-        localDataSource.insertPlayers(players)
     }
 
     override suspend fun insertPlayer(player: Player) {

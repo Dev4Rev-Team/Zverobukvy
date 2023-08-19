@@ -5,13 +5,11 @@ import android.os.Parcelable
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
-import ru.gb.zverobukvy.data.data_source.LetterCardsDB
-import ru.gb.zverobukvy.data.data_source.WordCardsDB
-import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
 import ru.gb.zverobukvy.data.data_source_impl.LocalDataSourceImpl
-import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
+import ru.gb.zverobukvy.data.mapper.LetterCardsMapper
+import ru.gb.zverobukvy.data.mapper.WordCardsMapper
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
-import ru.gb.zverobukvy.data.room.PlayersDatabase
+import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.databinding.FragmentGameZverobukvyBinding
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -34,11 +32,12 @@ class GameZverobukvyFragment :
     private val viewModel: GameZverobukvyViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
 
-            val letterCardsDB: LetterCardsDB = LetterCardsDBImpl()
-            val wordCardsDB: WordCardsDB = WordCardsDBImpl()
             val animalLettersCardsRepository =
-                AnimalLettersCardsRepositoryImpl(letterCardsDB, wordCardsDB, LocalDataSourceImpl(
-                    PlayersDatabase.getPlayersDatabase()))
+                AnimalLettersCardsRepositoryImpl(
+                    LocalDataSourceImpl(AnimalLettersDatabase.getPlayersDatabase()),
+                    LetterCardsMapper(),
+                    WordCardsMapper()
+                )
             val game = AnimalLettersInteractorImpl(
                 animalLettersCardsRepository,
                 gameStart!!.typesCards,

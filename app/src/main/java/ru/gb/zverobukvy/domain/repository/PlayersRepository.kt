@@ -6,8 +6,6 @@ interface PlayersRepository {
     suspend fun getPlayers(): List<Player>
 
     suspend fun deletePlayer(player: Player)
-
-    suspend fun insertPlayers(players: List<Player>)
     
     suspend fun insertPlayer(player: Player)
 

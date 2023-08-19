@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.data.data_source_impl.LetterCardsDBImpl
 import ru.gb.zverobukvy.data.data_source_impl.LocalDataSourceImpl
-import ru.gb.zverobukvy.data.data_source_impl.WordCardsDBImpl
+import ru.gb.zverobukvy.data.mapper.LetterCardsMapper
+import ru.gb.zverobukvy.data.mapper.WordCardsMapper
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
-import ru.gb.zverobukvy.data.room.PlayersDatabase
+import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -38,18 +38,14 @@ class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
     private val viewModel: SettingsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
-
             val playersRepository: PlayersRepository =
                 AnimalLettersCardsRepositoryImpl(
-                    LetterCardsDBImpl(),
-                    WordCardsDBImpl(),
-                    LocalDataSourceImpl(PlayersDatabase.getPlayersDatabase())
+                    LocalDataSourceImpl(AnimalLettersDatabase.getPlayersDatabase()),
+                    LetterCardsMapper(),
+                    WordCardsMapper()
                 )
-
             val resourcesProvider = ResourcesProvider(requireContext())
             SettingsScreenViewModelImpl(playersRepository, resourcesProvider)
-
-            SettingsScreenViewModelImpl(playersRepository, ResourcesProvider(requireContext()))
         })[SettingsScreenViewModelImpl::class.java]
     }
 
