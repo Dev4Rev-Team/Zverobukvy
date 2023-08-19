@@ -11,7 +11,7 @@ class App : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-        // создаем PlayersDatabase
+        // создаем AnimalLettersDatabase
         AnimalLettersDatabase.createInstanceDatabase(this)
     }
 }

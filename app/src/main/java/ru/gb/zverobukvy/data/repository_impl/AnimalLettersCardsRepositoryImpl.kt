@@ -27,6 +27,10 @@ class AnimalLettersCardsRepositoryImpl (
         localDataSource.deletePlayer(player)
     }
 
+    override suspend fun insertPlayers(players: List<Player>) {
+        localDataSource.insertPlayers(players)
+    }
+
     override suspend fun insertPlayer(player: Player) {
         localDataSource.insertPlayer(player)
     }

@@ -49,6 +49,7 @@ class SettingsScreenViewModelImpl(
         //playersSelectedForGame.addAll(listOf("Игрок 1", "Игрок 2", "Игрок 3"))
 
         viewModelScope.launch {
+            players.clear()
             players.addAll(
                 playersRepository.getPlayers().map {
                     mapToPlayerInSettings(it).apply {
@@ -87,6 +88,10 @@ class SettingsScreenViewModelImpl(
     }
 
     override fun onRemovePlayer(positionPlayer: Int) {
+        viewModelScope.launch {
+            players[positionPlayer]?.player?.let { playersRepository.deletePlayer(it) }
+        }
+
         players.removeAt(positionPlayer)
 
         liveDataPlayersScreenState.value =
@@ -103,6 +108,9 @@ class SettingsScreenViewModelImpl(
         players[positionPlayer]?.apply {
             player.name = newNamePlayer
         }
+        viewModelScope.launch {
+            players[positionPlayer]?.let { playersRepository.updatePlayer(it.player) }
+        }
 
         liveDataPlayersScreenState.value =
             SettingsScreenState.PlayersScreenState.ChangedPlayerState(
@@ -117,18 +125,35 @@ class SettingsScreenViewModelImpl(
 
     override fun onAddPlayer() {
         closeEditablePlayer()
+
+        viewModelScope.launch {
+            createAndSavePlayer()
+            val newPosition = players.size - 1
+            players.add(newPosition, loadPlayerInSettings())
+
+            liveDataPlayersScreenState.postValue(
+                SettingsScreenState.PlayersScreenState.AddPlayerState(
+                    players,
+                    players.size - 2
+                )
+            )
+        }
+    }
+
+    private suspend fun loadPlayerInSettings(): PlayerInSettings {
+        val playersDB = playersRepository.getPlayers()
+        return PlayerInSettings(
+            playersDB[playersDB.size - 1],
+            isSelectedForGame = true
+        )
+    }
+
+    private suspend fun createAndSavePlayer() {
         val player = PlayerInSettings(
             Player("new ${players.size}"),
             isSelectedForGame = true
         )
-        val newPosition = players.size - 1
-        players.add(newPosition, player)
-
-        liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.AddPlayerState(
-                players,
-                players.size - 2
-            )
+        playersRepository.insertPlayer(player.player)
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
