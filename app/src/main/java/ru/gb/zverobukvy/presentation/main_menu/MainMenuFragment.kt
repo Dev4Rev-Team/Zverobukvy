@@ -135,8 +135,11 @@ class MainMenuFragment :
     }
 
     private fun initPlayGameButton() {
-        binding.playButton.setOnClickListener {
-            viewModel.onStartGame()
+        binding.playButton.apply {
+            setOnClickListener {
+                isClickable = false
+                viewModel.onStartGame()
+            }
         }
     }
 
@@ -162,6 +165,7 @@ class MainMenuFragment :
                 )
             }
         }
+        binding.playButton.isClickable = true
     }
 
     private fun openAnimalLettersFragment(
