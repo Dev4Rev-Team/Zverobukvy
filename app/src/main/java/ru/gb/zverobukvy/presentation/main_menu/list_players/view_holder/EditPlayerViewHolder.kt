@@ -20,9 +20,9 @@ class EditPlayerViewHolder(
                         playerNameTextInputView.text.toString()
                     )
                 }
-                saveImageButton.setOnClickListener {
-                    cancelChangedPlayerClickListener(this@EditPlayerViewHolder.adapterPosition)
-                }
+//               TODO  cancelImageButton.setOnClickListener {
+//                    cancelChangedPlayerClickListener(this@EditPlayerViewHolder.adapterPosition)
+//                }
                 deleteButton.setOnClickListener {
                     queryRemovePlayersClickListener(
                         this@EditPlayerViewHolder.adapterPosition,

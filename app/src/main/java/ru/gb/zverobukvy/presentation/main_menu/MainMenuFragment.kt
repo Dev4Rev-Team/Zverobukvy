@@ -30,6 +30,7 @@ import ru.gb.zverobukvy.presentation.main_menu.preferences.SharedPreferencesForG
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModel
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
+import ru.gb.zverobukvy.utility.ui.setOnClickListenerThrottled
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
@@ -131,8 +132,10 @@ class MainMenuFragment :
     }
 
     private fun initPlayGameButton() {
-        binding.playButton.setOnClickListener {
-            viewModel.onStartGame()
+        binding.playButton.apply {
+            setOnClickListenerThrottled(wait = DURATION_WAIT) {
+                viewModel.onStartGame()
+            }
         }
     }
 
@@ -303,6 +306,7 @@ class MainMenuFragment :
     companion object {
         private const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
         private const val TAG_REMOVE_PLAYER_DIALOG_FRAGMENT = "RemovePlayerDialogFragment"
+        private const val DURATION_WAIT = 3500L
         const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"
