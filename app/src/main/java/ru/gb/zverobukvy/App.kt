@@ -1,7 +1,7 @@
 package ru.gb.zverobukvy
 
 import android.app.Application
-import ru.gb.zverobukvy.data.room.PlayersDatabase
+import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import timber.log.Timber
 
 class App : Application() {
@@ -12,6 +12,6 @@ class App : Application() {
             Timber.plant(Timber.DebugTree())
         }
         // создаем PlayersDatabase
-        PlayersDatabase.createInstanceDatabase(this)
+        AnimalLettersDatabase.createInstanceDatabase(this)
     }
 }

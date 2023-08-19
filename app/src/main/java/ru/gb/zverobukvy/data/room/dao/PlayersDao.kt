@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.data.room
+package ru.gb.zverobukvy.data.room.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -16,9 +16,6 @@ interface PlayersDao {
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlayer(player: Player)
-
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlayers(players: List<Player>)
 
     @Delete
     suspend fun deletePlayer(player: Player)
