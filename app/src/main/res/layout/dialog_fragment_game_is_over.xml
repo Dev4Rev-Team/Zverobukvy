@@ -50,7 +50,7 @@
         android:layout_marginTop="@dimen/margin_medium"
         android:text="@string/points_text"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_small"
+        android:textSize="@dimen/text_medium_small"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_time_text_view" />

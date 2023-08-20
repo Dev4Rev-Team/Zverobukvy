@@ -128,18 +128,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="60dp" />
 
-    <ru.gb.zverobukvy.presentation.customview.CustomCard
-        android:id="@+id/word_custom_card"
-        android:layout_width="@dimen/auto_layout"
-        android:layout_height="@dimen/auto_layout"
-        android:layout_marginTop="@dimen/margin_medium"
-        app:cardElevation="@dimen/elevation_default"
-        app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/sector_menu_guidline" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/sector_word_card_image_guidline"
         android:layout_width="wrap_content"
@@ -189,6 +177,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_end="20dp" />
+
+    <ru.gb.zverobukvy.presentation.customview.CustomCard
+        android:id="@+id/word_custom_card"
+        android:layout_width="@dimen/auto_layout"
+        android:layout_height="@dimen/auto_layout"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:cardElevation="@dimen/elevation_default"
+        app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sector_menu_guidline" />
 
     <FrameLayout
         android:id="@+id/next_word"
