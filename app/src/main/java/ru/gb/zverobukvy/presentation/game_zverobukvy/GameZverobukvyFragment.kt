@@ -5,11 +5,7 @@ import android.os.Parcelable
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
-import ru.gb.zverobukvy.data.data_source_impl.LocalDataSourceImpl
-import ru.gb.zverobukvy.data.mapper.LetterCardsMapper
-import ru.gb.zverobukvy.data.mapper.WordCardsMapper
-import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
-import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
+import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.databinding.FragmentGameZverobukvyBinding
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -33,11 +29,7 @@ class GameZverobukvyFragment :
         ViewModelProvider(this, viewModelProviderFactoryOf {
 
             val animalLettersCardsRepository =
-                AnimalLettersCardsRepositoryImpl(
-                    LocalDataSourceImpl(AnimalLettersDatabase.getPlayersDatabase()),
-                    LetterCardsMapper(),
-                    WordCardsMapper()
-                )
+                (requireContext().applicationContext as App).animalLettersCardsRepository
             val game = AnimalLettersInteractorImpl(
                 animalLettersCardsRepository,
                 gameStart!!.typesCards,
@@ -54,11 +46,11 @@ class GameZverobukvyFragment :
             gameStart = it.parcelable(GAME_START)
         }
         gameStart ?: throw IllegalArgumentException("not arg gameStart")
+        viewModel.onActiveGame()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.onActiveGame()
 
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
@@ -114,6 +106,7 @@ class GameZverobukvyFragment :
                     initPictureWord(it)
                     setWord(it.wordCard)
                     initTable(it)
+                    binding.root.visibility = View.VISIBLE
                 }
             }
         }
