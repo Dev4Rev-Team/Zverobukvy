@@ -21,4 +21,10 @@
     <color name="color_card_blue">@color/color_blue</color>
     <color name="color_card_violet">@color/color_violet</color>
 
+    <color name="primary_color">#D0E1FB</color>
+    <color name="secondary_color">#445D79</color>
+
+    <color name="button_primary.dark">@color/secondary_color</color>
+    <color name="button_primary">@color/white</color>
+
 </resources>

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_violet_pastel"
-    android:clickable="true"
-    android:focusable="true">
+    android:clickable="true">
 
     <TextView
         android:id="@+id/title_text_view"
@@ -78,16 +77,13 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
+        android:id="@+id/ok_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ok_button"
+        style="@style/Button.Big"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/white"
-        android:fontFamily="@font/junegull"
         android:text="@string/ok"
-        android:textSize="36sp"
-        android:textColor="@color/color_violet"
-        app:cornerRadius="@dimen/main_menu_card_corner_radius"
+        android:textColor="@color/color_violet_pastel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
