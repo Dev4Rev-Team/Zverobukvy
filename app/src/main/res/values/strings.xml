@@ -29,5 +29,8 @@
     <string name="game_end_text">Игра завершена</string>
     <string name="game_time_text">Время игры</string>
     <string name="end_game_question_text">Закончить игру?</string>
+    <string name="next_player_move_text">Ход следующего игрока</string>
+    <string name="press_to_continue_text">Нажми чтобы продолжить</string>
+    <string name="word_guessed_text">Слово отгадано</string>
 
 </resources>
