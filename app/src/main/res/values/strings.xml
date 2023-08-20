@@ -28,5 +28,6 @@
     <string name="player_state_not_ready">Не играет</string>
     <string name="game_end_text">Игра завершена</string>
     <string name="game_time_text">Время игры</string>
+    <string name="end_game_question_text">Закончить игру?</string>
 
 </resources>

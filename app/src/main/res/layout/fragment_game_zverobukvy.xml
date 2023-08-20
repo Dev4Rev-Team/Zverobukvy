@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D0E1FB"
+    android:background="@color/primary_color"
     android:clickable="true"
     android:visibility="invisible"
     tools:context=".presentation.game_zverobukvy.GameZverobukvyFragment"
@@ -15,10 +15,10 @@
         android:id="@+id/back_to_menu_image_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
         android:background="@drawable/background_white"
-        android:elevation="8dp"
+        android:elevation="@dimen/elevation_default"
         android:src="@drawable/ic_arrow_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,8 +27,8 @@
         android:id="@+id/player_name_card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:cardCornerRadius="10dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:cardCornerRadius="@dimen/corner_radius_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -37,8 +37,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="4dp"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:layout_marginVertical="@dimen/margin_small"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
@@ -61,7 +61,7 @@
 
             <Space
                 android:layout_width="10dp"
-                android:layout_height="0dp" />
+                android:layout_height="@dimen/auto_layout" />
 
             <TextView
                 android:id="@+id/player_name_text_view"
@@ -70,7 +70,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/username_default"
-                android:textSize="22sp" />
+                android:textSize="@dimen/text_medium_small" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -84,10 +84,10 @@
 
     <ru.gb.zverobukvy.presentation.customview.CustomCard
         android:id="@+id/word_custom_card"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="16dp"
-        app:cardElevation="10dp"
+        android:layout_width="@dimen/auto_layout"
+        android:layout_height="@dimen/auto_layout"
+        android:layout_margin="@dimen/margin_medium"
+        app:cardElevation="@dimen/elevation_default"
         app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -104,11 +104,11 @@
     <ru.gb.zverobukvy.presentation.customview.CustomWordView
         android:id="@+id/word_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="@dimen/auto_layout"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_default"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_default"
         app:layout_constraintBottom_toTopOf="@+id/word_guidline"
         app:layout_constraintDimensionRatio="6:1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -126,8 +126,8 @@
 
     <ru.gb.zverobukvy.presentation.customview.CustomCardTable
         android:id="@+id/table"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/auto_layout"
+        android:layout_height="@dimen/auto_layout"
         app:horizontalGap="24"
         app:layout_constraintBottom_toTopOf="@+id/word_cards_table_guidline"
         app:layout_constraintDimensionRatio="5:7"
@@ -162,25 +162,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/text_view_play_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Игра на паузе"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/word_cards_table_guidline" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/card_level1"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:backgroundTint="@color/color_orange_pastel"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="@dimen/corner_radius_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -188,9 +177,9 @@
             android:id="@+id/card_level2"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_default"
             android:backgroundTint="@color/color_green_pastel"
-            app:cardCornerRadius="10dp"
+            app:cardCornerRadius="@dimen/corner_radius_default"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -198,10 +187,10 @@
                 android:id="@+id/card_level3"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_default"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:backgroundTint="@color/color_blue_pastel"
-                app:cardCornerRadius="10dp"
+                app:cardCornerRadius="@dimen/corner_radius_default"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -209,10 +198,10 @@
                     android:id="@+id/card_level4"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="@dimen/margin_default"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    app:cardCornerRadius="@dimen/corner_radius_default"
                     android:backgroundTint="@color/color_violet_pastel"
-                    app:cardCornerRadius="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.cardview.widget.CardView>
