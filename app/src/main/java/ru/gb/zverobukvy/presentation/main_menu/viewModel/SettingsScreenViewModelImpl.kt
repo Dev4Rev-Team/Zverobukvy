@@ -38,6 +38,7 @@ class SettingsScreenViewModelImpl(
         namesPlayersSelectedForGameFromPreference: List<String>,
     ) {
         Timber.d("onLaunch")
+        typesCardsSelectedForGame.clear()
         typesCardsSelectedForGame.addAll(typesCardsSelectedForGameFromPreference)
         //TODO
 //        if (typesCardsSelectedForGame.size == 0) {
