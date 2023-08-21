@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import ru.gb.zverobukvy.data.mapper.DataEntity
 
 @Entity(tableName = "letters", indices = [Index(value = ["letter", "face"], unique = true)])
 data class LetterCardInDatabase(

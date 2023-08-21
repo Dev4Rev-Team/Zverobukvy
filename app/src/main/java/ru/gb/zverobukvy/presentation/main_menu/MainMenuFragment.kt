@@ -8,25 +8,20 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.data.data_source_impl.LocalDataSourceImpl
-import ru.gb.zverobukvy.data.mapper.LetterCardsMapper
-import ru.gb.zverobukvy.data.mapper.WordCardsMapper
-import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
-import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.repository.PlayersRepository
+import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
 import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.preferences.SharedPreferencesForGameImpl
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModel
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
@@ -38,19 +33,12 @@ class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
     private val viewModel: SettingsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
-            val playersRepository: PlayersRepository =
-                AnimalLettersCardsRepositoryImpl(
-                    LocalDataSourceImpl(AnimalLettersDatabase.getPlayersDatabase()),
-                    LetterCardsMapper(),
-                    WordCardsMapper()
-                )
+            val repository: MainMenuRepository =
+                (requireContext().applicationContext as App).animalLettersRepository
             val resourcesProvider = ResourcesProvider(requireContext())
-            SettingsScreenViewModelImpl(playersRepository, resourcesProvider)
+            SettingsScreenViewModelImpl(repository, resourcesProvider)
         })[SettingsScreenViewModelImpl::class.java]
     }
-
-    private val sharedPreferencesForGame: SharedPreferencesForGameImpl =
-        SharedPreferencesForGameImpl()
 
     private val playersAdapter =
         PlayersAdapter(PlayerClickListenerOwner(::clickPlayer, ::clickEditMenuPlayer),
@@ -62,13 +50,9 @@ class MainMenuFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setRemovePlayerDialogFragmentListener()
-        val typesCardsSelectedForGame = sharedPreferencesForGame.readTypesCardsSelectedForGame()
-        val namesPlayersSelectedForGame = sharedPreferencesForGame.readNamesPlayersSelectedForGame()
-        initView(typesCardsSelectedForGame)
+        initView()
         viewModel.run {
-            onLaunch(
-                typesCardsSelectedForGame, namesPlayersSelectedForGame
-            )
+            onLaunch()
             getLiveDataScreenState().observe(viewLifecycleOwner) {
                 renderSettingsScreenState(it)
             }
@@ -78,22 +62,14 @@ class MainMenuFragment :
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        Timber.d("onPause")
-        updateTypesCardsSelectedForGame()
-        sharedPreferencesForGame.savePreferencesForGame()
-    }
-
     override fun onBackPressed(): Boolean {
         Timber.d("onBackPressed")
         requireActivity().finish()
         return super.onBackPressed()
     }
 
-    private fun initView(typesCardsSelectedForGame: List<TypeCards>) {
+    private fun initView() {
         initRecycleView()
-        initTypesCardsToggleButtons(typesCardsSelectedForGame)
         initPlayGameButton()
     }
 
@@ -160,6 +136,13 @@ class MainMenuFragment :
                     settingsScreenState.playersSelectedForGame
                 )
             }
+
+            is SettingsScreenState.ScreenState.TypesCardsState -> {
+                Timber.d("TypesCardsState")
+                initTypesCardsToggleButtons(
+                    settingsScreenState.typesCard
+                )
+            }
         }
     }
 
@@ -213,9 +196,6 @@ class MainMenuFragment :
 
     private fun onChangedPlayer(newPlayers: List<PlayerInSettings?>, positionChangedPlayer: Int) {
         playersAdapter.changedPlayer(newPlayers, positionChangedPlayer)
-        sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
-            extractNamesPlayersSelectedForGame(newPlayers)
-        )
     }
 
     private fun onAddPlayer(newPlayers: List<PlayerInSettings?>, positionAddPlayer: Int) {
@@ -225,31 +205,14 @@ class MainMenuFragment :
                 scrollToPosition(it.itemCount - 1)
             }
         }
-        sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
-            extractNamesPlayersSelectedForGame(newPlayers)
-        )
     }
 
     private fun onRemovePlayer(newPlayers: List<PlayerInSettings?>, positionRemovePlayer: Int) {
         playersAdapter.removePlayer(newPlayers, positionRemovePlayer)
-        sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
-            extractNamesPlayersSelectedForGame(newPlayers)
-        )
     }
 
     private fun onNewPlayers(newPlayers: List<PlayerInSettings?>) {
         playersAdapter.setNewPlayers(newPlayers)
-        sharedPreferencesForGame.updateNamesPlayersSelectedForGame(
-            extractNamesPlayersSelectedForGame(newPlayers)
-        )
-    }
-
-    private fun extractNamesPlayersSelectedForGame(players: List<PlayerInSettings?>): List<String> {
-        val namesPlayersSelectedForGame = mutableListOf<String>()
-        players.forEach {
-            if (it != null && it.isSelectedForGame) namesPlayersSelectedForGame.add(it.player.name)
-        }
-        return namesPlayersSelectedForGame
     }
 
     private fun clickPlayer(position: Int) {
@@ -280,17 +243,6 @@ class MainMenuFragment :
 
     private fun clickAddPlayer() {
         viewModel.onAddPlayer()
-    }
-
-    private fun updateTypesCardsSelectedForGame() {
-        val typesCardsSelectedForGame = mutableListOf<TypeCards>()
-        binding.run {
-            if (orangeToggleButton.isChecked) typesCardsSelectedForGame.add(TypeCards.ORANGE)
-            if (blueToggleButton.isChecked) typesCardsSelectedForGame.add(TypeCards.BLUE)
-            if (greenToggleButton.isChecked) typesCardsSelectedForGame.add(TypeCards.GREEN)
-            if (violetToggleButton.isChecked) typesCardsSelectedForGame.add(TypeCards.VIOLET)
-        }
-        sharedPreferencesForGame.updateTypesCardsSelectedForGame(typesCardsSelectedForGame)
     }
 
     private fun setRemovePlayerDialogFragmentListener() {

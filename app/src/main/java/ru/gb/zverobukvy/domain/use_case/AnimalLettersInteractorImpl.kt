@@ -9,7 +9,7 @@ import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
-import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
+import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
@@ -45,7 +45,7 @@ import java.util.Queue
  * учитывать при формировании viewModel состояния экрана для view!!!
  */
 class AnimalLettersInteractorImpl(
-    private val animalLettersCardsRepository: AnimalLettersCardsRepository,
+    private val animalLettersGameRepository: AnimalLettersGameRepository,
     private val typesCards: List<TypeCards>,
     private var players: List<PlayerInGame>
 ) : AnimalLettersInteractor {
@@ -428,7 +428,7 @@ class AnimalLettersInteractorImpl(
      */
     private suspend fun getStartedLettersField(typesCards: List<TypeCards>): MutableList<LetterCard> {
         checkData.apply {
-            animalLettersCardsRepository.getLetterCards().also {
+            animalLettersGameRepository.getLetterCards().also {
                 checkLetterCardsFromRepository(it)
                 return checkLettersField(DealCards.getKitCards(it, typesCards)).toMutableList()
             }
@@ -445,7 +445,7 @@ class AnimalLettersInteractorImpl(
      */
     private suspend fun getGamingWords(typesCards: List<TypeCards>): Queue<WordCard> {
         checkData.apply {
-            animalLettersCardsRepository.getWordCards().also {
+            animalLettersGameRepository.getWordCards().also {
                 checkWordCardsFromRepository(it)
                 return LinkedList(checkGamingWords(DealCards.getKitCards(it, typesCards)))
             }
