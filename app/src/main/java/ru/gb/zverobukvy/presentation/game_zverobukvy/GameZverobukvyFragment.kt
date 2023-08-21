@@ -137,7 +137,7 @@ class GameZverobukvyFragment :
     }
 
     private fun initView() {
-        binding.nextWordButton.setOnClickListener {
+        binding.nextWord.setOnClickListener {
             it.visibility = View.INVISIBLE
             viewModel.onClickNextWord()
         }
@@ -184,7 +184,7 @@ class GameZverobukvyFragment :
     }
 
     private fun requestNextPlayer(state: AnimalLettersState.ChangingState.InvalidLetter) {
-        binding.nextPlayerButton.let { button ->
+        binding.nextPlayer.let { button ->
             button.setOnClickListener {
                 button.visibility = View.INVISIBLE
                 binding.table.setInvalidLetterCard(state.invalidLetterCard)
@@ -195,7 +195,7 @@ class GameZverobukvyFragment :
     }
 
     private fun requestNextWord() {
-        binding.nextWordButton.visibility = View.VISIBLE
+        binding.nextWord.visibility = View.VISIBLE
     }
 
     override fun onBackPressed(): Boolean {

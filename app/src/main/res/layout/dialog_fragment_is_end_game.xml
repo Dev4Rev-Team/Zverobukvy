@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/color_blue_pastel"
-    app:cardCornerRadius="24dp">
+    android:backgroundTint="@color/secondary_color"
+    app:cardCornerRadius="@dimen/main_menu_card_corner_radius">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,15 +15,17 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Хотите закончить игру"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:textColor="@color/button_primary"
+            android:text="@string/end_game_question_text"
+            android:textSize="@dimen/text_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/no_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Button.Medium"
             android:text="@string/no"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/yes_button"
@@ -32,8 +34,7 @@
 
         <Button
             android:id="@+id/yes_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Button.Medium"
             android:text="@string/yes"
             app:layout_constraintBottom_toBottomOf="@+id/no_button"
             app:layout_constraintEnd_toEndOf="parent"
