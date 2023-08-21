@@ -199,7 +199,6 @@ class SettingsScreenViewModelImpl(
             liveDataScreenState.postValue(
                 SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
             )
-            saveToRepository()
         }
     }
 
