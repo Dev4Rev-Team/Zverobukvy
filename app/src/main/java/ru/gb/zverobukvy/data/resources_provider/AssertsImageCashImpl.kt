@@ -8,6 +8,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
+import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import java.io.IOException
 import java.io.InputStream
 
@@ -29,6 +30,8 @@ class AssertsImageCashImpl(
             animalLettersCardsRepository.getWordCards().forEach {
                 addToMap(context, it.faceImageName)
             }
+
+            addToMap(context, "FACE.webp")
 
         }
     }

@@ -6,9 +6,9 @@ import ru.gb.zverobukvy.data.mapper.LetterCardsMapper
 import ru.gb.zverobukvy.data.mapper.WordCardsMapper
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
 import ru.gb.zverobukvy.data.resources_provider.AssertsImageCashImpl
-import ru.gb.zverobukvy.data.resources_provider.AssetsImageCash
 import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
+import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import timber.log.Timber
 
 class App : Application() {

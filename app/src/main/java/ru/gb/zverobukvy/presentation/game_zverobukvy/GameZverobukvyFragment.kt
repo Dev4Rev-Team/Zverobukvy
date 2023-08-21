@@ -11,6 +11,7 @@ import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
+import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
@@ -24,6 +25,9 @@ import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 class GameZverobukvyFragment :
     ViewBindingFragment<FragmentGameZverobukvyBinding>(FragmentGameZverobukvyBinding::inflate) {
     private var gameStart: GameStart? = null
+    private val assertsImageCash: AssetsImageCash by lazy {
+        (requireContext().applicationContext as App).assetsImageCash
+    }
 
     private val viewModel: GameZverobukvyViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
@@ -164,9 +168,10 @@ class GameZverobukvyFragment :
     }
 
     private fun setPictureOfWord(urlPicture: String) {
-        binding.wordCustomCard.setSrcFromAssert(
-            urlPicture,
-            urlPicture
+        val image = assertsImageCash.getImage(urlPicture)
+        binding.wordCustomCard.setImageSide(
+            image,
+            image
         )
     }
 
@@ -200,11 +205,11 @@ class GameZverobukvyFragment :
 
     private fun initTable(startGameState: AnimalLettersState.EntireState.StartGameState) {
         binding.table.apply {
-            setListItem(startGameState.lettersCards) {
+            setListItem(startGameState.lettersCards, assertsImageCash) {
                 CustomCard(requireContext()).apply {
                     radius = CARD_RADIUS
                     enableClickAnimation()
-                    setSrcOpenBackgroundFromAssert("FACE.webp")
+                    setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
                 }
             }
             setOnClickListener { pos ->
@@ -217,7 +222,7 @@ class GameZverobukvyFragment :
         binding.wordCustomCard.apply {
             radius = CARD_RADIUS
             //TODO
-            setSrcOpenBackgroundFromAssert("FACE.webp")
+            setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
         }
         setPictureOfWord(startGameState.wordCard.faceImageName)
     }

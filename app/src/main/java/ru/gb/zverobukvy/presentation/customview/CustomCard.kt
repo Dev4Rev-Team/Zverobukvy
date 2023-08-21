@@ -29,6 +29,7 @@ class CustomCard @JvmOverloads constructor(
 
     private lateinit var frontSideImageView: CustomImageView
     private lateinit var backSideImageView: CustomImageView
+    private lateinit var frontBackgroundImageView: CustomImageView
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -56,9 +57,12 @@ class CustomCard @JvmOverloads constructor(
         val layoutParams = createLayoutParams()
         frontSideImageView = createImageView(context, layoutParams)
         backSideImageView = createImageView(context, layoutParams)
+        frontBackgroundImageView = createImageView(context, layoutParams)
+
         setSrcFromRes(srcOpen, srcClose)
         setOpenDisplay(isOpen)
 
+        addView(frontBackgroundImageView)
         addView(frontSideImageView)
         addView(backSideImageView)
     }
@@ -126,6 +130,10 @@ class CustomCard @JvmOverloads constructor(
             this.isOpen = isOpen
             startAnimationFlip()
         }
+    }
+
+    fun setImageOpenBackground(openBackground: Drawable) {
+        frontBackgroundImageView.setImageDrawable(openBackground)
     }
 
     fun setImageSide(frontSide: Drawable, backSide: Drawable) {
