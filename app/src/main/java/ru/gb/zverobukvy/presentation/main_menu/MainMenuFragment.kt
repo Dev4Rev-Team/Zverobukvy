@@ -10,13 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.data.data_source_impl.LocalDataSourceImpl
-import ru.gb.zverobukvy.data.mapper.LetterCardsMapper
-import ru.gb.zverobukvy.data.mapper.WordCardsMapper
-import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
-import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProviderImpl
-import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -40,9 +34,9 @@ class MainMenuFragment :
     private val viewModel: SettingsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             val repository: MainMenuRepository =
-                (requireContext().applicationContext as App).animalLettersRepository
+                (requireContext().applicationContext as App).mainMenuRepository
             val resourcesProvider = ResourcesProviderImpl(requireContext())
-            SettingsScreenViewModelImpl(repository, resourcesProvider)
+            SettingsScreenViewModelImpl(repository, repository, repository, resourcesProvider)
         })[SettingsScreenViewModelImpl::class.java]
     }
 
@@ -56,13 +50,10 @@ class MainMenuFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setRemovePlayerDialogFragmentListener()
-        val typesCardsSelectedForGame = sharedPreferencesForGame.readTypesCardsSelectedForGame()
-        val namesPlayersSelectedForGame = sharedPreferencesForGame.readNamesPlayersSelectedForGame()
-        initView(typesCardsSelectedForGame)
+
+        initView()
         viewModel.run {
-            onLaunch(
-                typesCardsSelectedForGame, namesPlayersSelectedForGame
-            )
+            onLaunch()
             getLiveDataScreenState().observe(viewLifecycleOwner) {
                 renderSettingsScreenState(it)
             }
@@ -107,7 +98,7 @@ class MainMenuFragment :
     }
 
     private fun initTypeCardToggleButton(
-        toggleButton: ToggleButton, typeCard: TypeCards, isChecked: Boolean
+        toggleButton: ToggleButton, typeCard: TypeCards, isChecked: Boolean,
     ) {
         toggleButton.apply {
             setChecked(isChecked)
@@ -157,7 +148,7 @@ class MainMenuFragment :
     }
 
     private fun openAnimalLettersFragment(
-        typesCardsSelectedForGame: List<TypeCards>, playersSelectedForGame: List<PlayerInGame>
+        typesCardsSelectedForGame: List<TypeCards>, playersSelectedForGame: List<PlayerInGame>,
     ) {
         requireActivity().supportFragmentManager.beginTransaction().replace(
             R.id.container, GameZverobukvyFragment.newInstance(
