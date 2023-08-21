@@ -1,18 +1,14 @@
 package ru.gb.zverobukvy.presentation.customview
 
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
-import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import ru.gb.zverobukvy.R
-import java.io.IOException
-import java.io.InputStream
 
 
 /**
@@ -33,11 +29,16 @@ class CustomCard @JvmOverloads constructor(
 
     private lateinit var frontSideImageView: CustomImageView
     private lateinit var backSideImageView: CustomImageView
-    private lateinit var frontBackgroundImageView: CustomImageView
 
     init {
         initAttributes(context, attrs, defStyle)
         initContentView(context)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        setMeasuredDimension(width, width)
     }
 
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
@@ -55,12 +56,9 @@ class CustomCard @JvmOverloads constructor(
         val layoutParams = createLayoutParams()
         frontSideImageView = createImageView(context, layoutParams)
         backSideImageView = createImageView(context, layoutParams)
-        frontBackgroundImageView = createImageView(context, layoutParams)
-
         setSrcFromRes(srcOpen, srcClose)
         setOpenDisplay(isOpen)
 
-        addView(frontBackgroundImageView)
         addView(frontSideImageView)
         addView(backSideImageView)
     }
@@ -75,23 +73,6 @@ class CustomCard @JvmOverloads constructor(
     ): CustomImageView = CustomImageView(context).apply {
         this.layoutParams = layoutParams
         scaleType = ImageView.ScaleType.CENTER_CROP
-    }
-
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        setMeasuredDimension(width, width)
-    }
-
-    private fun getVisibility(isVisible: Boolean) = if (isVisible) VISIBLE else INVISIBLE
-
-
-    fun setOpenCard(isOpen: Boolean) {
-        if (isOpen != this.isOpen) {
-            this.isOpen = isOpen
-            startAnimationFlip()
-        }
     }
 
     private fun startAnimationFlip() {
@@ -126,34 +107,9 @@ class CustomCard @JvmOverloads constructor(
         }
     }
 
-
-    fun setVisibilityCard(isVisibility: Boolean) {
-        visibility = getVisibility(isVisibility)
-    }
-
-    fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
+    private fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
         frontSideImageView.setImageResource(srcOpen)
         backSideImageView.setImageResource(srcClose)
-    }
-
-    fun setSrcFromAssert(srcOpen: String, srcClose: String) {
-        setImageFromAssert(frontSideImageView, srcOpen)
-        setImageFromAssert(backSideImageView, srcClose)
-    }
-
-    private fun setImageFromAssert(ImageView: ImageView, src: String) {
-        try {
-            val ims: InputStream = context.assets.open(src)
-            val d = Drawable.createFromStream(ims, null)
-            ImageView.setImageDrawable(d)
-            ims.close()
-        } catch (ex: IOException) {
-            return
-        }
-    }
-
-    fun setSrcOpenBackgroundFromAssert(srcOpenBackground: String) {
-        setImageFromAssert(frontBackgroundImageView, srcOpenBackground)
     }
 
     /** pos - set position view
@@ -163,6 +119,18 @@ class CustomCard @JvmOverloads constructor(
         setOnClickListener {
             click(pos)
         }
+    }
+
+    fun setOpenCard(isOpen: Boolean) {
+        if (isOpen != this.isOpen) {
+            this.isOpen = isOpen
+            startAnimationFlip()
+        }
+    }
+
+    fun setImageSide(frontSide: Drawable, backSide: Drawable) {
+        frontSideImageView.setImageDrawable(frontSide)
+        backSideImageView.setImageDrawable(backSide)
     }
 
     companion object {
