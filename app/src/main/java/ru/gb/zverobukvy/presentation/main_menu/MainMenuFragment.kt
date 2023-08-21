@@ -36,7 +36,7 @@ class MainMenuFragment :
             val repository: MainMenuRepository =
                 (requireContext().applicationContext as App).mainMenuRepository
             val resourcesProvider = ResourcesProviderImpl(requireContext())
-            SettingsScreenViewModelImpl(repository, repository, repository, resourcesProvider)
+            SettingsScreenViewModelImpl(repository, resourcesProvider)
         })[SettingsScreenViewModelImpl::class.java]
     }
 
