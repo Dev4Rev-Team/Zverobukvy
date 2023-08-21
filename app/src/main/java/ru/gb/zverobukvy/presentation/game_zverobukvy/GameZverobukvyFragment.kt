@@ -33,7 +33,7 @@ class GameZverobukvyFragment :
         ViewModelProvider(this, viewModelProviderFactoryOf {
 
             val animalLettersCardsRepository =
-                (requireContext().applicationContext as App).animalLettersCardsRepository
+                (requireContext().applicationContext as App).animalLettersRepository
             val game = AnimalLettersInteractorImpl(
                 animalLettersCardsRepository,
                 gameStart!!.typesCards,

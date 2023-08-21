@@ -9,18 +9,12 @@ interface SettingsScreenViewModel {
 
     /**
      * Метод вызывается при создании или пересоздании view, до подписки на liveData.
-     * В этом методе viewModel запрашивает список игроков в репозитории и при получении данных
-     * формирует состояние Players. При пересоздании view, т.е. когда во viewModel уже хранится
-     * список игроков, обращение в репозиторий не происходит.
-     * @param typesCardsSelectedForGameFromPreference сохраненные настройки уровня игры (цвета игры),
-     * которые извлекаются из preference (пустой список, если данные не сохранены)
-     * @param namesPlayersSelectedForGameFromPreference сохраненные в настройках имена игроков,
-     * выбранных для игры; извлекаются из preference (пустой список, если данные не сохранены)
+     * В этом методе viewModel запрашивает список игроков, список выбранных игроков и уровня игры
+     * (цвет игры) в репозитории и при получении данных формирует состояния Players и TypesCards.
+     * При пересоздании view, т.е. когда во viewModel уже хранится список игроков, обращение в
+     * репозиторий не происходит.
      */
-    fun onLaunch(
-        typesCardsSelectedForGameFromPreference: List<TypeCards>,
-        namesPlayersSelectedForGameFromPreference: List<String>
-    )
+    fun onLaunch ()
 
     /**
     Метод для подписки view на состояние списка игроков на экране настроек.

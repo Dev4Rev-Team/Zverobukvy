@@ -10,4 +10,5 @@ interface PlayersRepository {
     suspend fun insertPlayer(player: Player)
 
     suspend fun updatePlayer(player: Player)
+
 }

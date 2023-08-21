@@ -12,12 +12,12 @@ import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.repository.PlayersRepository
+import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.presentation.SingleEventLiveData
 import timber.log.Timber
 
 class SettingsScreenViewModelImpl(
-    private val playersRepository: PlayersRepository,
+    private val playersRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
 ) :
     SettingsScreenViewModel, ViewModel() {
@@ -33,10 +33,7 @@ class SettingsScreenViewModelImpl(
 
     private val liveDataScreenState = SingleEventLiveData<SettingsScreenState.ScreenState>()
 
-    override fun onLaunch(
-        typesCardsSelectedForGameFromPreference: List<TypeCards>,
-        namesPlayersSelectedForGameFromPreference: List<String>,
-    ) {
+    override fun onLaunch() {
         Timber.d("onLaunch")
         typesCardsSelectedForGame.clear()
         typesCardsSelectedForGame.addAll(typesCardsSelectedForGameFromPreference)
