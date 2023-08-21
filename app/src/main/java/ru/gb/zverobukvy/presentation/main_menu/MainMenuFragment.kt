@@ -13,7 +13,7 @@ import ru.gb.zverobukvy.data.data_source_impl.LocalDataSourceImpl
 import ru.gb.zverobukvy.data.mapper.LetterCardsMapper
 import ru.gb.zverobukvy.data.mapper.WordCardsMapper
 import ru.gb.zverobukvy.data.repository_impl.AnimalLettersCardsRepositoryImpl
-import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
+import ru.gb.zverobukvy.data.resources_provider.ResourcesProviderImpl
 import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
@@ -44,7 +44,7 @@ class MainMenuFragment :
                     LetterCardsMapper(),
                     WordCardsMapper()
                 )
-            val resourcesProvider = ResourcesProvider(requireContext())
+            val resourcesProvider = ResourcesProviderImpl(requireContext())
             SettingsScreenViewModelImpl(playersRepository, resourcesProvider)
         })[SettingsScreenViewModelImpl::class.java]
     }
@@ -166,7 +166,7 @@ class MainMenuFragment :
     private fun openAnimalLettersFragment(
         typesCardsSelectedForGame: List<TypeCards>, playersSelectedForGame: List<PlayerInGame>
     ) {
-        requireActivity().supportFragmentManager.beginTransaction().add(
+        requireActivity().supportFragmentManager.beginTransaction().replace(
             R.id.container, GameZverobukvyFragment.newInstance(
                 GameZverobukvyFragment.GameStart(
                     typesCardsSelectedForGame, playersSelectedForGame
