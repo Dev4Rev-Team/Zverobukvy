@@ -33,11 +33,11 @@ class TestCustomCardFragment : Fragment() {
         }
 
         binding.visibleButton.setOnClickListener {
-            binding.card.setVisibilityCard(true)
+           // binding.card.setVisibilityCard(true)
         }
 
         binding.invisibleButton.setOnClickListener {
-            binding.card.setVisibilityCard(false)
+            //binding.card.setVisibilityCard(false)
         }
 
         binding.card.setOnClickCardListener(389) {
@@ -45,15 +45,15 @@ class TestCustomCardFragment : Fragment() {
         }
 
         binding.resIdButton.setOnClickListener {
-            binding.card.setSrcFromRes(R.drawable.ic_launcher_background, R.drawable.img)
+       //     binding.card.setSrcFromRes(R.drawable.ic_launcher_background, R.drawable.img)
         }
 
         binding.resStringButton.setOnClickListener {
-            binding.card.setSrcFromRes("img", "ic_launcher_foreground")
+           // binding.card.setSrcFromRes("img", "ic_launcher_foreground")
         }
         binding.assertsButton.setOnClickListener {
 
-            binding.card.setSrcFromAssert("img1.jpg", "img2.jpg")
+           // binding.card.setSrcFromAssert("img1.jpg", "img2.jpg")
         }
     }
 

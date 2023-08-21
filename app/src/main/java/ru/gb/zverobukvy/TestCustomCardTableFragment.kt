@@ -48,8 +48,8 @@ class TestCustomCardTableFragment : Fragment() {
                             Random.nextInt(letterCardListTmp.size)]
                 )
             }
-
-            binding.cardTable.setListItem(letterCardList) {
+            val fakeAssetsImageCash = FakeAssetsImageCash(requireContext())
+            binding.cardTable.setListItem(letterCardList, fakeAssetsImageCash) {
                 CustomCard(requireContext()).apply {
                     radius = 50f
                     elevation = 3f
