@@ -143,7 +143,7 @@ class CustomCard @JvmOverloads constructor(
 
     companion object {
         private val SRC_CLOSE = R.drawable.ic_launcher_background
-        private val SRC_OPEN = R.drawable.ic_launcher_foreground
+        private val SRC_OPEN = R.drawable.ic_launcher_background
         private const val IS_OPEN = false
         private const val DURATION_ANIMATION = 250
         private const val SCALE = 1.08f

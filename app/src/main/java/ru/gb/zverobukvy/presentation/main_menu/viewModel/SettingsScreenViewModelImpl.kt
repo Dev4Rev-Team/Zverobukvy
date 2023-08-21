@@ -12,16 +12,12 @@ import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.repository.NamesPlayersSelectedForGameRepository
-import ru.gb.zverobukvy.domain.repository.PlayersRepository
-import ru.gb.zverobukvy.domain.repository.TypesCardsSelectedForGameRepository
+import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.presentation.SingleEventLiveData
 import timber.log.Timber
 
 class SettingsScreenViewModelImpl(
-    private val playersRepository: PlayersRepository,
-    private val typesCardsSelectedForGameRepository: TypesCardsSelectedForGameRepository,
-    private val namesPlayersSelectedForGameRepository: NamesPlayersSelectedForGameRepository,
+    private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
 ) :
     SettingsScreenViewModel, ViewModel() {
@@ -37,18 +33,13 @@ class SettingsScreenViewModelImpl(
 
     private val liveDataScreenState = SingleEventLiveData<SettingsScreenState.ScreenState>()
 
-    override fun onLaunch() {
-        Timber.d("onLaunch")
+    init {
         loadTypeCardsSelectedForGame()
-        liveDataScreenState.value =
-            SettingsScreenState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
-
         loadPlayersSelectedForGame()
-
         viewModelScope.launch {
             players.clear()
             players.addAll(
-                playersRepository.getPlayers().map {
+                mainMenuRepository.getPlayers().map {
                     mapToPlayerInSettings(it).apply {
                         if (namesPlayersSelectedForGame.contains(player.name)) {
                             isSelectedForGame = true
@@ -60,17 +51,24 @@ class SettingsScreenViewModelImpl(
                 SettingsScreenState.PlayersScreenState.PlayersState(players)
         }
     }
+    override fun onLaunch() {
+        Timber.d("onLaunch")
+        liveDataScreenState.value =
+            SettingsScreenState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
+        liveDataPlayersScreenState.value =
+            SettingsScreenState.PlayersScreenState.PlayersState(players)
+    }
 
     private fun loadPlayersSelectedForGame() {
         namesPlayersSelectedForGame.clear()
         namesPlayersSelectedForGame.addAll(
-            namesPlayersSelectedForGameRepository.getNamesPlayersSelectedForGame()
+            mainMenuRepository.getNamesPlayersSelectedForGame()
         )
     }
 
     private fun loadTypeCardsSelectedForGame() {
         typesCardsSelectedForGame.clear()
-        typesCardsSelectedForGame.addAll(typesCardsSelectedForGameRepository.getTypesCardsSelectedForGame())
+        typesCardsSelectedForGame.addAll(mainMenuRepository.getTypesCardsSelectedForGame())
         if (typesCardsSelectedForGame.size == 0) {
             typesCardsSelectedForGame.add(TypeCards.ORANGE)
         }
@@ -90,9 +88,16 @@ class SettingsScreenViewModelImpl(
         closeEditablePlayer()
         players[positionPlayer]?.apply {
             isSelectedForGame = !isSelectedForGame
+
         }
 
-        players[positionPlayer]?.player?.let { namesPlayersSelectedForGame.add(it.name) }
+        players[positionPlayer]?.let {
+            if (it.isSelectedForGame) {
+                namesPlayersSelectedForGame.add(it.player.name)
+            } else {
+                namesPlayersSelectedForGame.remove(it.player.name)
+            }
+        }
 
         liveDataPlayersScreenState.value =
             SettingsScreenState.PlayersScreenState.ChangedPlayerState(
@@ -103,7 +108,7 @@ class SettingsScreenViewModelImpl(
 
     override fun onRemovePlayer(positionPlayer: Int) {
         viewModelScope.launch {
-            players[positionPlayer]?.player?.let { playersRepository.deletePlayer(it) }
+            players[positionPlayer]?.player?.let { mainMenuRepository.deletePlayer(it) }
         }
 
         players.removeAt(positionPlayer)
@@ -123,7 +128,7 @@ class SettingsScreenViewModelImpl(
             player.name = newNamePlayer
         }
         viewModelScope.launch {
-            players[positionPlayer]?.let { playersRepository.updatePlayer(it.player) }
+            players[positionPlayer]?.let { mainMenuRepository.updatePlayer(it.player) }
         }
 
         liveDataPlayersScreenState.value =
@@ -155,7 +160,7 @@ class SettingsScreenViewModelImpl(
     }
 
     private suspend fun loadPlayerInSettings(): PlayerInSettings {
-        val playersDB = playersRepository.getPlayers()
+        val playersDB = mainMenuRepository.getPlayers()
         return PlayerInSettings(
             playersDB[playersDB.size - 1],
             isSelectedForGame = true
@@ -167,7 +172,7 @@ class SettingsScreenViewModelImpl(
             Player("new ${players.size}"),
             isSelectedForGame = true
         )
-        playersRepository.insertPlayer(player.player)
+        mainMenuRepository.insertPlayer(player.player)
         namesPlayersSelectedForGame.add(player.player.name)
     }
 
@@ -194,14 +199,17 @@ class SettingsScreenViewModelImpl(
             liveDataScreenState.postValue(
                 SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
             )
-            typesCardsSelectedForGameRepository.saveTypesCardsSelectedForGame(
-                typesCardsSelectedForGame
-            )
-            namesPlayersSelectedForGameRepository.saveNamesPlayersSelectedForGame(
-                namesPlayersSelectedForGame
-            )
-
+            saveToRepository()
         }
+    }
+
+    fun saveToRepository() {
+        mainMenuRepository.saveTypesCardsSelectedForGame(
+            typesCardsSelectedForGame
+        )
+        mainMenuRepository.saveNamesPlayersSelectedForGame(
+            namesPlayersSelectedForGame
+        )
     }
 
     private fun findPlayersForGame(): MutableList<PlayerInGame> {
@@ -245,6 +253,11 @@ class SettingsScreenViewModelImpl(
 
         }
         lastEditablePlayer = null
+    }
+
+    override fun onCleared() {
+        saveToRepository()
+        super.onCleared()
     }
 
     companion object {
