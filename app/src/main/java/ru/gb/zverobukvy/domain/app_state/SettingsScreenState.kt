@@ -50,6 +50,13 @@ sealed interface SettingsScreenState {
     sealed interface ScreenState {
 
         /**
+         * Состояние для первичной (при создании View) отрисовки выбранного уровня игры (цвета игры)
+         */
+        data class TypesCardsState(
+            val typesCard: List<TypeCards>
+        ): ScreenState
+
+        /**
          * Состояние для информационных сообщений:
          * - некорректное или повторяющееся имя игрока при редактировании данных игрока;
          * - не выбраны игроки или выбрано слишком много игроков для игры;

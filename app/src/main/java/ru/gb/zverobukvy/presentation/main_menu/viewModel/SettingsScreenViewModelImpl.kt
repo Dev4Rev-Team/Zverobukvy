@@ -12,18 +12,22 @@ import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.domain.repository.NamesPlayersSelectedForGameRepository
 import ru.gb.zverobukvy.domain.repository.PlayersRepository
+import ru.gb.zverobukvy.domain.repository.TypesCardsSelectedForGameRepository
 import ru.gb.zverobukvy.presentation.SingleEventLiveData
 import timber.log.Timber
 
 class SettingsScreenViewModelImpl(
     private val playersRepository: PlayersRepository,
+    private val typesCardsSelectedForGameRepository: TypesCardsSelectedForGameRepository,
+    private val namesPlayersSelectedForGameRepository: NamesPlayersSelectedForGameRepository,
     private val resourcesProvider: ResourcesProvider,
 ) :
     SettingsScreenViewModel, ViewModel() {
     private val typesCardsSelectedForGame: MutableList<TypeCards> = mutableListOf()
 
-    private val playersSelectedForGame: MutableList<String> = mutableListOf()
+    private val namesPlayersSelectedForGame: MutableList<String> = mutableListOf()
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
     private var lastEditablePlayer: PlayerInSettings? = null
 
@@ -33,28 +37,20 @@ class SettingsScreenViewModelImpl(
 
     private val liveDataScreenState = SingleEventLiveData<SettingsScreenState.ScreenState>()
 
-    override fun onLaunch(
-        typesCardsSelectedForGameFromPreference: List<TypeCards>,
-        namesPlayersSelectedForGameFromPreference: List<String>,
-    ) {
+    override fun onLaunch() {
         Timber.d("onLaunch")
-        typesCardsSelectedForGame.clear()
-        typesCardsSelectedForGame.addAll(typesCardsSelectedForGameFromPreference)
-        //TODO
-//        if (typesCardsSelectedForGame.size == 0) {
-//            typesCardsSelectedForGame.add(TypeCards.ORANGE)
-//        }
+        loadTypeCardsSelectedForGame()
+        liveDataScreenState.value =
+            SettingsScreenState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
 
-        //TODO реализовать формирование List<String> с использованием
-        // namesPlayersSelectedForGameFromPreference и с запросом к репозиторию
-        //playersSelectedForGame.addAll(listOf("Игрок 1", "Игрок 2", "Игрок 3"))
+        loadPlayersSelectedForGame()
 
         viewModelScope.launch {
             players.clear()
             players.addAll(
                 playersRepository.getPlayers().map {
                     mapToPlayerInSettings(it).apply {
-                        if (playersSelectedForGame.contains(player.name)) {
+                        if (namesPlayersSelectedForGame.contains(player.name)) {
                             isSelectedForGame = true
                         }
                     }
@@ -62,6 +58,21 @@ class SettingsScreenViewModelImpl(
             players.add(null)
             liveDataPlayersScreenState.value =
                 SettingsScreenState.PlayersScreenState.PlayersState(players)
+        }
+    }
+
+    private fun loadPlayersSelectedForGame() {
+        namesPlayersSelectedForGame.clear()
+        namesPlayersSelectedForGame.addAll(
+            namesPlayersSelectedForGameRepository.getNamesPlayersSelectedForGame()
+        )
+    }
+
+    private fun loadTypeCardsSelectedForGame() {
+        typesCardsSelectedForGame.clear()
+        typesCardsSelectedForGame.addAll(typesCardsSelectedForGameRepository.getTypesCardsSelectedForGame())
+        if (typesCardsSelectedForGame.size == 0) {
+            typesCardsSelectedForGame.add(TypeCards.ORANGE)
         }
     }
 
@@ -80,6 +91,8 @@ class SettingsScreenViewModelImpl(
         players[positionPlayer]?.apply {
             isSelectedForGame = !isSelectedForGame
         }
+
+        players[positionPlayer]?.player?.let { namesPlayersSelectedForGame.add(it.name) }
 
         liveDataPlayersScreenState.value =
             SettingsScreenState.PlayersScreenState.ChangedPlayerState(
@@ -155,6 +168,7 @@ class SettingsScreenViewModelImpl(
             isSelectedForGame = true
         )
         playersRepository.insertPlayer(player.player)
+        namesPlayersSelectedForGame.add(player.player.name)
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
@@ -177,8 +191,16 @@ class SettingsScreenViewModelImpl(
         } else if (playersForGame.size == 0) {
             sendError(StringEnum.MAIN_MENU_FRAGMENT_NO_PLAYER_SELECTED)
         } else {
-            liveDataScreenState.value =
+            liveDataScreenState.postValue(
                 SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
+            )
+            typesCardsSelectedForGameRepository.saveTypesCardsSelectedForGame(
+                typesCardsSelectedForGame
+            )
+            namesPlayersSelectedForGameRepository.saveNamesPlayersSelectedForGame(
+                namesPlayersSelectedForGame
+            )
+
         }
     }
 

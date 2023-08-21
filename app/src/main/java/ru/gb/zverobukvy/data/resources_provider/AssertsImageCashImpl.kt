@@ -7,14 +7,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import ru.gb.zverobukvy.domain.repository.AnimalLettersCardsRepository
+import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import java.io.IOException
 import java.io.InputStream
 
 class AssertsImageCashImpl(
     context: Context,
-    animalLettersCardsRepository: AnimalLettersCardsRepository,
+    animalLettersCardsRepository: AnimalLettersGameRepository,
 ) : AssetsImageCash {
     private val mapImages: MutableMap<String, Drawable> = mutableMapOf()
     private val myCoroutineScope = CoroutineScope(Dispatchers.Default)
