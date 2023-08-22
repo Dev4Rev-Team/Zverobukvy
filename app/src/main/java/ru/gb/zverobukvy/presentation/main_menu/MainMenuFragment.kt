@@ -159,7 +159,9 @@ class MainMenuFragment :
     private fun openAnimalLettersFragment(
         typesCardsSelectedForGame: List<TypeCards>, playersSelectedForGame: List<PlayerInGame>,
     ) {
-        requireActivity().supportFragmentManager.beginTransaction().replace(
+        requireActivity().supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.enter_x, R.anim.exit_x, R.anim.enter_x, R.anim.exit_x)
+            .replace(
             R.id.container, GameZverobukvyFragment.newInstance(
                 GameZverobukvyFragment.GameStart(
                     typesCardsSelectedForGame, playersSelectedForGame
