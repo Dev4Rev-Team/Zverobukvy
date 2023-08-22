@@ -202,7 +202,8 @@ class SettingsScreenViewModelImpl(
         }
     }
 
-    fun saveToRepository() {
+    override fun onViewPause() {
+        Timber.d("onViewPause")
         mainMenuRepository.saveTypesCardsSelectedForGame(
             typesCardsSelectedForGame
         )
@@ -252,11 +253,6 @@ class SettingsScreenViewModelImpl(
 
         }
         lastEditablePlayer = null
-    }
-
-    override fun onCleared() {
-        saveToRepository()
-        super.onCleared()
     }
 
     companion object {
