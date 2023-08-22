@@ -140,12 +140,12 @@ class CustomCardTable @JvmOverloads constructor(
         listOfCardsOnTable.forEach { it.setOpenCard(false) }
     }
 
-    fun openTheEntireTable(delayMillis: Long) {
+    fun openUheEntireTable(delayMillis: Long) {
         isClick = true
-        listOfCardsOnTable.forEach { it.setOpenCard(true) }
+        listOfInvalidCards.forEach { it.setOpenCard(true) }
         postDelayed(
             {
-                listOfCardsOnTable.forEach { it.setOpenCard(false) }
+                listOfInvalidCards.forEach { it.setOpenCard(false) }
                 isClick = false
             },
             delayMillis
