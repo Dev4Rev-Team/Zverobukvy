@@ -1,7 +1,6 @@
-package ru.gb.zverobukvy.presentation.game_zverobukvy
+package ru.gb.zverobukvy.presentation.animal_letters_game
 
 import androidx.lifecycle.LiveData
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 
 /**
 Во viewModel необходимо хранить текущее полное состояние игры (var currentGameState: GameState?).
@@ -11,7 +10,7 @@ entireStateLiveData. После этого обновляет текущее п�
 Т.е. во viewModel должна быть реализована логика преобразования данных, полученных от интерактора,
 в данные необходимые для view.
  */
-interface GameZverobukvyViewModel {
+interface AnimalLettersGameViewModel {
     /**
     Метод вызывается при создании или при пересоздании view, в этом методе viewModel присваивает
     entireStateLiveData полное состояние игры (все данные для полной отрисовки экрана игры).
@@ -23,13 +22,13 @@ interface GameZverobukvyViewModel {
     Непосредственно при подписке view получает Loading (при первом создании) или текущее полное состояние игры
     (при пересоздании).
      */
-    fun getEntireGameStateLiveData(): LiveData<AnimalLettersState.EntireState>
+    fun getEntireGameStateLiveData(): LiveData<AnimalLettersGameState.EntireState>
 
     /**
     Методы для подписки view на изменения состояния игры по ходу игры.
     Непосредственно при подписке view ничего получать не будет, т.к. реализовывается подход SingleEvent.
      */
-    fun getChangingGameStateLiveData(): LiveData<AnimalLettersState.ChangingState>
+    fun getChangingGameStateLiveData(): LiveData<AnimalLettersGameState.ChangingState>
 
     /**
     Метод вызывается при выборе буквенной карточки, в этом методе viewModel вызывает
@@ -48,7 +47,7 @@ interface GameZverobukvyViewModel {
     /**
     Метод вызывается при нажатии кнопки перехода к следующему слову
 
-     * @see [ru.gb.zverobukvy.domain.app_state.AnimalLettersState.ChangingState.NextGuessWord]
+     * @see [ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState.NextGuessWord]
      */
     fun onClickNextWord()
 

@@ -8,7 +8,7 @@ import ru.gb.zverobukvy.domain.entity.GameState
  GameState.
  * @exception IllegalArgumentException, если в конструктор переданы не корректные данные
  */
-interface AnimalLettersInteractor {
+interface AnimalLettersGameInteractor {
 
     /**
     Метод для подписки viewModel на состояние игры.

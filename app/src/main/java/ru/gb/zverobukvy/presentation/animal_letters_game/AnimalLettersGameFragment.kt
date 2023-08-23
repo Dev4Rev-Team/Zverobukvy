@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.game_zverobukvy
+package ru.gb.zverobukvy.presentation.animal_letters_game
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -6,41 +6,41 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.App
-import ru.gb.zverobukvy.databinding.FragmentGameZverobukvyBinding
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
+import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
+import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractorImpl
+import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
+import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.DataGameIsOverDialog
+import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.GameIsOverDialogFragment
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
-import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.DataGameIsOverDialog
-import ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog.GameIsOverDialogFragment
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
-class GameZverobukvyFragment :
-    ViewBindingFragment<FragmentGameZverobukvyBinding>(FragmentGameZverobukvyBinding::inflate) {
+class AnimalLettersGameFragment :
+    ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
     private var gameStart: GameStart? = null
     private val assertsImageCash: AssetsImageCash by lazy {
         (requireContext().applicationContext as App).assetsImageCash
     }
 
-    private val viewModel: GameZverobukvyViewModel by lazy {
+    private val viewModel: AnimalLettersGameViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
 
             val animalLettersCardsRepository =
                 (requireContext().applicationContext as App).animalLettersCardsRepository
-            val game = AnimalLettersInteractorImpl(
+            val game = AnimalLettersGameInteractorImpl(
                 animalLettersCardsRepository,
                 gameStart!!.typesCards,
                 gameStart!!.players
             )
-            GameZverobukvyViewModelImpl(game)
-        })[GameZverobukvyViewModelImpl::class.java]
+            AnimalLettersGameViewModelImpl(game)
+        })[AnimalLettersGameViewModelImpl::class.java]
     }
 
 
@@ -58,34 +58,34 @@ class GameZverobukvyFragment :
 
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is AnimalLettersState.ChangingState.CorrectLetter -> {
+                is AnimalLettersGameState.ChangingState.CorrectLetter -> {
                     setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.setCorrectLetterCard()
                 }
 
-                is AnimalLettersState.ChangingState.GuessedWord -> {
+                is AnimalLettersGameState.ChangingState.GuessedWord -> {
                     setPositionLetterInWord(it.positionLetterInWord)
                     if (it.hasNextWord) {
                         requestNextWord()
                     }
                 }
 
-                is AnimalLettersState.ChangingState.InvalidLetter -> {
+                is AnimalLettersGameState.ChangingState.InvalidLetter -> {
                     requestNextPlayer(it)
                 }
 
-                is AnimalLettersState.ChangingState.NextGuessWord -> {
+                is AnimalLettersGameState.ChangingState.NextGuessWord -> {
                     setPictureOfWord(it.wordCard.faceImageName)
                     setWord(it.wordCard)
                     closeTable()
 
                 }
 
-                is AnimalLettersState.ChangingState.CloseInvalidLetter -> {
+                is AnimalLettersGameState.ChangingState.CloseInvalidLetter -> {
                     closeInvalidCard()
                 }
 
-                is AnimalLettersState.ChangingState.NextPlayer -> {
+                is AnimalLettersGameState.ChangingState.NextPlayer -> {
                     setPlayer(it.nextWalkingPlayer.name)
                 }
             }
@@ -93,19 +93,19 @@ class GameZverobukvyFragment :
 
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is AnimalLettersState.EntireState.EndGameState -> {
+                is AnimalLettersGameState.EntireState.EndGameState -> {
                     val players = DataGameIsOverDialog.map(it.players)
                     val data = DataGameIsOverDialog(players, it.gameTime)
                     GameIsOverDialogFragment.instance(data)
                         .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
                 }
 
-                is AnimalLettersState.EntireState.IsEndGameState -> {
+                is AnimalLettersGameState.EntireState.IsEndGameState -> {
                     IsEndGameDialogFragment.instance()
                         .show(parentFragmentManager, IsEndGameDialogFragment.TAG)
                 }
 
-                is AnimalLettersState.EntireState.StartGameState -> {
+                is AnimalLettersGameState.EntireState.StartGameState -> {
                     setPlayer(it.nextWalkingPlayer.name)
                     initPictureWord(it)
                     setWord(it.wordCard)
@@ -183,7 +183,7 @@ class GameZverobukvyFragment :
         }
     }
 
-    private fun requestNextPlayer(state: AnimalLettersState.ChangingState.InvalidLetter) {
+    private fun requestNextPlayer(state: AnimalLettersGameState.ChangingState.InvalidLetter) {
         binding.nextPlayer.let { button ->
             button.setOnClickListener {
                 button.visibility = View.INVISIBLE
@@ -203,7 +203,7 @@ class GameZverobukvyFragment :
         return false
     }
 
-    private fun initTable(startGameState: AnimalLettersState.EntireState.StartGameState) {
+    private fun initTable(startGameState: AnimalLettersGameState.EntireState.StartGameState) {
         binding.table.apply {
             setListItem(startGameState.lettersCards, assertsImageCash) {
                 CustomCard(requireContext()).apply {
@@ -218,7 +218,7 @@ class GameZverobukvyFragment :
         }
     }
 
-    private fun initPictureWord(startGameState: AnimalLettersState.EntireState.StartGameState) {
+    private fun initPictureWord(startGameState: AnimalLettersGameState.EntireState.StartGameState) {
         binding.wordCustomCard.apply {
             radius = CARD_RADIUS
             //TODO
@@ -239,7 +239,7 @@ class GameZverobukvyFragment :
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) =
-            GameZverobukvyFragment().apply {
+            AnimalLettersGameFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(GAME_START, gameStart)
                 }

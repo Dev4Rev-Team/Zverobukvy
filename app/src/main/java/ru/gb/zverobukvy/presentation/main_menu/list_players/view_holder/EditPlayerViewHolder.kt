@@ -1,7 +1,7 @@
 package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
-import ru.gb.zverobukvy.domain.entity.PlayerInSettings
+import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 
 class EditPlayerViewHolder(
     override val viewBinding: FragmentMainMenuItemPlayerModeEditBinding,
@@ -20,7 +20,8 @@ class EditPlayerViewHolder(
                         playerNameTextInputView.text.toString()
                     )
                 }
-//               TODO  cancelImageButton.setOnClickListener {
+//               TODO реализовать, когда добавится соответствующая кнопка в layout
+//                cancelImageButton.setOnClickListener {
 //                    cancelChangedPlayerClickListener(this@EditPlayerViewHolder.adapterPosition)
 //                }
                 deleteButton.setOnClickListener {

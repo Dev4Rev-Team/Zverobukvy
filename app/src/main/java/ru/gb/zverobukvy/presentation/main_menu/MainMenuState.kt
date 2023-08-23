@@ -1,10 +1,9 @@
-package ru.gb.zverobukvy.domain.app_state
+package ru.gb.zverobukvy.presentation.main_menu
 
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
 
-sealed interface SettingsScreenState {
+sealed interface MainMenuState {
 
     sealed interface PlayersScreenState {
 
@@ -50,7 +49,8 @@ sealed interface SettingsScreenState {
     sealed interface ScreenState {
 
         /**
-         * Состояние для первичной (при создании View) отрисовки выбранного уровня игры (цвета игры)
+         * Состояние для первичной (при создании и восстановлении View) отрисовки выбранного
+         * уровня игры (цвета игры)
          */
         data class TypesCardsState(
             val typesCard: List<TypeCards>

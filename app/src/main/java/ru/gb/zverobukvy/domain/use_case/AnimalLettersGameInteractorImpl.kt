@@ -44,11 +44,11 @@ import java.util.Queue
  * !!!Состояние 7 при предшествующем состоянии 4 будет соответствовать состоянию 5. Это необходимо
  * учитывать при формировании viewModel состояния экрана для view!!!
  */
-class AnimalLettersInteractorImpl(
+class AnimalLettersGameInteractorImpl(
     private val animalLettersGameRepository: AnimalLettersGameRepository,
     private val typesCards: List<TypeCards>,
     private var players: List<PlayerInGame>
-) : AnimalLettersInteractor {
+) : AnimalLettersGameInteractor {
     private val checkData = CheckData()
     private val gamingWords: Queue<WordCard> = LinkedList()
     private var currentWalkingPlayer: PlayerInGame

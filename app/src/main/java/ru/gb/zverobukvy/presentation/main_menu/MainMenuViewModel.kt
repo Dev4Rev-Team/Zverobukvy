@@ -1,11 +1,10 @@
-package ru.gb.zverobukvy.presentation.main_menu.viewModel
+package ru.gb.zverobukvy.presentation.main_menu
 
 import androidx.lifecycle.LiveData
-import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.presentation.SingleEventLiveData
+import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 
-interface SettingsScreenViewModel {
+interface MainMenuViewModel {
 
     /**
      * Метод вызывается при создании или пересоздании view, до подписки на liveData.
@@ -19,12 +18,12 @@ interface SettingsScreenViewModel {
     /**
     Метод для подписки view на состояние списка игроков на экране настроек.
      */
-    fun getLiveDataPlayersScreenState(): LiveData<SettingsScreenState.PlayersScreenState>
+    fun getLiveDataPlayersScreenState(): LiveData<MainMenuState.PlayersScreenState>
 
     /**
     Метод для подписки viewна состояние экрана настроек.
      */
-    fun getLiveDataScreenState(): SingleEventLiveData<SettingsScreenState.ScreenState>
+    fun getLiveDataScreenState(): SingleEventLiveData<MainMenuState.ScreenState>
 
     /**
      * Метод вызывается при выборе или отмене выбора игрока для участия в игре, например, по клику

@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.game_zverobukvy
+package ru.gb.zverobukvy.presentation.animal_letters_game
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,21 +8,20 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatchImpl
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.ChangingState
-import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.EntireState
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.domain.entity.GameState
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractor
+import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
-import ru.gb.zverobukvy.presentation.SingleEventLiveData
+import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import java.util.LinkedList
 
 
-class GameZverobukvyViewModelImpl(
-    private val animalLettersInteractor: AnimalLettersInteractor,
+class AnimalLettersGameViewModelImpl(
+    private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch = GameStopwatchImpl(),
 ) :
-    GameZverobukvyViewModel, ViewModel() {
+    AnimalLettersGameViewModel, ViewModel() {
 
     /** Флаг показа диалогового окна о закрытии игры :
      * - true - показывается диалог об окончании игры
@@ -70,8 +69,8 @@ class GameZverobukvyViewModelImpl(
      */
     init {
         viewModelScope.launch {
-            animalLettersInteractor.startGame()
-            animalLettersInteractor.subscribeToGameState().collect(::collectGameState)
+            animalLettersGameInteractor.startGame()
+            animalLettersGameInteractor.subscribeToGameState().collect(::collectGameState)
         }
     }
 
@@ -109,12 +108,12 @@ class GameZverobukvyViewModelImpl(
         )
     }
 
-    /** Метод обновляет значение одной из viewModels в зависимости от типа входящего [AnimalLettersState]
+    /** Метод обновляет значение одной из viewModels в зависимости от типа входящего [AnimalLettersGameState]
      * и сохраняет его во viewModel если тип == [EntireState]
      *
      * @param state Состояние экрана для отправки во View
      */
-    private fun updateViewModels(state: AnimalLettersState) {
+    private fun updateViewModels(state: AnimalLettersGameState) {
         if (state is EntireState) {
             mViewState = state
             entireLiveData.value = mViewState
@@ -130,7 +129,7 @@ class GameZverobukvyViewModelImpl(
      * @exception IllegalStateException если проверка провалена
      */
     private fun checkingCorrectnessOfConversion(
-        viewState: List<AnimalLettersState>,
+        viewState: List<AnimalLettersGameState>,
     ) {
         if (viewState.size > 3)
             throw IllegalStateException(ERROR_INDEX_INCORRECT)
@@ -146,10 +145,10 @@ class GameZverobukvyViewModelImpl(
     }
 
     /** Метод конвертирует разницу состояний (+ [mLastClickCardPosition])
-     * в список из одного или двух [AnimalLettersState].
+     * в список из одного или двух [AnimalLettersGameState].
      * * Вторым состоянием может быть только [EntireState.EndGameState]
      */
-    private fun convert(oldState: GameState?, newState: GameState?): List<AnimalLettersState> {
+    private fun convert(oldState: GameState?, newState: GameState?): List<AnimalLettersGameState> {
 
         /** Проверка на Null newState :
          * Срабатывает сразу после подписки на данные в Interactor
@@ -181,7 +180,7 @@ class GameZverobukvyViewModelImpl(
          *
          * TODO : Теоретически возможно совмещение [EntireState.EndGameState] и с двумя первыми проверками
          */
-        val stateList = LinkedList<AnimalLettersState>()
+        val stateList = LinkedList<AnimalLettersGameState>()
 
         /** Ловим событие окончания игры [EntireState.EndGameState]
          */
@@ -322,7 +321,7 @@ class GameZverobukvyViewModelImpl(
         if (!isCardClick) {
             isCardClick = true
             mLastClickCardPosition = positionSelectedLetterCard
-            animalLettersInteractor.selectionLetterCard(positionSelectedLetterCard)
+            animalLettersGameInteractor.selectionLetterCard(positionSelectedLetterCard)
         }
 
     }
@@ -347,7 +346,7 @@ class GameZverobukvyViewModelImpl(
     }
 
     override fun onClickNextWord() {
-        animalLettersInteractor.getNextWordCard()
+        animalLettersGameInteractor.getNextWordCard()
     }
 
     override fun onBackPressed() {
@@ -362,7 +361,7 @@ class GameZverobukvyViewModelImpl(
     }
 
     override fun onEndGameByUser() {
-        animalLettersInteractor.endGameByUser()
+        animalLettersGameInteractor.endGameByUser()
     }
 
     override fun onResume() {
