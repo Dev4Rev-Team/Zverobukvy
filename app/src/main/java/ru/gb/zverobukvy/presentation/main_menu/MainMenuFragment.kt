@@ -25,7 +25,6 @@ import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModel
 import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
-import ru.gb.zverobukvy.utility.ui.setOnClickListenerThrottled
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
@@ -48,6 +47,7 @@ class MainMenuFragment :
             AddPlayerClickListenerOwner { clickAddPlayer() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.d("onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         setRemovePlayerDialogFragmentListener()
 
@@ -61,6 +61,12 @@ class MainMenuFragment :
                 renderPlayersScreenState(it)
             }
         }
+    }
+
+    override fun onPause() {
+        Timber.d("onPause")
+        viewModel.onViewPause()
+        super.onPause()
     }
 
     override fun onBackPressed(): Boolean {
@@ -110,7 +116,9 @@ class MainMenuFragment :
 
     private fun initPlayGameButton() {
         binding.playButton.apply {
-            setOnClickListenerThrottled(wait = DURATION_WAIT) {
+            isClickable = true
+            setOnClickListener {
+                isClickable = false
                 viewModel.onStartGame()
             }
         }
@@ -128,6 +136,7 @@ class MainMenuFragment :
             is SettingsScreenState.ScreenState.ErrorState -> {
                 Timber.d("ErrorState")
                 showError(settingsScreenState.error)
+                binding.playButton.isClickable = true
             }
 
             is SettingsScreenState.ScreenState.StartGame -> {
@@ -259,7 +268,6 @@ class MainMenuFragment :
     companion object {
         private const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
         private const val TAG_REMOVE_PLAYER_DIALOG_FRAGMENT = "RemovePlayerDialogFragment"
-        private const val DURATION_WAIT = 3500L
         const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"

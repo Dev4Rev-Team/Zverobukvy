@@ -95,4 +95,10 @@ interface SettingsScreenViewModel {
      */
     fun onStartGame()
 
+    /**
+     * Метод вызывается при переходе view  в состояние Pause. ViewModel сохраняет текущие
+     * выбранный уровень игры (цвета игры) и выбранных для игры игроков.
+     */
+    fun onViewPause()
+
 }
