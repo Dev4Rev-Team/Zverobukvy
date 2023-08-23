@@ -1,10 +1,10 @@
-package ru.gb.zverobukvy.presentation
+package ru.gb.zverobukvy.utility.ui
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SingleEventLiveData<T> : MutableLiveData<T>() {
@@ -14,7 +14,7 @@ class SingleEventLiveData<T> : MutableLiveData<T>() {
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         if (hasActiveObservers()) {
-            Log.w(TAG, "Multiple observers registered but only one will be notified of changes.")
+            Timber.w(TAG, "Multiple observers registered but only one will be notified of changes.")
         }
         // Observe the internal MutableLiveData
         super.observe(owner) { t ->

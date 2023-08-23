@@ -1,13 +1,13 @@
 package ru.gb.zverobukvy.data.mapper
 
-import ru.gb.zverobukvy.data.room.entity.ColorCards
+import ru.gb.zverobukvy.data.room.entity.TypeCardsInDatabase
 import ru.gb.zverobukvy.domain.entity.TypeCards
 
 class ExtractTypesCardsHelper {
     companion object {
-        fun extractTypesCards(colorCards: ColorCards): List<TypeCards> {
+        fun extractTypesCards(typeCardsInDatabase: TypeCardsInDatabase): List<TypeCards> {
             val typeCards = mutableListOf<TypeCards>()
-            colorCards.run {
+            typeCardsInDatabase.run {
                 if (isOrange)
                     typeCards.add(TypeCards.ORANGE)
                 if (isGreen)

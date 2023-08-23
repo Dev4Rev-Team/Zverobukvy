@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:visibility="invisible"
-    tools:context=".presentation.game_zverobukvy.GameZverobukvyFragment"
+    tools:context=".presentation.animal_letters_game.AnimalLettersGameFragment"
     tools:visibility="visible">
 
     <ImageButton

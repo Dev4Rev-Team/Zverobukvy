@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.game_zverobukvy.game_is_over_dialog
+package ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog
 
 import android.content.DialogInterface
 import android.os.Bundle
