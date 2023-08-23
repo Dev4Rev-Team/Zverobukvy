@@ -10,7 +10,7 @@ class WordCardsMapperToDomain: EntitiesMapperToDomain<List<WordCard>, List<WordC
            wordCards.add(
                WordCard(
                     word = it.word,
-                    typesCards = ExtractTypesCardsHelper.extractTypesCards(it.colorCards),
+                    typesCards = ExtractTypesCardsHelper.extractTypesCards(it.typeCardsInDatabase),
                     faceImageName = it.faceImageName,
                 )
             )

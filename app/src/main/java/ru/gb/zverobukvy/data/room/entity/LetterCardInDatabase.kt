@@ -12,7 +12,7 @@ data class LetterCardInDatabase(
     @field:ColumnInfo(name = "letter")
     val letter: String,
     @Embedded
-    val colorCards: ColorCards,
+    val typeCardsInDatabase: TypeCardsInDatabase,
     @field:ColumnInfo(name = "face")
     val faceImageName: String,
     @field:ColumnInfo(name = "back")

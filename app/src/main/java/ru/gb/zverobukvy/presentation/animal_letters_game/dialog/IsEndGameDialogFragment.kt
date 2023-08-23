@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.game_zverobukvy
+package ru.gb.zverobukvy.presentation.animal_letters_game.dialog
 
 import android.content.DialogInterface
 import android.graphics.Color

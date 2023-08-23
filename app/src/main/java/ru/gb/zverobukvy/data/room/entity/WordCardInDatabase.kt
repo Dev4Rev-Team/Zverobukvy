@@ -12,7 +12,7 @@ class WordCardInDatabase (
     @field:ColumnInfo(name = "word")
     val word: String,
     @Embedded
-    val colorCards: ColorCards,
+    val typeCardsInDatabase: TypeCardsInDatabase,
     @field:ColumnInfo(name = "face")
     val faceImageName: String,
     @field:PrimaryKey(autoGenerate = true)
