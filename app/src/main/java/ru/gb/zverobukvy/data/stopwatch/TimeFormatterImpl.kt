@@ -1,8 +1,9 @@
 package ru.gb.zverobukvy.data.stopwatch
 
 import ru.gb.zverobukvy.domain.use_case.stopwatch.TimeFormatter
+import javax.inject.Inject
 
-class TimeFormatterImpl(): TimeFormatter {
+class TimeFormatterImpl @Inject constructor(): TimeFormatter {
 
     override fun format(timeInMillisecond: Long): String {
 

@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.gb.zverobukvy.data.stopwatch.GameStopwatchImpl
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.ChangingState
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState.EntireState
@@ -16,11 +15,12 @@ import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractor
 import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
 import ru.gb.zverobukvy.presentation.SingleEventLiveData
 import java.util.LinkedList
+import javax.inject.Inject
 
 
-class GameZverobukvyViewModelImpl(
+class GameZverobukvyViewModelImpl @Inject constructor(
     private val animalLettersInteractor: AnimalLettersInteractor,
-    private val gameStopwatch: GameStopwatch = GameStopwatchImpl(),
+    private val gameStopwatch: GameStopwatch,
 ) :
     GameZverobukvyViewModel, ViewModel() {
 

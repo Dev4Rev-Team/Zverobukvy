@@ -5,12 +5,11 @@ import android.os.Parcelable
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
-import ru.gb.zverobukvy.App
+import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentGameZverobukvyBinding
 import ru.gb.zverobukvy.domain.app_state.AnimalLettersState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
@@ -26,20 +25,15 @@ class GameZverobukvyFragment :
     ViewBindingFragment<FragmentGameZverobukvyBinding>(FragmentGameZverobukvyBinding::inflate) {
     private var gameStart: GameStart? = null
     private val assertsImageCash: AssetsImageCash by lazy {
-        (requireContext().applicationContext as App).assetsImageCash
+        requireContext().appComponent.getAssetsImageCash()
     }
 
     private val viewModel: GameZverobukvyViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
-
-            val animalLettersCardsRepository =
-                (requireContext().applicationContext as App).animalLettersCardsRepository
-            val game = AnimalLettersInteractorImpl(
-                animalLettersCardsRepository,
+            requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
                 gameStart!!.typesCards,
                 gameStart!!.players
-            )
-            GameZverobukvyViewModelImpl(game)
+            ).viewModel
         })[GameZverobukvyViewModelImpl::class.java]
     }
 

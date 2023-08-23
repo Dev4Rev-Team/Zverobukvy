@@ -5,8 +5,11 @@ import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase
 import ru.gb.zverobukvy.data.room.entity.WordCardInDatabase
 import ru.gb.zverobukvy.domain.entity.Player
+import javax.inject.Inject
 
-class LocalDataSourceImpl (private val playersDatabase: AnimalLettersDatabase): LocalDataSource {
+class LocalDataSourceImpl @Inject constructor(
+    private val playersDatabase: AnimalLettersDatabase,
+) : LocalDataSource {
     private val playersDao = playersDatabase.playersDao()
 
     override suspend fun getPlayers(): List<Player> = playersDao.getPlayers()

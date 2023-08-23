@@ -11,8 +11,9 @@ import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import java.io.IOException
 import java.io.InputStream
+import javax.inject.Inject
 
-class AssertsImageCashImpl(
+class AssertsImageCashImpl @Inject constructor(
     context: Context,
     animalLettersCardsRepository: AnimalLettersGameRepository,
 ) : AssetsImageCash {

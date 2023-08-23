@@ -8,15 +8,13 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.data.resources_provider.ResourcesProviderImpl
+import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
 import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
@@ -30,12 +28,10 @@ import timber.log.Timber
 
 class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
+
     private val viewModel: SettingsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
-            val repository: MainMenuRepository =
-                (requireContext().applicationContext as App).mainMenuRepository
-            val resourcesProvider = ResourcesProviderImpl(requireContext())
-            SettingsScreenViewModelImpl(repository, resourcesProvider)
+            requireContext().appComponent.getSettingsScreenViewModel()
         })[SettingsScreenViewModelImpl::class.java]
     }
 

@@ -3,8 +3,9 @@ package ru.gb.zverobukvy.data.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import timber.log.Timber
+import javax.inject.Inject
 
-class SharedPreferencesForGameImpl(context: Context) : SharedPreferencesForGame {
+class SharedPreferencesForGameImpl @Inject constructor(context: Context) : SharedPreferencesForGame {
     private val sharedPreferencesForGame: SharedPreferences = context.getSharedPreferences(
         NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE
     )

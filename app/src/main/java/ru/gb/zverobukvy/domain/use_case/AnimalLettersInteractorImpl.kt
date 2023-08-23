@@ -13,6 +13,7 @@ import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
+import javax.inject.Inject
 
 /**
  * Возможные состояния игры GameState:
@@ -44,7 +45,7 @@ import java.util.Queue
  * !!!Состояние 7 при предшествующем состоянии 4 будет соответствовать состоянию 5. Это необходимо
  * учитывать при формировании viewModel состояния экрана для view!!!
  */
-class AnimalLettersInteractorImpl(
+class AnimalLettersInteractorImpl @Inject constructor(
     private val animalLettersGameRepository: AnimalLettersGameRepository,
     private val typesCards: List<TypeCards>,
     private var players: List<PlayerInGame>
