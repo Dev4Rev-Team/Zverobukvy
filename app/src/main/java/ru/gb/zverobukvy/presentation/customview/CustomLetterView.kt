@@ -19,6 +19,7 @@ class CustomLetterView @JvmOverloads constructor(
     private lateinit var textView: CustomTextView
     private var char: Char = EMPTY_SPACE
     var colorGuessed = DEFAULT_COLOR_GUESSED
+    var colorUnsolved = DEFAULT_COLOR_UNSOLVED
 
     init {
         initContentView()
@@ -67,6 +68,10 @@ class CustomLetterView @JvmOverloads constructor(
         }
     }
 
+    fun setUnsolved() {
+        layoutBackground.setBackgroundColor(colorUnsolved)
+    }
+
     private fun setBackground() {
         layoutBackground.setBackgroundColor(colorGuessed)
     }
@@ -79,10 +84,11 @@ class CustomLetterView @JvmOverloads constructor(
 
     companion object {
         private const val EMPTY_SPACE = ' '
-        private const val DEFAULT_COLOR_GUESSED = Color.GREEN
         private const val DURATION_ANIMATION = 250
         private const val START_DELAY_ANIMATION = 300
         private const val SCALE = 1.2f
         private const val NORMAL = 1f
+        private const val DEFAULT_COLOR_GUESSED = Color.GREEN
+        private const val DEFAULT_COLOR_UNSOLVED = Color.WHITE
     }
 }

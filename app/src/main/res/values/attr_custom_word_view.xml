@@ -4,5 +4,6 @@
         <attr name="horizontalGap" />
         <attr name="colorUnsolved" />
         <attr name="colorGuessed"  />
+        <attr name="radiusCards" />
     </declare-styleable>
 </resources>
