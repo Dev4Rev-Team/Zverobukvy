@@ -145,6 +145,7 @@
         android:layout_marginBottom="@dimen/margin_default"
         app:layout_constraintBottom_toTopOf="@+id/word_guidline"
         app:layout_constraintDimensionRatio="6:1"
+        app:horizontalGap="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sector_word_card_image_guidline">
@@ -156,20 +157,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.39" />
+        app:layout_constraintGuide_percent="0.37" />
 
     <ru.gb.zverobukvy.presentation.customview.CustomCardTable
         android:id="@+id/table"
         android:layout_width="@dimen/auto_layout"
         android:layout_height="@dimen/auto_layout"
-        app:horizontalGap="24"
+        app:horizontalGap="24dp"
         app:layout_constraintBottom_toTopOf="@+id/word_cards_table_guidline"
         app:layout_constraintDimensionRatio="5:7"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/word_guidline"
         app:layout_constraintVertical_bias="0.5"
-        app:verticalGap="24" />
+        app:verticalGap="24dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/word_cards_table_guidline"
