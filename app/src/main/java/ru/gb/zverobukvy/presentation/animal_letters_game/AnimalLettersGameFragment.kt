@@ -177,9 +177,7 @@ class AnimalLettersGameFragment :
 
     private fun setWord(wordCard: CustomWordView.WordCardUI) {
         binding.wordView.setWord(wordCard) {
-            CustomLetterView(requireContext()).apply {
-                radius = CARD_RADIUS
-            }
+            CustomLetterView(requireContext())
         }
     }
 
@@ -207,7 +205,6 @@ class AnimalLettersGameFragment :
         binding.table.apply {
             setListItem(startGameState.lettersCards, assertsImageCash) {
                 CustomCard(requireContext()).apply {
-                    radius = CARD_RADIUS
                     enableClickAnimation()
                     setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
                 }
