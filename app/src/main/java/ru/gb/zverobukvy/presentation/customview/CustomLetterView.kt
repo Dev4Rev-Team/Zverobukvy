@@ -17,17 +17,14 @@ class CustomLetterView @JvmOverloads constructor(
 
     private lateinit var layoutBackground: FrameLayout
     private lateinit var textView: CustomTextView
-    private var padding = 8
-    private var char: Char = ' '
-    var colorTrue = Color.GREEN
+    private var char: Char = EMPTY_SPACE
+    var colorGuessed = DEFAULT_COLOR_GUESSED
 
     init {
-        initAttributes(context, attrs, defStyle)
         initContentView()
     }
 
     private fun initContentView() {
-        setPadding(padding, padding, padding, padding)
         val layoutParams = createLayoutParams()
         layoutBackground = FrameLayout(context).apply {
             this.layoutParams = layoutParams
@@ -45,47 +42,34 @@ class CustomLetterView @JvmOverloads constructor(
         LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
     )
 
-    private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
-//        val typedArray =
-//            context.obtainStyledAttributes(attrs, R.styleable.CustomCardTable, defStyle, 0)
-//        padding = typedArray.getInteger(
-//            R.styleable.CustomCardTable_horizontalGap,
-//            CustomCardTable.HORIZONTAL_GAP
-//        )
-//        colorTrue
-//
-//        typedArray.recycle()
-    }
-
     fun setChar(char: Char) {
         textView.text = char.toString()
     }
 
-    fun setTrue(isAnimation: Boolean = true) {
+    fun setGuessed(isAnimation: Boolean = true) {
         if (isAnimation) {
             val animatorSet = AnimatorSet()
-            val scaleUp = createScaleAnimation(this, 1f, 1.2f).apply {
+            val scaleUp = createScaleAnimation(this, NORMAL, SCALE).apply {
                 duration = DURATION_ANIMATION.toLong()
                 doOnStart {
                     setBackground()
                 }
             }
-            val scaleDown = createScaleAnimation(this, 1.2f, 1f).apply {
+            val scaleDown = createScaleAnimation(this, SCALE, NORMAL).apply {
                 duration = DURATION_ANIMATION.toLong()
             }
             animatorSet.playSequentially(scaleUp, scaleDown)
             animatorSet.doOnStart { bringToFront() }
             animatorSet.startDelay = START_DELAY_ANIMATION.toLong()
             animatorSet.start()
-        }else{
+        } else {
             setBackground()
         }
     }
 
     private fun setBackground() {
-        layoutBackground.setBackgroundColor(colorTrue)
+        layoutBackground.setBackgroundColor(colorGuessed)
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -94,7 +78,11 @@ class CustomLetterView @JvmOverloads constructor(
     }
 
     companion object {
+        private const val EMPTY_SPACE = ' '
+        private const val DEFAULT_COLOR_GUESSED = Color.GREEN
         private const val DURATION_ANIMATION = 250
         private const val START_DELAY_ANIMATION = 300
+        private const val SCALE = 1.2f
+        private const val NORMAL = 1f
     }
 }

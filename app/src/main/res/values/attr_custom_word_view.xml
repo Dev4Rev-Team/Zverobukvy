@@ -2,5 +2,7 @@
 <resources>
     <declare-styleable name="CustomWordView">
         <attr name="horizontalGap" />
+        <attr name="colorUnsolved" />
+        <attr name="colorGuessed"  />
     </declare-styleable>
 </resources>

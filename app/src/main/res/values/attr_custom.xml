@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="colorUnsolved" format="color" />
+    <attr name="colorGuessed" format="color" />
     <attr name="verticalGap" format="dimension" />
     <attr name="horizontalGap" format="dimension" />
     <attr name="srcOpen" format="reference" />
