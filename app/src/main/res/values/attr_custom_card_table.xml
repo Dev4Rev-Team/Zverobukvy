@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="CustomCardTable">
         <attr name="verticalGap" />
-        <attr name="horizontalGap"/>
+        <attr name="horizontalGap" />
+        <attr name="radiusCards" />
     </declare-styleable>
 </resources>
