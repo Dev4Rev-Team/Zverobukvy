@@ -4,28 +4,41 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlin.math.max
+import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.utility.ui.dipToPixels
+import kotlin.properties.Delegates
+
 
 class CustomWordView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0,
+) : ConstraintLayout(context, attrs, defStyle) {
 
-    ) : ConstraintLayout(context, attrs, defStyle) {
-
-    private var horizontalGap = HORIZONTAL_GAP
-    private var verticalGap = VERTICAL_GAP
+    private var horizontalGap by Delegates.notNull<Int>()
     private var flow: Flow? = null
     private val listOfLetterView = mutableListOf<CustomLetterView>()
 
 
     init {
+        initAttributes(context, attrs, defStyle)
         initContentView()
     }
 
+    private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
+        val typedArray =
+            context.obtainStyledAttributes(attrs, R.styleable.CustomWordView, defStyle, 0)
+        horizontalGap = typedArray.getDimensionPixelSize(
+            R.styleable.CustomWordView_horizontalGap, context.dipToPixels(
+                HORIZONTAL_GAP.toFloat()
+            )
+        )
+        typedArray.recycle()
+    }
+
     private fun initContentView() {
-        val padding = max(horizontalGap, verticalGap)
-        setPadding(padding, padding, padding, padding)
+        val padding = horizontalGap + SHIFT_PADDING
+        setPadding(0, padding / 2, 0, padding / 2)
         clipToPadding = false
         clipChildren = false
     }
@@ -37,7 +50,6 @@ class CustomWordView @JvmOverloads constructor(
         flow = Flow(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             setHorizontalGap(horizontalGap)
-            setVerticalGap(verticalGap)
 
             setMaxElementsWrap(countLetter)
             setWrapMode(Flow.WRAP_ALIGNED)
@@ -57,8 +69,10 @@ class CustomWordView @JvmOverloads constructor(
 
         repeat(countLetter) { pos: Int ->
             val customLetter = (factory?.run { invoke() } ?: CustomLetterView(context)).apply {
-                layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, 0)
+                layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, 0).apply {
+                }
                 id = generateViewId()
+
 
                 setChar(word.word[pos].uppercaseChar())
                 if (word.positionsGuessedLetters.contains(pos)) {
@@ -66,7 +80,7 @@ class CustomWordView @JvmOverloads constructor(
                 }
             }
 
-            this@CustomWordView.addView(customLetter, 1 + pos)
+            this@CustomWordView.addView(customLetter, SHIFT_PADDING + pos)
             flow?.addView(customLetter)
             listOfLetterView.add(customLetter)
         }
@@ -76,24 +90,9 @@ class CustomWordView @JvmOverloads constructor(
         listOfLetterView[pos].setTrue()
     }
 
-
-    private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
-//        val typedArray =
-//            context.obtainStyledAttributes(attrs, R.styleable.CustomCardTable, defStyle, 0)
-//        horizontalGap = typedArray.getInteger(
-//            R.styleable.CustomCardTable_horizontalGap,
-//            CustomWordView.HORIZONTAL_GAP
-//        )
-//        verticalGap = typedArray.getInteger(
-//            R.styleable.CustomCardTable_verticalGap,
-//            CustomWordView.VERTICAL_GAP
-//        )
-//        typedArray.recycle()
-    }
-
     companion object {
+        private const val SHIFT_PADDING = 1
         private const val HORIZONTAL_GAP = 24
-        private const val VERTICAL_GAP = 24
     }
 
 
