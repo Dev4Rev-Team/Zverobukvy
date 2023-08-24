@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.utility.ui.dipToPixels
 import kotlin.math.max
 
 class CustomCardTable @JvmOverloads constructor(
@@ -38,13 +39,15 @@ class CustomCardTable @JvmOverloads constructor(
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.CustomCardTable, defStyle, 0)
-        horizontalGap = typedArray.getInteger(
-            R.styleable.CustomCardTable_horizontalGap,
-            HORIZONTAL_GAP
+        horizontalGap = typedArray.getDimensionPixelSize(
+            R.styleable.CustomCardTable_horizontalGap, context.dipToPixels(
+                HORIZONTAL_GAP.toFloat()
+            )
         )
-        verticalGap = typedArray.getInteger(
-            R.styleable.CustomCardTable_verticalGap,
-            VERTICAL_GAP
+        verticalGap = typedArray.getDimensionPixelSize(
+            R.styleable.CustomCardTable_verticalGap, context.dipToPixels(
+                VERTICAL_GAP.toFloat()
+            )
         )
         typedArray.recycle()
     }
