@@ -4,6 +4,7 @@
     <dimen name="main_menu_card_vertical_margin">4dp</dimen>
     <dimen name="main_menu_toggle_button_width">40dp</dimen>
     <dimen name="main_menu_toggle_button_height">60dp</dimen>
+    <dimen name="text_tiny">10dp</dimen>
     <dimen name="text_small">16dp</dimen>
     <dimen name="text_medium">26sp</dimen>
     <dimen name="text_medium_small">20sp</dimen>
