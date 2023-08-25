@@ -157,6 +157,8 @@ class AnimalLettersGameFragment :
         binding.backToMenuImageButton.setOnClickListener {
             viewModel.onBackPressed()
         }
+
+        binding.cardLevel.setCards(gameStart!!.typesCards)
     }
 
     private fun setPositionLetterInWord(pos: Int) {
