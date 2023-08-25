@@ -219,8 +219,6 @@ class AnimalLettersGameFragment :
 
     private fun initPictureWord(startGameState: AnimalLettersGameState.EntireState.StartGameState) {
         binding.wordCustomCard.apply {
-            radius = CARD_RADIUS
-            //TODO
             setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
         }
         setPictureOfWord(startGameState.wordCard.faceImageName)
@@ -232,9 +230,6 @@ class AnimalLettersGameFragment :
 
     companion object {
         const val GAME_START = "GAME_START"
-
-        //Y
-        const val CARD_RADIUS = 48f
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) =

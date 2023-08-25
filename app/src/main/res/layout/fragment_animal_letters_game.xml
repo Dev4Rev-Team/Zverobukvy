@@ -164,6 +164,7 @@
             android:layout_height="@dimen/auto_layout"
             android:layout_marginTop="@dimen/margin_medium"
             app:cardElevation="@dimen/elevation_default"
+            app:cardCornerRadius="24dp"
             app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"
