@@ -25,6 +25,7 @@ class CustomCardTable @JvmOverloads constructor(
     private val listOfCardsOnTable = mutableListOf<CustomCard>()
     private val listOfInvalidCards = mutableListOf<CustomCard>()
     private var radiusCard by Delegates.notNull<Int>()
+    var countCardHorizontally: Int = 0
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -64,12 +65,13 @@ class CustomCardTable @JvmOverloads constructor(
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setHorizontalGap(horizontalGap)
             setVerticalGap(verticalGap)
+            countCardHorizontally = when {
+                countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_3 -> 3
+                countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_4 -> 4
+                else -> 5
+            }
             setMaxElementsWrap(
-                when {
-                    countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_3 -> 3
-                    countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_4 -> 4
-                    else -> 5
-                }
+                countCardHorizontally
             )
             setWrapMode(Flow.WRAP_ALIGNED)
             setHorizontalStyle(Flow.CHAIN_PACKED)

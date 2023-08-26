@@ -3,6 +3,7 @@ package ru.gb.zverobukvy.presentation.animal_letters_game
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.App
@@ -21,6 +22,7 @@ import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
+import kotlin.math.ceil
 
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
@@ -35,9 +37,7 @@ class AnimalLettersGameFragment :
             val animalLettersCardsRepository =
                 (requireContext().applicationContext as App).animalLettersCardsRepository
             val game = AnimalLettersGameInteractorImpl(
-                animalLettersCardsRepository,
-                gameStart!!.typesCards,
-                gameStart!!.players
+                animalLettersCardsRepository, gameStart!!.typesCards, gameStart!!.players
             )
             AnimalLettersGameViewModelImpl(game)
         })[AnimalLettersGameViewModelImpl::class.java]
@@ -172,8 +172,7 @@ class AnimalLettersGameFragment :
     private fun setPictureOfWord(urlPicture: String) {
         val image = assertsImageCash.getImage(urlPicture)
         binding.wordCustomCard.setImageSide(
-            image,
-            image
+            image, image
         )
     }
 
@@ -214,7 +213,21 @@ class AnimalLettersGameFragment :
             setOnClickListener { pos ->
                 viewModel.onClickLetterCard(pos)
             }
+            setRatioForTable(
+                countCardHorizontally,
+                startGameState.lettersCards.size,
+                layoutParams as ConstraintLayout.LayoutParams
+            )
         }
+    }
+
+    private fun setRatioForTable(
+        width: Int,
+        countCards: Int,
+        layoutParams: ConstraintLayout.LayoutParams,
+    ) {
+        val height = ceil(countCards / width.toFloat()).toInt()
+        layoutParams.dimensionRatio = "$width:$height"
     }
 
     private fun initPictureWord(startGameState: AnimalLettersGameState.EntireState.StartGameState) {
@@ -232,11 +245,10 @@ class AnimalLettersGameFragment :
         const val GAME_START = "GAME_START"
 
         @JvmStatic
-        fun newInstance(gameStart: GameStart) =
-            AnimalLettersGameFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(GAME_START, gameStart)
-                }
+        fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(GAME_START, gameStart)
             }
+        }
     }
 }
