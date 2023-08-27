@@ -137,7 +137,7 @@ class AnimalLettersGameFragment :
     }
 
     private fun initView() {
-        binding.nextWord.setOnClickListener {
+        binding.nextWord?.root?.setOnClickListener {
             it.visibility = View.INVISIBLE
             viewModel.onClickNextWord()
         }
@@ -183,18 +183,18 @@ class AnimalLettersGameFragment :
     }
 
     private fun requestNextPlayer(state: AnimalLettersGameState.ChangingState.InvalidLetter) {
-        binding.nextPlayer.let { button ->
-            button.setOnClickListener {
-                button.visibility = View.INVISIBLE
+        binding.nextPlayer?.root.let { button ->
+            button?.setOnClickListener {
+                button?.visibility = View.INVISIBLE
                 binding.table.setInvalidLetterCard(state.invalidLetterCard)
                 viewModel.onClickNextWalkingPlayer()
             }
-            button.visibility = View.VISIBLE
+            button?.visibility = View.VISIBLE
         }
     }
 
     private fun requestNextWord() {
-        binding.nextWord.visibility = View.VISIBLE
+        binding.nextWord?.root?.visibility = View.VISIBLE
     }
 
     override fun onBackPressed(): Boolean {
