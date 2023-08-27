@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CustomCardTable">
-        <attr name="verticalGap" />
+    <declare-styleable name="CustomWordView">
         <attr name="horizontalGap" />
+        <attr name="colorUnsolved" />
+        <attr name="colorGuessed"  />
         <attr name="radiusCards" />
     </declare-styleable>
 </resources>

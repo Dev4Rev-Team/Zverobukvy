@@ -5,7 +5,9 @@ import android.util.AttributeSet
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.utility.ui.dipToPixels
 import kotlin.math.max
+import kotlin.properties.Delegates
 
 class CustomCardTable @JvmOverloads constructor(
     context: Context,
@@ -22,10 +24,30 @@ class CustomCardTable @JvmOverloads constructor(
     private var listLetterCards: List<LetterCardUI>? = null
     private val listOfCardsOnTable = mutableListOf<CustomCard>()
     private val listOfInvalidCards = mutableListOf<CustomCard>()
+    private var radiusCard by Delegates.notNull<Int>()
+    var countCardHorizontally: Int = 0
 
     init {
         initAttributes(context, attrs, defStyle)
         initContentView()
+    }
+
+    private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
+        val typedArray =
+            context.obtainStyledAttributes(attrs, R.styleable.CustomCardTable, defStyle, 0)
+        horizontalGap = typedArray.getDimensionPixelSize(
+            R.styleable.CustomCardTable_horizontalGap,
+            context.dipToPixels(HORIZONTAL_GAP.toFloat())
+        )
+        verticalGap = typedArray.getDimensionPixelSize(
+            R.styleable.CustomCardTable_verticalGap,
+            context.dipToPixels(VERTICAL_GAP.toFloat())
+        )
+        radiusCard = typedArray.getDimensionPixelSize(
+            R.styleable.CustomCardTable_radiusCards,
+            context.dipToPixels(RADIUS_CARD.toFloat())
+        )
+        typedArray.recycle()
     }
 
     private fun initContentView() {
@@ -33,20 +55,6 @@ class CustomCardTable @JvmOverloads constructor(
         setPadding(padding, padding, padding, padding)
         clipToPadding = false
         clipChildren = false
-    }
-
-    private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
-        val typedArray =
-            context.obtainStyledAttributes(attrs, R.styleable.CustomCardTable, defStyle, 0)
-        horizontalGap = typedArray.getInteger(
-            R.styleable.CustomCardTable_horizontalGap,
-            HORIZONTAL_GAP
-        )
-        verticalGap = typedArray.getInteger(
-            R.styleable.CustomCardTable_verticalGap,
-            VERTICAL_GAP
-        )
-        typedArray.recycle()
     }
 
     private fun createNewFlow(countCard: Int) {
@@ -57,12 +65,13 @@ class CustomCardTable @JvmOverloads constructor(
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setHorizontalGap(horizontalGap)
             setVerticalGap(verticalGap)
+            countCardHorizontally = when {
+                countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_3 -> 3
+                countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_4 -> 4
+                else -> 5
+            }
             setMaxElementsWrap(
-                when {
-                    countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_3 -> 3
-                    countCard <= COUNT_CARDS_FOR_CARDS_HORIZONTALLY_4 -> 4
-                    else -> 5
-                }
+                countCardHorizontally
             )
             setWrapMode(Flow.WRAP_ALIGNED)
             setHorizontalStyle(Flow.CHAIN_PACKED)
@@ -87,6 +96,7 @@ class CustomCardTable @JvmOverloads constructor(
             val customCard = (factory?.run { invoke() } ?: CustomCard(context)).apply {
                 layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT)
                 id = generateViewId()
+                radius = radiusCard.toFloat()
 
                 val letterCard = list[pos]
                 setOpenCard(letterCard.isVisible)
@@ -149,6 +159,7 @@ class CustomCardTable @JvmOverloads constructor(
         private const val COUNT_CARDS_FOR_CARDS_HORIZONTALLY_4 = 20
         private const val HORIZONTAL_GAP = 24
         private const val VERTICAL_GAP = 24
+        private const val RADIUS_CARD = 8
     }
 
     interface LetterCardUI {

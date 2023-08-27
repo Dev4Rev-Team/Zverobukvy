@@ -15,14 +15,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="100dp" />
+        app:layout_constraintGuide_begin="60dp" />
 
     <ImageView
         android:id="@+id/show_instruction_image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-10dp"
-        android:layout_marginTop="@dimen/margin_default"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="@dimen/margin_small"
         android:rotation="-90"
         android:src="@drawable/ic_bookmark"
         app:layout_constraintStart_toEndOf="@+id/app_name_text_view"
@@ -44,8 +44,8 @@
         android:id="@+id/players_recycler_view"
         android:layout_width="@dimen/auto_layout"
         android:layout_height="@dimen/auto_layout"
-        android:layout_marginStart="-8dp"
-        android:layout_marginEnd="-8dp"
+        android:layout_marginStart="-48dp"
+        android:layout_marginEnd="-48dp"
         android:layout_marginBottom="@dimen/margin_medium"
         app:layout_constraintBottom_toTopOf="@+id/sector_recycle_view_guideline"
         app:layout_constraintEnd_toEndOf="@+id/app_name_text_view"
@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="270dp" />
+        app:layout_constraintGuide_end="222dp" />
 
     <TextView
         android:id="@+id/cards_text_view"
@@ -133,7 +133,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="149dp" />
+        app:layout_constraintGuide_end="106dp" />
 
 
     <Button
