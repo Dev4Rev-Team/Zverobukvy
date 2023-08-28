@@ -28,8 +28,8 @@ import java.util.Queue
  * актуальный счет каждого игрока, walkingPlayer != null, isActive == true)
  * 4. отгадано слово (не последнее): GameState (lettersField - для отдельных карточек-букв
  * isVisible == true, gamingWordCard != null и список positionsGuessedLetters содержит позиции всех
- * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer == null,
- * isActive = true)
+ * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer
+ * соответствует предшествующему состоянию, isActive = true)
  * 5. отгадано последнее слово (конец игры):GameState (lettersField - для отдельных карточек-букв
  * isVisible == true, gamingWordCard != null и список positionsGuessedLetters содержит позиции всех
  * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer == null,
@@ -322,8 +322,7 @@ class AnimalLettersGameInteractorImpl(
                     positionCorrectLetterCardInGamingWordCard
                 )
             ),
-            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players),
-            walkingPlayer = null
+            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players)
         )
     }
 
