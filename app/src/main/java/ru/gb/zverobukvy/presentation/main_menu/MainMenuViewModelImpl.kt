@@ -210,6 +210,11 @@ class MainMenuViewModelImpl(
         )
     }
 
+    override fun onClickScreen() {
+        // TODO("Not yet implemented")
+        Timber.d("onClickScreen")
+    }
+
     private fun findPlayersForGame(): MutableList<PlayerInGame> {
         val playersForGame: MutableList<PlayerInGame> = mutableListOf()
         players.forEach {

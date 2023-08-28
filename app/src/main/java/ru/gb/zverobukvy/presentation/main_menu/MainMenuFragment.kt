@@ -74,6 +74,13 @@ class MainMenuFragment :
     private fun initView() {
         initRecycleView()
         initPlayGameButton()
+        initRoot()
+    }
+
+    private fun initRoot() {
+        binding.root.setOnClickListener {
+            viewModel.onClickScreen()
+        }
     }
 
     private fun initTypesCardsToggleButtons(typesCardsSelectedForGame: List<TypeCards>) {
@@ -196,6 +203,11 @@ class MainMenuFragment :
                 onRemovePlayer(
                     playersScreenState.playersInSettings, playersScreenState.positionRemovePlayer
                 )
+            }
+
+            is MainMenuState.PlayersScreenState.QueryForChangedPlayerState -> {
+                Timber.d("QueryForChangedPlayerState")
+                //TODO()
             }
         }
     }
