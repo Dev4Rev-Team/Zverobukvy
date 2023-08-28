@@ -28,8 +28,8 @@ import java.util.Queue
  * актуальный счет каждого игрока, walkingPlayer != null, isActive == true)
  * 4. отгадано слово (не последнее): GameState (lettersField - для отдельных карточек-букв
  * isVisible == true, gamingWordCard != null и список positionsGuessedLetters содержит позиции всех
- * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer == null,
- * isActive = true)
+ * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer
+ * соответствует предшествующему состоянию, isActive = true)
  * 5. отгадано последнее слово (конец игры):GameState (lettersField - для отдельных карточек-букв
  * isVisible == true, gamingWordCard != null и список positionsGuessedLetters содержит позиции всех
  * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer == null,
@@ -44,11 +44,11 @@ import java.util.Queue
  * !!!Состояние 7 при предшествующем состоянии 4 будет соответствовать состоянию 5. Это необходимо
  * учитывать при формировании viewModel состояния экрана для view!!!
  */
-class AnimalLettersInteractorImpl(
+class AnimalLettersGameInteractorImpl(
     private val animalLettersGameRepository: AnimalLettersGameRepository,
     private val typesCards: List<TypeCards>,
     private var players: List<PlayerInGame>
-) : AnimalLettersInteractor {
+) : AnimalLettersGameInteractor {
     private val checkData = CheckData()
     private val gamingWords: Queue<WordCard> = LinkedList()
     private var currentWalkingPlayer: PlayerInGame
@@ -322,8 +322,7 @@ class AnimalLettersInteractorImpl(
                     positionCorrectLetterCardInGamingWordCard
                 )
             ),
-            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players),
-            walkingPlayer = null
+            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players)
         )
     }
 

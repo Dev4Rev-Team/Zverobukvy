@@ -1,12 +1,12 @@
-package ru.gb.zverobukvy.domain.app_state
+package ru.gb.zverobukvy.presentation.animal_letters_game
 
 import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.WordCard
 
-sealed interface AnimalLettersState {
+sealed interface AnimalLettersGameState {
 
-    sealed interface EntireState : AnimalLettersState {
+    sealed interface EntireState : AnimalLettersGameState {
 
         /** Полное состояние экрана, передается в случаях:
          * 1. Начала игры
@@ -47,7 +47,7 @@ sealed interface AnimalLettersState {
         ) : EntireState
     }
 
-    sealed interface ChangingState : AnimalLettersState {
+    sealed interface ChangingState : AnimalLettersGameState {
         /** Состояние верно отгаданной карточки с буквой
          *
          * @param correctLetterCard Карточка, которую нужно перевернуть
@@ -106,7 +106,7 @@ sealed interface AnimalLettersState {
          * слово и игрока. При нажатии на кнопку приходит состояние [NextGuessWord]
          *  * Если [hasNextWord] == false, следом приходит состояние [EntireState.EndGameState]
          *
-         * @see ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyViewModel.onClickNextWord
+         * @see ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModel.onClickNextWord
          *
          * @param correctLetterCard Карточка, которую нужно перевернуть
          * @param positionLetterInWord Отгаданная буква, которую нужно подсветить

@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.main_menu.viewModel
+package ru.gb.zverobukvy.presentation.main_menu
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,20 +7,18 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.StringEnum
-import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
-import ru.gb.zverobukvy.presentation.SingleEventLiveData
+import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
 
-class SettingsScreenViewModelImpl(
+class MainMenuViewModelImpl(
     private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
 ) :
-    SettingsScreenViewModel, ViewModel() {
+    MainMenuViewModel, ViewModel() {
     private val typesCardsSelectedForGame: MutableList<TypeCards> = mutableListOf()
 
     private val namesPlayersSelectedForGame: MutableList<String> = mutableListOf()
@@ -29,9 +27,9 @@ class SettingsScreenViewModelImpl(
 
 
     private val liveDataPlayersScreenState =
-        MutableLiveData<SettingsScreenState.PlayersScreenState>()
+        MutableLiveData<MainMenuState.PlayersScreenState>()
 
-    private val liveDataScreenState = SingleEventLiveData<SettingsScreenState.ScreenState>()
+    private val liveDataScreenState = SingleEventLiveData<MainMenuState.ScreenState>()
 
     init {
         loadTypeCardsSelectedForGame()
@@ -48,15 +46,15 @@ class SettingsScreenViewModelImpl(
                 })
             players.add(null)
             liveDataPlayersScreenState.value =
-                SettingsScreenState.PlayersScreenState.PlayersState(players)
+                MainMenuState.PlayersScreenState.PlayersState(players)
         }
     }
     override fun onLaunch() {
         Timber.d("onLaunch")
         liveDataScreenState.value =
-            SettingsScreenState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
+            MainMenuState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
         liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.PlayersState(players)
+            MainMenuState.PlayersScreenState.PlayersState(players)
     }
 
     private fun loadPlayersSelectedForGame() {
@@ -74,12 +72,12 @@ class SettingsScreenViewModelImpl(
         }
     }
 
-    override fun getLiveDataPlayersScreenState(): LiveData<SettingsScreenState.PlayersScreenState> {
+    override fun getLiveDataPlayersScreenState(): LiveData<MainMenuState.PlayersScreenState> {
         Timber.d("getLiveDataPlayersScreenState")
         return liveDataPlayersScreenState
     }
 
-    override fun getLiveDataScreenState(): SingleEventLiveData<SettingsScreenState.ScreenState> {
+    override fun getLiveDataScreenState(): SingleEventLiveData<MainMenuState.ScreenState> {
         Timber.d("getLiveDataPlayersScreenState")
         return liveDataScreenState
     }
@@ -100,7 +98,7 @@ class SettingsScreenViewModelImpl(
         }
 
         liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+            MainMenuState.PlayersScreenState.ChangedPlayerState(
                 players,
                 positionPlayer
             )
@@ -114,7 +112,7 @@ class SettingsScreenViewModelImpl(
         players.removeAt(positionPlayer)
 
         liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.RemovePlayerState(players, positionPlayer)
+            MainMenuState.PlayersScreenState.RemovePlayerState(players, positionPlayer)
     }
 
     override fun onQueryChangedPlayer(positionPlayer: Int) {
@@ -132,7 +130,7 @@ class SettingsScreenViewModelImpl(
         }
 
         liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+            MainMenuState.PlayersScreenState.ChangedPlayerState(
                 players,
                 positionPlayer
             )
@@ -151,7 +149,7 @@ class SettingsScreenViewModelImpl(
             players.add(newPosition, loadPlayerInSettings())
 
             liveDataPlayersScreenState.postValue(
-                SettingsScreenState.PlayersScreenState.AddPlayerState(
+                MainMenuState.PlayersScreenState.AddPlayerState(
                     players,
                     players.size - 2
                 )
@@ -197,7 +195,7 @@ class SettingsScreenViewModelImpl(
             sendError(StringEnum.MAIN_MENU_FRAGMENT_NO_PLAYER_SELECTED)
         } else {
             liveDataScreenState.postValue(
-                SettingsScreenState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
+                MainMenuState.ScreenState.StartGame(typesCardsSelectedForGame, playersForGame)
             )
         }
     }
@@ -223,7 +221,7 @@ class SettingsScreenViewModelImpl(
 
     private fun sendError(stringEnum: StringEnum) {
         liveDataScreenState.value =
-            SettingsScreenState.ScreenState.ErrorState(
+            MainMenuState.ScreenState.ErrorState(
                 resourcesProvider.getString(stringEnum)
             )
     }
@@ -233,11 +231,11 @@ class SettingsScreenViewModelImpl(
 
         players[positionPlayer]?.apply {
             inEditingState = true
-            this@SettingsScreenViewModelImpl.lastEditablePlayer = this
+            this@MainMenuViewModelImpl.lastEditablePlayer = this
         }
 
         liveDataPlayersScreenState.value =
-            SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+            MainMenuState.PlayersScreenState.ChangedPlayerState(
                 players,
                 positionPlayer
             )
@@ -247,7 +245,7 @@ class SettingsScreenViewModelImpl(
         lastEditablePlayer?.let {
             it.inEditingState = false
             liveDataPlayersScreenState.value =
-                SettingsScreenState.PlayersScreenState.ChangedPlayerState(
+                MainMenuState.PlayersScreenState.ChangedPlayerState(
                     players, players.indexOf(it)
                 )
 

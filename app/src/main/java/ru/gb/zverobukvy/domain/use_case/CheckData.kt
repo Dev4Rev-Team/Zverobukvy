@@ -132,7 +132,7 @@ class CheckData {
 
     /**
      * Метод проверяет, что позиция выбранной карточки-слова корректная, т.е. имеется на игровом поле.
-     * @param lettersField список карточук-букв для конкретной игры (игровое поле)
+     * @param lettersField список карточек-букв для конкретной игры (игровое поле)
      * @param positionSelectedLetterCard позиция выбранной карточки-слова
      * @exception IllegalArgumentException
      */

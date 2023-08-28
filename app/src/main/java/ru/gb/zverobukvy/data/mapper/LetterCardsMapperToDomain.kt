@@ -10,7 +10,7 @@ class LetterCardsMapperToDomain: EntitiesMapperToDomain<List<LetterCard>, List<L
             letterCards.add(
                 LetterCard(
                     letter = it.letter.first(),
-                    typesCards = ExtractTypesCardsHelper.extractTypesCards(it.colorCards),
+                    typesCards = ExtractTypesCardsHelper.extractTypesCards(it.typeCardsInDatabase),
                     faceImageName = it.faceImageName,
                     backImageName = it.backImageName
                 )

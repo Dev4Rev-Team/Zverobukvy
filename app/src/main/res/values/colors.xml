@@ -16,10 +16,10 @@
     <color name="color_green_pastel">#8EFF93</color>
     <color name="color_violet_pastel">#A47AEF</color>
     <!--Cards colors-->
-    <color name="color_card_orange">@color/color_orange</color>
+    <color name="color_card_orange">@color/color_orange_pastel</color>
     <color name="color_card_green">@color/color_green</color>
-    <color name="color_card_blue">@color/color_blue</color>
-    <color name="color_card_violet">@color/color_violet</color>
+    <color name="color_card_blue">@color/color_blue_pastel</color>
+    <color name="color_card_violet">@color/color_violet_pastel</color>
 
     <color name="primary_color">#D0E1FB</color>
     <color name="secondary_color">#445D79</color>

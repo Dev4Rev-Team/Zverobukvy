@@ -1,7 +1,8 @@
-package ru.gb.zverobukvy.domain.entity
+package ru.gb.zverobukvy.presentation.main_menu
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import ru.gb.zverobukvy.domain.entity.Player
 
 @Parcelize
 data class PlayerInSettings(

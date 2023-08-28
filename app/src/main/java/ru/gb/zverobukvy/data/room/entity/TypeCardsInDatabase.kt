@@ -2,7 +2,7 @@ package ru.gb.zverobukvy.data.room.entity
 
 import androidx.room.ColumnInfo
 
-data class ColorCards (
+data class TypeCardsInDatabase (
     @field:ColumnInfo(name = "orange")
     val isOrange: Boolean,
     @field:ColumnInfo(name = "green")

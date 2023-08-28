@@ -12,31 +12,27 @@ import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProviderImpl
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
-import ru.gb.zverobukvy.domain.app_state.SettingsScreenState
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.PlayerInSettings
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
-import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyFragment
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
-import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModel
-import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
 class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
-    private val viewModel: SettingsScreenViewModel by lazy {
+    private val viewModel: MainMenuViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             val repository: MainMenuRepository =
                 (requireContext().applicationContext as App).mainMenuRepository
             val resourcesProvider = ResourcesProviderImpl(requireContext())
-            SettingsScreenViewModelImpl(repository, resourcesProvider)
-        })[SettingsScreenViewModelImpl::class.java]
+            MainMenuViewModelImpl(repository, resourcesProvider)
+        })[MainMenuViewModelImpl::class.java]
     }
 
     private val playersAdapter =
@@ -131,26 +127,26 @@ class MainMenuFragment :
         }
     }
 
-    private fun renderSettingsScreenState(settingsScreenState: SettingsScreenState.ScreenState) {
-        when (settingsScreenState) {
-            is SettingsScreenState.ScreenState.ErrorState -> {
+    private fun renderSettingsScreenState(mainMenuState: MainMenuState.ScreenState) {
+        when (mainMenuState) {
+            is MainMenuState.ScreenState.ErrorState -> {
                 Timber.d("ErrorState")
-                showError(settingsScreenState.error)
+                showError(mainMenuState.error)
                 binding.playButton.isClickable = true
             }
 
-            is SettingsScreenState.ScreenState.StartGame -> {
+            is MainMenuState.ScreenState.StartGame -> {
                 Timber.d("StartGame")
                 openAnimalLettersFragment(
-                    settingsScreenState.typesCardsSelectedForGame,
-                    settingsScreenState.playersSelectedForGame
+                    mainMenuState.typesCardsSelectedForGame,
+                    mainMenuState.playersSelectedForGame
                 )
             }
 
-            is SettingsScreenState.ScreenState.TypesCardsState -> {
+            is MainMenuState.ScreenState.TypesCardsState -> {
                 Timber.d("TypesCardsState")
                 initTypesCardsToggleButtons(
-                    settingsScreenState.typesCard
+                    mainMenuState.typesCard
                 )
             }
         }
@@ -159,11 +155,9 @@ class MainMenuFragment :
     private fun openAnimalLettersFragment(
         typesCardsSelectedForGame: List<TypeCards>, playersSelectedForGame: List<PlayerInGame>,
     ) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.enter_x, R.anim.exit_x, R.anim.enter_x, R.anim.exit_x)
-            .replace(
-            R.id.container, GameZverobukvyFragment.newInstance(
-                GameZverobukvyFragment.GameStart(
+        requireActivity().supportFragmentManager.beginTransaction().replace(
+            R.id.container, AnimalLettersGameFragment.newInstance(
+                AnimalLettersGameFragment.GameStart(
                     typesCardsSelectedForGame, playersSelectedForGame
                 )
             ), TAG_ANIMAL_LETTERS_FRAGMENT
@@ -176,28 +170,28 @@ class MainMenuFragment :
         ).show()
     }
 
-    private fun renderPlayersScreenState(playersScreenState: SettingsScreenState.PlayersScreenState) {
+    private fun renderPlayersScreenState(playersScreenState: MainMenuState.PlayersScreenState) {
         when (playersScreenState) {
-            is SettingsScreenState.PlayersScreenState.AddPlayerState -> {
+            is MainMenuState.PlayersScreenState.AddPlayerState -> {
                 Timber.d("AddPlayerState")
                 onAddPlayer(
                     playersScreenState.playersInSettings, playersScreenState.positionAddPlayer
                 )
             }
 
-            is SettingsScreenState.PlayersScreenState.ChangedPlayerState -> {
+            is MainMenuState.PlayersScreenState.ChangedPlayerState -> {
                 Timber.d("ChangedPlayerState")
                 onChangedPlayer(
                     playersScreenState.playersInSettings, playersScreenState.positionChangedPlayer
                 )
             }
 
-            is SettingsScreenState.PlayersScreenState.PlayersState -> {
+            is MainMenuState.PlayersScreenState.PlayersState -> {
                 Timber.d("PlayersState")
                 onNewPlayers(playersScreenState.playersInSettings)
             }
 
-            is SettingsScreenState.PlayersScreenState.RemovePlayerState -> {
+            is MainMenuState.PlayersScreenState.RemovePlayerState -> {
                 Timber.d("RemovePlayerState")
                 onRemovePlayer(
                     playersScreenState.playersInSettings, playersScreenState.positionRemovePlayer
