@@ -51,12 +51,13 @@
                     android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/color_violet_pastel"
+                    android:backgroundTint="@color/color_blue_pastel"
                     app:cardCornerRadius="8000dp">
 
                     <ImageView
                         android:id="@+id/player_avatar_image_view"
                         android:layout_width="wrap_content"
+                        android:layout_margin="@dimen/margin_avatar_image"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
