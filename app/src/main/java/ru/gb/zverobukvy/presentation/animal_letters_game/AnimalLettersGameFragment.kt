@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
@@ -23,6 +24,7 @@ import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
+
 
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
@@ -73,6 +75,21 @@ class AnimalLettersGameFragment :
                 }
 
                 is AnimalLettersGameState.ChangingState.InvalidLetter -> {
+                    val mediaPlayer = MediaPlayer()
+
+                    val descriptor = requireContext().assets.openFd("sounds/flip.mp3")
+                    mediaPlayer.setDataSource(
+                        descriptor.fileDescriptor,
+                        descriptor.startOffset,
+                        descriptor.length
+                    )
+                    descriptor.close()
+                    mediaPlayer.prepare()
+
+                    mediaPlayer.setVolume(1f, 1f)
+                    mediaPlayer.isLooping = false
+                    mediaPlayer.seekTo(150)
+                    mediaPlayer.start()
                     binding.table.openCard(it.invalidLetterCard)
                     requestNextPlayer()
                 }
@@ -213,6 +230,7 @@ class AnimalLettersGameFragment :
                 }
             }
             setOnClickListener { pos ->
+                setWorkClick(false)
                 viewModel.onClickLetterCard(pos)
             }
             setRatioForTable(
