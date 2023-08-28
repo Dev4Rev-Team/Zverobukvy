@@ -1,6 +1,5 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
@@ -19,6 +18,9 @@ import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
+import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
+import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayerImpl
+import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
@@ -31,6 +33,9 @@ class AnimalLettersGameFragment :
     private var gameStart: GameStart? = null
     private val assertsImageCash: AssetsImageCash by lazy {
         (requireContext().applicationContext as App).assetsImageCash
+    }
+    private val soundEffectPlayer: SoundEffectPlayer by lazy {
+        SoundEffectPlayerImpl(requireContext())
     }
 
     private val viewModel: AnimalLettersGameViewModel by lazy {
@@ -61,12 +66,14 @@ class AnimalLettersGameFragment :
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.ChangingState.CorrectLetter -> {
+                    soundEffectPlayer.play(SoundEnum.CARD_IS_SUCCESSFUL)
                     setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.openCard(it.correctLetterCard)
                     binding.table.setWorkClick(true)
                 }
 
                 is AnimalLettersGameState.ChangingState.GuessedWord -> {
+                    soundEffectPlayer.play(SoundEnum.WORD_IS_GUESSED)
                     setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.openCard(it.correctLetterCard)
                     if (it.hasNextWord) {
@@ -75,21 +82,7 @@ class AnimalLettersGameFragment :
                 }
 
                 is AnimalLettersGameState.ChangingState.InvalidLetter -> {
-                    val mediaPlayer = MediaPlayer()
-
-                    val descriptor = requireContext().assets.openFd("sounds/flip.mp3")
-                    mediaPlayer.setDataSource(
-                        descriptor.fileDescriptor,
-                        descriptor.startOffset,
-                        descriptor.length
-                    )
-                    descriptor.close()
-                    mediaPlayer.prepare()
-
-                    mediaPlayer.setVolume(1f, 1f)
-                    mediaPlayer.isLooping = false
-                    mediaPlayer.seekTo(150)
-                    mediaPlayer.start()
+                    soundEffectPlayer.play(SoundEnum.CARD_IS_UNSUCCESSFUL)
                     binding.table.openCard(it.invalidLetterCard)
                     requestNextPlayer()
                 }
@@ -115,6 +108,7 @@ class AnimalLettersGameFragment :
                 is AnimalLettersGameState.EntireState.EndGameState -> {
                     val players = DataGameIsOverDialog.map(it.players)
                     val data = DataGameIsOverDialog(players, it.gameTime)
+                    soundEffectPlayer.play(SoundEnum.GAME_OVER)
                     GameIsOverDialogFragment.instance(data)
                         .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
                 }
@@ -232,6 +226,7 @@ class AnimalLettersGameFragment :
             setOnClickListener { pos ->
                 setWorkClick(false)
                 viewModel.onClickLetterCard(pos)
+                soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
             }
             setRatioForTable(
                 countCardHorizontally,
