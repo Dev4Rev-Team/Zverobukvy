@@ -7,7 +7,8 @@
     android:background="@color/primary_color"
     android:clickable="true"
     android:orientation="vertical"
-    tools:context=".presentation.main_menu.view.MainMenuFragment">
+    tools:context=".presentation.main_menu.MainMenuFragment"
+    android:focusable="true">
 
 
     <androidx.constraintlayout.widget.Guideline
