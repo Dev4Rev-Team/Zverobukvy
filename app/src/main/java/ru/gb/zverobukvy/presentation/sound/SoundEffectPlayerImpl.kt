@@ -29,7 +29,8 @@ class SoundEffectPlayerImpl(val context: Context) : SoundEffectPlayer {
     override fun play(soundEnum: SoundEnum) {
         soundsMap[soundEnum]?.let {
             if (it.isPlaying) {
-                it.stop()
+                it.pause()
+                it.seekTo(0)
             }
             it.start()
         }
