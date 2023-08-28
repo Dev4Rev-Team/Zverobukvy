@@ -66,12 +66,14 @@ class AnimalLettersGameFragment :
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.ChangingState.CorrectLetter -> {
+                    soundEffectPlayer.play(SoundEnum.CARD_IS_SUCCESSFUL)
                     setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.openCard(it.correctLetterCard)
                     binding.table.setWorkClick(true)
                 }
 
                 is AnimalLettersGameState.ChangingState.GuessedWord -> {
+                    soundEffectPlayer.play(SoundEnum.WORD_IS_GUESSED)
                     setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.openCard(it.correctLetterCard)
                     if (it.hasNextWord) {
@@ -80,7 +82,7 @@ class AnimalLettersGameFragment :
                 }
 
                 is AnimalLettersGameState.ChangingState.InvalidLetter -> {
-                    soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
+                    soundEffectPlayer.play(SoundEnum.CARD_IS_UNSUCCESSFUL)
                     binding.table.openCard(it.invalidLetterCard)
                     requestNextPlayer()
                 }
@@ -106,6 +108,7 @@ class AnimalLettersGameFragment :
                 is AnimalLettersGameState.EntireState.EndGameState -> {
                     val players = DataGameIsOverDialog.map(it.players)
                     val data = DataGameIsOverDialog(players, it.gameTime)
+                    soundEffectPlayer.play(SoundEnum.GAME_OVER)
                     GameIsOverDialogFragment.instance(data)
                         .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
                 }
@@ -223,6 +226,7 @@ class AnimalLettersGameFragment :
             setOnClickListener { pos ->
                 setWorkClick(false)
                 viewModel.onClickLetterCard(pos)
+                soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
             }
             setRatioForTable(
                 countCardHorizontally,
