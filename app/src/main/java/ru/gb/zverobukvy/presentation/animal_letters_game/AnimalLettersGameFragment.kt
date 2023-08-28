@@ -60,29 +60,31 @@ class AnimalLettersGameFragment :
             when (it) {
                 is AnimalLettersGameState.ChangingState.CorrectLetter -> {
                     setPositionLetterInWord(it.positionLetterInWord)
-                    binding.table.setCorrectLetterCard()
+                    binding.table.openCard(it.correctLetterCard)
+                    binding.table.setWorkClick(true)
                 }
 
                 is AnimalLettersGameState.ChangingState.GuessedWord -> {
                     setPositionLetterInWord(it.positionLetterInWord)
+                    binding.table.openCard(it.correctLetterCard)
                     if (it.hasNextWord) {
                         requestNextWord()
                     }
                 }
 
                 is AnimalLettersGameState.ChangingState.InvalidLetter -> {
-                    requestNextPlayer(it)
+                    binding.table.openCard(it.invalidLetterCard)
+                    requestNextPlayer()
                 }
 
                 is AnimalLettersGameState.ChangingState.NextGuessWord -> {
                     setPictureOfWord(it.wordCard.faceImageName)
                     setWord(it.wordCard)
-                    closeTable()
-
+                    binding.table.closeCardAll()
                 }
 
                 is AnimalLettersGameState.ChangingState.CloseInvalidLetter -> {
-                    closeInvalidCard()
+                    binding.table.closeCard(it.invalidLetterCard)
                 }
 
                 is AnimalLettersGameState.ChangingState.NextPlayer -> {
@@ -107,10 +109,18 @@ class AnimalLettersGameFragment :
 
                 is AnimalLettersGameState.EntireState.StartGameState -> {
                     setPlayer(it.nextWalkingPlayer.name)
-                    initPictureWord(it)
+                    initPictureWord(it.wordCard.faceImageName)
                     setWord(it.wordCard)
                     initTable(it)
                     binding.root.visibility = View.VISIBLE
+
+                    if (it.nextPlayerBtnVisible) {
+                        requestNextPlayer()
+                    } else if (it.nextWordBtnVisible) {
+                        requestNextWord()
+                    } else {
+                        binding.table.setWorkClick(true)
+                    }
                 }
             }
         }
@@ -128,16 +138,8 @@ class AnimalLettersGameFragment :
         super.onPause()
     }
 
-    private fun closeInvalidCard() {
-        binding.table.nextPlayer()
-    }
-
-    private fun closeTable() {
-        binding.table.nextWord()
-    }
-
     private fun initView() {
-        binding.nextWord.setOnClickListener {
+        binding.nextWord.root.setOnClickListener {
             it.visibility = View.INVISIBLE
             viewModel.onClickNextWord()
         }
@@ -167,6 +169,7 @@ class AnimalLettersGameFragment :
 
     private fun setPlayer(name: String) {
         binding.playerNameTextView.text = name
+        binding.table.setWorkClick(true)
     }
 
     private fun setPictureOfWord(urlPicture: String) {
@@ -182,11 +185,10 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private fun requestNextPlayer(state: AnimalLettersGameState.ChangingState.InvalidLetter) {
-        binding.nextPlayer.let { button ->
+    private fun requestNextPlayer() {
+        binding.nextPlayer.root.let { button ->
             button.setOnClickListener {
                 button.visibility = View.INVISIBLE
-                binding.table.setInvalidLetterCard(state.invalidLetterCard)
                 viewModel.onClickNextWalkingPlayer()
             }
             button.visibility = View.VISIBLE
@@ -194,7 +196,7 @@ class AnimalLettersGameFragment :
     }
 
     private fun requestNextWord() {
-        binding.nextWord.visibility = View.VISIBLE
+        binding.nextWord.root.visibility = View.VISIBLE
     }
 
     override fun onBackPressed(): Boolean {
@@ -230,11 +232,11 @@ class AnimalLettersGameFragment :
         layoutParams.dimensionRatio = "$width:$height"
     }
 
-    private fun initPictureWord(startGameState: AnimalLettersGameState.EntireState.StartGameState) {
+    private fun initPictureWord(picture: String) {
         binding.wordCustomCard.apply {
             setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
         }
-        setPictureOfWord(startGameState.wordCard.faceImageName)
+        setPictureOfWord(picture)
     }
 
     @Parcelize

@@ -109,6 +109,7 @@
             android:layout_height="@dimen/auto_layout"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_medium"
+            app:cardCornerRadius="@dimen/corner_radius_default"
             app:cardElevation="@dimen/elevation_default"
             app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
             app:layout_constraintDimensionRatio="1:1"
@@ -125,23 +126,19 @@
 
         <ru.gb.zverobukvy.presentation.customview.CustomWordView
             android:id="@+id/word_view"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_default"
             android:layout_marginBottom="@dimen/margin_default"
             app:colorGuessed="@color/color_green_pastel"
             app:colorUnsolved="@color/white"
             app:horizontalGap="@dimen/margin_default"
             app:layout_constraintBottom_toTopOf="@+id/word_guidline"
-            app:layout_constraintDimensionRatio="6:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintDimensionRatio="H,6:1"
+            app:layout_constraintEnd_toEndOf="@+id/table"
+            app:layout_constraintStart_toStartOf="@+id/table"
             app:layout_constraintTop_toTopOf="@+id/sector_word_card_image_guidline"
-            app:radiusCards="@dimen/corner_radius_default">
-
-        </ru.gb.zverobukvy.presentation.customview.CustomWordView>
+            app:radiusCards="@dimen/corner_radius_default" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/word_guidline"
@@ -162,7 +159,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/word_guidline"
             app:layout_constraintVertical_bias="0.5"
-            app:radiusCards="@dimen/corner_radius_default"
+            app:radiusCards="@dimen/corner_radius_small"
             app:verticalGap="@dimen/margin_default" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -174,94 +171,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
         android:id="@+id/next_word"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#4009FF00"
-        android:clickable="true"
-        android:visibility="invisible">
+        layout="@layout/fragment_animal_letters_game_dialog_next_word" />
 
-        <TextView
-            android:id="@+id/next_word_guessed_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/word_guessed_text"
-            android:textColor="#63000000"
-            android:textSize="@dimen/text_medium"
-            app:layout_constraintBottom_toTopOf="@+id/next_word_tap_to_screen_text_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.29000002" />
-
-        <TextView
-            android:id="@+id/next_word_move_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/next_player_move_text"
-            android:textColor="#63000000"
-            android:textSize="@dimen/text_big"
-            app:layout_constraintBottom_toTopOf="@+id/next_word_tap_to_screen_text_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/next_word_guessed_text_view"
-            app:layout_constraintVertical_bias="0.06999999" />
-
-        <TextView
-            android:id="@+id/next_word_tap_to_screen_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:text="@string/press_to_continue_text"
-            android:textColor="#63000000"
-            android:textSize="@dimen/text_medium_small"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
         android:id="@+id/next_player"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#40FF0000"
-        android:clickable="true"
-        android:visibility="invisible">
+        layout="@layout/fragment_animal_letters_game_dialog_next_player" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/next_player_move_text"
-            android:textColor="#63000000"
-            android:textSize="@dimen/text_big"
-            app:layout_constraintBottom_toTopOf="@+id/next_player_tap_to_screen_text_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.38" />
-
-        <TextView
-            android:id="@+id/next_player_tap_to_screen_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:gravity="center"
-            android:text="@string/press_to_continue_text"
-            android:textColor="#63000000"
-            android:textSize="@dimen/text_medium_small"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

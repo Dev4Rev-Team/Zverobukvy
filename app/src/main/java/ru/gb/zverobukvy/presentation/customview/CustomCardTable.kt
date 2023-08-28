@@ -20,10 +20,9 @@ class CustomCardTable @JvmOverloads constructor(
     private var verticalGap = VERTICAL_GAP
     private var flow: Flow? = null
     private var click: ((pos: Int) -> Unit)? = null
-    private var isClick = false
+    private var isWorkClick = false
     private var listLetterCards: List<LetterCardUI>? = null
     private val listOfCardsOnTable = mutableListOf<CustomCard>()
-    private val listOfInvalidCards = mutableListOf<CustomCard>()
     private var radiusCard by Delegates.notNull<Int>()
     var countCardHorizontally: Int = 0
 
@@ -80,13 +79,16 @@ class CustomCardTable @JvmOverloads constructor(
         addView(flow)
     }
 
+    fun setWorkClick(switch: Boolean) {
+        isWorkClick = switch
+    }
 
     fun setListItem(
         list: List<LetterCardUI>,
         assetsImageCash: AssetsImageCash,
         factory: (() -> CustomCard)? = null,
     ) {
-        isClick = false
+        setWorkClick(false)
         listOfCardsOnTable.clear()
         listLetterCards = list
         val countCard = list.count()
@@ -107,12 +109,10 @@ class CustomCardTable @JvmOverloads constructor(
                 )
 
                 setOnClickCardListener(pos) {
-                    if (!isClick && !listOfCardsOnTable[pos].isOpen) {
-                        isClick = true
-                        updateView(pos)
+                    if (isWorkClick && !listOfCardsOnTable[pos].isOpen) {
+                        listOfCardsOnTable[pos].setOpenCard(true)
                         click?.run { invoke(it) }
                     }
-
                 }
             }
 
@@ -122,32 +122,21 @@ class CustomCardTable @JvmOverloads constructor(
         }
     }
 
-    private fun updateView(pos: Int) {
-        listOfCardsOnTable[pos].setOpenCard(true)
+    fun openCard(letterCard: LetterCardUI) {
+        listOfCardsOnTable[getPositionCard(letterCard)].setOpenCard(true)
     }
 
-    fun setCorrectLetterCard() {
-        isClick = false
+    fun closeCard(letterCard: LetterCardUI) {
+        listOfCardsOnTable[getPositionCard(letterCard)].setOpenCard(false)
     }
 
-    fun setInvalidLetterCard(letterCard: LetterCardUI) {
-        listLetterCards?.indexOf(letterCard)?.let {
-            listOfInvalidCards.add(listOfCardsOnTable[it])
-        }
-        isClick = true
-    }
-
-    fun nextPlayer() {
-        listOfInvalidCards.forEach {
-            it.setOpenCard(false)
-        }
-        listOfInvalidCards.clear()
-        isClick = false
-    }
-
-    fun nextWord() {
-        isClick = false
+    fun closeCardAll() {
         listOfCardsOnTable.forEach { it.setOpenCard(false) }
+    }
+
+    private fun getPositionCard(letterCard: LetterCardUI): Int {
+        return listLetterCards?.withIndex()?.find { it.value.letter == letterCard.letter }?.index
+            ?: throw IllegalArgumentException("No card found $letterCard")
     }
 
     fun setOnClickListener(click: (pos: Int) -> Unit) {
