@@ -2,8 +2,52 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Zverobukvy" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="fontFamily">@font/junegull</item>
+        <item name="colorPrimary">@color/secondary_color</item>
+        <item name="colorSecondary">@color/primary_color</item>
+        <item name="android:textColor">@color/secondary_color</item>
     </style>
 
     <style name="Theme.Zverobukvy" parent="Base.Theme.Zverobukvy" />
+
+    <style name="Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="backgroundTint">@color/button_primary</item>
+        <item name="android:textColor">@color/secondary_color</item>
+        <item name="cornerRadius">@dimen/main_menu_card_corner_radius</item>
+    </style>
+
+    <style name="Button.Dark" parent="Button">
+        <item name="backgroundTint">@color/button_primary.dark</item>
+        <item name="android:textColor">@color/button_primary</item>
+    </style>
+
+    <style name="Button.Tiny" parent="Button">
+        <item name="android:textSize">@dimen/text_tiny</item>
+    </style>
+
+    <style name="Button.Tiny.Dark" parent="Button.Tiny">
+        <item name="backgroundTint">@color/button_primary.dark</item>
+        <item name="android:textColor">@color/button_primary</item>
+    </style>
+
+    <style name="Button.Big" parent="Button">
+        <item name="android:textSize">@dimen/text_big</item>
+    </style>
+
+    <style name="Button.Big.Dark" parent="Button.Big">
+        <item name="backgroundTint">@color/button_primary.dark</item>
+        <item name="android:textColor">@color/button_primary</item>
+    </style>
+
+    <style name="Button.Medium">
+        <item name="android:textSize">@dimen/text_medium</item>
+    </style>
+
+    <style name="Button.Medium.Dark">
+        <item name="backgroundTint">@color/button_primary.dark</item>
+        <item name="android:textColor">@color/button_primary</item>
+    </style>
+
 </resources>

@@ -1,18 +1,14 @@
 package ru.gb.zverobukvy.presentation.customview
 
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
-import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import ru.gb.zverobukvy.R
-import java.io.IOException
-import java.io.InputStream
 
 
 /**
@@ -38,6 +34,12 @@ class CustomCard @JvmOverloads constructor(
     init {
         initAttributes(context, attrs, defStyle)
         initContentView(context)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        setMeasuredDimension(width, width)
     }
 
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
@@ -77,23 +79,6 @@ class CustomCard @JvmOverloads constructor(
         scaleType = ImageView.ScaleType.CENTER_CROP
     }
 
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        setMeasuredDimension(width, width)
-    }
-
-    private fun getVisibility(isVisible: Boolean) = if (isVisible) VISIBLE else INVISIBLE
-
-
-    fun setOpenCard(isOpen: Boolean) {
-        if (isOpen != this.isOpen) {
-            this.isOpen = isOpen
-            startAnimationFlip()
-        }
-    }
-
     private fun startAnimationFlip() {
         val animatorSet = AnimatorSet()
 
@@ -126,34 +111,9 @@ class CustomCard @JvmOverloads constructor(
         }
     }
 
-
-    fun setVisibilityCard(isVisibility: Boolean) {
-        visibility = getVisibility(isVisibility)
-    }
-
-    fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
+    private fun setSrcFromRes(@DrawableRes srcOpen: Int, @DrawableRes srcClose: Int) {
         frontSideImageView.setImageResource(srcOpen)
         backSideImageView.setImageResource(srcClose)
-    }
-
-    fun setSrcFromAssert(srcOpen: String, srcClose: String) {
-        setImageFromAssert(frontSideImageView, srcOpen)
-        setImageFromAssert(backSideImageView, srcClose)
-    }
-
-    private fun setImageFromAssert(ImageView: ImageView, src: String) {
-        try {
-            val ims: InputStream = context.assets.open(src)
-            val d = Drawable.createFromStream(ims, null)
-            ImageView.setImageDrawable(d)
-            ims.close()
-        } catch (ex: IOException) {
-            return
-        }
-    }
-
-    fun setSrcOpenBackgroundFromAssert(srcOpenBackground: String) {
-        setImageFromAssert(frontBackgroundImageView, srcOpenBackground)
     }
 
     /** pos - set position view
@@ -165,9 +125,25 @@ class CustomCard @JvmOverloads constructor(
         }
     }
 
+    fun setOpenCard(isOpen: Boolean) {
+        if (isOpen != this.isOpen) {
+            this.isOpen = isOpen
+            startAnimationFlip()
+        }
+    }
+
+    fun setImageOpenBackground(openBackground: Drawable) {
+        frontBackgroundImageView.setImageDrawable(openBackground)
+    }
+
+    fun setImageSide(frontSide: Drawable, backSide: Drawable) {
+        frontSideImageView.setImageDrawable(frontSide)
+        backSideImageView.setImageDrawable(backSide)
+    }
+
     companion object {
         private val SRC_CLOSE = R.drawable.ic_launcher_background
-        private val SRC_OPEN = R.drawable.ic_launcher_foreground
+        private val SRC_OPEN = R.drawable.ic_launcher_background
         private const val IS_OPEN = false
         private const val DURATION_ANIMATION = 250
         private const val SCALE = 1.08f

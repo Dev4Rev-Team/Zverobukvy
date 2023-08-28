@@ -31,6 +31,7 @@ class RemovePlayerDialogFragment : DialogFragment() {
     companion object {
         const val KEY_NAME_PLAYER = "KeyNamePlayer"
         const val KEY_POSITION_REMOVE_PLAYER = "KeyPositionRemovePlayer"
+        //TODO перенести в ресурсы
         private const val TITLE_REMOVE_PLAYER = "Удаление игрока"
         private const val MESSAGE_REMOVE_PLAYER = "Вы действительно хотите удалить игрока"
     }
