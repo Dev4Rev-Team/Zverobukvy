@@ -179,11 +179,10 @@ class AnimalLettersGameViewModelImpl(
         /** Ловим событие окончания игры [EntireState.EndGameState]
          */
         if (!newState.isActive) {
-            val isFastEndGame = (mLastClickCardPosition == DEFAULT_BUFFER_SIZE)
 
             stateList.addFirst(
                 EntireState.EndGameState(
-                    isFastEndGame,
+                    isNonCardClickStateGame(),
                     newState.players,
                     gameStopwatch.getGameRunningTime()
                 )
