@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.presentation.game_zverobukvy
+package ru.gb.zverobukvy.presentation.animal_letters_game
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,21 +7,20 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
-import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import java.util.LinkedList
 import javax.inject.Inject
 
 
 class AnimalLettersGameViewModelImpl @Inject constructor(
-    private val animalLettersInteractor: AnimalLettersInteractor,
+    private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
-) :
-    AnimalLettersGameViewModel, ViewModel() {
+) : AnimalLettersGameViewModel, ViewModel() {
 
     /** Флаг показа диалогового окна о закрытии игры :
      * - true - показывается диалог об окончании игры

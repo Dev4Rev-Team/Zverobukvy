@@ -4,7 +4,7 @@ import dagger.Component
 import ru.gb.zverobukvy.data.resources_provider.AssertsImageCashImpl
 import ru.gb.zverobukvy.di.modules.AppModule
 import ru.gb.zverobukvy.di.modules.ContextModule
-import ru.gb.zverobukvy.presentation.main_menu.viewModel.SettingsScreenViewModelImpl
+import ru.gb.zverobukvy.presentation.main_menu.MainMenuViewModelImpl
 import javax.inject.Singleton
 
 @Singleton
@@ -13,7 +13,7 @@ interface AppComponent {
 
     fun getAssetsImageCash(): AssertsImageCashImpl
 
-    fun getSettingsScreenViewModel(): SettingsScreenViewModelImpl
+    fun getSettingsScreenViewModel(): MainMenuViewModelImpl
 
     fun getAnimalLettersGameSubcomponentFactory(): AnimalLettersGameSubcomponent.Factory
 }

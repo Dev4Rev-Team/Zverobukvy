@@ -6,11 +6,10 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
-import ru.gb.zverobukvy.App
+import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractorImpl
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.DataGameIsOverDialog
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.GameIsOverDialogFragment
@@ -44,7 +43,7 @@ class AnimalLettersGameFragment :
                 gameStart!!.typesCards,
                 gameStart!!.players
             ).viewModel
-        })[GameZverobukvyViewModelImpl::class.java]
+        })[AnimalLettersGameViewModelImpl::class.java]
     }
 
 

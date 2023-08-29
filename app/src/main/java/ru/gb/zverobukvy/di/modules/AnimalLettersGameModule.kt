@@ -3,19 +3,19 @@ package ru.gb.zverobukvy.di.modules
 import dagger.Binds
 import dagger.Module
 import ru.gb.zverobukvy.di.AnimalLettersGameScope
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractor
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersInteractorImpl
-import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyViewModel
-import ru.gb.zverobukvy.presentation.game_zverobukvy.GameZverobukvyViewModelImpl
+import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
+import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractorImpl
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModel
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModelImpl
 
 @Module(includes = [GameStopwatchModule::class, RepositoryModule::class])
 interface AnimalLettersGameModule {
 
     @Binds
     @AnimalLettersGameScope
-    fun bindAnimalLettersInteractor(interactor: AnimalLettersInteractorImpl): AnimalLettersInteractor
+    fun bindAnimalLettersInteractor(interactor: AnimalLettersGameInteractorImpl): AnimalLettersGameInteractor
 
     @Binds
     @AnimalLettersGameScope
-    fun bindAnimalLettersViewModel(interactor: GameZverobukvyViewModelImpl): GameZverobukvyViewModel
+    fun bindAnimalLettersViewModel(interactor: AnimalLettersGameViewModelImpl): AnimalLettersGameViewModel
 }

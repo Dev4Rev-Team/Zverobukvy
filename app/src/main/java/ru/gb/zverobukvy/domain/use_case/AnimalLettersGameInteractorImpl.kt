@@ -13,6 +13,7 @@ import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
+import javax.inject.Inject
 
 /**
  * Возможные состояния игры GameState:
