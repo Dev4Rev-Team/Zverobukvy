@@ -132,7 +132,9 @@ class MainMenuViewModelImpl(
     }
 
     override fun onEditNamePlayer(newNamePlayer: String) {
-        lastEditablePlayerName = newNamePlayer
+        lastEditablePlayer?.apply {
+            player.name = newNamePlayer
+        }
     }
 
     override fun onAddPlayer() {
@@ -225,6 +227,14 @@ class MainMenuViewModelImpl(
             )
     }
 
+    @Suppress("SameParameterValue")
+    private fun sendError(stringEnum: StringEnum, name: String) {
+        liveDataScreenState.value =
+            MainMenuState.ScreenState.ErrorState(
+                resourcesProvider.getString(stringEnum).format(name)
+            )
+    }
+
     private fun openEditablePlayer(positionPlayer: Int) {
         closeEditablePlayer(true)
 
@@ -243,14 +253,31 @@ class MainMenuViewModelImpl(
 
     private fun closeEditablePlayer(isSave: Boolean) {
         lastEditablePlayer?.let {
+            var isValidate = true
             it.inEditingState = false
-            if (isSave) {
-                it.player.name = lastEditablePlayerName
+            it.player.name = it.player.name.trim()
+            if (it.player.name.isEmpty()) {
+                isValidate = false
+                sendError(StringEnum.MAIN_MENU_FRAGMENT_THE_NAME_FIELD_IS_EMPTY)
+            } else {
+                players.forEach { item ->
+                    if (item != it && item?.player?.name.equals(it.player.name)) {
+                        isValidate = false
+                        sendError(
+                            StringEnum.MAIN_MENU_FRAGMENT_A_PLAYER_WITH_THE_SAME_NAME_ALREADY_EXISTS,
+                            it.player.name
+                        )
+                    }
+                }
+            }
+            if (isSave && isValidate) {
                 viewModelScope.launch {
                     players[players.indexOf(it)]?.let { item ->
                         mainMenuRepository.updatePlayer(item.player)
                     }
                 }
+            } else {
+                it.player.name = lastEditablePlayerName
             }
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.ChangedPlayerState(players, players.indexOf(it))

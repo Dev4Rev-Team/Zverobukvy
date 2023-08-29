@@ -2,6 +2,7 @@ package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.inputmethod.EditorInfo
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 
@@ -10,12 +11,13 @@ class EditPlayerViewHolder(
     private val saveChangedPlayerClickListener: () -> Unit,
     private val cancelChangedPlayerClickListener: () -> Unit,
     private val editNameChangedPlayerClickListener: (String) -> Unit,
-    private val queryRemovePlayersClickListener: (Int, String) -> Unit
+    private val queryRemovePlayersClickListener: (Int, String) -> Unit,
 ) :
     BaseViewHolder(viewBinding) {
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
             viewBinding.run {
+                playerNameTextInputView.imeOptions = EditorInfo.IME_ACTION_DONE
                 playerNameTextInputView.setText(playerInSetting.player.name)
                 saveImageButton.setOnClickListener {
                     saveChangedPlayerClickListener()
@@ -23,7 +25,7 @@ class EditPlayerViewHolder(
                 cancelImageButton.setOnClickListener {
                     cancelChangedPlayerClickListener()
                 }
-                playerNameTextInputView.addTextChangedListener(object :TextWatcher{
+                playerNameTextInputView.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
                         s: CharSequence?,
                         start: Int,
