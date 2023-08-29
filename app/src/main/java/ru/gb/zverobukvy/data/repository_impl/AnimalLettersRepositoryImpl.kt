@@ -65,4 +65,7 @@ class AnimalLettersRepositoryImpl(
 
     override fun saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame: List<String>) =
         sharedPreferencesForGame.saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame)
+
+    override fun isFirstLaunch(): Boolean =
+        sharedPreferencesForGame.isFirstLaunch()
 }

@@ -9,4 +9,5 @@ interface SharedPreferencesForGame {
 
     fun saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame: List<String>)
 
+    fun isFirstLaunch():Boolean
 }

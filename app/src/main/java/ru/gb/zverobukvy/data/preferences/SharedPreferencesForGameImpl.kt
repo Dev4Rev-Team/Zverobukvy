@@ -39,9 +39,20 @@ class SharedPreferencesForGameImpl(context: Context) : SharedPreferencesForGame 
             .apply()
     }
 
+    override fun isFirstLaunch(): Boolean {
+        Timber.d("isFirstLaunch")
+        val isFirstLaunch = sharedPreferencesForGame.getBoolean(KEY_FIRST_LAUNCH, true)
+        if (isFirstLaunch)
+            sharedPreferencesForGame.edit()
+                .putBoolean(KEY_FIRST_LAUNCH, false)
+                .apply()
+        return isFirstLaunch
+    }
+
     companion object {
         private const val KEY_TYPES_CARDS = "KeyTypesCards"
         private const val KEY_NAMES_PLAYERS = "KeyNamesPlayers"
+        private const val KEY_FIRST_LAUNCH = "KeyFirstLaunch"
         private const val NAME_SHARED_PREFERENCES = "animal_letters_pref"
     }
 }
