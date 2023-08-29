@@ -11,7 +11,7 @@ class EditPlayerViewHolder(
     private val saveChangedPlayerClickListener: () -> Unit,
     private val cancelChangedPlayerClickListener: () -> Unit,
     private val editNameChangedPlayerClickListener: (String) -> Unit,
-    private val queryRemovePlayersClickListener: (Int, String) -> Unit,
+    private val queryRemovePlayersClickListener: (Int) -> Unit,
 ) :
     BaseViewHolder(viewBinding) {
     override fun bindView(playerInSetting: PlayerInSettings?) {
@@ -49,8 +49,7 @@ class EditPlayerViewHolder(
                 })
                 deleteButton.setOnClickListener {
                     queryRemovePlayersClickListener(
-                        this@EditPlayerViewHolder.adapterPosition,
-                        playerNameTextInputView.text.toString()
+                        this@EditPlayerViewHolder.adapterPosition
                     )
                 }
             }

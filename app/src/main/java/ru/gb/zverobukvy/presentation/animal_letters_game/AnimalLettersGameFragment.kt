@@ -259,6 +259,8 @@ class AnimalLettersGameFragment :
     companion object {
         const val GAME_START = "GAME_START"
 
+        const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
+
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {
             arguments = Bundle().apply {

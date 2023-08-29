@@ -4,5 +4,5 @@ data class EditPlayerClickListenerOwner(
     val saveChangedPlayerClickListener: () -> Unit,
     val cancelChangedPlayerClickListener: () -> Unit,
     val editNameChangedPlayerClickListener: (String) -> Unit,
-    val queryRemovePlayersClickListener: (Int, String) -> Unit
+    val queryRemovePlayersClickListener: (Int) -> Unit
 )

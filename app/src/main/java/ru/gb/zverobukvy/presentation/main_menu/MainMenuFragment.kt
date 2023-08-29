@@ -16,6 +16,8 @@ import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
+import ru.gb.zverobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
 import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
@@ -251,10 +253,9 @@ class MainMenuFragment :
         viewModel.onCancelChangedPlayer()
     }
 
-    private fun clickQueryRemovePlayer(position: Int, name: String) {
-        RemovePlayerDialogFragment().also {
+    private fun clickQueryRemovePlayer(position: Int) {
+        RemovePlayerDialogFragment.newInstance().also {
             it.arguments = bundleOf(
-                RemovePlayerDialogFragment.KEY_NAME_PLAYER to name,
                 RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER to position
             )
             it.show(requireActivity().supportFragmentManager, TAG_REMOVE_PLAYER_DIALOG_FRAGMENT)
@@ -276,9 +277,8 @@ class MainMenuFragment :
     }
 
     companion object {
-        private const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
-        private const val TAG_REMOVE_PLAYER_DIALOG_FRAGMENT = "RemovePlayerDialogFragment"
         const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
+
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"
 
