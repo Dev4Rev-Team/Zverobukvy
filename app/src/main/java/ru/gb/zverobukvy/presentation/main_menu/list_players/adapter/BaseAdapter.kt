@@ -2,7 +2,7 @@ package ru.gb.zverobukvy.presentation.main_menu.list_players.adapter
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.zverobukvy.domain.entity.PlayerInSettings
+import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.BaseViewHolder
 
 abstract class BaseAdapter: RecyclerView.Adapter<BaseViewHolder>() {

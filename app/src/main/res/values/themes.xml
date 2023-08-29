@@ -23,6 +23,15 @@
         <item name="android:textColor">@color/button_primary</item>
     </style>
 
+    <style name="Button.Tiny" parent="Button">
+        <item name="android:textSize">@dimen/text_tiny</item>
+    </style>
+
+    <style name="Button.Tiny.Dark" parent="Button.Tiny">
+        <item name="backgroundTint">@color/button_primary.dark</item>
+        <item name="android:textColor">@color/button_primary</item>
+    </style>
+
     <style name="Button.Big" parent="Button">
         <item name="android:textSize">@dimen/text_big</item>
     </style>
@@ -41,5 +50,4 @@
         <item name="android:textColor">@color/button_primary</item>
     </style>
 
-    <dimen name="text_big">36sp</dimen>
 </resources>
