@@ -211,11 +211,6 @@ class MainMenuFragment :
                     playersScreenState.playersInSettings, playersScreenState.positionRemovePlayer
                 )
             }
-
-            is MainMenuState.PlayersScreenState.QueryForChangedPlayerState -> {
-                Timber.d("QueryForChangedPlayerState")
-                //TODO()
-            }
         }
     }
 

@@ -44,16 +44,6 @@ sealed interface MainMenuState {
             val playersInSettings: List<PlayerInSettings?>,
             val positionChangedPlayer: Int
         ) : PlayersScreenState
-
-        /**
-         * Состояние запроса от view нового имени игрока, которое находится в редактируемом item игрока.
-         * Используется, когда пользователь во время редактирования нажимает на свободное место экрана
-         * или на кликабельный элемент экрана (кроме кнопок "отмена" и "сохранить"). Необходимо для
-         * сохранения нового имени игрока.
-         */
-        data class QueryForChangedPlayerState(
-            val positionChangedPlayer: Int
-        ) : PlayersScreenState
     }
 
     sealed interface ScreenState {

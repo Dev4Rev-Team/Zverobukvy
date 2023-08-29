@@ -132,6 +132,7 @@ class MainMenuViewModelImpl(
     }
 
     override fun onEditNamePlayer(newNamePlayer: String) {
+        Timber.d("onEditNamePlayer")
         lastEditablePlayer?.apply {
             player.name = newNamePlayer
         }
