@@ -374,10 +374,17 @@ class AnimalLettersGameViewModelImpl(
     }
 
     override fun onBackPressed() {
-        entireLiveData.value = EntireState.IsEndGameState
         gameStopwatch.stop()
-        isEndGameDialog = true
+
+        if (isNonCardClickStateGame()) {
+            animalLettersGameInteractor.endGameByUser()
+        } else {
+            entireLiveData.value = EntireState.IsEndGameState
+            isEndGameDialog = true
+        }
     }
+
+    private fun isNonCardClickStateGame() = mLastClickCardPosition == INIT_CARD_CLICK_POSITION
 
     override fun onLoadGame() {
         gameStopwatch.start()
