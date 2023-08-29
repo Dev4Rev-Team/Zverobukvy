@@ -21,6 +21,7 @@ sealed interface AnimalLettersGameState {
          * @param nextWalkingPlayer Ходящий игрок
          * @param nextWordBtnVisible true - Показать кнопку с переходом к следующему слову
          * @param nextPlayerBtnVisible true - показать кнопку о переходе к следующему игроку
+         * @param screenDimmingText Текст для затемненного экрана
          */
         data class StartGameState(
             val lettersCards: List<LetterCard>,
@@ -29,6 +30,7 @@ sealed interface AnimalLettersGameState {
             val nextWalkingPlayer: PlayerInGame,
             val nextWordBtnVisible: Boolean,
             val nextPlayerBtnVisible: Boolean,
+            val screenDimmingText: String,
         ) : EntireState
 
         /** Состояние запроса на прекращение игры, показ диалогового окна
@@ -40,8 +42,13 @@ sealed interface AnimalLettersGameState {
          * (исходит из Interactor)
          *
          * @param players Список игроков
+         * @param gameTime Время игры
+         * @param isFastEndGame
+         * * true - экран со счетам показывать не нужно,
+         * * false - стандартный выход из игры
          */
         data class EndGameState(
+            val isFastEndGame : Boolean,
             val players: List<PlayerInGame>,
             val gameTime: String,
         ) : EntireState
@@ -65,9 +72,11 @@ sealed interface AnimalLettersGameState {
          * 2. Сообщить пользователю, что карточка неверная
          *
          * @param invalidLetterCard Невалидную карточку
+         * @param screenDimmingText Текст для затемненного экрана
          */
         data class InvalidLetter(
             val invalidLetterCard: LetterCard,
+            val screenDimmingText: String,
         ) : ChangingState
 
         /** Передача хода следующему игроку.
@@ -112,12 +121,14 @@ sealed interface AnimalLettersGameState {
          * @param positionLetterInWord Отгаданная буква, которую нужно подсветить
          * @param players список игроков (в том числе обновленный счет)
          * @param hasNextWord true - если следующее слово есть, false - если нет
+         * @param screenDimmingText Текст для затемненного экрана
          */
         data class GuessedWord(
             val correctLetterCard: LetterCard,
             val positionLetterInWord: Int,
             val players: List<PlayerInGame>,
             val hasNextWord: Boolean,
+            val screenDimmingText: String,
         ) : ChangingState
 
         /** Состояние смены загадываемого слова
