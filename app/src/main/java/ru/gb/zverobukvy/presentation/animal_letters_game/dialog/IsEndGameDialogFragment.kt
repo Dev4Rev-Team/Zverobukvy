@@ -1,68 +1,35 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game.dialog
 
 import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.InsetDrawable
-import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import ru.gb.zverobukvy.databinding.DialogFragmentIsEndGameBinding
-import ru.gb.zverobukvy.utility.ui.ViewBindingDialogFragment
+import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.utility.ui.BaseDialogFragment
 
 
-class IsEndGameDialogFragment : ViewBindingDialogFragment<DialogFragmentIsEndGameBinding>(
-    DialogFragmentIsEndGameBinding::inflate
-) {
-    var isSendEvent = false
+class IsEndGameDialogFragment : BaseDialogFragment() {
+    var event = EVENT_NO
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        super.onCreateView(inflater, container, savedInstanceState)
-        binding.yesButton.setOnClickListener {
-            sendEvent(EVENT_YES)
-            dismiss()
-        }
+    override fun initMessageTextView() {
+        binding.messageTextView.text = getString(R.string.end_game_question_text)
+    }
+
+    override fun initNegativeButton() {
         binding.noButton.setOnClickListener {
             dismiss()
         }
-        return binding.root
+    }
+
+    override fun initPositiveButton() {
+        binding.yesButton.setOnClickListener {
+            event = EVENT_YES
+            dismiss()
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        sendEvent(EVENT_NO)
+        parentFragmentManager.setFragmentResult(event, bundleOf())
         super.onDismiss(dialog)
-    }
-
-    private fun sendEvent(event: String) {
-        if (!isSendEvent) {
-            isSendEvent = true
-            parentFragmentManager.setFragmentResult(event, bundleOf(event to event))
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        dialog?.window?.attributes = dialog?.window?.attributes?.apply {
-            gravity = Gravity.BOTTOM
-            // flags = flags and WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()
-            dimAmount = 0.3f
-            width = WindowManager.LayoutParams.MATCH_PARENT
-            height = WindowManager.LayoutParams.WRAP_CONTENT
-
-        }
-        dialog?.window?.setBackgroundDrawable(
-            InsetDrawable(ColorDrawable(Color.TRANSPARENT), 48)
-        )
     }
 
     companion object {
