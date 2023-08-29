@@ -24,6 +24,7 @@ class MainMenuViewModelImpl(
     private val namesPlayersSelectedForGame: MutableList<String> = mutableListOf()
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
     private var lastEditablePlayer: PlayerInSettings? = null
+    private var lastEditablePlayerName: String = ""
 
 
     private val liveDataPlayersScreenState =
@@ -49,6 +50,7 @@ class MainMenuViewModelImpl(
                 MainMenuState.PlayersScreenState.PlayersState(players)
         }
     }
+
     override fun onLaunch() {
         Timber.d("onLaunch")
         liveDataScreenState.value =
@@ -83,7 +85,7 @@ class MainMenuViewModelImpl(
     }
 
     override fun onChangedSelectingPlayer(positionPlayer: Int) {
-        closeEditablePlayer()
+        closeEditablePlayer(true)
         players[positionPlayer]?.apply {
             isSelectedForGame = !isSelectedForGame
 
@@ -105,6 +107,7 @@ class MainMenuViewModelImpl(
     }
 
     override fun onRemovePlayer(positionPlayer: Int) {
+        closeEditablePlayer(false)
         viewModelScope.launch {
             players[positionPlayer]?.player?.let { mainMenuRepository.deletePlayer(it) }
         }
@@ -116,32 +119,24 @@ class MainMenuViewModelImpl(
     }
 
     override fun onQueryChangedPlayer(positionPlayer: Int) {
-        closeEditablePlayer()
+        closeEditablePlayer(true)
         openEditablePlayer(positionPlayer)
     }
 
-    override fun onChangedPlayer(positionPlayer: Int, newNamePlayer: String) {
-        closeEditablePlayer()
-        players[positionPlayer]?.apply {
-            player.name = newNamePlayer
-        }
-        viewModelScope.launch {
-            players[positionPlayer]?.let { mainMenuRepository.updatePlayer(it.player) }
-        }
-
-        liveDataPlayersScreenState.value =
-            MainMenuState.PlayersScreenState.ChangedPlayerState(
-                players,
-                positionPlayer
-            )
+    override fun onChangedPlayer() {
+        closeEditablePlayer(true)
     }
 
-    override fun onCancelChangedPlayer(positionPlayer: Int) {
-        closeEditablePlayer()
+    override fun onCancelChangedPlayer() {
+        closeEditablePlayer(false)
+    }
+
+    override fun onEditNamePlayer(newNamePlayer: String) {
+        lastEditablePlayerName = newNamePlayer
     }
 
     override fun onAddPlayer() {
-        closeEditablePlayer()
+        closeEditablePlayer(true)
 
         viewModelScope.launch {
             createAndSavePlayer()
@@ -175,7 +170,7 @@ class MainMenuViewModelImpl(
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
-        closeEditablePlayer()
+        closeEditablePlayer(true)
         if (typesCardsSelectedForGame.contains(typeCards)) {
             typesCardsSelectedForGame.remove(typeCards)
         } else {
@@ -186,7 +181,7 @@ class MainMenuViewModelImpl(
     override fun onStartGame() {
         Timber.d("onStartGame")
 
-        closeEditablePlayer()
+        closeEditablePlayer(true)
         val playersForGame = findPlayersForGame()
 
         if (typesCardsSelectedForGame.size == 0) {
@@ -211,8 +206,7 @@ class MainMenuViewModelImpl(
     }
 
     override fun onClickScreen() {
-        // TODO("Not yet implemented")
-        Timber.d("onClickScreen")
+        closeEditablePlayer(true)
     }
 
     private fun findPlayersForGame(): MutableList<PlayerInGame> {
@@ -232,10 +226,11 @@ class MainMenuViewModelImpl(
     }
 
     private fun openEditablePlayer(positionPlayer: Int) {
-        closeEditablePlayer()
+        closeEditablePlayer(true)
 
         players[positionPlayer]?.apply {
             inEditingState = true
+            this@MainMenuViewModelImpl.lastEditablePlayerName = player.name
             this@MainMenuViewModelImpl.lastEditablePlayer = this
         }
 
@@ -246,16 +241,24 @@ class MainMenuViewModelImpl(
             )
     }
 
-    private fun closeEditablePlayer() {
+    private fun closeEditablePlayer(isSave: Boolean) {
         lastEditablePlayer?.let {
             it.inEditingState = false
+            if (isSave) {
+                it.player.name = lastEditablePlayerName
+                viewModelScope.launch {
+                    players[players.indexOf(it)]?.let { item ->
+                        mainMenuRepository.updatePlayer(item.player)
+                    }
+                }
+            }
             liveDataPlayersScreenState.value =
-                MainMenuState.PlayersScreenState.ChangedPlayerState(
-                    players, players.indexOf(it)
-                )
+                MainMenuState.PlayersScreenState.ChangedPlayerState(players, players.indexOf(it))
 
         }
+
         lastEditablePlayer = null
+        lastEditablePlayerName = ""
     }
 
     companion object {

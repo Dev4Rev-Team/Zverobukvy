@@ -59,7 +59,7 @@ interface MainMenuViewModel {
      * Если введенное имя некорректно или повторяется ViewModel формирует состояние Error, по которому
      * во view соответствующим образом информируется пользователь, например Toast.
      */
-    fun onChangedPlayer(positionPlayer: Int, newNamePlayer: String)
+    fun onChangedPlayer()
 
     /**
      * Метод вызывается при отказе пользователя в редактировании данных игрока, например при нажатии
@@ -67,8 +67,9 @@ interface MainMenuViewModel {
      * игрока и формирует состояние ChangedPlayer, по которому во view в адаптер передается новый
      * список игроков и изменяется соответствующий item игрока: переводится в нередактируемый режим.
      */
-    fun onCancelChangedPlayer(positionPlayer: Int)
+    fun onCancelChangedPlayer()
 
+    fun onEditNamePlayer(newNamePlayer: String)
     /**
      * Метод вызывается при добавление нового игрока, например при нажатии на кнопку "+".
      * ViewModel добавляет в список "дефолтного" игрока, отправляет соответствующую информацию в

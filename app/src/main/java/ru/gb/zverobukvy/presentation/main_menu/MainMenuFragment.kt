@@ -38,9 +38,16 @@ class MainMenuFragment :
     private val playersAdapter =
         PlayersAdapter(PlayerClickListenerOwner(::clickPlayer, ::clickEditMenuPlayer),
             EditPlayerClickListenerOwner(
-                ::clickSaveChangedPlayer, ::clickCancelChangedPlayer, ::clickQueryRemovePlayer
+                ::clickSaveChangedPlayer,
+                ::clickCancelChangedPlayer,
+                ::inputEditNameChangedPlayerClickListener,
+                ::clickQueryRemovePlayer
             ),
             AddPlayerClickListenerOwner { clickAddPlayer() })
+
+    private fun inputEditNameChangedPlayerClickListener(name: String) {
+        viewModel.onEditNamePlayer(name)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Timber.d("onViewCreated")
@@ -241,12 +248,12 @@ class MainMenuFragment :
         viewModel.onQueryChangedPlayer(position)
     }
 
-    private fun clickSaveChangedPlayer(position: Int, newName: String) {
-        viewModel.onChangedPlayer(position, newName)
+    private fun clickSaveChangedPlayer() {
+        viewModel.onChangedPlayer()
     }
 
-    private fun clickCancelChangedPlayer(position: Int) {
-        viewModel.onCancelChangedPlayer(position)
+    private fun clickCancelChangedPlayer() {
+        viewModel.onCancelChangedPlayer()
     }
 
     private fun clickQueryRemovePlayer(position: Int, name: String) {
