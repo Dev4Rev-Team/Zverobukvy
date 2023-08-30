@@ -23,12 +23,6 @@ class AnimalLettersGameViewModelImpl(
 ) :
     AnimalLettersGameViewModel, ViewModel() {
 
-    /** Флаг показа диалогового окна о закрытии игры :
-     * - true - показывается диалог об окончании игры
-     * - false - диалог скрыт
-     */
-    private var isEndGameDialog: Boolean = false
-
     /** Флаг для события нажатия на карточку с буквой :
      * - true - Произошло нажатие на букву/Обрабатывается событие нажатия (новые нажатия не обрабатываются)
      * - false - Новые нажатия снова обрабатываются
@@ -320,10 +314,7 @@ class AnimalLettersGameViewModelImpl(
                 throw IllegalStateException(ERROR_STATE_RESTORE)
             }
         }
-
-        if (isEndGameDialog)
-            entireLiveData.value = EntireState.IsEndGameState
-    }
+ }
 
     private fun calculateScreenDimmingTextOnActiveGame(state: GameState) =
         if (isWaitingNextPlayer) textOfInvalidLetter(!isSinglePlayerGame(state))
@@ -379,7 +370,6 @@ class AnimalLettersGameViewModelImpl(
             animalLettersGameInteractor.endGameByUser()
         } else {
             entireLiveData.value = EntireState.IsEndGameState
-            isEndGameDialog = true
         }
     }
 
@@ -387,7 +377,6 @@ class AnimalLettersGameViewModelImpl(
 
     override fun onLoadGame() {
         gameStopwatch.start()
-        isEndGameDialog = false
     }
 
     override fun onEndGameByUser() {
