@@ -57,9 +57,9 @@
                     <ImageView
                         android:id="@+id/player_avatar_image_view"
                         android:layout_width="wrap_content"
-                        android:layout_margin="@dimen/margin_avatar_image"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_margin="@dimen/margin_avatar_image"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/avatar_cat" />
                 </androidx.cardview.widget.CardView>
@@ -131,13 +131,14 @@
             android:layout_height="@dimen/auto_layout"
             android:layout_marginTop="@dimen/margin_default"
             android:layout_marginBottom="@dimen/margin_default"
+            android:maxHeight="50dp"
             app:colorGuessed="@color/color_green_pastel"
             app:colorUnsolved="@color/white"
             app:horizontalGap="@dimen/margin_default"
             app:layout_constraintBottom_toTopOf="@+id/word_guidline"
             app:layout_constraintDimensionRatio="H,6:1"
-            app:layout_constraintEnd_toEndOf="@+id/table"
-            app:layout_constraintStart_toStartOf="@+id/table"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/sector_word_card_image_guidline"
             app:radiusCards="@dimen/corner_radius_default" />
 
