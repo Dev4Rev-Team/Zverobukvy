@@ -106,11 +106,16 @@ class AnimalLettersGameFragment :
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.EntireState.EndGameState -> {
-                    val players = DataGameIsOverDialog.map(it.players)
-                    val data = DataGameIsOverDialog(players, it.gameTime)
-                    soundEffectPlayer.play(SoundEnum.GAME_OVER)
-                    GameIsOverDialogFragment.instance(data)
-                        .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
+                    if (it.isFastEndGame) {
+                        parentFragmentManager.popBackStack()
+                    } else {
+                        val players = DataGameIsOverDialog.map(it.players)
+                        val data = DataGameIsOverDialog(players, it.gameTime)
+                        soundEffectPlayer.play(SoundEnum.GAME_OVER)
+                        GameIsOverDialogFragment.instance(data)
+                            .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
+                    }
+
                 }
 
                 is AnimalLettersGameState.EntireState.IsEndGameState -> {
