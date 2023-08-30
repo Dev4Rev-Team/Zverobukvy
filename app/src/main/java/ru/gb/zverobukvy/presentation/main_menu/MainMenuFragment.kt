@@ -59,13 +59,13 @@ class MainMenuFragment :
 
         initView()
         viewModel.run {
-            onLaunch()
             getLiveDataScreenState().observe(viewLifecycleOwner) {
                 renderSettingsScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
                 renderPlayersScreenState(it)
             }
+            onLaunch()
         }
     }
 

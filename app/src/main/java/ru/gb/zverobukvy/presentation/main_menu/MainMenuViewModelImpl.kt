@@ -36,8 +36,6 @@ class MainMenuViewModelImpl(
         loadTypeCardsSelectedForGame()
         loadPlayersSelectedForGame()
         loadPlayersFromRepository()
-
-        showInstruction()
     }
 
     private fun showInstruction() {
@@ -70,10 +68,7 @@ class MainMenuViewModelImpl(
 
     override fun onLaunch() {
         Timber.d("onLaunch")
-        liveDataScreenState.value =
-            MainMenuState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
-        liveDataPlayersScreenState.value =
-            MainMenuState.PlayersScreenState.PlayersState(players)
+        showInstruction()
     }
 
     private fun loadPlayersSelectedForGame() {
@@ -89,6 +84,8 @@ class MainMenuViewModelImpl(
         if (typesCardsSelectedForGame.size == 0) {
             typesCardsSelectedForGame.add(TypeCards.ORANGE)
         }
+        liveDataScreenState.value =
+            MainMenuState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
     }
 
     override fun getLiveDataPlayersScreenState(): LiveData<MainMenuState.PlayersScreenState> {
