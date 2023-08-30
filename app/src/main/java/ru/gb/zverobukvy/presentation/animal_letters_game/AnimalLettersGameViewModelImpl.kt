@@ -8,11 +8,11 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatchImpl
-import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
-import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import java.util.LinkedList
 
@@ -22,12 +22,6 @@ class AnimalLettersGameViewModelImpl(
     private val gameStopwatch: GameStopwatch = GameStopwatchImpl(),
 ) :
     AnimalLettersGameViewModel, ViewModel() {
-
-    /** Флаг показа диалогового окна о закрытии игры :
-     * - true - показывается диалог об окончании игры
-     * - false - диалог скрыт
-     */
-    private var isEndGameDialog: Boolean = false
 
     /** Флаг для события нажатия на карточку с буквой :
      * - true - Произошло нажатие на букву/Обрабатывается событие нажатия (новые нажатия не обрабатываются)
@@ -83,15 +77,31 @@ class AnimalLettersGameViewModelImpl(
 
             val viewState = convert(oldState, newState)
 
-            //checkingCorrectnessOfConversion(viewState)
-
             viewState.forEachIndexed { index, state ->
                 updateViewModels(state)
-                if (index != viewState.lastIndex) delay(STATE_DELAY)
+                calculateDelayBetweenStates(index, viewState)
             }
         }
 
         updateMGameState(newState)
+    }
+
+    /** Метод расчитывает задержку между отправками состояний во View
+     *
+     * @param viewState Список отправляемых состояний
+     * @param index Индекс элемента первого в очереди на отправку
+     */
+    private suspend fun calculateDelayBetweenStates(
+        index: Int,
+        viewState: List<AnimalLettersGameState>,
+    ) {
+        if (index == viewState.lastIndex) {
+            return
+        }
+        if (viewState[index] is ChangingState.NextGuessWord) {
+            return
+        }
+        delay(STATE_DELAY)
     }
 
     /** Метод обновляет значение сохраняемого во viewModel GameState - [mGameState]
@@ -122,28 +132,6 @@ class AnimalLettersGameViewModelImpl(
         }
     }
 
-    /** Метод проверяет результат конвертации на наличие логических ошибок
-     *
-     * @param viewState Результат конвертации для проверки
-     *
-     * @exception IllegalStateException если проверка провалена
-     */
-    private fun checkingCorrectnessOfConversion(
-        viewState: List<AnimalLettersGameState>,
-    ) {
-        if (viewState.size > 3)
-            throw IllegalStateException(ERROR_INDEX_INCORRECT)
-
-        if ((viewState.size > 1) &&
-            (viewState[1] !is EntireState.EndGameState || viewState[1] !is ChangingState.NextPlayer)
-        )
-            throw IllegalStateException(ERROR_INCORRECT_TYPE_OF_APP_STATE)
-
-        if (viewState.size > 2 && viewState[2] !is EntireState.EndGameState
-        )
-            throw IllegalStateException(ERROR_INCORRECT_TYPE_OF_APP_STATE)
-    }
-
     /** Метод конвертирует разницу состояний (+ [mLastClickCardPosition])
      * в список из одного или двух [AnimalLettersGameState].
      * * Вторым состоянием может быть только [EntireState.EndGameState]
@@ -169,6 +157,7 @@ class AnimalLettersGameViewModelImpl(
                     newState.walkingPlayer!!,
                     isGuessedWord,
                     isWaitingNextPlayer,
+                    TEXT_DEFAULT
                 )
             )
         }
@@ -178,15 +167,16 @@ class AnimalLettersGameViewModelImpl(
          * [ChangingState.CorrectLetter], [ChangingState.InvalidLetter], [ChangingState.GuessedWord]
          * или [ChangingState.NextGuessWord]
          *
-         * TODO : Теоретически возможно совмещение [EntireState.EndGameState] и с двумя первыми проверками
          */
         val stateList = LinkedList<AnimalLettersGameState>()
 
         /** Ловим событие окончания игры [EntireState.EndGameState]
          */
         if (!newState.isActive) {
+
             stateList.addFirst(
                 EntireState.EndGameState(
+                    isNonCardClickStateGame(),
                     newState.players,
                     gameStopwatch.getGameRunningTime()
                 )
@@ -242,13 +232,16 @@ class AnimalLettersGameViewModelImpl(
                     /** Событие отгаданного слова */
                     isCardClick = false
                     if (newState.isActive) isGuessedWord = true
+                    val screenDimmingText =
+                        textOfGuessedWord(newState.walkingPlayer != oldState.walkingPlayer)
 
                     stateList.addFirst(
                         ChangingState.GuessedWord(
                             lastClickCard,
                             positionGuessedLetters,
                             newState.players,
-                            newState.isActive
+                            newState.isActive,
+                            screenDimmingText
                         )
                     )
                 } else {
@@ -268,12 +261,25 @@ class AnimalLettersGameViewModelImpl(
                 isCardClick = false
                 isWaitingNextPlayer = true
 
-                stateList.addFirst(ChangingState.InvalidLetter(lastClickCard))
+                val screenDimmingText =
+                    textOfInvalidLetter(newState.walkingPlayer != oldState.walkingPlayer)
+
+                stateList.addFirst(ChangingState.InvalidLetter(lastClickCard, screenDimmingText))
             }
 
         }
 
         return stateList
+    }
+
+    private fun textOfInvalidLetter(playersAreDifferent: Boolean): String {
+        return if (playersAreDifferent) TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT
+        else TEXT_INVALID_LETTER_PLAYERS_ARE_NOT_DIFFERENT
+    }
+
+    private fun textOfGuessedWord(playersAreDifferent: Boolean): String {
+        return if (playersAreDifferent) TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT
+        else TEXT_GUESSED_WORD_PLAYERS_ARE_NOT_DIFFERENT
     }
 
     private fun positionGuessedLetters(oldPositions: List<Int>, newPositions: List<Int>): Int? {
@@ -287,6 +293,9 @@ class AnimalLettersGameViewModelImpl(
             val guessesWord = state.gameField.gamingWordCard
             val walkingPlayer = state.walkingPlayer
 
+            val screenDimmingText =
+                calculateScreenDimmingTextOnActiveGame(state)
+
             if (guessesWord != null && walkingPlayer != null) {
                 entireLiveData.value = EntireState.StartGameState(
                     state.gameField.lettersField.apply {
@@ -299,15 +308,20 @@ class AnimalLettersGameViewModelImpl(
                     state.walkingPlayer!!,
                     isGuessedWord,
                     isWaitingNextPlayer,
+                    screenDimmingText
                 )
             } else {
                 throw IllegalStateException(ERROR_STATE_RESTORE)
             }
         }
+ }
 
-        if (isEndGameDialog)
-            entireLiveData.value = EntireState.IsEndGameState
-    }
+    private fun calculateScreenDimmingTextOnActiveGame(state: GameState) =
+        if (isWaitingNextPlayer) textOfInvalidLetter(!isSinglePlayerGame(state))
+        else if (isGuessedWord) textOfGuessedWord(!isSinglePlayerGame(state))
+        else TEXT_DEFAULT
+
+    private fun isSinglePlayerGame(state: GameState) = state.players.size == 1
 
     override fun getEntireGameStateLiveData(): LiveData<EntireState> {
         return entireLiveData
@@ -350,14 +364,19 @@ class AnimalLettersGameViewModelImpl(
     }
 
     override fun onBackPressed() {
-        entireLiveData.value = EntireState.IsEndGameState
         gameStopwatch.stop()
-        isEndGameDialog = true
+
+        if (isNonCardClickStateGame()) {
+            animalLettersGameInteractor.endGameByUser()
+        } else {
+            entireLiveData.value = EntireState.IsEndGameState
+        }
     }
+
+    private fun isNonCardClickStateGame() = mLastClickCardPosition == INIT_CARD_CLICK_POSITION
 
     override fun onLoadGame() {
         gameStopwatch.start()
-        isEndGameDialog = false
     }
 
     override fun onEndGameByUser() {
@@ -382,13 +401,20 @@ class AnimalLettersGameViewModelImpl(
 
         const val STATE_DELAY = 2000L
 
-        const val ERROR_NEXT_PLAYER_NOT_FOUND = "Следующий игрок не найден"
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
-        const val ERROR_INDEX_INCORRECT = "Индекс вышел за пределы корректных значений"
-        const val ERROR_INCORRECT_TYPE_OF_APP_STATE = "Некорректный тип AnimalLetterState"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null "
         const val ERROR_STATE_RESTORE = "Проблема в логике восстановления состояния эерана"
 
+        const val TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT =
+            "Карточка отгадана неверно" + "/n" + "Ход переходит следующему игроку"
+        const val TEXT_INVALID_LETTER_PLAYERS_ARE_NOT_DIFFERENT =
+            "Карточка отгадана неверно"
+        const val TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT =
+            "Слово отгадано" + "/n" + "Ход переходит следующему игроку"
+        const val TEXT_GUESSED_WORD_PLAYERS_ARE_NOT_DIFFERENT =
+            "Слово отгадано"
+
+        const val TEXT_DEFAULT = ""
 
         const val COROUTINE_SCOPE_CANCEL = "in viewModel.onCleared()"
     }

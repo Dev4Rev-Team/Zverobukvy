@@ -109,8 +109,8 @@
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
             android:layout_marginTop="@dimen/margin_medium"
-            app:cardElevation="@dimen/elevation_default"
             app:cardCornerRadius="@dimen/corner_radius_default"
+            app:cardElevation="@dimen/elevation_default"
             app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -130,15 +130,16 @@
             android:layout_height="@dimen/auto_layout"
             android:layout_marginTop="@dimen/margin_default"
             android:layout_marginBottom="@dimen/margin_default"
+            android:maxHeight="50dp"
             app:colorGuessed="@color/color_green_pastel"
             app:colorUnsolved="@color/white"
             app:horizontalGap="@dimen/margin_default"
             app:layout_constraintBottom_toTopOf="@+id/word_guidline"
             app:layout_constraintDimensionRatio="H,6:1"
-            app:layout_constraintEnd_toEndOf="@+id/table"
-            app:layout_constraintStart_toStartOf="@+id/table"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/sector_word_card_image_guidline"
-            app:radiusCards="@dimen/corner_radius_default"/>
+            app:radiusCards="@dimen/corner_radius_default" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/word_guidline"
@@ -171,7 +172,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include android:id="@+id/next_word" layout="@layout/fragment_animal_letters_game_dialog_next_word"/>
-    <include android:id="@+id/next_player" layout="@layout/fragment_animal_letters_game_dialog_next_player"/>
+    <include
+        android:id="@+id/next_word"
+        layout="@layout/fragment_animal_letters_game_dialog_next_word" />
+
+    <include
+        android:id="@+id/next_player"
+        layout="@layout/fragment_animal_letters_game_dialog_next_player" />
 
 </RelativeLayout>
