@@ -38,6 +38,15 @@ class MainMenuViewModelImpl(
         loadPlayersFromRepository()
     }
 
+    override fun onLaunch() {
+        Timber.d("onLaunch")
+        showInstruction()
+        liveDataScreenState.value =
+            MainMenuState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
+        liveDataPlayersScreenState.value =
+            MainMenuState.PlayersScreenState.PlayersState(players)
+    }
+
     private fun showInstruction() {
         if (mainMenuRepository.isFirstLaunch()) {
             liveDataScreenState.value = MainMenuState.ScreenState.ShowInstructions
@@ -64,11 +73,6 @@ class MainMenuViewModelImpl(
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.PlayersState(players)
         }
-    }
-
-    override fun onLaunch() {
-        Timber.d("onLaunch")
-        showInstruction()
     }
 
     private fun loadPlayersSelectedForGame() {
