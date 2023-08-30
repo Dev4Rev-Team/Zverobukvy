@@ -35,8 +35,19 @@ class MainMenuViewModelImpl(
     init {
         loadTypeCardsSelectedForGame()
         loadPlayersSelectedForGame()
+        loadPlayersFromRepository()
+
+        showInstruction()
+    }
+
+    private fun showInstruction() {
+        if (mainMenuRepository.isFirstLaunch()) {
+            liveDataScreenState.value = MainMenuState.ScreenState.ShowInstructions
+        }
+    }
+
+    private fun loadPlayersFromRepository() {
         viewModelScope.launch {
-            players.clear()
             players.addAll(
                 mainMenuRepository.getPlayers().map {
                     mapToPlayerInSettings(it).apply {
@@ -45,7 +56,13 @@ class MainMenuViewModelImpl(
                         }
                     }
                 })
+
+            if (namesPlayersSelectedForGame.size == 0 && players.size > 0) {
+                players[0]?.isSelectedForGame = true
+            }
+
             players.add(null)
+
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.PlayersState(players)
         }

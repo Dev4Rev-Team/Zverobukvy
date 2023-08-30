@@ -54,7 +54,7 @@ class GameIsOverDialogFragment :
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        parentFragmentManager.setFragmentResult(EVENT_CLOSE, bundleOf(EVENT_CLOSE to EVENT_CLOSE))
+        parentFragmentManager.setFragmentResult(EVENT_CLOSE, bundleOf())
         super.onDismiss(dialog)
     }
 
