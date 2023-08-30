@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,13 +59,13 @@ class MainMenuFragment :
 
         initView()
         viewModel.run {
-            onLaunch()
             getLiveDataScreenState().observe(viewLifecycleOwner) {
                 renderSettingsScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
                 renderPlayersScreenState(it)
             }
+            onLaunch()
         }
     }
 
@@ -163,6 +164,14 @@ class MainMenuFragment :
                 Timber.d("TypesCardsState")
                 initTypesCardsToggleButtons(
                     mainMenuState.typesCard
+                )
+            }
+
+            MainMenuState.ScreenState.ShowInstructions -> {
+                Timber.d("ShowInstructions")
+                parentFragmentManager.setFragmentResult(
+                    TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS,
+                    bundleOf()
                 )
             }
         }
@@ -278,11 +287,21 @@ class MainMenuFragment :
 
     companion object {
         const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
+        const val TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS = "MainMenuFragmentShowInstructions"
 
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"
 
         @JvmStatic
         fun newInstance() = MainMenuFragment()
+
+        fun setOnListenerShowInstruction(activity: AppCompatActivity, f: (() -> Unit)?) {
+            activity.supportFragmentManager.setFragmentResultListener(
+                TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS,
+                activity
+            ) { _, _ ->
+                f?.invoke()
+            }
+        }
     }
 }

@@ -66,6 +66,11 @@ sealed interface MainMenuState {
             val error: String
         ): ScreenState
 
+
+        /**
+         * Состояния для вывода на экран инструкции к игре
+         */
+        object ShowInstructions:ScreenState
         /**
          * Состояние для запуска игры "Зверобуквы"
          */

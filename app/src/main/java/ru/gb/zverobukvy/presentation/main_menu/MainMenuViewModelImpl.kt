@@ -35,8 +35,17 @@ class MainMenuViewModelImpl(
     init {
         loadTypeCardsSelectedForGame()
         loadPlayersSelectedForGame()
+        loadPlayersFromRepository()
+    }
+
+    private fun showInstruction() {
+        if (mainMenuRepository.isFirstLaunch()) {
+            liveDataScreenState.value = MainMenuState.ScreenState.ShowInstructions
+        }
+    }
+
+    private fun loadPlayersFromRepository() {
         viewModelScope.launch {
-            players.clear()
             players.addAll(
                 mainMenuRepository.getPlayers().map {
                     mapToPlayerInSettings(it).apply {
@@ -45,7 +54,13 @@ class MainMenuViewModelImpl(
                         }
                     }
                 })
+
+            if (namesPlayersSelectedForGame.size == 0 && players.size > 0) {
+                players[0]?.isSelectedForGame = true
+            }
+
             players.add(null)
+
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.PlayersState(players)
         }
@@ -53,10 +68,7 @@ class MainMenuViewModelImpl(
 
     override fun onLaunch() {
         Timber.d("onLaunch")
-        liveDataScreenState.value =
-            MainMenuState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
-        liveDataPlayersScreenState.value =
-            MainMenuState.PlayersScreenState.PlayersState(players)
+        showInstruction()
     }
 
     private fun loadPlayersSelectedForGame() {
@@ -72,6 +84,8 @@ class MainMenuViewModelImpl(
         if (typesCardsSelectedForGame.size == 0) {
             typesCardsSelectedForGame.add(TypeCards.ORANGE)
         }
+        liveDataScreenState.value =
+            MainMenuState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
     }
 
     override fun getLiveDataPlayersScreenState(): LiveData<MainMenuState.PlayersScreenState> {
