@@ -18,7 +18,6 @@ import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
-import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayerImpl
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
@@ -34,7 +33,7 @@ class AnimalLettersGameFragment :
         requireContext().appComponent.getAssetsImageCash()
     }
     private val soundEffectPlayer: SoundEffectPlayer by lazy {
-        SoundEffectPlayerImpl(requireContext())
+        requireContext().appComponent.getSoundEffectPlayer()
     }
 
     private val viewModel: AnimalLettersGameViewModel by lazy {

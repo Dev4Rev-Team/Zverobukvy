@@ -5,6 +5,6 @@ import ru.gb.zverobukvy.di.AnimalLettersGameSubcomponent
 
 @Module(
     subcomponents = [AnimalLettersGameSubcomponent::class],
-    includes = [MainMenuModule::class, AssetImageCashModule::class]
+    includes = [MainMenuModule::class, AssetImageCashModule::class, SoundEffectModule::class]
 )
 interface AppModule

@@ -5,6 +5,7 @@ import ru.gb.zverobukvy.data.resources_provider.AssertsImageCashImpl
 import ru.gb.zverobukvy.di.modules.AppModule
 import ru.gb.zverobukvy.di.modules.ContextModule
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuViewModelImpl
+import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayerImpl
 import javax.inject.Singleton
 
 @Singleton
@@ -12,6 +13,8 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun getAssetsImageCash(): AssertsImageCashImpl
+
+    fun getSoundEffectPlayer(): SoundEffectPlayerImpl
 
     fun getSettingsScreenViewModel(): MainMenuViewModelImpl
 
