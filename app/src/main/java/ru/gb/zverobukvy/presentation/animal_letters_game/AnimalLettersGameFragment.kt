@@ -29,21 +29,21 @@ import kotlin.math.ceil
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
     private var gameStart: GameStart? = null
-    private val assertsImageCash: AssetsImageCash by lazy {
+    private lateinit var assertsImageCash: AssetsImageCash /*by lazy {
         requireContext().appComponent.getAssetsImageCash()
-    }
-    private val soundEffectPlayer: SoundEffectPlayer by lazy {
+    }*/
+    private lateinit var soundEffectPlayer: SoundEffectPlayer /*by lazy {
         requireContext().appComponent.getSoundEffectPlayer()
-    }
+    }*/
 
-    private val viewModel: AnimalLettersGameViewModel by lazy {
+    private lateinit var viewModel: AnimalLettersGameViewModel /*by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
                 gameStart!!.typesCards,
                 gameStart!!.players
             ).viewModel
         })[AnimalLettersGameViewModelImpl::class.java]
-    }
+    }*/
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +52,25 @@ class AnimalLettersGameFragment :
             gameStart = it.parcelable(GAME_START)
         }
         gameStart ?: throw IllegalArgumentException("not arg gameStart")
+
+        initDagger()
+
         viewModel.onActiveGame()
+    }
+
+    private fun initDagger() {
+        requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
+            gameStart!!.typesCards,
+            gameStart!!.players
+        ).also { fragmentComponent ->
+            viewModel = ViewModelProvider(
+                this,
+                viewModelProviderFactoryOf { fragmentComponent.viewModel }
+            )[AnimalLettersGameViewModelImpl::class.java]
+
+            assertsImageCash = fragmentComponent.assetsImageCash
+            soundEffectPlayer = fragmentComponent.soundEffectPlayer
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

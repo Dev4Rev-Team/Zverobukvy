@@ -29,7 +29,7 @@ class MainMenuFragment :
 
     private val viewModel: MainMenuViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
-            requireContext().appComponent.getSettingsScreenViewModel()
+            requireContext().appComponent.settingsScreenViewModel
         })[MainMenuViewModelImpl::class.java]
     }
 

@@ -8,7 +8,14 @@ import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractorImpl
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModel
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModelImpl
 
-@Module(includes = [GameStopwatchModule::class, RepositoryModule::class])
+@Module(
+    includes = [
+        GameStopwatchModule::class,
+        RepositoryModule::class,
+        SoundEffectModule::class,
+        AssetImageCashModule::class,
+    ]
+)
 interface AnimalLettersGameModule {
 
     @Binds
