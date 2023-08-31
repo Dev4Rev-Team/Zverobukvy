@@ -3,10 +3,11 @@ package ru.gb.zverobukvy.data.stopwatch
 import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
 import ru.gb.zverobukvy.domain.use_case.stopwatch.TimeFormatter
 import ru.gb.zverobukvy.domain.use_case.stopwatch.TimeStampProvider
+import javax.inject.Inject
 
-class GameStopwatchImpl(
-    private val timeStampProvider: TimeStampProvider = TimeStampProviderImpl(),
-    private val timeFormatter: TimeFormatter = TimeFormatterImpl(),
+class GameStopwatchImpl @Inject constructor(
+    private val timeStampProvider: TimeStampProvider,
+    private val timeFormatter: TimeFormatter,
 ) : GameStopwatch {
 
     private var currentState: StopwatchState = StopwatchState.Pause(0L)

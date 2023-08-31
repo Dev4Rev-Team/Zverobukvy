@@ -13,8 +13,9 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainMenuViewModelImpl(
+class MainMenuViewModelImpl @Inject constructor(
     private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
 ) :
