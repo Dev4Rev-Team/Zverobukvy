@@ -4,15 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import ru.gb.zverobukvy.data.room.dao.AvatarsDao
 import ru.gb.zverobukvy.data.room.dao.LetterCardsDao
-import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase
 import ru.gb.zverobukvy.data.room.dao.PlayersDao
 import ru.gb.zverobukvy.data.room.dao.WordCardsDao
+import ru.gb.zverobukvy.data.room.entity.AvatarInDatabase
+import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase
+import ru.gb.zverobukvy.data.room.entity.PlayerInDatabase
 import ru.gb.zverobukvy.data.room.entity.WordCardInDatabase
-import ru.gb.zverobukvy.domain.entity.Player
 
 @Database(
-    entities = [Player::class, LetterCardInDatabase::class, WordCardInDatabase::class],
+    entities = [
+        PlayerInDatabase::class,
+        AvatarInDatabase::class,
+        LetterCardInDatabase::class,
+        WordCardInDatabase::class
+    ],
     version = 1,
     exportSchema = false
 )
@@ -22,6 +29,8 @@ abstract class AnimalLettersDatabase : RoomDatabase() {
     abstract fun letterCardsDao(): LetterCardsDao
 
     abstract fun wordCardsDao(): WordCardsDao
+
+    abstract fun avatarsDao(): AvatarsDao
 
     companion object {
         private var instance: AnimalLettersDatabase? = null
