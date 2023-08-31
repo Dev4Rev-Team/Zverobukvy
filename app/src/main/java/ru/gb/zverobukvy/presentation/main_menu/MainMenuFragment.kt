@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.presentation.main_menu
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -8,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.android.support.AndroidSupportInjection
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
@@ -45,6 +47,12 @@ class MainMenuFragment :
 
     private fun inputEditNameChangedPlayerClickListener(name: String) {
         viewModel.onEditNamePlayer(name)
+    }
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+
+        super.onAttach(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

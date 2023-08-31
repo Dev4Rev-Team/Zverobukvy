@@ -1,10 +1,12 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
@@ -23,28 +25,27 @@ import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
+import javax.inject.Inject
 import kotlin.math.ceil
 
 
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
     private var gameStart: GameStart? = null
-    private val assertsImageCash: AssetsImageCash by lazy {
-        requireContext().appComponent.getAssetsImageCash()
-    }
-    private val soundEffectPlayer: SoundEffectPlayer by lazy {
-        requireContext().appComponent.getSoundEffectPlayer()
-    }
 
-    private val viewModel: AnimalLettersGameViewModel by lazy {
-        ViewModelProvider(this, viewModelProviderFactoryOf {
-            requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
-                gameStart!!.typesCards,
-                gameStart!!.players
-            ).viewModel
-        })[AnimalLettersGameViewModelImpl::class.java]
-    }
+    @Inject
+    lateinit var assertsImageCash: AssetsImageCash
 
+    @Inject
+    lateinit var soundEffectPlayer: SoundEffectPlayer
+
+    private lateinit var viewModel: AnimalLettersGameViewModel
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,25 @@ class AnimalLettersGameFragment :
             gameStart = it.parcelable(GAME_START)
         }
         gameStart ?: throw IllegalArgumentException("not arg gameStart")
+
+        daggerInject()
+
         viewModel.onActiveGame()
+    }
+
+    private fun daggerInject() {
+
+        val subcomponent =
+            requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
+                gameStart!!.typesCards,
+                gameStart!!.players
+            )
+        subcomponent.also { subcomponent ->
+            viewModel = ViewModelProvider(this, viewModelProviderFactoryOf {
+                subcomponent.viewModel
+            })[AnimalLettersGameViewModelImpl::class.java]
+            subcomponent.inject(this)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

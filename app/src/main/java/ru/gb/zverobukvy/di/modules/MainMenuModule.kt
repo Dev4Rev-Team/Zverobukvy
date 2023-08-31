@@ -1,15 +1,14 @@
 package ru.gb.zverobukvy.di.modules
 
-import dagger.Binds
 import dagger.Module
-import ru.gb.zverobukvy.presentation.main_menu.MainMenuViewModel
-import ru.gb.zverobukvy.presentation.main_menu.MainMenuViewModelImpl
-import javax.inject.Singleton
+import dagger.android.ContributesAndroidInjector
+import ru.gb.zverobukvy.di.AnimalLettersGameScope
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 
-@Module(includes = [ResourcesProviderModule::class, RepositoryModule::class])
+@Module
 interface MainMenuModule {
 
-    @Binds
-    @Singleton
-    fun bindSettingsScreenViewModel(viewModel: MainMenuViewModelImpl): MainMenuViewModel
+    @AnimalLettersGameScope
+    @ContributesAndroidInjector(modules = [AnimalLettersGameModule::class])
+    fun animalLettersGameFragmentInjector(): AnimalLettersGameFragment
 }
