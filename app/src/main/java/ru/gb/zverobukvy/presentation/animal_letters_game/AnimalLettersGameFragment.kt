@@ -5,9 +5,11 @@ import android.os.Parcelable
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import coil.load
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
+import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractorImpl
@@ -22,11 +24,11 @@ import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayerImpl
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
+import ru.gb.zverobukvy.utility.ui.ExtractAvatarDrawableHelper
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
-
 
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
@@ -98,7 +100,7 @@ class AnimalLettersGameFragment :
                 }
 
                 is AnimalLettersGameState.ChangingState.NextPlayer -> {
-                    setPlayer(it.nextWalkingPlayer.name)
+                    setPlayer(it.nextWalkingPlayer.player)
                 }
             }
         }
@@ -124,7 +126,7 @@ class AnimalLettersGameFragment :
                 }
 
                 is AnimalLettersGameState.EntireState.StartGameState -> {
-                    setPlayer(it.nextWalkingPlayer.name)
+                    setPlayer(it.nextWalkingPlayer.player)
                     initPictureWord(it.wordCard.faceImageName)
                     setWord(it.wordCard)
                     initTable(it)
@@ -183,8 +185,14 @@ class AnimalLettersGameFragment :
         binding.wordView.setPositionLetterInWord(pos)
     }
 
-    private fun setPlayer(name: String) {
-        binding.playerNameTextView.text = name
+    private fun setPlayer(player: Player) {
+        binding.playerNameTextView.text = player.name
+        binding.playerAvatarImageView.load(
+            ExtractAvatarDrawableHelper.extractDrawable(
+                requireContext(),
+                player.avatar
+            )
+        )
         binding.table.setWorkClick(true)
     }
 
