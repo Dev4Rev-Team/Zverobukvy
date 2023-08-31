@@ -7,13 +7,12 @@ import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase
 import ru.gb.zverobukvy.data.room.entity.PlayerInDatabase
 import ru.gb.zverobukvy.data.room.entity.PlayerWithAvatar
 import ru.gb.zverobukvy.data.room.entity.WordCardInDatabase
-import ru.gb.zverobukvy.domain.entity.Player
 import javax.inject.Inject
 
 class LocalDataSourceImpl @Inject constructor(
-    private val playersDatabase: AnimalLettersDatabase,
+    private val animalLettersDatabase: AnimalLettersDatabase,
 ) : LocalDataSource {
-    private val playersDao = playersDatabase.playersDao()
+    private val playersDao = animalLettersDatabase.playersDao()
 
 
     override suspend fun getPlayers(): List<PlayerWithAvatar> = playersDao.getPlayers()
