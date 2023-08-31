@@ -3,8 +3,10 @@ package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
+import coil.load
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
+import ru.gb.zverobukvy.utility.ui.ExtractAvatarDrawableHelper
 
 class EditPlayerViewHolder(
     override val viewBinding: FragmentMainMenuItemPlayerModeEditBinding,
@@ -52,6 +54,12 @@ class EditPlayerViewHolder(
                         this@EditPlayerViewHolder.adapterPosition
                     )
                 }
+                playerAvatarImageView.load(
+                    ExtractAvatarDrawableHelper.extractDrawable(
+                        itemView.context,
+                        it.player.avatar
+                    )
+                )
             }
         }
     }

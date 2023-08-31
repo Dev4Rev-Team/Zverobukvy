@@ -3,16 +3,12 @@ package ru.gb.zverobukvy.data.mapper
 import ru.gb.zverobukvy.data.preferences.TypeCardsInSharedPreferences
 import ru.gb.zverobukvy.domain.entity.TypeCards
 
-class TypeCardsMapper : EntitiesMapper<List<TypeCards>, List<TypeCardsInSharedPreferences>> {
-    override fun mapToData(entity: List<TypeCards>): List<TypeCardsInSharedPreferences> =
-        entity.map {
-            mapColorFromTypeCard(it)
-        }
+class TypeCardsMapper : EntityMapper<TypeCards, TypeCardsInSharedPreferences> {
+    override fun mapToData(entity: TypeCards): TypeCardsInSharedPreferences =
+            mapColorFromTypeCard(entity)
 
-    override fun mapToDomain(entity: List<TypeCardsInSharedPreferences>): List<TypeCards> =
-        entity.map {
-            mapTypeCardFromColor(it.nameTypeCard)
-        }
+    override fun mapToDomain(entity: TypeCardsInSharedPreferences): TypeCards =
+            mapTypeCardFromColor(entity.nameTypeCard)
 
     private fun mapTypeCardFromColor(color: String): TypeCards =
         when (color) {

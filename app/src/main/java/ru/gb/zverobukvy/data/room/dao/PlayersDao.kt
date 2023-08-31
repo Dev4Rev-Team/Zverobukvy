@@ -5,22 +5,23 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.data.room.entity.PlayerInDatabase
+import ru.gb.zverobukvy.data.room.entity.PlayerWithAvatar
 
 @Dao
 interface PlayersDao {
+    @Transaction
+    @Query("SELECT * FROM players, avatars WHERE players.id_avatar=avatars.id")
+    suspend fun getPlayers(): List<PlayerWithAvatar>
 
-    @Query("SELECT * FROM players")
-    suspend fun getPlayers(): List<Player>
-
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlayer(player: Player)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPlayer(player: PlayerInDatabase)
 
     @Delete
-    suspend fun deletePlayer(player: Player)
+    suspend fun deletePlayer(player: PlayerInDatabase)
 
     @Update
-    suspend fun updatePlayer (player: Player)
-
+    suspend fun updatePlayer(player: PlayerInDatabase)
 }
