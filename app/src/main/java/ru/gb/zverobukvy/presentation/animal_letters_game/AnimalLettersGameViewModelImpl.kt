@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.gb.zverobukvy.data.stopwatch.GameStopwatchImpl
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
@@ -15,13 +14,13 @@ import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import java.util.LinkedList
+import javax.inject.Inject
 
 
-class AnimalLettersGameViewModelImpl(
+class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
-    private val gameStopwatch: GameStopwatch = GameStopwatchImpl(),
-) :
-    AnimalLettersGameViewModel, ViewModel() {
+    private val gameStopwatch: GameStopwatch,
+) : AnimalLettersGameViewModel, ViewModel() {
 
     /** Флаг для события нажатия на карточку с буквой :
      * - true - Произошло нажатие на букву/Обрабатывается событие нажатия (новые нажатия не обрабатываются)

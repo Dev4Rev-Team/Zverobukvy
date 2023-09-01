@@ -2,8 +2,9 @@ package ru.gb.zverobukvy.presentation.sound
 
 import android.content.Context
 import android.media.MediaPlayer
+import javax.inject.Inject
 
-class SoundEffectPlayerImpl(val context: Context) : SoundEffectPlayer {
+class SoundEffectPlayerImpl @Inject constructor(val context: Context) : SoundEffectPlayer {
     private val soundsMap = mutableMapOf<SoundEnum, MediaPlayer>()
 
     init {

@@ -13,8 +13,9 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainMenuViewModelImpl(
+class MainMenuViewModelImpl @Inject constructor(
     private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
 ) :
@@ -31,6 +32,8 @@ class MainMenuViewModelImpl(
         MutableLiveData<MainMenuState.PlayersScreenState>()
 
     private val liveDataScreenState = SingleEventLiveData<MainMenuState.ScreenState>()
+
+    private val liveDataAvatarsScreenState = MutableLiveData<MainMenuState.AvatarsScreenState>()
 
     init {
         loadTypeCardsSelectedForGame()
@@ -102,6 +105,11 @@ class MainMenuViewModelImpl(
         return liveDataScreenState
     }
 
+    override fun getLiveDataAvatarsScreenState(): LiveData<MainMenuState.AvatarsScreenState> {
+        Timber.d("getLiveDataAvatarsScreenState")
+        return liveDataAvatarsScreenState
+    }
+
     override fun onChangedSelectingPlayer(positionPlayer: Int) {
         closeEditablePlayer(true)
         players[positionPlayer]?.apply {
@@ -139,6 +147,16 @@ class MainMenuViewModelImpl(
     override fun onQueryChangedPlayer(positionPlayer: Int) {
         closeEditablePlayer(true)
         openEditablePlayer(positionPlayer)
+    }
+
+    override fun onClickAvatar() {
+        Timber.d("onClickAvatar")
+        // TODO("Not yet implemented")
+    }
+
+    override fun onQueryChangedAvatar(positionAvatar: Int) {
+        Timber.d("onQueryChangedAvatar")
+        // TODO("Not yet implemented")
     }
 
     override fun onChangedPlayer() {

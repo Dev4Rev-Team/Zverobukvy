@@ -9,13 +9,11 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.data.resources_provider.ResourcesProviderImpl
+import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
 import ru.gb.zverobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
@@ -29,12 +27,10 @@ import timber.log.Timber
 
 class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
+
     private val viewModel: MainMenuViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
-            val repository: MainMenuRepository =
-                (requireContext().applicationContext as App).mainMenuRepository
-            val resourcesProvider = ResourcesProviderImpl(requireContext())
-            MainMenuViewModelImpl(repository, resourcesProvider)
+            requireContext().appComponent.settingsScreenViewModel
         })[MainMenuViewModelImpl::class.java]
     }
 
@@ -60,10 +56,13 @@ class MainMenuFragment :
         initView()
         viewModel.run {
             getLiveDataScreenState().observe(viewLifecycleOwner) {
-                renderSettingsScreenState(it)
+                renderScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
                 renderPlayersScreenState(it)
+            }
+            getLiveDataAvatarsScreenState().observe(viewLifecycleOwner) {
+                renderAvatarsScreenState(it)
             }
             onLaunch()
         }
@@ -144,7 +143,7 @@ class MainMenuFragment :
         }
     }
 
-    private fun renderSettingsScreenState(mainMenuState: MainMenuState.ScreenState) {
+    private fun renderScreenState(mainMenuState: MainMenuState.ScreenState) {
         when (mainMenuState) {
             is MainMenuState.ScreenState.ErrorState -> {
                 Timber.d("ErrorState")
@@ -282,6 +281,20 @@ class MainMenuFragment :
             if (requestKey == KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT) viewModel.onRemovePlayer(
                 result.getInt(RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER)
             )
+        }
+    }
+
+    private fun renderAvatarsScreenState(avatarsScreenState: MainMenuState.AvatarsScreenState){
+        when(avatarsScreenState){
+            MainMenuState.AvatarsScreenState.HideAvatarsState -> {
+                Timber.d("HideAvatarsState")
+                //TODO()
+            }
+
+            is MainMenuState.AvatarsScreenState.ShowAvatarsState -> {
+                Timber.d("ShowAvatarsState")
+                //TODO()
+            }
         }
     }
 

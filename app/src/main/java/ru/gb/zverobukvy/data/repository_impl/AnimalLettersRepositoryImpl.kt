@@ -15,8 +15,9 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
 import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
+import javax.inject.Inject
 
-class AnimalLettersRepositoryImpl(
+class AnimalLettersRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val sharedPreferencesForGame: SharedPreferencesForGame,
 ) : AnimalLettersGameRepository, MainMenuRepository {
