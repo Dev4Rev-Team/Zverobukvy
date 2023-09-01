@@ -21,9 +21,14 @@ interface MainMenuViewModel {
     fun getLiveDataPlayersScreenState(): LiveData<MainMenuState.PlayersScreenState>
 
     /**
-    Метод для подписки viewна состояние экрана настроек.
+    Метод для подписки view на состояние экрана настроек.
      */
     fun getLiveDataScreenState(): SingleEventLiveData<MainMenuState.ScreenState>
+
+    /**
+    Метод для подписки view на состояние списка аватарок.
+     */
+    fun getLiveDataAvatarsScreenState(): LiveData<MainMenuState.AvatarsScreenState>
 
     /**
      * Метод вызывается при выборе или отмене выбора игрока для участия в игре, например, по клику
@@ -51,9 +56,21 @@ interface MainMenuViewModel {
     fun onQueryChangedPlayer(positionPlayer: Int)
 
     /**
+     * Метод вызывается при нажатии на аватарку в редактируемом item игрока. ViewVodel отправляет
+     * состояние ShowAvatarsState с предварительной проверкой, что список аватарок не отображается.
+     */
+    fun onClickAvatar()
+
+    /**
+     * Метод вызывается при выборе новой аватарки для редактируемого item игрока. ViewModel посылает
+     * состояние ChangedPlayerState, в котором item игрока остается редактируемым, но с новой аватаркой.
+     * Также ViewModel посылает состояние HideAvatarsState().
+     */
+    fun onQueryChangedAvatar(positionAvatar: Int)
+
+    /**
      * Метод вызывается при изменении данных игрока, например, при нажатии ОК в item игрока в режиме
-     * редактирования этого item (на данном этапе изменяется только имя). ViewModel изменяет значение
-     * name соответствующего игрока, информирует об этом репозиторий для внесения изменений в БД и
+     * редактирования этого item (изменяется имя или аватарка). ViewModel изменяет данные соответствующего игрока, информирует об этом репозиторий для внесения изменений в БД и
      * формирует состояние ChangedPlayer, по которому во view в адаптер передается новый
      * список игроков и изменяется соответствующий item игрока.
      * Если введенное имя некорректно или повторяется ViewModel формирует состояние Error, по которому
@@ -109,7 +126,8 @@ interface MainMenuViewModel {
 
     /**
      * Метод вызывается при нажатии на свободное место экрана. ViewModel, в случае если это нажатие
-     * было выполнено в момент редактирования item игрока, формирует состояние
+     * было выполнено в момент редактирования item игрока, формируют состояния ChangedPlayerState и,
+     * если необходимо, HideAvatarsState.
      */
     fun onClickScreen()
 
