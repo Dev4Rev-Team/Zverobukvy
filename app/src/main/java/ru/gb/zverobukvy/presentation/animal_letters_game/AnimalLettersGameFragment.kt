@@ -29,21 +29,12 @@ import kotlin.math.ceil
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
     private var gameStart: GameStart? = null
-    private lateinit var assertsImageCash: AssetsImageCash /*by lazy {
-        requireContext().appComponent.getAssetsImageCash()
-    }*/
-    private lateinit var soundEffectPlayer: SoundEffectPlayer /*by lazy {
-        requireContext().appComponent.getSoundEffectPlayer()
-    }*/
 
-    private lateinit var viewModel: AnimalLettersGameViewModel /*by lazy {
-        ViewModelProvider(this, viewModelProviderFactoryOf {
-            requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
-                gameStart!!.typesCards,
-                gameStart!!.players
-            ).viewModel
-        })[AnimalLettersGameViewModelImpl::class.java]
-    }*/
+    private lateinit var assertsImageCash: AssetsImageCash
+
+    private lateinit var soundEffectPlayer: SoundEffectPlayer
+
+    private lateinit var viewModel: AnimalLettersGameViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
