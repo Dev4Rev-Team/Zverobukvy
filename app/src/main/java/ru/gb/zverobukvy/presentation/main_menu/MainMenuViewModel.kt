@@ -13,7 +13,7 @@ interface MainMenuViewModel {
      * При пересоздании view, т.е. когда во viewModel уже хранится список игроков, обращение в
      * репозиторий не происходит.
      */
-    fun onLaunch ()
+    fun onLaunch()
 
     /**
     Метод для подписки view на состояние списка игроков на экране настроек.
@@ -21,9 +21,14 @@ interface MainMenuViewModel {
     fun getLiveDataPlayersScreenState(): LiveData<MainMenuState.PlayersScreenState>
 
     /**
-    Метод для подписки viewна состояние экрана настроек.
+    Метод для подписки view на состояние экрана настроек.
      */
     fun getLiveDataScreenState(): SingleEventLiveData<MainMenuState.ScreenState>
+
+    /**
+    Метод для подписки view на состояние вывода инструкции на экране настроек.
+     */
+    fun getLiveDataShowInstructionScreenState(): SingleEventLiveData<MainMenuState.ShowInstructionsScreenState>
 
     /**
      * Метод вызывается при выборе или отмене выбора игрока для участия в игре, например, по клику

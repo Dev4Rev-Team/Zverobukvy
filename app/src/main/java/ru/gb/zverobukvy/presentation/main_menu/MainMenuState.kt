@@ -11,7 +11,7 @@ sealed interface MainMenuState {
          * Состояние для отрисовки всего списка игроков: при создании или пересоздании view.
          */
         data class PlayersState(
-            val playersInSettings: List<PlayerInSettings?>
+            val playersInSettings: List<PlayerInSettings?>,
         ) : PlayersScreenState
 
         /**
@@ -19,7 +19,7 @@ sealed interface MainMenuState {
          */
         data class AddPlayerState(
             val playersInSettings: List<PlayerInSettings?>,
-            val positionAddPlayer: Int
+            val positionAddPlayer: Int,
         ) : PlayersScreenState
 
         /**
@@ -27,7 +27,7 @@ sealed interface MainMenuState {
          */
         data class RemovePlayerState(
             val playersInSettings: List<PlayerInSettings?>,
-            val positionRemovePlayer: Int
+            val positionRemovePlayer: Int,
         ) : PlayersScreenState
 
         /**
@@ -42,7 +42,7 @@ sealed interface MainMenuState {
          */
         data class ChangedPlayerState(
             val playersInSettings: List<PlayerInSettings?>,
-            val positionChangedPlayer: Int
+            val positionChangedPlayer: Int,
         ) : PlayersScreenState
     }
 
@@ -53,8 +53,8 @@ sealed interface MainMenuState {
          * уровня игры (цвета игры)
          */
         data class TypesCardsState(
-            val typesCard: List<TypeCards>
-        ): ScreenState
+            val typesCard: List<TypeCards>,
+        ) : ScreenState
 
         /**
          * Состояние для информационных сообщений:
@@ -63,20 +63,23 @@ sealed interface MainMenuState {
          * - не выбраны уровни игры.
          */
         data class ErrorState(
-            val error: String
-        ): ScreenState
+            val error: String,
+        ) : ScreenState
 
 
-        /**
-         * Состояния для вывода на экран инструкции к игре
-         */
-        object ShowInstructions:ScreenState
         /**
          * Состояние для запуска игры "Зверобуквы"
          */
         data class StartGame(
             val typesCardsSelectedForGame: List<TypeCards>,
-            val playersSelectedForGame: List<PlayerInGame>
+            val playersSelectedForGame: List<PlayerInGame>,
         ) : ScreenState
     }
+
+    /**
+     * Состояния для вывода на экран инструкции к игре
+     */
+    object ShowInstructionsScreenState {}
+
+
 }

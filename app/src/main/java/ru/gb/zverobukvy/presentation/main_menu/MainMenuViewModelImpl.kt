@@ -13,8 +13,8 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
+import java.lang.IllegalStateException
 import javax.inject.Inject
-
 
 class MainMenuViewModelImpl @Inject constructor(
     private val mainMenuRepository: MainMenuRepository,
@@ -35,6 +35,9 @@ class MainMenuViewModelImpl @Inject constructor(
 
     private val liveDataScreenState = SingleEventLiveData<MainMenuState.ScreenState>()
 
+    private val liveDataShowInstructionScreenState =
+        SingleEventLiveData<MainMenuState.ShowInstructionsScreenState>()
+
     init {
         loadTypeCardsSelectedForGame()
         loadPlayersSelectedForGame()
@@ -52,7 +55,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     private fun showInstruction() {
         if (mainMenuRepository.isFirstLaunch()) {
-            liveDataScreenState.value = MainMenuState.ScreenState.ShowInstructions
+            liveDataShowInstructionScreenState.value = MainMenuState.ShowInstructionsScreenState
         }
     }
 
@@ -72,9 +75,10 @@ class MainMenuViewModelImpl @Inject constructor(
             }
 
             if (players.size > 0) {
-                maxIdPlayer = players.last()?.player?.id ?: 1
+                maxIdPlayer = players.last()?.player?.id
+                    ?: throw IllegalStateException("В базе данных некорректный игрок ${players.last()}")
             }
-            players.add(null)
+            players.add(ADD_PLAYER_BUTTON)
 
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.PlayersState(players)
@@ -106,6 +110,11 @@ class MainMenuViewModelImpl @Inject constructor(
     override fun getLiveDataScreenState(): SingleEventLiveData<MainMenuState.ScreenState> {
         Timber.d("getLiveDataPlayersScreenState")
         return liveDataScreenState
+    }
+
+    override fun getLiveDataShowInstructionScreenState(): SingleEventLiveData<MainMenuState.ShowInstructionsScreenState> {
+        Timber.d("getLiveDataShowInstructionScreenState")
+        return liveDataShowInstructionScreenState
     }
 
     override fun onChangedSelectingPlayer(positionPlayer: Int) {
@@ -326,6 +335,7 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     companion object {
+        private val ADD_PLAYER_BUTTON = null
         private const val SHIFT_LAST_PLAYER = 2
         fun mapToPlayerInSettings(player: Player) = PlayerInSettings(player)
     }
