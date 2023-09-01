@@ -61,6 +61,9 @@ class MainMenuFragment :
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
                 renderPlayersScreenState(it)
             }
+            getLiveDataShowInstructionScreenState().observe(viewLifecycleOwner){
+                renderShowInstructionScreenState()
+            }
             getLiveDataAvatarsScreenState().observe(viewLifecycleOwner) {
                 renderAvatarsScreenState(it)
             }
@@ -165,14 +168,6 @@ class MainMenuFragment :
                     mainMenuState.typesCard
                 )
             }
-
-            MainMenuState.ScreenState.ShowInstructions -> {
-                Timber.d("ShowInstructions")
-                parentFragmentManager.setFragmentResult(
-                    TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS,
-                    bundleOf()
-                )
-            }
         }
     }
 
@@ -272,6 +267,14 @@ class MainMenuFragment :
 
     private fun clickAddPlayer() {
         viewModel.onAddPlayer()
+    }
+
+    private fun renderShowInstructionScreenState() {
+        Timber.d("renderShowInstructionScreenState")
+        parentFragmentManager.setFragmentResult(
+            TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS,
+            bundleOf()
+        )
     }
 
     private fun setRemovePlayerDialogFragmentListener() {
