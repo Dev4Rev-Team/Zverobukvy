@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.data.repository_impl
 
 import ru.gb.zverobukvy.data.data_source.LocalDataSource
+import ru.gb.zverobukvy.data.data_source.RemoteDataSource
 import ru.gb.zverobukvy.data.mapper.AvatarMapper
 import ru.gb.zverobukvy.data.mapper.LetterCardMapperToDomain
 import ru.gb.zverobukvy.data.mapper.PlayerMapperToData
@@ -19,6 +20,7 @@ import javax.inject.Inject
 
 class AnimalLettersRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
+    private val remoteDataSource: RemoteDataSource,
     private val sharedPreferencesForGame: SharedPreferencesForGame,
 ) : AnimalLettersGameRepository, MainMenuRepository {
     private val letterCardMapperToDomain = LetterCardMapperToDomain()
