@@ -27,6 +27,7 @@
     <string name="main_menu_fragment_the_name_field_is_empty">The name field is empty</string>
     <string name="main_menu_fragment_a_player_with_the_same_name_already_exists">A player with the same name %s already exists</string>
     <string name="main_menu_fragment_delete_player">Удалить игрока?</string>
+    <string name="main_menu_fragment_new_player">Игрок %d</string>
     <string name="player_state_ready">Хочет играть</string>
     <string name="player_state_not_ready">Не играет</string>
     <string name="game_end_text">Игра завершена</string>

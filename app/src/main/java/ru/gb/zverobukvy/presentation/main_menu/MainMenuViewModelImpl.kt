@@ -15,6 +15,7 @@ import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
 import javax.inject.Inject
 
+
 class MainMenuViewModelImpl @Inject constructor(
     private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
@@ -26,6 +27,7 @@ class MainMenuViewModelImpl @Inject constructor(
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
     private var lastEditablePlayer: PlayerInSettings? = null
     private var lastEditablePlayerName: String = ""
+    private var maxIdPlayer = 1L
 
 
     private val liveDataPlayersScreenState =
@@ -69,6 +71,9 @@ class MainMenuViewModelImpl @Inject constructor(
                 players[0]?.isSelectedForGame = true
             }
 
+            if (players.size > 0) {
+                maxIdPlayer = players.last()?.player?.id ?: 1
+            }
             players.add(null)
 
             liveDataPlayersScreenState.value =
@@ -158,37 +163,49 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     override fun onAddPlayer() {
+        maxIdPlayer += 1
+
         closeEditablePlayer(true)
 
         viewModelScope.launch {
-            createAndSavePlayer()
-            val newPosition = players.size - 1
-            players.add(newPosition, loadPlayerInSettings())
+            val name = createAndSavePlayer(maxIdPlayer)
+            val newPosition = players.lastIndex
+            players.add(newPosition, loadPlayerInSettings(name))
 
             liveDataPlayersScreenState.postValue(
                 MainMenuState.PlayersScreenState.AddPlayerState(
                     players,
-                    players.size - 2
+                    players.size - SHIFT_LAST_PLAYER
                 )
             )
         }
     }
 
-    private suspend fun loadPlayerInSettings(): PlayerInSettings {
+    private suspend fun loadPlayerInSettings(name: String): PlayerInSettings {
         val playersDB = mainMenuRepository.getPlayers()
+        val newPlayerDB = playersDB.first {
+            it.name == name
+        }
         return PlayerInSettings(
-            playersDB[playersDB.size - 1],
+            newPlayerDB,
             isSelectedForGame = true
         )
     }
 
-    private suspend fun createAndSavePlayer() {
+    private suspend fun createAndSavePlayer(nameID: Long): String {
+        val name = newNamePlayer(nameID)
         val player = PlayerInSettings(
-            Player("new ${players.size}"),
+            Player(name),
             isSelectedForGame = true
         )
         mainMenuRepository.insertPlayer(player.player)
-        namesPlayersSelectedForGame.add(player.player.name)
+        namesPlayersSelectedForGame.add(name)
+        return name
+    }
+
+    private fun newNamePlayer(nameID: Long): String {
+        return resourcesProvider.getString(StringEnum.MAIN_MENU_FRAGMENT_NEW_PLAYER)
+            .format(nameID)
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
@@ -309,6 +326,7 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     companion object {
+        private const val SHIFT_LAST_PLAYER = 2
         fun mapToPlayerInSettings(player: Player) = PlayerInSettings(player)
     }
 }
