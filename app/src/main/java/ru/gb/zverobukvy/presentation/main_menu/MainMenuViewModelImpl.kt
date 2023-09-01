@@ -27,7 +27,7 @@ class MainMenuViewModelImpl @Inject constructor(
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
     private var lastEditablePlayer: PlayerInSettings? = null
     private var lastEditablePlayerName: String = ""
-    private var maxIdPlayer = 1L
+    private var maxIdPlayer = 0L
 
 
     private val liveDataPlayersScreenState =
@@ -37,6 +37,8 @@ class MainMenuViewModelImpl @Inject constructor(
 
     private val liveDataShowInstructionScreenState =
         SingleEventLiveData<MainMenuState.ShowInstructionsScreenState>()
+
+    private val liveDataAvatarsScreenState = MutableLiveData<MainMenuState.AvatarsScreenState>()
 
     init {
         loadTypeCardsSelectedForGame()
@@ -117,6 +119,11 @@ class MainMenuViewModelImpl @Inject constructor(
         return liveDataShowInstructionScreenState
     }
 
+    override fun getLiveDataAvatarsScreenState(): LiveData<MainMenuState.AvatarsScreenState> {
+        Timber.d("getLiveDataAvatarsScreenState")
+        return liveDataAvatarsScreenState
+    }
+
     override fun onChangedSelectingPlayer(positionPlayer: Int) {
         closeEditablePlayer(true)
         players[positionPlayer]?.apply {
@@ -154,6 +161,16 @@ class MainMenuViewModelImpl @Inject constructor(
     override fun onQueryChangedPlayer(positionPlayer: Int) {
         closeEditablePlayer(true)
         openEditablePlayer(positionPlayer)
+    }
+
+    override fun onClickAvatar() {
+        Timber.d("onClickAvatar")
+        // TODO("Not yet implemented")
+    }
+
+    override fun onQueryChangedAvatar(positionAvatar: Int) {
+        Timber.d("onQueryChangedAvatar")
+        // TODO("Not yet implemented")
     }
 
     override fun onChangedPlayer() {

@@ -56,13 +56,16 @@ class MainMenuFragment :
         initView()
         viewModel.run {
             getLiveDataScreenState().observe(viewLifecycleOwner) {
-                renderSettingsScreenState(it)
+                renderScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
                 renderPlayersScreenState(it)
             }
             getLiveDataShowInstructionScreenState().observe(viewLifecycleOwner){
                 renderShowInstructionScreenState()
+            }
+            getLiveDataAvatarsScreenState().observe(viewLifecycleOwner) {
+                renderAvatarsScreenState(it)
             }
             onLaunch()
         }
@@ -143,7 +146,7 @@ class MainMenuFragment :
         }
     }
 
-    private fun renderSettingsScreenState(mainMenuState: MainMenuState.ScreenState) {
+    private fun renderScreenState(mainMenuState: MainMenuState.ScreenState) {
         when (mainMenuState) {
             is MainMenuState.ScreenState.ErrorState -> {
                 Timber.d("ErrorState")
@@ -281,6 +284,20 @@ class MainMenuFragment :
             if (requestKey == KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT) viewModel.onRemovePlayer(
                 result.getInt(RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER)
             )
+        }
+    }
+
+    private fun renderAvatarsScreenState(avatarsScreenState: MainMenuState.AvatarsScreenState){
+        when(avatarsScreenState){
+            MainMenuState.AvatarsScreenState.HideAvatarsState -> {
+                Timber.d("HideAvatarsState")
+                //TODO()
+            }
+
+            is MainMenuState.AvatarsScreenState.ShowAvatarsState -> {
+                Timber.d("ShowAvatarsState")
+                //TODO()
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.presentation.main_menu
 
+import ru.gb.zverobukvy.domain.entity.Avatar
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 
@@ -11,7 +12,7 @@ sealed interface MainMenuState {
          * Состояние для отрисовки всего списка игроков: при создании или пересоздании view.
          */
         data class PlayersState(
-            val playersInSettings: List<PlayerInSettings?>,
+            val playersInSettings: List<PlayerInSettings?>
         ) : PlayersScreenState
 
         /**
@@ -19,7 +20,7 @@ sealed interface MainMenuState {
          */
         data class AddPlayerState(
             val playersInSettings: List<PlayerInSettings?>,
-            val positionAddPlayer: Int,
+            val positionAddPlayer: Int
         ) : PlayersScreenState
 
         /**
@@ -27,7 +28,7 @@ sealed interface MainMenuState {
          */
         data class RemovePlayerState(
             val playersInSettings: List<PlayerInSettings?>,
-            val positionRemovePlayer: Int,
+            val positionRemovePlayer: Int
         ) : PlayersScreenState
 
         /**
@@ -42,7 +43,7 @@ sealed interface MainMenuState {
          */
         data class ChangedPlayerState(
             val playersInSettings: List<PlayerInSettings?>,
-            val positionChangedPlayer: Int,
+            val positionChangedPlayer: Int
         ) : PlayersScreenState
     }
 
@@ -53,8 +54,8 @@ sealed interface MainMenuState {
          * уровня игры (цвета игры)
          */
         data class TypesCardsState(
-            val typesCard: List<TypeCards>,
-        ) : ScreenState
+            val typesCard: List<TypeCards>
+        ): ScreenState
 
         /**
          * Состояние для информационных сообщений:
@@ -63,8 +64,8 @@ sealed interface MainMenuState {
          * - не выбраны уровни игры.
          */
         data class ErrorState(
-            val error: String,
-        ) : ScreenState
+            val error: String
+        ): ScreenState
 
 
         /**
@@ -82,4 +83,18 @@ sealed interface MainMenuState {
     object ShowInstructionsScreenState {}
 
 
+
+    sealed interface AvatarsScreenState{
+        /**
+         * Состояние, по которому отображается список аватарок для выбора пользователем.
+         */
+        data class ShowAvatarsState(
+            val avatars: List<Avatar>
+        ): AvatarsScreenState
+
+        /**
+         * Состояние, по которому скрывается список аватарок.
+         */
+        object HideAvatarsState: AvatarsScreenState
+    }
 }
