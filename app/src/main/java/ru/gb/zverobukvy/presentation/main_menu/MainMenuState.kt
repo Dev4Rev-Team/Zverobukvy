@@ -73,7 +73,7 @@ sealed interface MainMenuState {
          */
         data class StartGame(
             val typesCardsSelectedForGame: List<TypeCards>,
-            val playersSelectedForGame: List<PlayerInGame>,
+            val playersSelectedForGame: List<PlayerInGame>
         ) : ScreenState
     }
 
