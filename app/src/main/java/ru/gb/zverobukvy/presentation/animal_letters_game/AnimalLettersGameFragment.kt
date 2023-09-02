@@ -102,7 +102,7 @@ class AnimalLettersGameFragment :
                 }
 
                 is AnimalLettersGameState.ChangingState.NextPlayer -> {
-                    setPlayer(it.nextWalkingPlayer.name)
+                    setPlayer(it.nextWalkingPlayer)
                 }
             }
         }
@@ -128,7 +128,7 @@ class AnimalLettersGameFragment :
                 }
 
                 is AnimalLettersGameState.EntireState.StartGameState -> {
-                    setPlayer(it.nextWalkingPlayer.name)
+                    setPlayer(it.nextWalkingPlayer)
                     initPictureWord(it.wordCard.faceImageName)
                     setWord(it.wordCard)
                     initTable(it)
@@ -187,8 +187,8 @@ class AnimalLettersGameFragment :
         binding.wordView.setPositionLetterInWord(pos)
     }
 
-    private fun setPlayer(name: String) {
-        binding.playerNameTextView.text = name
+    private fun setPlayer(player: PlayerInGame) {
+        binding.playerNameTextView.text = player.name
         binding.table.setWorkClick(true)
     }
 
