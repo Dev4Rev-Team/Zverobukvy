@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.StringEnum
+import ru.gb.zverobukvy.domain.entity.Avatar
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
@@ -26,8 +29,10 @@ class MainMenuViewModelImpl @Inject constructor(
     private val namesPlayersSelectedForGame: MutableList<String> = mutableListOf()
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
     private var lastEditablePlayer: PlayerInSettings? = null
-    private var lastEditablePlayerName: String = ""
+    private var saveEditablePlayer = Player("")
     private var maxIdPlayer = 0L
+    private val avatarList = mutableListOf<Avatar>()
+    private var isClickAvatar = false
 
 
     private val liveDataPlayersScreenState =
@@ -44,6 +49,16 @@ class MainMenuViewModelImpl @Inject constructor(
         loadTypeCardsSelectedForGame()
         loadPlayersSelectedForGame()
         loadPlayersFromRepository()
+    }
+
+    private suspend fun loadAvatarsFromRepository(): MutableList<Avatar> {
+        if (avatarList.size == 0) {
+            val avatars = withContext(Dispatchers.Default) {
+                mainMenuRepository.getAvatars()
+            }
+            avatarList.addAll(avatars)
+        }
+        return avatarList
     }
 
     override fun onLaunch() {
@@ -165,12 +180,29 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onClickAvatar() {
         Timber.d("onClickAvatar")
-        // TODO("Not yet implemented")
+        if (!isClickAvatar) {
+            isClickAvatar = true
+
+            viewModelScope.launch {
+                val loadAvatars = loadAvatarsFromRepository()
+                liveDataAvatarsScreenState.value =
+                    MainMenuState.AvatarsScreenState.ShowAvatarsState(loadAvatars)
+            }
+        }
     }
 
     override fun onQueryChangedAvatar(positionAvatar: Int) {
         Timber.d("onQueryChangedAvatar")
-        // TODO("Not yet implemented")
+        isClickAvatar = false
+        liveDataAvatarsScreenState.value = MainMenuState.AvatarsScreenState.HideAvatarsState
+
+        lastEditablePlayer?.player?.avatar = avatarList[positionAvatar]
+
+        liveDataPlayersScreenState.value =
+            MainMenuState.PlayersScreenState.ChangedPlayerState(
+                players,
+                players.indexOf(lastEditablePlayer)
+            )
     }
 
     override fun onChangedPlayer() {
@@ -307,11 +339,12 @@ class MainMenuViewModelImpl @Inject constructor(
     private fun openEditablePlayer(positionPlayer: Int) {
         closeEditablePlayer(true)
 
-        players[positionPlayer]?.apply {
+        lastEditablePlayer = players[positionPlayer]?.apply {
             inEditingState = true
-            this@MainMenuViewModelImpl.lastEditablePlayerName = player.name
-            this@MainMenuViewModelImpl.lastEditablePlayer = this
+            this@MainMenuViewModelImpl.saveEditablePlayer.name = player.name
+            this@MainMenuViewModelImpl.saveEditablePlayer.avatar = player.avatar
         }
+
 
         liveDataPlayersScreenState.value =
             MainMenuState.PlayersScreenState.ChangedPlayerState(
@@ -346,7 +379,8 @@ class MainMenuViewModelImpl @Inject constructor(
                     }
                 }
             } else {
-                it.player.name = lastEditablePlayerName
+                it.player.name = saveEditablePlayer.name
+                it.player.avatar = saveEditablePlayer.avatar
             }
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.ChangedPlayerState(players, players.indexOf(it))
@@ -354,7 +388,6 @@ class MainMenuViewModelImpl @Inject constructor(
         }
 
         lastEditablePlayer = null
-        lastEditablePlayerName = ""
     }
 
     companion object {
