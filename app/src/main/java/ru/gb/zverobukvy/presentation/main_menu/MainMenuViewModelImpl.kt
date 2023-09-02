@@ -321,7 +321,7 @@ class MainMenuViewModelImpl @Inject constructor(
         val playersForGame: MutableList<PlayerInGame> = mutableListOf()
         players.forEach {
             if (it != null && it.isSelectedForGame)
-                playersForGame.add(PlayerInGame(it.player.name))
+                playersForGame.add(PlayerInGame(it.player))
         }
         return playersForGame
     }
