@@ -309,7 +309,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onQueryShowInstruction() {
         Timber.d("onQueryInstruction")
-        //TODO показать инструкцию
+        liveDataShowInstructionScreenState.value = MainMenuState.ShowInstructionsScreenState
     }
 
     private fun findPlayersForGame(): MutableList<PlayerInGame> {
@@ -384,6 +384,11 @@ class MainMenuViewModelImpl @Inject constructor(
             }
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.ChangedPlayerState(players, players.indexOf(it))
+
+            if (isClickAvatar) {
+                isClickAvatar = false
+                liveDataAvatarsScreenState.value = MainMenuState.AvatarsScreenState.HideAvatarsState
+            }
 
         }
 
