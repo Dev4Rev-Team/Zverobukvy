@@ -14,6 +14,7 @@ class EditPlayerViewHolder(
     private val cancelChangedPlayerClickListener: () -> Unit,
     private val editNameChangedPlayerClickListener: (String) -> Unit,
     private val queryRemovePlayersClickListener: (Int) -> Unit,
+    private val avatarPlayerClickListener: () -> Unit
 ) :
     BaseViewHolder(viewBinding) {
     override fun bindView(playerInSetting: PlayerInSettings?) {
@@ -54,12 +55,18 @@ class EditPlayerViewHolder(
                         this@EditPlayerViewHolder.adapterPosition
                     )
                 }
-                playerAvatarImageView.load(
-                    ExtractAvatarDrawableHelper.extractDrawable(
-                        itemView.context,
-                        it.player.avatar
+                playerAvatarImageView.apply {
+                    load(
+                        ExtractAvatarDrawableHelper.extractDrawable(
+                            itemView.context,
+                            it.player.avatar
+                        )
                     )
-                )
+                    isClickable = true
+                    setOnClickListener {
+                        avatarPlayerClickListener()
+                    }
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.R
@@ -17,6 +18,7 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
 import ru.gb.zverobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
+import ru.gb.zverobukvy.presentation.main_menu.list_avatars.AvatarsAdapter
 import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
@@ -40,12 +42,13 @@ class MainMenuFragment :
                 ::clickSaveChangedPlayer,
                 ::clickCancelChangedPlayer,
                 ::inputEditNameChangedPlayerClickListener,
-                ::clickQueryRemovePlayer
+                ::clickQueryRemovePlayer,
+                ::clickAvatar
             ),
             AddPlayerClickListenerOwner { clickAddPlayer() })
 
-    private fun inputEditNameChangedPlayerClickListener(name: String) {
-        viewModel.onEditNamePlayer(name)
+    private val avatarsAdapter by lazy {
+        AvatarsAdapter(::clickChangedAvatar)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,7 +84,8 @@ class MainMenuFragment :
     }
 
     private fun initView() {
-        initRecycleView()
+        initPlayersRecycleView()
+        initAvatarsRecycleView()
         initPlayGameButton()
         initRoot()
     }
@@ -136,10 +140,22 @@ class MainMenuFragment :
         }
     }
 
-    private fun initRecycleView() {
+    private fun initPlayersRecycleView() {
         binding.playersRecyclerView.run {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = playersAdapter
+        }
+    }
+
+    private fun initAvatarsRecycleView() {
+        binding.avatarsRecyclerView.run {
+            layoutManager = GridLayoutManager(
+                requireContext(),
+                SPAN_COUNT_AVATARS_RECYCLER_VIEW,
+                RecyclerView.VERTICAL,
+                false
+            )
+            adapter = avatarsAdapter
         }
     }
 
@@ -270,6 +286,18 @@ class MainMenuFragment :
         }
     }
 
+    private fun inputEditNameChangedPlayerClickListener(name: String) {
+        viewModel.onEditNamePlayer(name)
+    }
+
+    private fun clickAvatar() {
+        viewModel.onClickAvatar()
+    }
+
+    private fun clickChangedAvatar(avatarPosition: Int) {
+        viewModel.onQueryChangedAvatar(avatarPosition)
+    }
+
     private fun clickAddPlayer() {
         viewModel.onAddPlayer()
     }
@@ -284,16 +312,17 @@ class MainMenuFragment :
         }
     }
 
-    private fun renderAvatarsScreenState(avatarsScreenState: MainMenuState.AvatarsScreenState){
-        when(avatarsScreenState){
+    private fun renderAvatarsScreenState(avatarsScreenState: MainMenuState.AvatarsScreenState) {
+        when (avatarsScreenState) {
             MainMenuState.AvatarsScreenState.HideAvatarsState -> {
                 Timber.d("HideAvatarsState")
-                //TODO()
+                binding.avatarsRecyclerViewLayout.visibility = View.GONE
             }
 
             is MainMenuState.AvatarsScreenState.ShowAvatarsState -> {
                 Timber.d("ShowAvatarsState")
-                //TODO()
+                binding.avatarsRecyclerViewLayout.visibility = View.VISIBLE
+                avatarsAdapter.setAvatars(avatarsScreenState.avatars)
             }
         }
     }
@@ -301,9 +330,9 @@ class MainMenuFragment :
     companion object {
         const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
         const val TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS = "MainMenuFragmentShowInstructions"
-
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"
+        const val SPAN_COUNT_AVATARS_RECYCLER_VIEW = 4
 
         @JvmStatic
         fun newInstance() = MainMenuFragment()
