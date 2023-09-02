@@ -13,7 +13,7 @@ interface MainMenuViewModel {
      * При пересоздании view, т.е. когда во viewModel уже хранится список игроков, обращение в
      * репозиторий не происходит.
      */
-    fun onLaunch ()
+    fun onLaunch()
 
     /**
     Метод для подписки view на состояние списка игроков на экране настроек.
@@ -24,6 +24,11 @@ interface MainMenuViewModel {
     Метод для подписки view на состояние экрана настроек.
      */
     fun getLiveDataScreenState(): SingleEventLiveData<MainMenuState.ScreenState>
+
+    /**
+    Метод для подписки view на состояние вывода инструкции на экране настроек.
+     */
+    fun getLiveDataShowInstructionScreenState(): SingleEventLiveData<MainMenuState.ShowInstructionsScreenState>
 
     /**
     Метод для подписки view на состояние списка аватарок.
@@ -67,6 +72,11 @@ interface MainMenuViewModel {
      * Также ViewModel посылает состояние HideAvatarsState().
      */
     fun onQueryChangedAvatar(positionAvatar: Int)
+
+    /**
+     * Метод вызывается при запросе дополнительных аватарок для отображения в списке аватарок.
+     */
+    fun onQueryAddAvatars()
 
     /**
      * Метод вызывается при изменении данных игрока, например, при нажатии ОК в item игрока в режиме
@@ -130,5 +140,11 @@ interface MainMenuViewModel {
      * если необходимо, HideAvatarsState.
      */
     fun onClickScreen()
+
+    /**
+     * Метод вызывается при нажатии на кнопку "показать интсрукцию". ViewModel формирует состояние
+     * ShowInstructionsScreenState.
+     */
+    fun onQueryShowInstruction()
 
 }

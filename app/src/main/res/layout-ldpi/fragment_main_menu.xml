@@ -7,7 +7,7 @@
     android:background="@color/primary_color"
     android:clickable="true"
     android:orientation="vertical"
-    tools:context=".presentation.main_menu.view.MainMenuFragment">
+    tools:context=".presentation.main_menu.MainMenuFragment">
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -146,6 +146,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sector_game_cards_guideline" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/avatars_recycler_view_layout"
+        android:layout_width="@dimen/auto_layout"
+        android:layout_height="@dimen/auto_layout"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="@id/sector_recycle_view_guideline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/players_recycler_view"
+        app:layout_constraintEnd_toEndOf="@id/players_recycler_view"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/avatars_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/secondary_color"
+            />
+
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

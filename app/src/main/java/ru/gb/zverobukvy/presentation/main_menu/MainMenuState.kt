@@ -67,10 +67,7 @@ sealed interface MainMenuState {
             val error: String
         ): ScreenState
 
-        /**
-         * Состояния для вывода на экран инструкции к игре
-         */
-        object ShowInstructions:ScreenState
+
         /**
          * Состояние для запуска игры "Зверобуквы"
          */
@@ -80,12 +77,18 @@ sealed interface MainMenuState {
         ) : ScreenState
     }
 
+    /**
+     * Состояния для вывода на экран инструкции к игре
+     */
+    object ShowInstructionsScreenState
+
     sealed interface AvatarsScreenState{
         /**
          * Состояние, по которому отображается список аватарок для выбора пользователем.
          */
         data class ShowAvatarsState(
-            val avatars: List<Avatar>
+            val avatars: List<Avatar>,
+            val scrollPosition: Int = 0
         ): AvatarsScreenState
 
         /**

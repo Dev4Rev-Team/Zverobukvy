@@ -3,7 +3,7 @@ package ru.gb.zverobukvy.data.mapper
 import ru.gb.zverobukvy.data.room.entity.AvatarInDatabase
 import ru.gb.zverobukvy.domain.entity.Avatar
 
-class AvatarMapper : EntityMapper<Avatar, AvatarInDatabase> {
+class AvatarRoomMapper : EntityMapper<Avatar, AvatarInDatabase> {
     override fun mapToData(entity: Avatar): AvatarInDatabase =
         entity.let {
             AvatarInDatabase(

@@ -37,7 +37,8 @@ class PlayersAdapter(
                 editPlayerClickListenerOwner.saveChangedPlayerClickListener,
                 editPlayerClickListenerOwner.cancelChangedPlayerClickListener,
                 editPlayerClickListenerOwner.editNameChangedPlayerClickListener,
-                editPlayerClickListenerOwner.queryRemovePlayersClickListener
+                editPlayerClickListenerOwner.queryRemovePlayersClickListener,
+                editPlayerClickListenerOwner.avatarPlayerClickListener
             )
 
             ADD_ITEM_TYPE -> AddPlayerViewHolder(
