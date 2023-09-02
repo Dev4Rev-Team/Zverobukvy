@@ -1,8 +1,9 @@
 package ru.gb.zverobukvy.data.resources_provider
 
 import android.content.Context
+import javax.inject.Inject
 
-class ResourcesProviderImpl(context: Context) : ResourcesProvider {
+class ResourcesProviderImpl @Inject constructor(context: Context) : ResourcesProvider {
     private val applicationContext: Context
 
     init {

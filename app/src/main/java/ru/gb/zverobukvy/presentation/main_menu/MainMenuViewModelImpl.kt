@@ -4,17 +4,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.StringEnum
+import ru.gb.zverobukvy.domain.entity.Avatar
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
+import java.lang.IllegalStateException
+import javax.inject.Inject
 
-class MainMenuViewModelImpl(
+class MainMenuViewModelImpl @Inject constructor(
     private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
 ) :
@@ -24,7 +29,10 @@ class MainMenuViewModelImpl(
     private val namesPlayersSelectedForGame: MutableList<String> = mutableListOf()
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
     private var lastEditablePlayer: PlayerInSettings? = null
-    private var lastEditablePlayerName: String = ""
+    private var saveEditablePlayer = Player("")
+    private var maxIdPlayer = 0L
+    private val avatarList = mutableListOf<Avatar>()
+    private var isClickAvatar = false
 
 
     private val liveDataPlayersScreenState =
@@ -32,10 +40,25 @@ class MainMenuViewModelImpl(
 
     private val liveDataScreenState = SingleEventLiveData<MainMenuState.ScreenState>()
 
+    private val liveDataShowInstructionScreenState =
+        SingleEventLiveData<MainMenuState.ShowInstructionsScreenState>()
+
+    private val liveDataAvatarsScreenState = MutableLiveData<MainMenuState.AvatarsScreenState>()
+
     init {
         loadTypeCardsSelectedForGame()
         loadPlayersSelectedForGame()
         loadPlayersFromRepository()
+    }
+
+    private suspend fun loadAvatarsFromRepository(): MutableList<Avatar> {
+        if (avatarList.size == 0) {
+            val avatars = withContext(Dispatchers.Default) {
+                mainMenuRepository.getAvatars()
+            }
+            avatarList.addAll(avatars)
+        }
+        return avatarList
     }
 
     override fun onLaunch() {
@@ -49,7 +72,7 @@ class MainMenuViewModelImpl(
 
     private fun showInstruction() {
         if (mainMenuRepository.isFirstLaunch()) {
-            liveDataScreenState.value = MainMenuState.ScreenState.ShowInstructions
+            liveDataShowInstructionScreenState.value = MainMenuState.ShowInstructionsScreenState
         }
     }
 
@@ -68,7 +91,11 @@ class MainMenuViewModelImpl(
                 players[0]?.isSelectedForGame = true
             }
 
-            players.add(null)
+            if (players.size > 0) {
+                maxIdPlayer = players.last()?.player?.id
+                    ?: throw IllegalStateException("В базе данных некорректный игрок ${players.last()}")
+            }
+            players.add(ADD_PLAYER_BUTTON)
 
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.PlayersState(players)
@@ -100,6 +127,16 @@ class MainMenuViewModelImpl(
     override fun getLiveDataScreenState(): SingleEventLiveData<MainMenuState.ScreenState> {
         Timber.d("getLiveDataPlayersScreenState")
         return liveDataScreenState
+    }
+
+    override fun getLiveDataShowInstructionScreenState(): SingleEventLiveData<MainMenuState.ShowInstructionsScreenState> {
+        Timber.d("getLiveDataShowInstructionScreenState")
+        return liveDataShowInstructionScreenState
+    }
+
+    override fun getLiveDataAvatarsScreenState(): LiveData<MainMenuState.AvatarsScreenState> {
+        Timber.d("getLiveDataAvatarsScreenState")
+        return liveDataAvatarsScreenState
     }
 
     override fun onChangedSelectingPlayer(positionPlayer: Int) {
@@ -141,6 +178,33 @@ class MainMenuViewModelImpl(
         openEditablePlayer(positionPlayer)
     }
 
+    override fun onClickAvatar() {
+        Timber.d("onClickAvatar")
+        if (!isClickAvatar) {
+            isClickAvatar = true
+
+            viewModelScope.launch {
+                val loadAvatars = loadAvatarsFromRepository()
+                liveDataAvatarsScreenState.value =
+                    MainMenuState.AvatarsScreenState.ShowAvatarsState(loadAvatars)
+            }
+        }
+    }
+
+    override fun onQueryChangedAvatar(positionAvatar: Int) {
+        Timber.d("onQueryChangedAvatar")
+        isClickAvatar = false
+        liveDataAvatarsScreenState.value = MainMenuState.AvatarsScreenState.HideAvatarsState
+
+        lastEditablePlayer?.player?.avatar = avatarList[positionAvatar]
+
+        liveDataPlayersScreenState.value =
+            MainMenuState.PlayersScreenState.ChangedPlayerState(
+                players,
+                players.indexOf(lastEditablePlayer)
+            )
+    }
+
     override fun onChangedPlayer() {
         closeEditablePlayer(true)
     }
@@ -157,37 +221,49 @@ class MainMenuViewModelImpl(
     }
 
     override fun onAddPlayer() {
+        maxIdPlayer += 1
+
         closeEditablePlayer(true)
 
         viewModelScope.launch {
-            createAndSavePlayer()
-            val newPosition = players.size - 1
-            players.add(newPosition, loadPlayerInSettings())
+            val name = createAndSavePlayer(maxIdPlayer)
+            val newPosition = players.lastIndex
+            players.add(newPosition, loadPlayerInSettings(name))
 
             liveDataPlayersScreenState.postValue(
                 MainMenuState.PlayersScreenState.AddPlayerState(
                     players,
-                    players.size - 2
+                    players.size - SHIFT_LAST_PLAYER
                 )
             )
         }
     }
 
-    private suspend fun loadPlayerInSettings(): PlayerInSettings {
+    private suspend fun loadPlayerInSettings(name: String): PlayerInSettings {
         val playersDB = mainMenuRepository.getPlayers()
+        val newPlayerDB = playersDB.first {
+            it.name == name
+        }
         return PlayerInSettings(
-            playersDB[playersDB.size - 1],
+            newPlayerDB,
             isSelectedForGame = true
         )
     }
 
-    private suspend fun createAndSavePlayer() {
+    private suspend fun createAndSavePlayer(nameID: Long): String {
+        val name = newNamePlayer(nameID)
         val player = PlayerInSettings(
-            Player("new ${players.size}"),
+            Player(name),
             isSelectedForGame = true
         )
         mainMenuRepository.insertPlayer(player.player)
-        namesPlayersSelectedForGame.add(player.player.name)
+        namesPlayersSelectedForGame.add(name)
+        return name
+    }
+
+    private fun newNamePlayer(nameID: Long): String {
+        return resourcesProvider.getString(StringEnum.MAIN_MENU_FRAGMENT_NEW_PLAYER)
+            .format(nameID)
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
@@ -227,7 +303,13 @@ class MainMenuViewModelImpl(
     }
 
     override fun onClickScreen() {
+        Timber.d("onClickScreen")
         closeEditablePlayer(true)
+    }
+
+    override fun onQueryShowInstruction() {
+        Timber.d("onQueryInstruction")
+        liveDataShowInstructionScreenState.value = MainMenuState.ShowInstructionsScreenState
     }
 
     private fun findPlayersForGame(): MutableList<PlayerInGame> {
@@ -257,11 +339,12 @@ class MainMenuViewModelImpl(
     private fun openEditablePlayer(positionPlayer: Int) {
         closeEditablePlayer(true)
 
-        players[positionPlayer]?.apply {
+        lastEditablePlayer = players[positionPlayer]?.apply {
             inEditingState = true
-            this@MainMenuViewModelImpl.lastEditablePlayerName = player.name
-            this@MainMenuViewModelImpl.lastEditablePlayer = this
+            this@MainMenuViewModelImpl.saveEditablePlayer.name = player.name
+            this@MainMenuViewModelImpl.saveEditablePlayer.avatar = player.avatar
         }
+
 
         liveDataPlayersScreenState.value =
             MainMenuState.PlayersScreenState.ChangedPlayerState(
@@ -296,18 +379,25 @@ class MainMenuViewModelImpl(
                     }
                 }
             } else {
-                it.player.name = lastEditablePlayerName
+                it.player.name = saveEditablePlayer.name
+                it.player.avatar = saveEditablePlayer.avatar
             }
             liveDataPlayersScreenState.value =
                 MainMenuState.PlayersScreenState.ChangedPlayerState(players, players.indexOf(it))
 
+            if (isClickAvatar) {
+                isClickAvatar = false
+                liveDataAvatarsScreenState.value = MainMenuState.AvatarsScreenState.HideAvatarsState
+            }
+
         }
 
         lastEditablePlayer = null
-        lastEditablePlayerName = ""
     }
 
     companion object {
+        private val ADD_PLAYER_BUTTON = null
+        private const val SHIFT_LAST_PLAYER = 2
         fun mapToPlayerInSettings(player: Player) = PlayerInSettings(player)
     }
 }

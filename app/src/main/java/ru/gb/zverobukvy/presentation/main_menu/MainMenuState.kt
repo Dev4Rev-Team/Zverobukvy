@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.presentation.main_menu
 
+import ru.gb.zverobukvy.domain.entity.Avatar
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 
@@ -68,15 +69,30 @@ sealed interface MainMenuState {
 
 
         /**
-         * Состояния для вывода на экран инструкции к игре
-         */
-        object ShowInstructions:ScreenState
-        /**
          * Состояние для запуска игры "Зверобуквы"
          */
         data class StartGame(
             val typesCardsSelectedForGame: List<TypeCards>,
             val playersSelectedForGame: List<PlayerInGame>
         ) : ScreenState
+    }
+
+    /**
+     * Состояния для вывода на экран инструкции к игре
+     */
+    object ShowInstructionsScreenState
+
+    sealed interface AvatarsScreenState{
+        /**
+         * Состояние, по которому отображается список аватарок для выбора пользователем.
+         */
+        data class ShowAvatarsState(
+            val avatars: List<Avatar>
+        ): AvatarsScreenState
+
+        /**
+         * Состояние, по которому скрывается список аватарок.
+         */
+        object HideAvatarsState: AvatarsScreenState
     }
 }

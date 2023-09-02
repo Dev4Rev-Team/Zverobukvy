@@ -7,12 +7,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import kotlinx.parcelize.Parcelize
-import ru.gb.zverobukvy.App
+import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractorImpl
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.DataGameIsOverDialog
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.GameIsOverDialogFragment
@@ -21,7 +20,6 @@ import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
-import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayerImpl
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ExtractAvatarDrawableHelper
@@ -33,24 +31,12 @@ import kotlin.math.ceil
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
     private var gameStart: GameStart? = null
-    private val assertsImageCash: AssetsImageCash by lazy {
-        (requireContext().applicationContext as App).assetsImageCash
-    }
-    private val soundEffectPlayer: SoundEffectPlayer by lazy {
-        SoundEffectPlayerImpl(requireContext())
-    }
 
-    private val viewModel: AnimalLettersGameViewModel by lazy {
-        ViewModelProvider(this, viewModelProviderFactoryOf {
+    private lateinit var assertsImageCash: AssetsImageCash
 
-            val animalLettersCardsRepository =
-                (requireContext().applicationContext as App).animalLettersCardsRepository
-            val game = AnimalLettersGameInteractorImpl(
-                animalLettersCardsRepository, gameStart!!.typesCards, gameStart!!.players
-            )
-            AnimalLettersGameViewModelImpl(game)
-        })[AnimalLettersGameViewModelImpl::class.java]
-    }
+    private lateinit var soundEffectPlayer: SoundEffectPlayer
+
+    private lateinit var viewModel: AnimalLettersGameViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +45,25 @@ class AnimalLettersGameFragment :
             gameStart = it.parcelable(GAME_START)
         }
         gameStart ?: throw IllegalArgumentException("not arg gameStart")
+
+        initDagger()
+
         viewModel.onActiveGame()
+    }
+
+    private fun initDagger() {
+        requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
+            gameStart!!.typesCards,
+            gameStart!!.players
+        ).also { fragmentComponent ->
+            viewModel = ViewModelProvider(
+                this,
+                viewModelProviderFactoryOf { fragmentComponent.viewModel }
+            )[AnimalLettersGameViewModelImpl::class.java]
+
+            assertsImageCash = fragmentComponent.assetsImageCash
+            soundEffectPlayer = fragmentComponent.soundEffectPlayer
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
