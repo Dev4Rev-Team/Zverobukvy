@@ -80,9 +80,7 @@ sealed interface MainMenuState {
     /**
      * Состояния для вывода на экран инструкции к игре
      */
-    object ShowInstructionsScreenState {}
-
-
+    object ShowInstructionsScreenState
 
     sealed interface AvatarsScreenState{
         /**

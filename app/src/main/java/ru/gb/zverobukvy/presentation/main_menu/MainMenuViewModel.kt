@@ -136,4 +136,10 @@ interface MainMenuViewModel {
      */
     fun onClickScreen()
 
+    /**
+     * Метод вызывается при нажатии на кнопку "показать интсрукцию". ViewModel формирует состояние
+     * ShowInstructionsScreenState.
+     */
+    fun onQueryShowInstruction()
+
 }

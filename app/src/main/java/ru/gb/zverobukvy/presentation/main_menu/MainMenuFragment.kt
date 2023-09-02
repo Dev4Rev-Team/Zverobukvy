@@ -91,6 +91,7 @@ class MainMenuFragment :
         initAvatarsRecycleView()
         initPlayGameButton()
         initRoot()
+        initShowInstructionImageView()
     }
 
     private fun initRoot() {
@@ -159,6 +160,12 @@ class MainMenuFragment :
                 false
             )
             adapter = avatarsAdapter
+        }
+    }
+
+    private fun initShowInstructionImageView() {
+        binding.showInstructionImageView.setOnClickListener {
+            viewModel.onQueryShowInstruction()
         }
     }
 
