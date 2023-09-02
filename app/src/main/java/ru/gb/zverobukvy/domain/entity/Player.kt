@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class Player(
     var name: String,
     val id: Long = 0,
-    var avatar: Avatar = Avatar("avatar_cat", true)
+    var avatar: Avatar = Avatar(Avatar.DEFAULT_IMAGE_NAME, true)
 ) : Parcelable, DomainEntity

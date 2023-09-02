@@ -87,7 +87,8 @@ sealed interface MainMenuState {
          * Состояние, по которому отображается список аватарок для выбора пользователем.
          */
         data class ShowAvatarsState(
-            val avatars: List<Avatar>
+            val avatars: List<Avatar>,
+            val scrollPosition: Int = 0
         ): AvatarsScreenState
 
         /**

@@ -2,7 +2,8 @@ package ru.gb.zverobukvy.data.repository_impl
 
 import ru.gb.zverobukvy.data.data_source.LocalDataSource
 import ru.gb.zverobukvy.data.data_source.RemoteDataSource
-import ru.gb.zverobukvy.data.mapper.AvatarMapper
+import ru.gb.zverobukvy.data.mapper.AvatarApiMapper
+import ru.gb.zverobukvy.data.mapper.AvatarRoomMapper
 import ru.gb.zverobukvy.data.mapper.LetterCardMapperToDomain
 import ru.gb.zverobukvy.data.mapper.PlayerMapperToData
 import ru.gb.zverobukvy.data.mapper.PlayerMapperToDomain
@@ -33,7 +34,9 @@ class AnimalLettersRepositoryImpl @Inject constructor(
 
     private val playersMapperData = PlayerMapperToData()
 
-    private val avatarsMapper = AvatarMapper()
+    private val avatarRoomMapper = AvatarRoomMapper()
+
+    private val avatarApiMapper = AvatarApiMapper()
 
     override suspend fun getLetterCards(): List<LetterCard> =
         localDataSource.getLetterCards().map {
@@ -83,8 +86,13 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     override fun isFirstLaunch(): Boolean =
         sharedPreferencesForGame.isFirstLaunch()
 
-    override suspend fun getAvatars(): List<Avatar> =
+    override suspend fun getAvatarsFromLocalDataSource(): List<Avatar> =
         localDataSource.getAvatars().map{
-            avatarsMapper.mapToDomain(it)
+            avatarRoomMapper.mapToDomain(it)
+        }
+
+    override suspend fun getAvatarsFromRemoteDataSource(quantities: Int): List<Avatar> =
+        remoteDataSource.getRandomAvatars(quantities).map {
+            avatarApiMapper.mapToDomain(it)
         }
 }
