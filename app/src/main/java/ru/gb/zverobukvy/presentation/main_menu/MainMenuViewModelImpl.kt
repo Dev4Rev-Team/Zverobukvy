@@ -271,7 +271,13 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     override fun onClickScreen() {
+        Timber.d("onClickScreen")
         closeEditablePlayer(true)
+    }
+
+    override fun onQueryShowInstruction() {
+        Timber.d("onQueryInstruction")
+        //TODO показать инструкцию
     }
 
     private fun findPlayersForGame(): MutableList<PlayerInGame> {
