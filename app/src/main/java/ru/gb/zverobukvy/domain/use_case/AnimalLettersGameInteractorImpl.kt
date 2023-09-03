@@ -26,7 +26,7 @@ import javax.inject.Inject
  * 3. ход игры, когда отгадана одна или несколько букв в слове, но полностью слово еще не отгадано:
  * GameState (lettersField - для отдельных карточек-букв isVisible == true, gamingWordCard != null и
  * список positionsGuessedLetters содержит позиции отгаданных букв, players - содержит в себе
- * актуальный счет каждого игрока, walkingPlayer != null, nextWalkingPlayer != null isActive == true)
+ * актуальный счет каждого игрока, walkingPlayer != null, nextWalkingPlayer != null, isActive == true)
  * 4. отгадано слово (не последнее): GameState (lettersField - для отдельных карточек-букв
  * isVisible == true, gamingWordCard != null и список positionsGuessedLetters содержит позиции всех
  * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer и
@@ -139,6 +139,25 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         }
     }
 
+    override fun getNextWalkingPlayer() {
+        Timber.d("getNextWalkingPlayer")
+        // gameStateFlow обновляет value, т.к. отличается walkingPlayer и nextWalkingPlayer
+        // когда один игрок, педварительно обнуляем walkingPlayer и nextWalkingPlayer в текущем
+        // состоянии gameStateFlow
+        gameStateFlow.value?.let {currentGameState ->
+            if (currentGameState.players.size == 1)
+                currentGameState.apply {
+                    walkingPlayer = null
+                    nextWalkingPlayer = null
+                }
+            val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
+            gameStateFlow.value = currentGameState.copy(
+                walkingPlayer = newWalkingPlayer,
+                nextWalkingPlayer = getNextWalkingPlayer(players, newWalkingPlayer)
+            )
+        }
+    }
+
     override fun endGameByUser() {
         Timber.d("endGameByUser")
         // gameStateFlow обновляет value, т.к. отличается isActive
@@ -190,24 +209,21 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     }
 
     /**
-     * Метод вызывается, если выбрана некорректная карточка-буква, и изменяет текущего игрока
+     * Метод вызывается, если выбрана некорректная карточка-буква, и испускает текущее состоние игры
      * @param currentGameState текущее состояние игры
-     * @return текущее состояние игры с учетом перехода хода к следующему игроку
+     * @return текущее состояние игры
      */
     private fun selectionWrongLetterCard(currentGameState: GameState) {
         Timber.d("selectionWrongLetterCard")
-        // gameStateFlow обновляет value, т.к. отличается walkingPlayer
-        // когда один игрок, педварительно обнуляем walkingPlayer в текущем состоянии gameStateFlow
-        if (currentGameState.players.size == 1)
+        // gameStateFlow обновляет value, т.к. отличаются walkingPlayer и nextWalkingPlayer
+        // (предварительно их обнуяем в текущем состоянии gameStateFlow)
             currentGameState.apply {
                 walkingPlayer = null
+                nextWalkingPlayer = null
             }
-        val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
         gameStateFlow.value = currentGameState.copy(
-            walkingPlayer = newWalkingPlayer.also {
-                currentWalkingPlayer = it
-            },
-            nextWalkingPlayer = getNextWalkingPlayer(players, newWalkingPlayer)
+            walkingPlayer = currentWalkingPlayer,
+            nextWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
         )
     }
 
