@@ -8,6 +8,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.domain.entity.GameState
+import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
@@ -21,6 +22,8 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
 ) : AnimalLettersGameViewModel, ViewModel() {
+
+    private var isClickNextWalkingPlayer: Boolean = false
 
     /** Флаг для события нажатия на карточку с буквой :
      * - true - Произошло нажатие на букву/Обрабатывается событие нажатия (новые нажатия не обрабатываются)
@@ -215,6 +218,23 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             }
         }
 
+        if (isClickNextWalkingPlayer) {
+            isClickNextWalkingPlayer = false
+
+            val nextWalkingPlayer = newState.walkingPlayer
+            val invalidLetterCard = newState.gameField.lettersField[mLastClickCardPosition]
+
+            changingLiveData.value = ChangingState.CloseInvalidLetter(
+                invalidLetterCard
+            )
+
+            if (nextWalkingPlayer != null) {
+                changingLiveData.value = ChangingState.NextPlayer(
+                    nextWalkingPlayer
+                )
+            }
+        }
+
         if (isCardClick) {
 
             // Получем последнюю нажатую карточку
@@ -232,7 +252,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     isCardClick = false
                     if (newState.isActive) isGuessedWord = true
                     val screenDimmingText =
-                        textOfGuessedWord(newState.walkingPlayer != oldState.walkingPlayer)
+                        textOfGuessedWord(newState)
 
                     stateList.addFirst(
                         ChangingState.GuessedWord(
@@ -261,7 +281,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 isWaitingNextPlayer = true
 
                 val screenDimmingText =
-                    textOfInvalidLetter(newState.walkingPlayer != oldState.walkingPlayer)
+                    textOfInvalidLetter(newState)
 
                 stateList.addFirst(ChangingState.InvalidLetter(lastClickCard, screenDimmingText))
             }
@@ -271,13 +291,13 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         return stateList
     }
 
-    private fun textOfInvalidLetter(playersAreDifferent: Boolean): String {
-        return if (playersAreDifferent) TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT
+    private fun textOfInvalidLetter(state: GameState): String {
+        return if (isMultiplayerGame(state)) TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT + state.nextWalkingPlayer!!.player.name
         else TEXT_INVALID_LETTER_PLAYERS_ARE_NOT_DIFFERENT
     }
 
-    private fun textOfGuessedWord(playersAreDifferent: Boolean): String {
-        return if (playersAreDifferent) TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT
+    private fun textOfGuessedWord(state: GameState): String {
+        return if (isMultiplayerGame(state)) TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT + state.nextWalkingPlayer!!.player.name
         else TEXT_GUESSED_WORD_PLAYERS_ARE_NOT_DIFFERENT
     }
 
@@ -290,14 +310,20 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     override fun onActiveGame() {
         mGameState?.let { state ->
             val guessesWord = state.gameField.gamingWordCard
-            val walkingPlayer = state.walkingPlayer
+
+            val walkingPlayer =
+                if (isClickNextWalkingPlayer || isGuessedWord) state.nextWalkingPlayer
+                else state.walkingPlayer
 
             val screenDimmingText =
                 calculateScreenDimmingTextOnActiveGame(state)
 
             if (guessesWord != null && walkingPlayer != null) {
                 entireLiveData.value = EntireState.StartGameState(
-                    state.gameField.lettersField.apply {
+                    mutableListOf<LetterCard>().apply {
+                        state.gameField.lettersField.forEach {
+                            add(it.copy())
+                        }
                         if (isWaitingNextPlayer) {
                             this[mLastClickCardPosition].isVisible = true
                         }
@@ -313,14 +339,14 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 throw IllegalStateException(ERROR_STATE_RESTORE)
             }
         }
- }
+    }
 
     private fun calculateScreenDimmingTextOnActiveGame(state: GameState) =
-        if (isWaitingNextPlayer) textOfInvalidLetter(!isSinglePlayerGame(state))
-        else if (isGuessedWord) textOfGuessedWord(!isSinglePlayerGame(state))
+        if (isWaitingNextPlayer) textOfInvalidLetter(state)
+        else if (isGuessedWord) textOfGuessedWord(state)
         else TEXT_DEFAULT
 
-    private fun isSinglePlayerGame(state: GameState) = state.players.size == 1
+    private fun isMultiplayerGame(state: GameState) = state.players.size > 1
 
     override fun getEntireGameStateLiveData(): LiveData<EntireState> {
         return entireLiveData
@@ -331,6 +357,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
+        isClickNextWalkingPlayer = false
         if (!isCardClick) {
             isCardClick = true
             mLastClickCardPosition = positionSelectedLetterCard
@@ -341,21 +368,9 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
     override fun onClickNextWalkingPlayer() {
         isWaitingNextPlayer = false
+        isClickNextWalkingPlayer = true
 
-        mGameState?.let { gameState ->
-            val nextWalkingPlayer = gameState.walkingPlayer
-            val invalidLetterCard = gameState.gameField.lettersField[mLastClickCardPosition]
-
-            changingLiveData.value = ChangingState.CloseInvalidLetter(
-                invalidLetterCard
-            )
-
-            if (nextWalkingPlayer != null) {
-                changingLiveData.value = ChangingState.NextPlayer(
-                    nextWalkingPlayer
-                )
-            }
-        }
+        animalLettersGameInteractor.getNextWalkingPlayer()
     }
 
     override fun onClickNextWord() {
@@ -405,11 +420,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         const val ERROR_STATE_RESTORE = "Проблема в логике восстановления состояния эерана"
 
         const val TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT =
-            "Карточка отгадана неверно" + "/n" + "Ход переходит следующему игроку"
+            "Карточка отгадана неверно" + "/n" + "Ход переходит "
         const val TEXT_INVALID_LETTER_PLAYERS_ARE_NOT_DIFFERENT =
             "Карточка отгадана неверно"
         const val TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT =
-            "Слово отгадано" + "/n" + "Ход переходит следующему игроку"
+            "Слово отгадано" + "/n" + "Ход переходит "
         const val TEXT_GUESSED_WORD_PLAYERS_ARE_NOT_DIFFERENT =
             "Слово отгадано"
 
