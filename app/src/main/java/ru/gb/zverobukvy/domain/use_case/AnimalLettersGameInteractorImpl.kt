@@ -152,7 +152,9 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 }
             val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
             gameStateFlow.value = currentGameState.copy(
-                walkingPlayer = newWalkingPlayer,
+                walkingPlayer = newWalkingPlayer.also {
+                    currentWalkingPlayer = it
+                },
                 nextWalkingPlayer = getNextWalkingPlayer(players, newWalkingPlayer)
             )
         }
