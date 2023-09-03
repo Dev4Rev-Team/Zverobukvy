@@ -7,11 +7,11 @@ import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 import ru.gb.zverobukvy.utility.ui.ExtractAvatarDrawableHelper
 
 class PlayerViewHolder(
-    override val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
+    private val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
     private val itemPlayerClickListener: (Int) -> Unit,
     private val editMenuClickListener: (Int) -> Unit
 ) :
-    BaseViewHolder(viewBinding) {
+    BasePlayerViewHolder(viewBinding) {
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {

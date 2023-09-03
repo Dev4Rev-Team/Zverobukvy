@@ -184,7 +184,9 @@ class MainMenuViewModelImpl @Inject constructor(
             isClickAvatar = true
 
             viewModelScope.launch {
-                val loadAvatars = loadAvatarsFromRepository()
+                val loadAvatars = loadAvatarsFromRepository().apply {
+                    add(Avatar.ADD_AVATAR)
+                }
                 liveDataAvatarsScreenState.value =
                     MainMenuState.AvatarsScreenState.ShowAvatarsState(loadAvatars)
             }
