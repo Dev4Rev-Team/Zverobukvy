@@ -6,5 +6,5 @@ import retrofit2.http.Path
 interface RandomAvatarService {
 
     @GET("adventurer/jpg?seed={seed}")
-    suspend fun getSvgImageEntityBySeed(@Path("seed") seed: String): AvatarImageEntity
+    suspend fun getSvgImageEntityBySeed(@Path("seed") seed: String): AvatarApi
 }
