@@ -4,9 +4,9 @@ import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeAddBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 
 class AddPlayerViewHolder(
-    override val viewBinding: FragmentMainMenuItemPlayerModeAddBinding,
+    private val viewBinding: FragmentMainMenuItemPlayerModeAddBinding,
     private val addPlayerClickListener: () -> Unit) :
-    BaseViewHolder(viewBinding) {
+    BasePlayerViewHolder(viewBinding) {
     override fun bindView(playerInSetting: PlayerInSettings?) {
         viewBinding.addPlayerCardView.setOnClickListener {
             addPlayerClickListener()

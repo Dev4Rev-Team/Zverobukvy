@@ -54,7 +54,7 @@ class MainMenuViewModelImpl @Inject constructor(
     private suspend fun loadAvatarsFromRepository(): MutableList<Avatar> {
         if (avatarList.size == 0) {
             val avatars = withContext(Dispatchers.Default) {
-                mainMenuRepository.getAvatars()
+                mainMenuRepository.getAvatarsFromLocalDataSource()
             }
             avatarList.addAll(avatars)
         }
@@ -184,7 +184,9 @@ class MainMenuViewModelImpl @Inject constructor(
             isClickAvatar = true
 
             viewModelScope.launch {
-                val loadAvatars = loadAvatarsFromRepository()
+                val loadAvatars = loadAvatarsFromRepository().apply {
+                    add(Avatar.ADD_AVATAR)
+                }
                 liveDataAvatarsScreenState.value =
                     MainMenuState.AvatarsScreenState.ShowAvatarsState(loadAvatars)
             }
@@ -203,6 +205,11 @@ class MainMenuViewModelImpl @Inject constructor(
                 players,
                 players.indexOf(lastEditablePlayer)
             )
+    }
+
+    override fun onQueryAddAvatars() {
+        Timber.d("onQueryAddAvatars")
+        //TODO("Not yet implemented")
     }
 
     override fun onChangedPlayer() {

@@ -48,7 +48,7 @@ class MainMenuFragment :
             AddPlayerClickListenerOwner { clickAddPlayer() })
 
     private val avatarsAdapter by lazy {
-        AvatarsAdapter(::clickChangedAvatar)
+        AvatarsAdapter(::clickChangedAvatar, ::clickAddAvatars)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -298,6 +298,10 @@ class MainMenuFragment :
 
     private fun clickChangedAvatar(avatarPosition: Int) {
         viewModel.onQueryChangedAvatar(avatarPosition)
+    }
+
+    private fun clickAddAvatars(){
+        viewModel.onQueryAddAvatars()
     }
 
     private fun clickAddPlayer() {

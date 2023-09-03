@@ -164,8 +164,7 @@
             android:id="@+id/avatars_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/secondary_color"
-            />
+            android:background="@color/secondary_color"/>
 
     </androidx.cardview.widget.CardView>
 
