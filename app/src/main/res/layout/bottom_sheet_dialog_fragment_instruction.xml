@@ -5,17 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="24dp">
+    app:cardCornerRadius="24dp"
+    android:elevation="@dimen/elevation_default">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:focusable="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/button_primary"
-            android:elevation="@dimen/elevation_default">
+            android:background="@color/button_primary">
 
             <TextView
                 android:id="@+id/textView8"
