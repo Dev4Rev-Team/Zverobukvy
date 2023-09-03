@@ -24,7 +24,7 @@ enum class AvatarEnum (val imageName: String, val resId: Int){
     AVATAR_FOX ("avatar_fox", R.drawable.avatar_fox),
     AVATAR_FROG ("avatar_frog", R.drawable.avatar_frog),
     AVATAR_GIRAFFE ("avatar_giraffe", R.drawable.avatar_giraffe),
-    AVATAR_CHAMELEON ("chameleon", R.drawable.avatar_chameleon),
+    AVATAR_CHAMELEON ("avatar_chameleon", R.drawable.avatar_chameleon),
     AVATAR_HIPPO ("avatar_hippo", R.drawable.avatar_hippo),
     AVATAR_HORSE ("avatar_horse", R.drawable.avatar_horse),
     AVATAR_LADYBUG ("avatar_ladybug", R.drawable.avatar_ladybug),
