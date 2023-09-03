@@ -9,7 +9,7 @@ import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.AddPlayerViewHolder
-import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.BaseViewHolder
+import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.BasePlayerViewHolder
 import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.EditPlayerViewHolder
 import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.PlayerViewHolder
 
@@ -20,7 +20,7 @@ class PlayersAdapter(
 ) :
     BaseAdapter() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasePlayerViewHolder {
         return when (viewType) {
             NOT_EDIT_ITEM_TYPE -> PlayerViewHolder(
                 FragmentMainMenuItemPlayerModeViewBinding.inflate(
@@ -61,7 +61,7 @@ class PlayersAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: BasePlayerViewHolder, position: Int) =
         holder.bindView(players[position])
 
     override fun getItemCount(): Int = players.size

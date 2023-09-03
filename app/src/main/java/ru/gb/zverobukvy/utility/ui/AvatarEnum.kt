@@ -39,5 +39,6 @@ enum class AvatarEnum (val imageName: String, val resId: Int){
     AVATAR_SNAKE ("avatar_snake", R.drawable.avatar_snake),
     AVATAR_TIGER ("avatar_tiger", R.drawable.avatar_tiger),
     AVATAR_WHITE_BEAR ("avatar_white_bear", R.drawable.avatar_white_bear),
-    AVATAR_TURTLE ("avatar_turtle", R.drawable.avatar_turtle)
+    AVATAR_TURTLE ("avatar_turtle", R.drawable.avatar_turtle),
+    AVATAR_ADD ("avatar_add", R.drawable.avatar_add)
 }

@@ -13,9 +13,10 @@
         android:layout_gravity="center">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/background_avatar_card_view"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:backgroundTint="@color/color_blue_pastel"
+            app:cardBackgroundColor="@color/color_blue_pastel"
             app:cardCornerRadius="8000dp"
             android:layout_margin="@dimen/margin_default"
             >
