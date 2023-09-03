@@ -1,5 +1,9 @@
 package ru.gb.zverobukvy.data.repository_impl
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.data.data_source.LocalDataSource
 import ru.gb.zverobukvy.data.data_source.RemoteDataSource
 import ru.gb.zverobukvy.data.mapper.AvatarApiMapper
@@ -9,6 +13,7 @@ import ru.gb.zverobukvy.data.mapper.PlayerMapperToData
 import ru.gb.zverobukvy.data.mapper.PlayerMapperToDomain
 import ru.gb.zverobukvy.data.mapper.TypeCardsMapper
 import ru.gb.zverobukvy.data.mapper.WordCardMapperToDomain
+import ru.gb.zverobukvy.data.network_state.NetworkStatusImpl
 import ru.gb.zverobukvy.data.preferences.SharedPreferencesForGame
 import ru.gb.zverobukvy.domain.entity.Avatar
 import ru.gb.zverobukvy.domain.entity.LetterCard
@@ -23,6 +28,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val sharedPreferencesForGame: SharedPreferencesForGame,
+    private val networkStatus: NetworkStatusImpl
 ) : AnimalLettersGameRepository, MainMenuRepository {
     private val letterCardMapperToDomain = LetterCardMapperToDomain()
 
@@ -37,6 +43,16 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     private val avatarRoomMapper = AvatarRoomMapper()
 
     private val avatarApiMapper = AvatarApiMapper()
+
+    override var isOnline: Boolean = false
+
+    private val repositoryCoroutineScope = CoroutineScope(
+    Dispatchers.IO
+    )
+
+    init{
+        registerNetworkStatus()
+    }
 
     override suspend fun getLetterCards(): List<LetterCard> =
         localDataSource.getLetterCards().map {
@@ -95,4 +111,15 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         remoteDataSource.getRandomAvatars(quantities).map {
             avatarApiMapper.mapToDomain(it)
         }
+
+    private fun registerNetworkStatus() {
+        repositoryCoroutineScope.launch {
+            withContext(Dispatchers.Default){
+                networkStatus.registerNetworkCallback()
+                    .collect {
+                        isOnline = it
+                    }
+            }
+        }
+    }
 }
