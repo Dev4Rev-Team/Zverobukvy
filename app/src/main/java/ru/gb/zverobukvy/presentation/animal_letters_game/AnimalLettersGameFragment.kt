@@ -19,6 +19,7 @@ import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
+import ru.gb.zverobukvy.presentation.customview.createAlphaShowAnimation
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
@@ -27,6 +28,7 @@ import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
+
 
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
@@ -83,14 +85,14 @@ class AnimalLettersGameFragment :
                     setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.openCard(it.correctLetterCard)
                     if (it.hasNextWord) {
-                        requestNextWord()
+                        requestNextWord(it.screenDimmingText)
                     }
                 }
 
                 is AnimalLettersGameState.ChangingState.InvalidLetter -> {
                     soundEffectPlayer.play(SoundEnum.CARD_IS_UNSUCCESSFUL)
                     binding.table.openCard(it.invalidLetterCard)
-                    requestNextPlayer()
+                    requestNextPlayer(it.screenDimmingText)
                 }
 
                 is AnimalLettersGameState.ChangingState.NextGuessWord -> {
@@ -137,9 +139,9 @@ class AnimalLettersGameFragment :
                     binding.root.visibility = View.VISIBLE
 
                     if (it.nextPlayerBtnVisible) {
-                        requestNextPlayer()
+                        requestNextPlayer(it.screenDimmingText)
                     } else if (it.nextWordBtnVisible) {
-                        requestNextWord()
+                        requestNextWord(it.screenDimmingText)
                     } else {
                         binding.table.setWorkClick(true)
                     }
@@ -213,18 +215,24 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private fun requestNextPlayer() {
+    private fun requestNextPlayer(screenDimmingText: String) {
         binding.nextPlayer.root.let { button ->
             button.setOnClickListener {
                 button.visibility = View.INVISIBLE
                 viewModel.onClickNextWalkingPlayer()
             }
-            button.visibility = View.VISIBLE
+            createAlphaShowAnimation(button, START_DELAY_ANIMATION, DURATION_ANIMATION).start()
         }
+        binding.nextPlayer.nextPlayerTextView.text = screenDimmingText
     }
 
-    private fun requestNextWord() {
-        binding.nextWord.root.visibility = View.VISIBLE
+    private fun requestNextWord(screenDimmingText: String) {
+        createAlphaShowAnimation(
+            binding.nextWord.root,
+            START_DELAY_ANIMATION,
+            DURATION_ANIMATION
+        ).start()
+        binding.nextWord.nextWordMoveTextView.text = screenDimmingText
     }
 
     override fun onBackPressed(): Boolean {
@@ -275,8 +283,10 @@ class AnimalLettersGameFragment :
 
     companion object {
         const val GAME_START = "GAME_START"
-
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
+
+        private const val START_DELAY_ANIMATION = 350L
+        private const val DURATION_ANIMATION = 300L
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {
