@@ -85,14 +85,14 @@ class AnimalLettersGameFragment :
                     setPositionLetterInWord(it.positionLetterInWord)
                     binding.table.openCard(it.correctLetterCard)
                     if (it.hasNextWord) {
-                        requestNextWord()
+                        requestNextWord(it.screenDimmingText)
                     }
                 }
 
                 is AnimalLettersGameState.ChangingState.InvalidLetter -> {
                     soundEffectPlayer.play(SoundEnum.CARD_IS_UNSUCCESSFUL)
                     binding.table.openCard(it.invalidLetterCard)
-                    requestNextPlayer()
+                    requestNextPlayer(it.screenDimmingText)
                 }
 
                 is AnimalLettersGameState.ChangingState.NextGuessWord -> {
@@ -139,9 +139,9 @@ class AnimalLettersGameFragment :
                     binding.root.visibility = View.VISIBLE
 
                     if (it.nextPlayerBtnVisible) {
-                        requestNextPlayer()
+                        requestNextPlayer(it.screenDimmingText)
                     } else if (it.nextWordBtnVisible) {
-                        requestNextWord()
+                        requestNextWord(it.screenDimmingText)
                     } else {
                         binding.table.setWorkClick(true)
                     }
@@ -215,7 +215,7 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private fun requestNextPlayer() {
+    private fun requestNextPlayer(screenDimmingText: String) {
         binding.nextPlayer.root.let { button ->
             button.setOnClickListener {
                 button.visibility = View.INVISIBLE
@@ -223,10 +223,16 @@ class AnimalLettersGameFragment :
             }
             createAlphaShowAnimation(button, START_DELAY_ANIMATION, DURATION_ANIMATION).start()
         }
+        binding.nextPlayer.nextPlayerTextView.text = screenDimmingText
     }
 
-    private fun requestNextWord() {
-        createAlphaShowAnimation(binding.nextWord.root, START_DELAY_ANIMATION, DURATION_ANIMATION).start()
+    private fun requestNextWord(screenDimmingText: String) {
+        createAlphaShowAnimation(
+            binding.nextWord.root,
+            START_DELAY_ANIMATION,
+            DURATION_ANIMATION
+        ).start()
+        binding.nextWord.nextWordMoveTextView.text = screenDimmingText
     }
 
     override fun onBackPressed(): Boolean {

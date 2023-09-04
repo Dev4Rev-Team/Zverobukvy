@@ -1,7 +1,9 @@
 package ru.gb.zverobukvy.presentation.main_menu
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
@@ -59,15 +61,19 @@ class MainMenuFragment :
         initView()
         viewModel.run {
             getLiveDataScreenState().observe(viewLifecycleOwner) {
+                hideKeyboard()
                 renderScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
+                hideKeyboard()
                 renderPlayersScreenState(it)
             }
             getLiveDataShowInstructionScreenState().observe(viewLifecycleOwner){
+                hideKeyboard()
                 renderShowInstructionScreenState()
             }
             getLiveDataAvatarsScreenState().observe(viewLifecycleOwner) {
+                hideKeyboard()
                 renderAvatarsScreenState(it)
             }
             onLaunch()
@@ -293,6 +299,7 @@ class MainMenuFragment :
     }
 
     private fun clickAvatar() {
+        hideKeyboard()
         viewModel.onClickAvatar()
     }
 
@@ -338,6 +345,13 @@ class MainMenuFragment :
                 binding.avatarsRecyclerViewLayout.visibility = View.VISIBLE
                 avatarsAdapter.setAvatars(avatarsScreenState.avatars)
             }
+        }
+    }
+
+    private fun hideKeyboard() {
+        requireActivity().currentFocus?.let {
+            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(it.windowToken, 0)
         }
     }
 
