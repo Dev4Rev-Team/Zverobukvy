@@ -419,14 +419,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null "
         const val ERROR_STATE_RESTORE = "Проблема в логике восстановления состояния эерана"
 
-        const val TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT =
-            "Карточка отгадана неверно" + "/n" + "Ход переходит "
-        const val TEXT_INVALID_LETTER_PLAYERS_ARE_NOT_DIFFERENT =
-            "Карточка отгадана неверно"
-        const val TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT =
-            "Слово отгадано" + "/n" + "Ход переходит "
-        const val TEXT_GUESSED_WORD_PLAYERS_ARE_NOT_DIFFERENT =
-            "Слово отгадано"
+        const val TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT = "Ход : "
+        const val TEXT_INVALID_LETTER_PLAYERS_ARE_NOT_DIFFERENT = ""
+        const val TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT = "Ход : "
+        const val TEXT_GUESSED_WORD_PLAYERS_ARE_NOT_DIFFERENT = ""
 
         const val TEXT_DEFAULT = ""
 
