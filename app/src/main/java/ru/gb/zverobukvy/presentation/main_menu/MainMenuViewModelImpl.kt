@@ -51,13 +51,19 @@ class MainMenuViewModelImpl @Inject constructor(
         loadPlayersFromRepository()
     }
 
-    private suspend fun loadAvatarsFromRepository(): MutableList<Avatar> {
-        if (avatarList.size == 0) {
-            val avatars = withContext(Dispatchers.Default) {
-                mainMenuRepository.getAvatarsFromLocalDataSource()
-            }
-            avatarList.addAll(avatars)
+    private suspend fun loadAvatarsFromRepositoryLocal(): MutableList<Avatar> {
+        val avatars = withContext(Dispatchers.IO) {
+            mainMenuRepository.getAvatarsFromLocalDataSource()
         }
+        avatarList.addAll(avatars)
+        return avatarList
+    }
+
+    private suspend fun loadAvatarsFromRepositoryRemote(): MutableList<Avatar> {
+        val avatar = withContext(Dispatchers.IO) {
+            mainMenuRepository.getAvatarsFromRemoteDataSource(1)
+        }
+        avatarList.addAll(avatar)
         return avatarList
     }
 
@@ -182,13 +188,14 @@ class MainMenuViewModelImpl @Inject constructor(
         Timber.d("onClickAvatar")
         if (!isClickAvatar) {
             isClickAvatar = true
-
             viewModelScope.launch {
-                val loadAvatars = loadAvatarsFromRepository().apply {
-                    add(Avatar.ADD_AVATAR)
+                if (avatarList.size == 0) {
+                    loadAvatarsFromRepositoryLocal().apply {
+                        avatarList.add(Avatar.ADD_AVATAR)
+                    }
                 }
                 liveDataAvatarsScreenState.value =
-                    MainMenuState.AvatarsScreenState.ShowAvatarsState(loadAvatars)
+                    MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList)
             }
         }
     }
@@ -209,8 +216,16 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onQueryAddAvatars() {
         Timber.d("onQueryAddAvatars")
-        //TODO("Not yet implemented")
+        avatarList.removeLast()
+        val quantities = avatarList.size
+        viewModelScope.launch {
+            loadAvatarsFromRepositoryRemote()
+            avatarList.add(Avatar.ADD_AVATAR)
+            liveDataAvatarsScreenState.value =
+                MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList, quantities)
+        }
     }
+
 
     override fun onChangedPlayer() {
         closeEditablePlayer(true)
@@ -390,11 +405,15 @@ class MainMenuViewModelImpl @Inject constructor(
                 it.player.avatar = saveEditablePlayer.avatar
             }
             liveDataPlayersScreenState.value =
-                MainMenuState.PlayersScreenState.ChangedPlayerState(players, players.indexOf(it))
+                MainMenuState.PlayersScreenState.ChangedPlayerState(
+                    players,
+                    players.indexOf(it)
+                )
 
             if (isClickAvatar) {
                 isClickAvatar = false
-                liveDataAvatarsScreenState.value = MainMenuState.AvatarsScreenState.HideAvatarsState
+                liveDataAvatarsScreenState.value =
+                    MainMenuState.AvatarsScreenState.HideAvatarsState
             }
 
         }

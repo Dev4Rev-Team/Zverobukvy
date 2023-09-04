@@ -10,6 +10,7 @@ object ExtractAvatarDrawableHelper {
         return if (avatar.isStandard)
             AppCompatResources.getDrawable(context, getResId(avatar.imageName))
         else
+
             //TODO загрузка drawable из файла
             AppCompatResources.getDrawable(context, AvatarEnum.AVATAR_CAT.resId)
     }

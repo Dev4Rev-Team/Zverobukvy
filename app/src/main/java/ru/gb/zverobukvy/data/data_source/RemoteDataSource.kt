@@ -4,7 +4,7 @@ import ru.gb.zverobukvy.data.retrofit.AvatarApi
 
 interface RemoteDataSource {
 
-    suspend fun getRandomAvatar(): AvatarApi
+    suspend fun getRandomAvatar(): String
 
     suspend fun getRandomAvatars(quantity: Int): List<AvatarApi>
 }

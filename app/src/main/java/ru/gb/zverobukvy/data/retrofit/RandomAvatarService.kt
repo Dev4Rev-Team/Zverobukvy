@@ -1,10 +1,11 @@
 package ru.gb.zverobukvy.data.retrofit
 
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.Headers
+import retrofit2.http.Query
 
 interface RandomAvatarService {
-
-    @GET("adventurer/jpg?seed={seed}")
-    suspend fun getSvgImageEntityBySeed(@Path("seed") seed: String): AvatarApi
+    @Headers("Content-Type: image/svg+xml")
+    @GET("adventurer/svg")
+    suspend fun getSvgImageEntityBySeed(@Query("seed") seed: String): String
 }
