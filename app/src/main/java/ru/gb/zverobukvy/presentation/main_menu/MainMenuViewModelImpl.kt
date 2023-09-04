@@ -316,6 +316,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onQueryShowInstruction() {
         Timber.d("onQueryInstruction")
+        closeEditablePlayer(true)
         liveDataShowInstructionScreenState.value = MainMenuState.ShowInstructionsScreenState
     }
 
