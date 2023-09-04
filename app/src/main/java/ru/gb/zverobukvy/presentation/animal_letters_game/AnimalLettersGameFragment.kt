@@ -19,6 +19,7 @@ import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
+import ru.gb.zverobukvy.presentation.customview.createAlphaShowAnimation
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
@@ -27,6 +28,7 @@ import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
+
 
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
@@ -219,12 +221,12 @@ class AnimalLettersGameFragment :
                 button.visibility = View.INVISIBLE
                 viewModel.onClickNextWalkingPlayer()
             }
-            button.visibility = View.VISIBLE
+            createAlphaShowAnimation(button, START_DELAY_ANIMATION, DURATION_ANIMATION).start()
         }
     }
 
     private fun requestNextWord() {
-        binding.nextWord.root.visibility = View.VISIBLE
+        createAlphaShowAnimation(binding.nextWord.root, START_DELAY_ANIMATION, DURATION_ANIMATION).start()
     }
 
     override fun onBackPressed(): Boolean {
@@ -275,8 +277,10 @@ class AnimalLettersGameFragment :
 
     companion object {
         const val GAME_START = "GAME_START"
-
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
+
+        private const val START_DELAY_ANIMATION = 350L
+        private const val DURATION_ANIMATION = 300L
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {
