@@ -3,10 +3,12 @@ package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
+import coil.decode.SvgDecoder
 import coil.load
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 import ru.gb.zverobukvy.utility.ui.ExtractAvatarDrawableHelper
+import java.nio.ByteBuffer
 
 class EditPlayerViewHolder(
     private val viewBinding: FragmentMainMenuItemPlayerModeEditBinding,
@@ -14,7 +16,7 @@ class EditPlayerViewHolder(
     private val cancelChangedPlayerClickListener: () -> Unit,
     private val editNameChangedPlayerClickListener: (String) -> Unit,
     private val queryRemovePlayersClickListener: (Int) -> Unit,
-    private val avatarPlayerClickListener: () -> Unit
+    private val avatarPlayerClickListener: () -> Unit,
 ) :
     BasePlayerViewHolder(viewBinding) {
     override fun bindView(playerInSetting: PlayerInSettings?) {
@@ -56,12 +58,21 @@ class EditPlayerViewHolder(
                     )
                 }
                 playerAvatarImageView.apply {
-                    load(
-                        ExtractAvatarDrawableHelper.extractDrawable(
-                            itemView.context,
-                            it.player.avatar
+                    val avatar = it.player.avatar
+                    if (avatar.isStandard) {
+                        viewBinding.playerAvatarImageView.load(
+                            ExtractAvatarDrawableHelper.extractDrawable(itemView.context, avatar)
                         )
-                    )
+                    } else {
+                        viewBinding.playerAvatarImageView.load(ByteBuffer.wrap(avatar.imageName.toByteArray())) {
+                            decoderFactory { result, options, _ ->
+                                SvgDecoder(
+                                    result.source,
+                                    options
+                                )
+                            }
+                        }
+                    }
                     isClickable = true
                     setOnClickListener {
                         avatarPlayerClickListener()
