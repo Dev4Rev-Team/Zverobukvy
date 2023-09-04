@@ -2,7 +2,6 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="@dimen/elevation_default"
@@ -14,10 +13,12 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/header_imageView"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:scaleType="fitCenter"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/ic_minus" />
 
         <androidx.core.widget.NestedScrollView
