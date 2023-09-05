@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 class Avatar(
     val imageName: String,
     val isStandard: Boolean = true,
-    val id: Long = 0
+    var id: Long = 0
 ) : Parcelable, DomainEntity {
     companion object {
         private const val DEFAULT_IMAGE_NAME = "avatar_cat"
