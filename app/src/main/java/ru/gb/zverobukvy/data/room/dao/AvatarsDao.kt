@@ -1,6 +1,8 @@
 package ru.gb.zverobukvy.data.room.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import ru.gb.zverobukvy.data.room.entity.AvatarInDatabase
 
@@ -8,4 +10,7 @@ import ru.gb.zverobukvy.data.room.entity.AvatarInDatabase
 interface AvatarsDao {
     @Query("SELECT * FROM avatars")
     suspend fun getAvatars(): List<AvatarInDatabase>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAvatar(avatar: AvatarInDatabase): Long
 }

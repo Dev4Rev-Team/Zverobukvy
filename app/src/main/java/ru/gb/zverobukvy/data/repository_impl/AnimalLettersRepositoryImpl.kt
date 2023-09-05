@@ -73,9 +73,8 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         localDataSource.deletePlayer(playersMapperData.mapToData(player))
     }
 
-    override suspend fun insertPlayer(player: Player) {
+    override suspend fun insertPlayer(player: Player): Long =
         localDataSource.insertPlayer(playersMapperData.mapToData(player))
-    }
 
     override suspend fun updatePlayer(player: Player) {
         localDataSource.updatePlayer(playersMapperData.mapToData(player))
@@ -111,6 +110,9 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         remoteDataSource.getRandomAvatars(quantities).map {
             avatarApiMapper.mapToDomain(it)
         }
+
+    override suspend fun insertAvatar(avatar: Avatar): Long =
+        localDataSource.insertAvatar(avatarRoomMapper.mapToData(avatar))
 
     private fun registerNetworkStatus() {
         repositoryCoroutineScope.launch {
