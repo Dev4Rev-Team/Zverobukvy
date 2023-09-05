@@ -55,29 +55,41 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getLetterCards(): List<LetterCard> =
-        localDataSource.getLetterCards().map {
-            letterCardMapperToDomain.mapToDomain(it)
+        withContext(Dispatchers.IO) {
+            localDataSource.getLetterCards().map {
+                letterCardMapperToDomain.mapToDomain(it)
+            }
         }
 
     override suspend fun getWordCards(): List<WordCard> =
-        localDataSource.getWordCards().map {
-            wordCardMapperToDomain.mapToDomain(it)
+        withContext(Dispatchers.IO){
+            localDataSource.getWordCards().map {
+                wordCardMapperToDomain.mapToDomain(it)
+            }
         }
 
     override suspend fun getPlayers(): List<Player> =
-        localDataSource.getPlayers().map {
-            playersMapperDomain.mapToDomain(it)
+        withContext(Dispatchers.IO){
+            localDataSource.getPlayers().map {
+                playersMapperDomain.mapToDomain(it)
+            }
         }
 
     override suspend fun deletePlayer(player: Player) {
-        localDataSource.deletePlayer(playersMapperData.mapToData(player))
+        withContext(Dispatchers.IO){
+            localDataSource.deletePlayer(playersMapperData.mapToData(player))
+        }
     }
 
     override suspend fun insertPlayer(player: Player): Long =
-        localDataSource.insertPlayer(playersMapperData.mapToData(player))
+        withContext(Dispatchers.IO){
+            localDataSource.insertPlayer(playersMapperData.mapToData(player))
+        }
 
     override suspend fun updatePlayer(player: Player) {
-        localDataSource.updatePlayer(playersMapperData.mapToData(player))
+        withContext(Dispatchers.IO){
+            localDataSource.updatePlayer(playersMapperData.mapToData(player))
+        }
     }
 
     override fun getTypesCardsSelectedForGame(): List<TypeCards> =
@@ -102,17 +114,23 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         sharedPreferencesForGame.isFirstLaunch()
 
     override suspend fun getAvatarsFromLocalDataSource(): List<Avatar> =
-        localDataSource.getAvatars().map{
-            avatarRoomMapper.mapToDomain(it)
+        withContext(Dispatchers.IO){
+            localDataSource.getAvatars().map{
+                avatarRoomMapper.mapToDomain(it)
+            }
         }
 
     override suspend fun getAvatarsFromRemoteDataSource(quantities: Int): List<Avatar> =
-        remoteDataSource.getRandomAvatars(quantities).map {
-            avatarApiMapper.mapToDomain(it)
+        withContext(Dispatchers.IO){
+            remoteDataSource.getRandomAvatars(quantities).map {
+                avatarApiMapper.mapToDomain(it)
+            }
         }
 
     override suspend fun insertAvatar(avatar: Avatar): Long =
-        localDataSource.insertAvatar(avatarRoomMapper.mapToData(avatar))
+        withContext(Dispatchers.IO){
+            localDataSource.insertAvatar(avatarRoomMapper.mapToData(avatar))
+        }
 
     private fun registerNetworkStatus() {
         repositoryCoroutineScope.launch {
