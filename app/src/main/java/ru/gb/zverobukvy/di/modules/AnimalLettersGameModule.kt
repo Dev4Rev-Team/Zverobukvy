@@ -14,6 +14,7 @@ import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewMo
         RepositoryModule::class,
         SoundEffectModule::class,
         AssetImageCashModule::class,
+        ResourcesProviderModule::class,
     ]
 )
 interface AnimalLettersGameModule {
