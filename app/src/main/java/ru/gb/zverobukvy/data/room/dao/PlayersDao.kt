@@ -17,7 +17,7 @@ interface PlayersDao {
     suspend fun getPlayers(): List<PlayerWithAvatar>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlayer(player: PlayerInDatabase)
+    suspend fun insertPlayer(player: PlayerInDatabase): Long
 
     @Delete
     suspend fun deletePlayer(player: PlayerInDatabase)
