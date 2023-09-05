@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
-import coil.load
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
@@ -23,9 +22,10 @@ import ru.gb.zverobukvy.presentation.customview.createAlphaShowAnimation
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
-import ru.gb.zverobukvy.utility.ui.ExtractAvatarDrawableHelper
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
+import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoader
+import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
 
@@ -40,6 +40,7 @@ class AnimalLettersGameFragment :
 
     private lateinit var viewModel: AnimalLettersGameViewModel
 
+    private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -193,12 +194,7 @@ class AnimalLettersGameFragment :
 
     private fun setPlayer(player: Player) {
         binding.playerNameTextView.text = player.name
-        binding.playerAvatarImageView.load(
-            ExtractAvatarDrawableHelper.extractDrawable(
-                requireContext(),
-                player.avatar
-            )
-        )
+        imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
         binding.table.setWorkClick(true)
     }
 

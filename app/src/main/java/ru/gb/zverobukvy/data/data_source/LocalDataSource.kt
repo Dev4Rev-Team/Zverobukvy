@@ -11,7 +11,7 @@ interface LocalDataSource {
 
     suspend fun deletePlayer(player: PlayerInDatabase)
 
-    suspend fun insertPlayer(player: PlayerInDatabase)
+    suspend fun insertPlayer(player: PlayerInDatabase): Long
 
     suspend fun updatePlayer(player: PlayerInDatabase)
 
@@ -20,4 +20,6 @@ interface LocalDataSource {
     suspend fun getWordCards(): List<WordCardInDatabase>
 
     suspend fun getAvatars(): List<AvatarInDatabase>
+
+    suspend fun insertAvatar(avatar: AvatarInDatabase): Long
 }

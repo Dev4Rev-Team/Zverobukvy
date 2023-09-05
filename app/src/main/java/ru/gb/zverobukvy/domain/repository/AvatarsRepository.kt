@@ -6,4 +6,6 @@ interface AvatarsRepository {
     suspend fun getAvatarsFromLocalDataSource(): List<Avatar>
 
     suspend fun getAvatarsFromRemoteDataSource(quantities: Int): List <Avatar>
+
+    suspend fun insertAvatar(avatar: Avatar): Long
 }

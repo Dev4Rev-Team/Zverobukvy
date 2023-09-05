@@ -1,26 +1,19 @@
 package ru.gb.zverobukvy.presentation.main_menu.list_avatars.view_holder
 
-import coil.decode.SvgDecoder
-import coil.load
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemAvatarBinding
 import ru.gb.zverobukvy.domain.entity.Avatar
-import ru.gb.zverobukvy.utility.ui.ExtractAvatarDrawableHelper
-import java.nio.ByteBuffer
+import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoader
+import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoaderImpl
 
 class AvatarViewHolder(
     private val viewBinding: FragmentMainMenuItemAvatarBinding,
     private val avatarClickListener: (Int) -> Unit,
 ) : BaseAvatarViewHolder(viewBinding) {
+
+    private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+
     override fun bindView(avatar: Avatar) {
-        if (avatar.isStandard) {
-            viewBinding.playerAvatarImageView.load(
-                ExtractAvatarDrawableHelper.extractDrawable(itemView.context, avatar)
-            )
-        } else {
-            viewBinding.playerAvatarImageView.load(ByteBuffer.wrap(avatar.imageName.toByteArray())) {
-                decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
-            }
-        }
+        imageAvatarLoader.loadImageAvatar(avatar, viewBinding.playerAvatarImageView)
         viewBinding.avatarCardView.setOnClickListener {
             avatarClickListener(adapterPosition)
         }
