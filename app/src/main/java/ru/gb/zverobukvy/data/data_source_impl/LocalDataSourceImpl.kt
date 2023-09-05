@@ -14,6 +14,7 @@ class LocalDataSourceImpl @Inject constructor(
 ) : LocalDataSource {
     private val playersDao = animalLettersDatabase.playersDao()
 
+    private val avatarsDao = animalLettersDatabase.avatarsDao()
 
     override suspend fun getPlayers(): List<PlayerWithAvatar> = playersDao.getPlayers()
 
@@ -21,9 +22,8 @@ class LocalDataSourceImpl @Inject constructor(
         playersDao.deletePlayer(player)
     }
 
-    override suspend fun insertPlayer(player: PlayerInDatabase) {
+    override suspend fun insertPlayer(player: PlayerInDatabase): Long =
         playersDao.insertPlayer(player)
-    }
 
     override suspend fun updatePlayer(player: PlayerInDatabase) {
         playersDao.updatePlayer(player)
@@ -36,6 +36,8 @@ class LocalDataSourceImpl @Inject constructor(
         animalLettersDatabase.wordCardsDao().getWordCards()
 
     override suspend fun getAvatars(): List<AvatarInDatabase> =
-        animalLettersDatabase.avatarsDao().getAvatars()
+        avatarsDao.getAvatars()
 
+    override suspend fun insertAvatar(avatar: AvatarInDatabase): Long =
+       avatarsDao.insertAvatar(avatar)
 }

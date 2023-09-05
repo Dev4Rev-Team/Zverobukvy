@@ -3,10 +3,10 @@ package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
-import coil.load
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
-import ru.gb.zverobukvy.utility.ui.ExtractAvatarDrawableHelper
+import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoader
+import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoaderImpl
 
 class EditPlayerViewHolder(
     private val viewBinding: FragmentMainMenuItemPlayerModeEditBinding,
@@ -14,9 +14,12 @@ class EditPlayerViewHolder(
     private val cancelChangedPlayerClickListener: () -> Unit,
     private val editNameChangedPlayerClickListener: (String) -> Unit,
     private val queryRemovePlayersClickListener: (Int) -> Unit,
-    private val avatarPlayerClickListener: () -> Unit
+    private val avatarPlayerClickListener: () -> Unit,
 ) :
     BasePlayerViewHolder(viewBinding) {
+
+    private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
             viewBinding.run {
@@ -55,13 +58,10 @@ class EditPlayerViewHolder(
                         this@EditPlayerViewHolder.adapterPosition
                     )
                 }
+
+                imageAvatarLoader.loadImageAvatar(it.player.avatar, playerAvatarImageView)
+
                 playerAvatarImageView.apply {
-                    load(
-                        ExtractAvatarDrawableHelper.extractDrawable(
-                            itemView.context,
-                            it.player.avatar
-                        )
-                    )
                     isClickable = true
                     setOnClickListener {
                         avatarPlayerClickListener()

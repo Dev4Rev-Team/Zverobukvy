@@ -30,21 +30,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBottomSheet() {
+        val bottomSheetView = findViewById<View>(R.id.containerBottomSheet)
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
 
         MainMenuFragment.setOnListenerShowInstruction(this) {
-            val bottomSheetView = findViewById<View>(R.id.containerBottomSheet).apply {
-                visibility = View.VISIBLE
-            }
-            val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
+            bottomSheetView.visibility = View.VISIBLE
             val bottomFragment =
                 InstructionBottomSheetDialogFragment.instance()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.containerBottomSheet, bottomFragment)
-                .commit()
-
+                .commitAllowingStateLoss()
             if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
+
+        InstructionBottomSheetDialogFragment.setOnListenerClickHeader(this) {
+            bottomSheetBehavior.state = when (bottomSheetBehavior.state) {
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+                    BottomSheetBehavior.STATE_EXPANDED
+                }
+
+                BottomSheetBehavior.STATE_EXPANDED -> {
+                    BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                else -> bottomSheetBehavior.state
+            }
+
+        }
+
     }
 }

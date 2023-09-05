@@ -16,7 +16,7 @@ class RemoteDataSourceImpl @Inject constructor(
             .joinToString("")
     }
 
-    override suspend fun getRandomAvatar(): AvatarApi {
+    override suspend fun getRandomAvatar(): String {
         val randomSeed = getRandomSeed(DEFAULT_SEED_LENGTH)
         return retrofitApi.getSvgImageEntityBySeed(randomSeed)
     }
@@ -26,7 +26,7 @@ class RemoteDataSourceImpl @Inject constructor(
 
         return mutableListOf<AvatarApi>().apply {
             (0..quantity).forEach { _ ->
-                val randomAvatar = getRandomAvatar()
+                val randomAvatar = AvatarApi(getRandomAvatar())
                 add(randomAvatar)
             }
         }
