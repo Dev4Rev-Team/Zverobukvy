@@ -8,5 +8,6 @@ enum class StringEnum(val id: Int) {
     MAIN_MENU_FRAGMENT_A_PLAYER_WITH_THE_SAME_NAME_ALREADY_EXISTS(
         R.string.main_menu_fragment_a_player_with_the_same_name_already_exists
     ),
-    MAIN_MENU_FRAGMENT_NEW_PLAYER(R.string.main_menu_fragment_new_player)
+    MAIN_MENU_FRAGMENT_NEW_PLAYER(R.string.main_menu_fragment_new_player),
+    MAIN_MENU_FRAGMENT_NO_INTERNET_CONNECTION(R.string.main_menu_fragment_no_internet_connection)
 }

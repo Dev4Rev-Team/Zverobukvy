@@ -216,14 +216,26 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onQueryAddAvatars() {
         Timber.d("onQueryAddAvatars")
-        avatarList.removeLast()
-        val quantities = avatarList.size
-        viewModelScope.launch {
-            loadAvatarsFromRepositoryRemote()
-            avatarList.add(Avatar.ADD_AVATAR)
+        if (mainMenuRepository.isOnline) {
+            avatarList.removeLast()
+            val quantities = avatarList.size
+            viewModelScope.launch {
+                loadAvatarsFromRepositoryRemote()
+                avatarList.add(Avatar.ADD_AVATAR)
+                liveDataAvatarsScreenState.value =
+                    MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList, quantities)
+            }
+        } else {
+            liveDataScreenState.value =
+                MainMenuState.ScreenState.ErrorState(
+                    resourcesProvider.getString(
+                        StringEnum.MAIN_MENU_FRAGMENT_NO_INTERNET_CONNECTION
+                    )
+                )
             liveDataAvatarsScreenState.value =
-                MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList, quantities)
+                MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList, avatarList.lastIndex)
         }
+
     }
 
 
@@ -399,7 +411,7 @@ class MainMenuViewModelImpl @Inject constructor(
                 viewModelScope.launch {
                     players[players.indexOf(it)]?.let { item ->
                         val avatar = item.player.avatar
-                        if(!avatar.isStandard){
+                        if (!avatar.isStandard) {
                             val id = mainMenuRepository.insertAvatar(avatar)
                             avatar.id = id
                         }
