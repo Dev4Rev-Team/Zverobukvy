@@ -15,19 +15,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.27" />
 
-    <TextView
-        android:id="@+id/next_word_guessed_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/word_guessed_text"
-        android:textColor="#63000000"
-        android:textSize="@dimen/text_medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/word_guidline2" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/word_guidline2"
         android:layout_width="wrap_content"
@@ -51,9 +38,10 @@
         android:text="@string/next_player_move_text"
         android:textColor="#63000000"
         android:textSize="@dimen/text_medium"
+        android:layout_marginTop="@dimen/margin_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/next_word_guessed_text_view" />
+        app:layout_constraintTop_toTopOf="@+id/word_guidline2" />
 
     <TextView
         android:id="@+id/next_word_tap_to_screen_text_view"
