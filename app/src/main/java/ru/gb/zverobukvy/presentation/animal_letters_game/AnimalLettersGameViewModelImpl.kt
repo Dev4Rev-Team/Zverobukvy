@@ -253,11 +253,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 if (newWordCard.word.length == newWordCard.positionsGuessedLetters.size) {
                     /** Событие отгаданного слова */
                     isCardClick = false
-                    val screenDimmingText = ""
+
                     if (newState.isActive)  {
                         isGuessedWord = true
-                        textOfGuessedWord(newState)
                     }
+                    val screenDimmingText = textOfGuessedWord(newState)
 
                     stateList.addFirst(
                         ChangingState.GuessedWord(
@@ -297,12 +297,12 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     private fun textOfInvalidLetter(state: GameState): String {
-        return if (isMultiplayerGame(state)) provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_INVALID_LETTER_MULTIPLAYER) + state.nextWalkingPlayer!!.player.name
+        return if (isMultiplayerGame(state)) provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_INVALID_LETTER_MULTIPLAYER) + state.nextWalkingPlayer?.player?.name
         else provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_INVALID_LETTER_SINGLE_PLAYER)
     }
 
     private fun textOfGuessedWord(state: GameState): String {
-        return if (isMultiplayerGame(state)) provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_GUESSED_WORD_MULTIPLAYER) + state.nextWalkingPlayer!!.player.name
+        return if (isMultiplayerGame(state)) provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_GUESSED_WORD_MULTIPLAYER) + state.nextWalkingPlayer?.player?.name
         else provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_GUESSED_WORD_SINGLE_PLAYER)
     }
 
