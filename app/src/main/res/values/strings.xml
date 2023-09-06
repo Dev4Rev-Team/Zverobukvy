@@ -22,10 +22,10 @@
     <string name="no">Нет</string>
     <string name="cancel">"Отмена"</string>
     <string name="save">"Сохранить"</string>
-    <string name="main_menu_fragment_no_card_selected">Карта не выбрана</string>
-    <string name="main_menu_fragment_no_player_selected">Игрок не выбран</string>
-    <string name="main_menu_fragment_the_name_field_is_empty">Поле с именем не заполнено</string>
-    <string name="main_menu_fragment_a_player_with_the_same_name_already_exists">Игрок с таким именем %s уже существует</string>
+    <string name="main_menu_fragment_no_card_selected">Выбери набор карточек</string>
+    <string name="main_menu_fragment_no_player_selected">Выбери, кто будет играть</string>
+    <string name="main_menu_fragment_the_name_field_is_empty">Введи имя игрока</string>
+    <string name="main_menu_fragment_a_player_with_the_same_name_already_exists">Игрок \"%s\" уже существует</string>
     <string name="main_menu_fragment_no_internet_connection">Нет подключения к Интернету</string>
     <string name="main_menu_fragment_delete_player">Удалить игрока?</string>
     <string name="main_menu_fragment_new_player">Игрок %d</string>
@@ -35,7 +35,16 @@
     <string name="game_time_text">Время игры</string>
     <string name="end_game_question_text">Закончить игру?</string>
     <string name="next_player_move_text">Ход следующего игрока</string>
-    <string name="press_to_continue_text">Нажми чтобы продолжить</string>
+    <string name="press_to_continue_text">Нажми, чтобы продолжить</string>
     <string name="word_guessed_text">Слово отгадано</string>
+
+    <string name="game_view_model_error_next_guessed_word_not_found">Следующее загадываемое слово не найдено</string>
+    <string name="game_view_model_error_null_arrived_game_state">Обновленное состояние GameState == null</string>
+    <string name="game_view_model_error_state_restore">Проблема в логике восстановления состояния экрана</string>
+    <string name="game_view_model_text_invalid_letters_multiplayer">"Ходит "</string>
+    <string name="game_view_model_text_invalid_letters_single_player"> </string>
+    <string name="game_view_model_text_guessed_word_multiplayer">"Ходит "</string>
+    <string name="game_view_model_text_guessed_word_single_player"> </string>
+    <string name="game_view_model_default_text_for_screen_dimming"> </string>
 
 </resources>

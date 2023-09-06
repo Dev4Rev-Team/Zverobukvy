@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -12,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
@@ -53,6 +53,12 @@ class MainMenuFragment :
         AvatarsAdapter(::clickChangedAvatar, ::clickAddAvatars)
     }
 
+    private val snackbar by lazy {
+        Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
+            setAction(getString(R.string.ok)){dismiss()}
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Timber.d("onViewCreated")
         super.onViewCreated(view, savedInstanceState)
@@ -61,18 +67,22 @@ class MainMenuFragment :
         initView()
         viewModel.run {
             getLiveDataScreenState().observe(viewLifecycleOwner) {
+                snackbar.dismiss()
                 hideKeyboard()
                 renderScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
+                snackbar.dismiss()
                 hideKeyboard()
                 renderPlayersScreenState(it)
             }
-            getLiveDataShowInstructionScreenState().observe(viewLifecycleOwner){
+            getLiveDataShowInstructionScreenState().observe(viewLifecycleOwner) {
+                snackbar.dismiss()
                 hideKeyboard()
                 renderShowInstructionScreenState()
             }
             getLiveDataAvatarsScreenState().observe(viewLifecycleOwner) {
+                snackbar.dismiss()
                 hideKeyboard()
                 renderAvatarsScreenState(it)
             }
@@ -102,6 +112,7 @@ class MainMenuFragment :
 
     private fun initRoot() {
         binding.root.setOnClickListener {
+            snackbar.dismiss()
             viewModel.onClickScreen()
         }
     }
@@ -135,6 +146,7 @@ class MainMenuFragment :
         toggleButton.apply {
             setChecked(isChecked)
             setOnCheckedChangeListener { _, _ ->
+                snackbar.dismiss()
                 viewModel.onClickTypeCards(typeCard)
             }
         }
@@ -213,9 +225,7 @@ class MainMenuFragment :
     }
 
     private fun showError(error: String) {
-        Toast.makeText(
-            requireContext(), error, Toast.LENGTH_LONG
-        ).show()
+       snackbar.setText(error).show()
     }
 
     private fun renderPlayersScreenState(playersScreenState: MainMenuState.PlayersScreenState) {
@@ -307,7 +317,7 @@ class MainMenuFragment :
         viewModel.onQueryChangedAvatar(avatarPosition)
     }
 
-    private fun clickAddAvatars(){
+    private fun clickAddAvatars() {
         viewModel.onQueryAddAvatars()
     }
 
@@ -344,13 +354,15 @@ class MainMenuFragment :
                 Timber.d("ShowAvatarsState")
                 binding.avatarsRecyclerViewLayout.visibility = View.VISIBLE
                 avatarsAdapter.setAvatars(avatarsScreenState.avatars)
+                binding.avatarsRecyclerView.scrollToPosition(avatarsScreenState.scrollPosition)
             }
         }
     }
 
     private fun hideKeyboard() {
         requireActivity().currentFocus?.let {
-            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val imm =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(it.windowToken, 0)
         }
     }
