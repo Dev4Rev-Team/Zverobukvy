@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -61,7 +62,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     private suspend fun loadAvatarsFromRepositoryRemote(): MutableList<Avatar> {
         val avatar = withContext(Dispatchers.IO) {
-            mainMenuRepository.getAvatarsFromRemoteDataSource(1)
+            mainMenuRepository.getAvatarsFromRemoteDataSource(QUANTITIES_AVATAR)
         }
         avatarList.addAll(avatar)
         return avatarList
@@ -218,10 +219,20 @@ class MainMenuViewModelImpl @Inject constructor(
         Timber.d("onQueryAddAvatars")
         if (mainMenuRepository.isOnline) {
             avatarList.removeLast()
-            val quantities = avatarList.size
-            viewModelScope.launch {
+
+            val exceptionHandler =
+                CoroutineExceptionHandler { _, throwable ->
+                    liveDataScreenState.value =
+                        MainMenuState.ScreenState.ErrorState(
+                            resourcesProvider.getString(
+                                StringEnum.MAIN_MENU_FRAGMENT_NO_INTERNET_CONNECTION
+                            ) + throwable
+                        )
+                }
+            viewModelScope.launch(exceptionHandler) {
                 loadAvatarsFromRepositoryRemote()
                 avatarList.add(Avatar.ADD_AVATAR)
+                val quantities = avatarList.lastIndex
                 liveDataAvatarsScreenState.value =
                     MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList, quantities)
             }
@@ -442,6 +453,7 @@ class MainMenuViewModelImpl @Inject constructor(
     companion object {
         private val ADD_PLAYER_BUTTON = null
         private const val SHIFT_LAST_PLAYER = 2
+        private const val QUANTITIES_AVATAR = 7
         fun mapToPlayerInSettings(player: Player) = PlayerInSettings(player)
     }
 }
