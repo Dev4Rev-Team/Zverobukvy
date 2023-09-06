@@ -271,9 +271,9 @@ class MainMenuViewModelImpl @Inject constructor(
         closeEditablePlayer(true)
 
         viewModelScope.launch {
-            val name = createAndSavePlayer(maxIdPlayer)
+            val player = createAndSavePlayer(maxIdPlayer)
             val newPosition = players.lastIndex
-            players.add(newPosition, loadPlayerInSettings(name))
+            players.add(newPosition, player)
 
             liveDataPlayersScreenState.postValue(
                 MainMenuState.PlayersScreenState.AddPlayerState(
@@ -284,26 +284,15 @@ class MainMenuViewModelImpl @Inject constructor(
         }
     }
 
-    private suspend fun loadPlayerInSettings(name: String): PlayerInSettings {
-        val playersDB = mainMenuRepository.getPlayers()
-        val newPlayerDB = playersDB.first {
-            it.name == name
-        }
-        return PlayerInSettings(
-            newPlayerDB,
-            isSelectedForGame = true
-        )
-    }
-
-    private suspend fun createAndSavePlayer(nameID: Long): String {
+    private suspend fun createAndSavePlayer(nameID: Long): PlayerInSettings {
         val name = newNamePlayer(nameID)
         val player = PlayerInSettings(
             Player(name),
             isSelectedForGame = true
         )
-        mainMenuRepository.insertPlayer(player.player)
+        player.player.id = mainMenuRepository.insertPlayer(player.player)
         namesPlayersSelectedForGame.add(name)
-        return name
+        return player
     }
 
     private fun newNamePlayer(nameID: Long): String {
