@@ -22,7 +22,7 @@
     <string name="no">Нет</string>
     <string name="cancel">"Отмена"</string>
     <string name="save">"Сохранить"</string>
-    <string name="main_menu_fragment_no_card_selected">Выбери набор карточек для игры</string>
+    <string name="main_menu_fragment_no_card_selected">Выбери набор карточек</string>
     <string name="main_menu_fragment_no_player_selected">Выбери, кто будет играть</string>
     <string name="main_menu_fragment_the_name_field_is_empty">Введи имя игрока</string>
     <string name="main_menu_fragment_a_player_with_the_same_name_already_exists">Игрок \"%s\" уже существует</string>
