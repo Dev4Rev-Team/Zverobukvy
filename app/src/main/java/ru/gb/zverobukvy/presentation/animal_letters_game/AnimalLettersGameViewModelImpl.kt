@@ -253,9 +253,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 if (newWordCard.word.length == newWordCard.positionsGuessedLetters.size) {
                     /** Событие отгаданного слова */
                     isCardClick = false
-                    if (newState.isActive) isGuessedWord = true
-                    val screenDimmingText =
+                    val screenDimmingText = ""
+                    if (newState.isActive)  {
+                        isGuessedWord = true
                         textOfGuessedWord(newState)
+                    }
 
                     stateList.addFirst(
                         ChangingState.GuessedWord(
