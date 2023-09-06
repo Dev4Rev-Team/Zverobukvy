@@ -22,11 +22,11 @@
     <string name="no">Нет</string>
     <string name="cancel">"Отмена"</string>
     <string name="save">"Сохранить"</string>
-    <string name="main_menu_fragment_no_card_selected">The card is not selected</string>
-    <string name="main_menu_fragment_no_player_selected">The player is not selected</string>
-    <string name="main_menu_fragment_the_name_field_is_empty">The name field is empty</string>
-    <string name="main_menu_fragment_a_player_with_the_same_name_already_exists">A player with the same name %s already exists</string>
-    <string name="main_menu_fragment_no_internet_connection">No internet connection</string>
+    <string name="main_menu_fragment_no_card_selected">Карта не выбрана</string>
+    <string name="main_menu_fragment_no_player_selected">Игрок не выбран</string>
+    <string name="main_menu_fragment_the_name_field_is_empty">Поле с именем не заполнено</string>
+    <string name="main_menu_fragment_a_player_with_the_same_name_already_exists">Игрок с таким именем %s уже существует</string>
+    <string name="main_menu_fragment_no_internet_connection">Нет подключения к Интернету</string>
     <string name="main_menu_fragment_delete_player">Удалить игрока?</string>
     <string name="main_menu_fragment_new_player">Игрок %d</string>
     <string name="player_state_ready">Хочет играть</string>
