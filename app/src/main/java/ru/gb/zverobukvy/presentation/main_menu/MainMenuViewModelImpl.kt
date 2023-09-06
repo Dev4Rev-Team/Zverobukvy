@@ -61,7 +61,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     private suspend fun loadAvatarsFromRepositoryRemote(): MutableList<Avatar> {
         val avatar = withContext(Dispatchers.IO) {
-            mainMenuRepository.getAvatarsFromRemoteDataSource(1)
+            mainMenuRepository.getAvatarsFromRemoteDataSource(7)
         }
         avatarList.addAll(avatar)
         return avatarList

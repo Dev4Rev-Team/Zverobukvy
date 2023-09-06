@@ -344,6 +344,7 @@ class MainMenuFragment :
                 Timber.d("ShowAvatarsState")
                 binding.avatarsRecyclerViewLayout.visibility = View.VISIBLE
                 avatarsAdapter.setAvatars(avatarsScreenState.avatars)
+                binding.avatarsRecyclerView.scrollToPosition(avatarsScreenState.scrollPosition)
             }
         }
     }
