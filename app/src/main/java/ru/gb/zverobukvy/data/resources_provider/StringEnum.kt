@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.data.resources_provider
 
 import ru.gb.zverobukvy.R
+
 enum class StringEnum(val id: Int) {
     MAIN_MENU_FRAGMENT_NO_CARD_SELECTED(R.string.main_menu_fragment_no_card_selected),
     MAIN_MENU_FRAGMENT_NO_PLAYER_SELECTED(R.string.main_menu_fragment_no_player_selected),
@@ -8,5 +9,14 @@ enum class StringEnum(val id: Int) {
     MAIN_MENU_FRAGMENT_A_PLAYER_WITH_THE_SAME_NAME_ALREADY_EXISTS(
         R.string.main_menu_fragment_a_player_with_the_same_name_already_exists
     ),
-    MAIN_MENU_FRAGMENT_NEW_PLAYER(R.string.main_menu_fragment_new_player)
+    MAIN_MENU_FRAGMENT_NEW_PLAYER(R.string.main_menu_fragment_new_player),
+
+    GAME_VIEW_MODEL_ERROR_NEXT_GUESSED_WORD_NOT_FOUND(R.string.game_view_model_error_next_guessed_word_not_found),
+    GAME_VIEW_MODEL_ERROR_NULL_ARRIVED_GAME_STATE(R.string.game_view_model_error_null_arrived_game_state),
+    GAME_VIEW_MODEL_ERROR_STATE_RESTORE(R.string.game_view_model_error_state_restore),
+    GAME_VIEW_MODEL_TEXT_INVALID_LETTER_MULTIPLAYER(R.string.game_view_model_text_invalid_letters_multiplayer),
+    GAME_VIEW_MODEL_TEXT_INVALID_LETTER_SINGLE_PLAYER(R.string.game_view_model_text_invalid_letters_single_player),
+    GAME_VIEW_MODEL_TEXT_GUESSED_WORD_MULTIPLAYER(R.string.game_view_model_text_guessed_word_multiplayer),
+    GAME_VIEW_MODEL_TEXT_GUESSED_WORD_SINGLE_PLAYER(R.string.game_view_model_text_guessed_word_single_player),
+    GAME_VIEW_MODEL_TEXT_DEFAULT_SCREEN_DIMMING(R.string.game_view_model_default_text_for_screen_dimming)
 }

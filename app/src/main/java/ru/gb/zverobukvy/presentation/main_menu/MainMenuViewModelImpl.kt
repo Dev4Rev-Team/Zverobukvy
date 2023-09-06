@@ -398,6 +398,11 @@ class MainMenuViewModelImpl @Inject constructor(
             if (isSave && isValidate) {
                 viewModelScope.launch {
                     players[players.indexOf(it)]?.let { item ->
+                        val avatar = item.player.avatar
+                        if(!avatar.isStandard){
+                            val id = mainMenuRepository.insertAvatar(avatar)
+                            avatar.id = id
+                        }
                         mainMenuRepository.updatePlayer(item.player)
                     }
                 }

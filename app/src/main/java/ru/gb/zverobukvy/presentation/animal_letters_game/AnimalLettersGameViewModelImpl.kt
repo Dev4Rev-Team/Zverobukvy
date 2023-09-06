@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
+import ru.gb.zverobukvy.data.resources_provider.StringEnum
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
@@ -21,6 +23,7 @@ import javax.inject.Inject
 class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
+    private val provider: ResourcesProvider
 ) : AnimalLettersGameViewModel, ViewModel() {
 
     private var isClickNextWalkingPlayer: Boolean = false
@@ -144,7 +147,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
          * Срабатывает сразу после подписки на данные в Interactor
          */
         if (newState == null) {
-            throw IllegalStateException(ERROR_NULL_ARRIVED_GAME_STATE)
+            throw IllegalStateException(provider.getString(StringEnum.GAME_VIEW_MODEL_ERROR_NULL_ARRIVED_GAME_STATE))
         }
 
         /** Проверка на Null oldState :
@@ -159,7 +162,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     newState.walkingPlayer!!,
                     isGuessedWord,
                     isWaitingNextPlayer,
-                    TEXT_DEFAULT
+                    provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_DEFAULT_SCREEN_DIMMING)
                 )
             )
         }
@@ -214,7 +217,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     )
                 )
             } else {
-                throw IllegalStateException(ERROR_NEXT_GUESSED_WORD_NOT_FOUND)
+                throw IllegalStateException(provider.getString(StringEnum.GAME_VIEW_MODEL_ERROR_NEXT_GUESSED_WORD_NOT_FOUND))
             }
         }
 
@@ -292,13 +295,13 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     private fun textOfInvalidLetter(state: GameState): String {
-        return if (isMultiplayerGame(state)) TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT + state.nextWalkingPlayer!!.player.name
-        else TEXT_INVALID_LETTER_PLAYERS_ARE_NOT_DIFFERENT
+        return if (isMultiplayerGame(state)) provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_INVALID_LETTER_MULTIPLAYER) + state.nextWalkingPlayer!!.player.name
+        else provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_INVALID_LETTER_SINGLE_PLAYER)
     }
 
     private fun textOfGuessedWord(state: GameState): String {
-        return if (isMultiplayerGame(state)) TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT + state.nextWalkingPlayer!!.player.name
-        else TEXT_GUESSED_WORD_PLAYERS_ARE_NOT_DIFFERENT
+        return if (isMultiplayerGame(state)) provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_GUESSED_WORD_MULTIPLAYER) + state.nextWalkingPlayer!!.player.name
+        else provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_GUESSED_WORD_SINGLE_PLAYER)
     }
 
     private fun positionGuessedLetters(oldPositions: List<Int>, newPositions: List<Int>): Int? {
@@ -336,7 +339,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     screenDimmingText
                 )
             } else {
-                throw IllegalStateException(ERROR_STATE_RESTORE)
+                throw IllegalStateException(provider.getString(StringEnum.GAME_VIEW_MODEL_ERROR_STATE_RESTORE))
             }
         }
     }
@@ -344,7 +347,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private fun calculateScreenDimmingTextOnActiveGame(state: GameState) =
         if (isWaitingNextPlayer) textOfInvalidLetter(state)
         else if (isGuessedWord) textOfGuessedWord(state)
-        else TEXT_DEFAULT
+        else provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_DEFAULT_SCREEN_DIMMING)
 
     private fun isMultiplayerGame(state: GameState) = state.players.size > 1
 
@@ -414,17 +417,6 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         const val INIT_CARD_CLICK_POSITION = -1
 
         const val STATE_DELAY = 2000L
-
-        const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
-        const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null "
-        const val ERROR_STATE_RESTORE = "Проблема в логике восстановления состояния эерана"
-
-        const val TEXT_INVALID_LETTER_PLAYERS_ARE_DIFFERENT = "Ход : "
-        const val TEXT_INVALID_LETTER_PLAYERS_ARE_NOT_DIFFERENT = ""
-        const val TEXT_GUESSED_WORD_PLAYERS_ARE_DIFFERENT = "Ход : "
-        const val TEXT_GUESSED_WORD_PLAYERS_ARE_NOT_DIFFERENT = ""
-
-        const val TEXT_DEFAULT = ""
 
         const val COROUTINE_SCOPE_CANCEL = "in viewModel.onCleared()"
     }
