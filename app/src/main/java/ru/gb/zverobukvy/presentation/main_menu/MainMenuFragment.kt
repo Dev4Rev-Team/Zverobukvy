@@ -71,14 +71,10 @@ class MainMenuFragment :
                 renderScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
-                if (snackbar.isShown)
-                    snackbar.dismiss()
                 hideKeyboard()
                 renderPlayersScreenState(it)
             }
             getLiveDataShowInstructionScreenState().observe(viewLifecycleOwner) {
-                if (snackbar.isShown)
-                    snackbar.dismiss()
                 hideKeyboard()
                 renderShowInstructionScreenState()
             }
@@ -112,8 +108,7 @@ class MainMenuFragment :
 
     private fun initRoot() {
         binding.root.setOnClickListener {
-            if (snackbar.isShown)
-                snackbar.dismiss()
+            hideError()
             viewModel.onClickScreen()
         }
     }
@@ -147,8 +142,7 @@ class MainMenuFragment :
         toggleButton.apply {
             setChecked(isChecked)
             setOnCheckedChangeListener { _, _ ->
-                if (snackbar.isShown)
-                    snackbar.dismiss()
+                hideError()
                 viewModel.onClickTypeCards(typeCard)
             }
         }
@@ -158,6 +152,7 @@ class MainMenuFragment :
         binding.playButton.apply {
             isClickable = true
             setOnClickListener {
+                hideError()
                 isClickable = false
                 viewModel.onStartGame()
             }
@@ -185,6 +180,7 @@ class MainMenuFragment :
 
     private fun initShowInstructionImageView() {
         binding.showInstructionImageView.setOnClickListener {
+            hideError()
             viewModel.onQueryShowInstruction()
         }
     }
@@ -199,8 +195,6 @@ class MainMenuFragment :
 
             is MainMenuState.ScreenState.StartGame -> {
                 Timber.d("StartGame")
-                if (snackbar.isShown)
-                    snackbar.dismiss()
                 openAnimalLettersFragment(
                     mainMenuState.typesCardsSelectedForGame,
                     mainMenuState.playersSelectedForGame
@@ -209,8 +203,6 @@ class MainMenuFragment :
 
             is MainMenuState.ScreenState.TypesCardsState -> {
                 Timber.d("TypesCardsState")
-                if (snackbar.isShown)
-                    snackbar.dismiss()
                 initTypesCardsToggleButtons(
                     mainMenuState.typesCard
                 )
@@ -233,6 +225,11 @@ class MainMenuFragment :
     private fun showError(error: String) {
         if (!snackbar.isShown)
             snackbar.setText(error).show()
+    }
+
+    private fun hideError() {
+        if (snackbar.isShown)
+            snackbar.dismiss()
     }
 
     private fun renderPlayersScreenState(playersScreenState: MainMenuState.PlayersScreenState) {
@@ -287,22 +284,27 @@ class MainMenuFragment :
     }
 
     private fun clickPlayer(position: Int) {
+        hideError()
         viewModel.onChangedSelectingPlayer(position)
     }
 
     private fun clickEditMenuPlayer(position: Int) {
+        hideError()
         viewModel.onQueryChangedPlayer(position)
     }
 
     private fun clickSaveChangedPlayer() {
+        hideError()
         viewModel.onChangedPlayer()
     }
 
     private fun clickCancelChangedPlayer() {
+        hideError()
         viewModel.onCancelChangedPlayer()
     }
 
     private fun clickQueryRemovePlayer(position: Int) {
+        hideError()
         RemovePlayerDialogFragment.newInstance().also {
             it.arguments = bundleOf(
                 RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER to position
@@ -312,23 +314,28 @@ class MainMenuFragment :
     }
 
     private fun inputEditNameChangedPlayerClickListener(name: String) {
+        hideError()
         viewModel.onEditNamePlayer(name)
     }
 
     private fun clickAvatar() {
+        hideError()
         hideKeyboard()
         viewModel.onClickAvatar()
     }
 
     private fun clickChangedAvatar(avatarPosition: Int) {
+        hideError()
         viewModel.onQueryChangedAvatar(avatarPosition)
     }
 
     private fun clickAddAvatars() {
+        hideError()
         viewModel.onQueryAddAvatars()
     }
 
     private fun clickAddPlayer() {
+        hideError()
         viewModel.onAddPlayer()
     }
 
