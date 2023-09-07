@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="game_rules_target">Цель игры</string>
-    <string name="game_rules_target_text">Игра состоит из нескольких раундов, в каждом из них разыгрывается карта со зверем — она отображается в верхней части экрана. Задача игроков — открыть все буквы, которые вхопят в название этого зверя. Тот, кому удаётся открыть последнюю из букв, входящих в слово, получает призовой балл.
-После этого появляется следующая карта со зверем — и начинается следующий раунд. Побеждает тот, кто по итогам всех раундов получил больше баллов!</string>
-    <string name="game_rules_cards">Карточки</string>
-    <string name="game_rules_card_orange">Слова из 3-4 букв</string>
-    <string name="game_rules_card_green">Слова из 3-5 букв</string>
-    <string name="game_rules_card_blue">Слова из 4-6 букв</string>
-    <string name="game_rules_card_violet">Слова из 4-10 букв</string>
+    <string name="game_rules_name">Правила</string>
+    <string name="game_rules_prepare">Подготовка</string>
+    <string name="game_rules_prepare_text1">Придумай имена и выбери аватарки для игроков.</string>
+    <string name="game_rules_prepare_text2">Выбери один или несколько наборов карточек. Начни с простого уровня – оранжевый.</string>
+
+    <string name="game_rules_player">Игра</string>
+    <string name="game_rules_player_text1">Перед тобой загаданное слово и карточки с буквами. Открывай карточки и запоминай, какие на них буквы. Твоя цель – найти все буквы в загаданном слове.</string>
+    <string name="game_rules_player_text2">Если слово отгадано, попробуй отгадать следующее.  Все карточки с буквами остаются на своих местах. апоминай, где расположены нужные тебе буквы!</string>
+
+    <string name="game_rules_multiplayer">Игра с другом</string>
+    <string name="game_rules_multiplayer_text1">Если ты играешь с другом, внимательно следи за тем, чей сейчас ход. Имя игрока указано в верхней части экрана.</string>
+    <string name="game_rules_multiplayer_text2">Ход переходит к следующему игроку, если была открыта неверная буква или слово было отгадано. \nИгрок, которому удалось открыть последнюю неотгаданную букву в слове, набирает балл.</string>
+
+    <string name="game_rules_end_game">Завершение игры</string>
+    <string name="game_rules_end_game_text">Если все слова отгаданы, посмотри на свой результат: сколько баллов ты набрал и за какое время. </string>
+
+    <string name="game_rules_end_game_say_goodbye">Удачи!</string>
 </resources>
