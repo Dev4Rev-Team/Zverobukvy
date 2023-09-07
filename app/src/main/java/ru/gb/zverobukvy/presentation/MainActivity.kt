@@ -3,6 +3,7 @@ package ru.gb.zverobukvy.presentation
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
@@ -10,6 +11,7 @@ import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
