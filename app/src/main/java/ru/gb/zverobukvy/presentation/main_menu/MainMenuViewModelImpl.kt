@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -61,7 +62,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     private suspend fun loadAvatarsFromRepositoryRemote(): MutableList<Avatar> {
         val avatar = withContext(Dispatchers.IO) {
-            mainMenuRepository.getAvatarsFromRemoteDataSource(7)
+            mainMenuRepository.getAvatarsFromRemoteDataSource(QUANTITIES_AVATAR)
         }
         avatarList.addAll(avatar)
         return avatarList
@@ -216,14 +217,36 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onQueryAddAvatars() {
         Timber.d("onQueryAddAvatars")
-        avatarList.removeLast()
-        val quantities = avatarList.size
-        viewModelScope.launch {
-            loadAvatarsFromRepositoryRemote()
-            avatarList.add(Avatar.ADD_AVATAR)
+        if (mainMenuRepository.isOnline) {
+            avatarList.removeLast()
+
+            val exceptionHandler =
+                CoroutineExceptionHandler { _, throwable ->
+                    liveDataScreenState.value =
+                        MainMenuState.ScreenState.ErrorState(
+                            resourcesProvider.getString(
+                                StringEnum.MAIN_MENU_FRAGMENT_NO_INTERNET_CONNECTION
+                            ) + throwable
+                        )
+                }
+            viewModelScope.launch(exceptionHandler) {
+                loadAvatarsFromRepositoryRemote()
+                avatarList.add(Avatar.ADD_AVATAR)
+                val quantities = avatarList.lastIndex
+                liveDataAvatarsScreenState.value =
+                    MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList, quantities)
+            }
+        } else {
+            liveDataScreenState.value =
+                MainMenuState.ScreenState.ErrorState(
+                    resourcesProvider.getString(
+                        StringEnum.MAIN_MENU_FRAGMENT_NO_INTERNET_CONNECTION
+                    )
+                )
             liveDataAvatarsScreenState.value =
-                MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList, quantities)
+                MainMenuState.AvatarsScreenState.ShowAvatarsState(avatarList, avatarList.lastIndex)
         }
+
     }
 
 
@@ -248,9 +271,9 @@ class MainMenuViewModelImpl @Inject constructor(
         closeEditablePlayer(true)
 
         viewModelScope.launch {
-            val name = createAndSavePlayer(maxIdPlayer)
+            val player = createAndSavePlayer(maxIdPlayer)
             val newPosition = players.lastIndex
-            players.add(newPosition, loadPlayerInSettings(name))
+            players.add(newPosition, player)
 
             liveDataPlayersScreenState.postValue(
                 MainMenuState.PlayersScreenState.AddPlayerState(
@@ -261,26 +284,15 @@ class MainMenuViewModelImpl @Inject constructor(
         }
     }
 
-    private suspend fun loadPlayerInSettings(name: String): PlayerInSettings {
-        val playersDB = mainMenuRepository.getPlayers()
-        val newPlayerDB = playersDB.first {
-            it.name == name
-        }
-        return PlayerInSettings(
-            newPlayerDB,
-            isSelectedForGame = true
-        )
-    }
-
-    private suspend fun createAndSavePlayer(nameID: Long): String {
+    private suspend fun createAndSavePlayer(nameID: Long): PlayerInSettings {
         val name = newNamePlayer(nameID)
         val player = PlayerInSettings(
             Player(name),
             isSelectedForGame = true
         )
-        mainMenuRepository.insertPlayer(player.player)
+        player.player.id = mainMenuRepository.insertPlayer(player.player)
         namesPlayersSelectedForGame.add(name)
-        return name
+        return player
     }
 
     private fun newNamePlayer(nameID: Long): String {
@@ -399,7 +411,7 @@ class MainMenuViewModelImpl @Inject constructor(
                 viewModelScope.launch {
                     players[players.indexOf(it)]?.let { item ->
                         val avatar = item.player.avatar
-                        if(!avatar.isStandard){
+                        if (!avatar.isStandard) {
                             val id = mainMenuRepository.insertAvatar(avatar)
                             avatar.id = id
                         }
@@ -430,6 +442,7 @@ class MainMenuViewModelImpl @Inject constructor(
     companion object {
         private val ADD_PLAYER_BUTTON = null
         private const val SHIFT_LAST_PLAYER = 2
+        private const val QUANTITIES_AVATAR = 7
         fun mapToPlayerInSettings(player: Player) = PlayerInSettings(player)
     }
 }
