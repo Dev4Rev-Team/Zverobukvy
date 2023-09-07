@@ -55,7 +55,7 @@ class MainMenuFragment :
 
     private val snackbar by lazy {
         Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
-            setAction(getString(R.string.ok)){dismiss()}
+            setAction(getString(R.string.ok)) { dismiss() }
         }
     }
 
@@ -67,22 +67,22 @@ class MainMenuFragment :
         initView()
         viewModel.run {
             getLiveDataScreenState().observe(viewLifecycleOwner) {
-                snackbar.dismiss()
                 hideKeyboard()
                 renderScreenState(it)
             }
             getLiveDataPlayersScreenState().observe(viewLifecycleOwner) {
-                snackbar.dismiss()
+                if (snackbar.isShown)
+                    snackbar.dismiss()
                 hideKeyboard()
                 renderPlayersScreenState(it)
             }
             getLiveDataShowInstructionScreenState().observe(viewLifecycleOwner) {
-                snackbar.dismiss()
+                if (snackbar.isShown)
+                    snackbar.dismiss()
                 hideKeyboard()
                 renderShowInstructionScreenState()
             }
             getLiveDataAvatarsScreenState().observe(viewLifecycleOwner) {
-                snackbar.dismiss()
                 hideKeyboard()
                 renderAvatarsScreenState(it)
             }
@@ -112,7 +112,8 @@ class MainMenuFragment :
 
     private fun initRoot() {
         binding.root.setOnClickListener {
-            snackbar.dismiss()
+            if (snackbar.isShown)
+                snackbar.dismiss()
             viewModel.onClickScreen()
         }
     }
@@ -146,7 +147,8 @@ class MainMenuFragment :
         toggleButton.apply {
             setChecked(isChecked)
             setOnCheckedChangeListener { _, _ ->
-                snackbar.dismiss()
+                if (snackbar.isShown)
+                    snackbar.dismiss()
                 viewModel.onClickTypeCards(typeCard)
             }
         }
@@ -197,6 +199,8 @@ class MainMenuFragment :
 
             is MainMenuState.ScreenState.StartGame -> {
                 Timber.d("StartGame")
+                if (snackbar.isShown)
+                    snackbar.dismiss()
                 openAnimalLettersFragment(
                     mainMenuState.typesCardsSelectedForGame,
                     mainMenuState.playersSelectedForGame
@@ -205,6 +209,8 @@ class MainMenuFragment :
 
             is MainMenuState.ScreenState.TypesCardsState -> {
                 Timber.d("TypesCardsState")
+                if (snackbar.isShown)
+                    snackbar.dismiss()
                 initTypesCardsToggleButtons(
                     mainMenuState.typesCard
                 )
@@ -225,7 +231,8 @@ class MainMenuFragment :
     }
 
     private fun showError(error: String) {
-       snackbar.setText(error).show()
+        if (!snackbar.isShown)
+            snackbar.setText(error).show()
     }
 
     private fun renderPlayersScreenState(playersScreenState: MainMenuState.PlayersScreenState) {
@@ -348,6 +355,7 @@ class MainMenuFragment :
             MainMenuState.AvatarsScreenState.HideAvatarsState -> {
                 Timber.d("HideAvatarsState")
                 binding.avatarsRecyclerViewLayout.visibility = View.GONE
+                avatarsAdapter.resetAvatars()
             }
 
             is MainMenuState.AvatarsScreenState.ShowAvatarsState -> {

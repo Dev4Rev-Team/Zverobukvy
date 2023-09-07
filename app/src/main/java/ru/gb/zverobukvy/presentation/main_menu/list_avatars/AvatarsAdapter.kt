@@ -50,7 +50,17 @@ class AvatarsAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun setAvatars(avatars: List<Avatar>) {
+        val size = this.avatars.size
         this.avatars = avatars
+        if (size != avatars.size)
+            notifyDataSetChanged()
+        else
+            notifyItemChanged(size - 1)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun resetAvatars(){
+        avatars = listOf()
         notifyDataSetChanged()
     }
 
