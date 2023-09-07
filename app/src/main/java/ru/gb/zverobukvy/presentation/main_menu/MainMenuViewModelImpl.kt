@@ -225,8 +225,8 @@ class MainMenuViewModelImpl @Inject constructor(
                     liveDataScreenState.value =
                         MainMenuState.ScreenState.ErrorState(
                             resourcesProvider.getString(
-                                StringEnum.MAIN_MENU_FRAGMENT_NO_INTERNET_CONNECTION
-                            ) + throwable
+                                StringEnum.MAIN_MENU_FRAGMENT_NO_SERVER_CONNECTION
+                            ) + ":" + throwable
                         )
                 }
             viewModelScope.launch(exceptionHandler) {
