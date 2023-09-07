@@ -11,6 +11,7 @@ enum class StringEnum(val id: Int) {
     ),
     MAIN_MENU_FRAGMENT_NEW_PLAYER(R.string.main_menu_fragment_new_player),
     MAIN_MENU_FRAGMENT_NO_INTERNET_CONNECTION(R.string.main_menu_fragment_no_internet_connection),
+    MAIN_MENU_FRAGMENT_NO_SERVER_CONNECTION(R.string.main_menu_fragment_no_server_connection),
 
     GAME_VIEW_MODEL_ERROR_NEXT_GUESSED_WORD_NOT_FOUND(R.string.game_view_model_error_next_guessed_word_not_found),
     GAME_VIEW_MODEL_ERROR_NULL_ARRIVED_GAME_STATE(R.string.game_view_model_error_null_arrived_game_state),
