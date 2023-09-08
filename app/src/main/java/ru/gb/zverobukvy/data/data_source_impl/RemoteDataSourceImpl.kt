@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.data.data_source_impl
 
+import androidx.annotation.IntRange
 import ru.gb.zverobukvy.data.data_source.RemoteDataSource
 import ru.gb.zverobukvy.data.retrofit.AvatarApi
 import ru.gb.zverobukvy.data.retrofit.RandomAvatarService
@@ -16,9 +17,12 @@ class RemoteDataSourceImpl @Inject constructor(
             .joinToString("")
     }
 
-    override suspend fun getRandomAvatar(): String {
+    override suspend fun getRandomAvatar(@IntRange(0, 200) scale: Int): String {
         val randomSeed = getRandomSeed(DEFAULT_SEED_LENGTH)
-        return retrofitApi.getSvgImageEntityBySeed(randomSeed)
+        return retrofitApi.getSvgImageEntityBySeed(mapOf(
+            SEED to randomSeed,
+            SCALE to scale.toString()
+        ))
     }
 
     override suspend fun getRandomAvatars(quantity: Int): List<AvatarApi> {
@@ -26,7 +30,7 @@ class RemoteDataSourceImpl @Inject constructor(
 
         return mutableListOf<AvatarApi>().apply {
             (0..quantity).forEach { _ ->
-                val randomAvatar = AvatarApi(getRandomAvatar())
+                val randomAvatar = AvatarApi(getRandomAvatar(DEFAULT_AVATAR_SCALE))
                 add(randomAvatar)
             }
         }
@@ -34,6 +38,10 @@ class RemoteDataSourceImpl @Inject constructor(
 
     companion object {
         const val DEFAULT_SEED_LENGTH: Int = 6
+        const val DEFAULT_AVATAR_SCALE: Int = 150
+
+        const val SEED = "seed"
+        const val SCALE = "scale"
 
         const val ERROR_INVALID_AVATARS_QUANTITY = "Невалидное количество"
 
