@@ -11,10 +11,6 @@ import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewMo
 @Module(
     includes = [
         GameStopwatchModule::class,
-        RepositoryModule::class,
-        SoundEffectModule::class,
-        AssetImageCashModule::class,
-        ResourcesProviderModule::class,
     ]
 )
 interface AnimalLettersGameModule {
