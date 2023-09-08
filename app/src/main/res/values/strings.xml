@@ -29,6 +29,7 @@
     <string name="main_menu_fragment_no_internet_connection">Нет подключения к Интернету</string>
     <string name="main_menu_fragment_delete_player">Удалить игрока?</string>
     <string name="main_menu_fragment_new_player">Игрок %d</string>
+    <string name="main_menu_fragment_no_server_connection">Сервер временно не работает</string>
     <string name="player_state_ready">Хочет играть</string>
     <string name="player_state_not_ready">Не играет</string>
     <string name="game_end_text">Игра завершена</string>
