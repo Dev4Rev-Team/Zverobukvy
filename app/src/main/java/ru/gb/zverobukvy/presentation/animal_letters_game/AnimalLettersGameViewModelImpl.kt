@@ -147,7 +147,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
          * Срабатывает сразу после подписки на данные в Interactor
          */
         if (newState == null) {
-            throw IllegalStateException(provider.getString(StringEnum.GAME_VIEW_MODEL_ERROR_NULL_ARRIVED_GAME_STATE))
+            throw IllegalStateException(ERROR_NULL_ARRIVED_GAME_STATE)
         }
 
         /** Проверка на Null oldState :
@@ -217,7 +217,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     )
                 )
             } else {
-                throw IllegalStateException(provider.getString(StringEnum.GAME_VIEW_MODEL_ERROR_NEXT_GUESSED_WORD_NOT_FOUND))
+                throw IllegalStateException(ERROR_NEXT_GUESSED_WORD_NOT_FOUND)
             }
         }
 
@@ -341,7 +341,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     screenDimmingText
                 )
             } else {
-                throw IllegalStateException(provider.getString(StringEnum.GAME_VIEW_MODEL_ERROR_STATE_RESTORE))
+                throw IllegalStateException(ERROR_STATE_RESTORE)
             }
         }
     }
@@ -419,6 +419,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         const val INIT_CARD_CLICK_POSITION = -1
 
         const val STATE_DELAY = 2000L
+
+        const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
+        const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"
+        const val ERROR_STATE_RESTORE = "Проблема в логике восстановления состояния экрана"
 
         const val COROUTINE_SCOPE_CANCEL = "in viewModel.onCleared()"
     }

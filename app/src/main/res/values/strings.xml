@@ -38,9 +38,6 @@
     <string name="press_to_continue_text">Нажми, чтобы продолжить</string>
     <string name="word_guessed_text">Слово отгадано</string>
 
-    <string name="game_view_model_error_next_guessed_word_not_found">Следующее загадываемое слово не найдено</string>
-    <string name="game_view_model_error_null_arrived_game_state">Обновленное состояние GameState == null</string>
-    <string name="game_view_model_error_state_restore">Проблема в логике восстановления состояния экрана</string>
     <string name="game_view_model_text_invalid_letters_multiplayer">"Ходит "</string>
     <string name="game_view_model_text_invalid_letters_single_player"> </string>
     <string name="game_view_model_text_guessed_word_multiplayer">"Ходит "</string>
