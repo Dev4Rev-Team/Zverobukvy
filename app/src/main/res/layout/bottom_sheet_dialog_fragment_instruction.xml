@@ -213,58 +213,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_view" />
 
-                <androidx.cardview.widget.CardView
+                <ImageView
                     android:id="@+id/game_multiplayer_card_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginTop="@dimen/margin_medium"
-                    app:cardCornerRadius="@dimen/corner_radius_medium"
+                    android:src="@drawable/game_player"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_part1_text_view">
 
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="@dimen/margin_medium"
-                        android:layout_marginVertical="@dimen/margin_small"
-                        android:orientation="horizontal">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/player_avatar_card_view"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:backgroundTint="@color/color_blue_pastel"
-                            app:cardCornerRadius="8000dp">
-
-                            <ImageView
-                                android:id="@+id/player_avatar_image_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="@dimen/margin_avatar_image"
-                                android:layout_weight="1"
-                                app:srcCompat="@drawable/avatar_cat" />
-                        </androidx.cardview.widget.CardView>
-
-                        <Space
-                            android:layout_width="10dp"
-                            android:layout_height="@dimen/auto_layout" />
-
-                        <TextView
-                            android:id="@+id/player_name_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="@string/username_default"
-                            android:textSize="@dimen/text_medium_small" />
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </ImageView>
 
                 <TextView
                     android:id="@+id/game_multiplayer_text_part2_text_view"
@@ -303,7 +262,7 @@
                 <ImageView
                     android:id="@+id/end_game_image_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="220dp"
                     android:maxHeight="50dp"
                     android:src="@drawable/game_end"
                     android:layout_marginTop="@dimen/margin_default"

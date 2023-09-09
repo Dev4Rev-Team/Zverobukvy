@@ -281,8 +281,8 @@ class AnimalLettersGameFragment :
         const val GAME_START = "GAME_START"
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
 
-        private const val START_DELAY_ANIMATION = 350L
-        private const val DURATION_ANIMATION = 100L
+        private const val START_DELAY_ANIMATION = 550L
+        private const val DURATION_ANIMATION = 300L
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {
