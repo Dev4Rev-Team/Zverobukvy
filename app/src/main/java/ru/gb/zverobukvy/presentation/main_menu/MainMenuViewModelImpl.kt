@@ -266,6 +266,14 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     override fun onAddPlayer() {
+
+        if (players.size > MAX_PLAYER) {
+            liveDataScreenState.value =
+                MainMenuState.ScreenState.ErrorState(
+                    resourcesProvider.getString(StringEnum.MAIN_MENU_FRAGMENT_MAX_PLAYERS)
+                )
+            return
+        }
         maxIdPlayer += 1
 
         closeEditablePlayer(true)
@@ -288,7 +296,7 @@ class MainMenuViewModelImpl @Inject constructor(
         val name = newNamePlayer(nameID)
         val player = PlayerInSettings(
             Player(name),
-            isSelectedForGame = true
+            isSelectedForGame = false
         )
         player.player.id = mainMenuRepository.insertPlayer(player.player)
         namesPlayersSelectedForGame.add(name)
@@ -443,6 +451,7 @@ class MainMenuViewModelImpl @Inject constructor(
         private val ADD_PLAYER_BUTTON = null
         private const val SHIFT_LAST_PLAYER = 2
         private const val QUANTITIES_AVATAR = 7
+        private const val MAX_PLAYER = 15
         fun mapToPlayerInSettings(player: Player) = PlayerInSettings(player)
     }
 }
