@@ -6,7 +6,7 @@ class AnimalLettersComputerImpl(
     private val smartLevel: SmartLevel,
     private var gameField: GameField
 ) : AnimalLettersComputer {
-    override fun setCurrentGameField(currentGameField: GameField) {
+    override fun setCurrentGameField(currentGameField: GameField, selectedPosition: Int) {
         TODO("Not yet implemented")
     }
 
