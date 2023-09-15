@@ -52,4 +52,15 @@ interface AnimalLettersGameInteractor {
     полное текущее состояние игры, в котором isActive = false
      */
     fun endGameByUser()
+
+    /**
+     * Метод вызывается, когда необходим ход компьютера. В этом методе интерактор испускает
+     * позицию карточки, выбранную компьютером
+     */
+    fun getSelectedLetterCardByComputer()
+
+    /**
+     * Метод для подписки ViewModel на ход компьютера (карточку, выбранную компьютером).
+     */
+    fun subscribeToComputer(): StateFlow<Int>
 }

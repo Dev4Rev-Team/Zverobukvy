@@ -140,6 +140,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     }
 
     override fun getNextWalkingPlayer() {
+        //TODO перевернуть неверную карточку!
         Timber.d("getNextWalkingPlayer")
         // gameStateFlow обновляет value, т.к. отличается walkingPlayer и nextWalkingPlayer
         // когда один игрок, педварительно обнуляем walkingPlayer и nextWalkingPlayer в текущем
@@ -176,6 +177,14 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 nextWalkingPlayer = null,
                 isActive = false
             )
+    }
+
+    override fun getSelectedLetterCardByComputer() {
+        TODO("Not yet implemented")
+    }
+
+    override fun subscribeToComputer(): StateFlow<Int> {
+        TODO("Not yet implemented")
     }
 
     /**
@@ -216,9 +225,10 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
      * @return текущее состояние игры
      */
     private fun selectionWrongLetterCard(currentGameState: GameState) {
+        //TODO отображать неверную карточку видимой!
         Timber.d("selectionWrongLetterCard")
         // gameStateFlow обновляет value, т.к. отличаются walkingPlayer и nextWalkingPlayer
-        // (предварительно их обнуяем в текущем состоянии gameStateFlow)
+        // (предварительно их обнуляем в текущем состоянии gameStateFlow)
             currentGameState.apply {
                 walkingPlayer = null
                 nextWalkingPlayer = null
