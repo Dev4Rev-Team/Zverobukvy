@@ -11,8 +11,9 @@ enum class StringEnum(val id: Int) {
     ),
     MAIN_MENU_FRAGMENT_NEW_PLAYER(R.string.main_menu_fragment_new_player),
     MAIN_MENU_FRAGMENT_NO_INTERNET_CONNECTION(R.string.main_menu_fragment_no_internet_connection),
-    MAIN_MENU_FRAGMENT_NO_SERVER_CONNECTION(R.string.main_menu_fragment_no_server_connection),
+    MAIN_MENU_FRAGMENT_MAX_PLAYERS(R.string.game_view_model_max_players),
 
+    MAIN_MENU_FRAGMENT_NO_SERVER_CONNECTION(R.string.main_menu_fragment_no_server_connection),
     GAME_VIEW_MODEL_TEXT_INVALID_LETTER_MULTIPLAYER(R.string.game_view_model_text_invalid_letters_multiplayer),
     GAME_VIEW_MODEL_TEXT_INVALID_LETTER_SINGLE_PLAYER(R.string.game_view_model_text_invalid_letters_single_player),
     GAME_VIEW_MODEL_TEXT_GUESSED_WORD_MULTIPLAYER(R.string.game_view_model_text_guessed_word_multiplayer),
