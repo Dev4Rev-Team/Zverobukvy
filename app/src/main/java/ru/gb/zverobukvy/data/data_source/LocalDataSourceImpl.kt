@@ -1,6 +1,5 @@
-package ru.gb.zverobukvy.data.data_source_impl
+package ru.gb.zverobukvy.data.data_source
 
-import ru.gb.zverobukvy.data.data_source.LocalDataSource
 import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.data.room.entity.AvatarInDatabase
 import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase

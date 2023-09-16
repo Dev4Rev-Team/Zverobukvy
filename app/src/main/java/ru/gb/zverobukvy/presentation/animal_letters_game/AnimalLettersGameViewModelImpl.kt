@@ -12,7 +12,7 @@ import ru.gb.zverobukvy.data.resources_provider.StringEnum
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
-import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
+import ru.gb.zverobukvy.data.stopwatch.GameStopwatch
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData

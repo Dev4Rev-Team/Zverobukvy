@@ -4,8 +4,8 @@ import android.view.animation.LinearInterpolator
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemAvatarBinding
 import ru.gb.zverobukvy.domain.entity.Avatar
-import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoader
-import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoaderImpl
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 
 class AddAvatarViewHolder(
     private val viewBinding: FragmentMainMenuItemAvatarBinding,
