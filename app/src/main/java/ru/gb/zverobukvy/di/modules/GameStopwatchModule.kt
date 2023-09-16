@@ -5,9 +5,9 @@ import dagger.Module
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatchImpl
 import ru.gb.zverobukvy.data.stopwatch.TimeFormatterImpl
 import ru.gb.zverobukvy.data.stopwatch.TimeStampProviderImpl
-import ru.gb.zverobukvy.domain.use_case.stopwatch.GameStopwatch
-import ru.gb.zverobukvy.domain.use_case.stopwatch.TimeFormatter
-import ru.gb.zverobukvy.domain.use_case.stopwatch.TimeStampProvider
+import ru.gb.zverobukvy.data.stopwatch.GameStopwatch
+import ru.gb.zverobukvy.data.stopwatch.TimeFormatter
+import ru.gb.zverobukvy.data.stopwatch.TimeStampProvider
 
 @Module
 interface GameStopwatchModule {

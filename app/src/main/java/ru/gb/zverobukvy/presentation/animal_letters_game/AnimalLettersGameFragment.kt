@@ -24,8 +24,8 @@ import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
-import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoader
-import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoaderImpl
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
 

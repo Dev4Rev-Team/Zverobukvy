@@ -1,7 +1,6 @@
-package ru.gb.zverobukvy.data.data_source_impl
+package ru.gb.zverobukvy.data.data_source
 
 import androidx.annotation.IntRange
-import ru.gb.zverobukvy.data.data_source.RemoteDataSource
 import ru.gb.zverobukvy.data.retrofit.AvatarApi
 import ru.gb.zverobukvy.data.retrofit.RandomAvatarService
 import javax.inject.Inject

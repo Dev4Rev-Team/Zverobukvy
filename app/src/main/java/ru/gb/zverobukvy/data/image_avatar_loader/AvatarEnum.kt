@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.utility.ui
+package ru.gb.zverobukvy.data.image_avatar_loader
 
 import ru.gb.zverobukvy.R
 
