@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeAddBinding
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
+import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
@@ -50,6 +51,8 @@ class PlayersAdapter(
                 addPlayerClickListenerOwner.addPlayerClickListener
             )
 
+            COMPUTER_ITEM_TYPE -> TODO()
+
             else -> AddPlayerViewHolder(
                 FragmentMainMenuItemPlayerModeAddBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -70,17 +73,25 @@ class PlayersAdapter(
         players[position].let {
             if (it == null)
                 return ADD_ITEM_TYPE
-            when (it.inEditingState) {
-                false -> return NOT_EDIT_ITEM_TYPE
-                true -> return EDIT_ITEM_TYPE
+            else{
+                when(it.player){
+                    is Player.HumanPlayer -> {
+                        when (it.inEditingState) {
+                            false -> return NOT_EDIT_ITEM_TYPE
+                            true -> return EDIT_ITEM_TYPE
+                        }
+                    }
+                    Player.ComputerPlayer -> return COMPUTER_ITEM_TYPE
+                }
             }
         }
     }
 
     companion object {
+        // TODO переделать на ENUM
         const val NOT_EDIT_ITEM_TYPE = 1
         const val EDIT_ITEM_TYPE = 2
         const val ADD_ITEM_TYPE = 3
-
+        const val COMPUTER_ITEM_TYPE = 4
     }
 }

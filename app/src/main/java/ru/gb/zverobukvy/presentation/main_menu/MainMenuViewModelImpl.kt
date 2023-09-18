@@ -30,7 +30,7 @@ class MainMenuViewModelImpl @Inject constructor(
     private val namesPlayersSelectedForGame: MutableList<String> = mutableListOf()
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
     private var lastEditablePlayer: PlayerInSettings? = null
-    private var saveEditablePlayer = Player("")
+    private var saveEditablePlayer = Player.HumanPlayer("")
     private var maxIdPlayer = 0L
     private val avatarList = mutableListOf<Avatar>()
     private var isClickAvatar = false
@@ -295,7 +295,7 @@ class MainMenuViewModelImpl @Inject constructor(
     private suspend fun createAndSavePlayer(nameID: Long): PlayerInSettings {
         val name = newNamePlayer(nameID)
         val player = PlayerInSettings(
-            Player(name),
+            Player.HumanPlayer(name),
             isSelectedForGame = false
         )
         player.player.id = mainMenuRepository.insertPlayer(player.player)

@@ -7,7 +7,7 @@ import ru.gb.zverobukvy.domain.entity.Player
 class PlayerMapperToDomain : EntityMapperToDomain<Player, PlayerWithAvatar> {
     override fun mapToDomain(entity: PlayerWithAvatar): Player =
         entity.let {
-            Player(
+            Player.HumanPlayer(
                 name = it.player.name,
                 id = it.player.idPlayer,
                 avatar = Avatar(
