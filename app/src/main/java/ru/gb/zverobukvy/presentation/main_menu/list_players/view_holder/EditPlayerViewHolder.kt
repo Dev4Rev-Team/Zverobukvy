@@ -5,8 +5,8 @@ import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
-import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoader
-import ru.gb.zverobukvy.utility.ui.image_avatar_loader.ImageAvatarLoaderImpl
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 
 class EditPlayerViewHolder(
     private val viewBinding: FragmentMainMenuItemPlayerModeEditBinding,

@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.domain.use_case.stopwatch
+package ru.gb.zverobukvy.data.stopwatch
 
 
 interface GameStopwatch {
