@@ -68,25 +68,25 @@ class AnimalLettersRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getPlayers(): List<Player> =
+    override suspend fun getPlayers(): List<Player.HumanPlayer> =
         withContext(Dispatchers.IO){
             localDataSource.getPlayers().map {
                 playersMapperDomain.mapToDomain(it)
             }
         }
 
-    override suspend fun deletePlayer(player: Player) {
+    override suspend fun deletePlayer(player: Player.HumanPlayer) {
         withContext(Dispatchers.IO){
             localDataSource.deletePlayer(playersMapperData.mapToData(player))
         }
     }
 
-    override suspend fun insertPlayer(player: Player): Long =
+    override suspend fun insertPlayer(player: Player.HumanPlayer): Long =
         withContext(Dispatchers.IO){
             localDataSource.insertPlayer(playersMapperData.mapToData(player))
         }
 
-    override suspend fun updatePlayer(player: Player) {
+    override suspend fun updatePlayer(player: Player.HumanPlayer) {
         withContext(Dispatchers.IO){
             localDataSource.updatePlayer(playersMapperData.mapToData(player))
         }
