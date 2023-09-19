@@ -49,7 +49,14 @@ class MainMenuViewModelImpl @Inject constructor(
     init {
         loadTypeCardsSelectedForGame()
         loadPlayersSelectedForGame()
+        createComputer()
         loadPlayersFromRepository()
+    }
+
+    private fun createComputer() {
+        val computer: Player = Player.ComputerPlayer
+        val isSelectedForGame = namesPlayersSelectedForGame.contains(computer.name)
+        players.add(PlayerInSettings(computer, isSelectedForGame))
     }
 
     private suspend fun loadAvatarsFromRepositoryLocal(): MutableList<Avatar> {
