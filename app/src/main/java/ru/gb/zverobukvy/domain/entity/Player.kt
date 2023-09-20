@@ -16,7 +16,10 @@ sealed class Player(open var name: String, open var id: Long = 0, open var avata
     ) : Player(name, id, avatar)
 
     @Parcelize
-    object ComputerPlayer : Player("Computer", avatar = Avatar.COMPUTER_AVATAR)
+    object ComputerPlayer : Player(COMPUTER_NAME, avatar = Avatar.COMPUTER_AVATAR)
 
+    companion object{
+        private const val COMPUTER_NAME = "Computer"
+    }
 }
 

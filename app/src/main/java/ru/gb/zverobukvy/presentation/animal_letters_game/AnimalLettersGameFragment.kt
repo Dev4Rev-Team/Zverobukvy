@@ -6,6 +6,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
+import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.gb.zverobukvy.domain.entity.Player
@@ -193,7 +194,11 @@ class AnimalLettersGameFragment :
     }
 
     private fun setPlayer(player: Player) {
-        binding.playerNameTextView.text = player.name
+        binding.playerNameTextView.text =
+            when(player){
+                Player.ComputerPlayer -> getString(R.string.username_computer)
+                is Player.HumanPlayer -> player.name
+            }
         imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
         binding.table.setWorkClick(true)
     }
