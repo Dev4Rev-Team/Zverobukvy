@@ -2,6 +2,7 @@ package ru.gb.zverobukvy.presentation.main_menu.list_players.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import ru.gb.zverobukvy.databinding.FragmentMainMenuItemComputerPlayerModeViewBinding
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeAddBinding
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
@@ -11,6 +12,7 @@ import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.AddPlayerViewHolder
 import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.BasePlayerViewHolder
+import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.ComputerPlayerViewHolder
 import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.EditPlayerViewHolder
 import ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder.PlayerViewHolder
 
@@ -51,7 +53,14 @@ class PlayersAdapter(
                 addPlayerClickListenerOwner.addPlayerClickListener
             )
 
-//            COMPUTER_ITEM_TYPE -> TODO()
+            COMPUTER_ITEM_TYPE -> ComputerPlayerViewHolder(
+                FragmentMainMenuItemComputerPlayerModeViewBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ),
+                playerClickListenerOwner.itemPlayerClickListener
+            )
 
             else -> AddPlayerViewHolder(
                 FragmentMainMenuItemPlayerModeAddBinding.inflate(
@@ -88,7 +97,6 @@ class PlayersAdapter(
     }
 
     companion object {
-        // TODO переделать на ENUM
         const val NOT_EDIT_ITEM_TYPE = 1
         const val EDIT_ITEM_TYPE = 2
         const val ADD_ITEM_TYPE = 3
