@@ -17,7 +17,7 @@ class ComputerPlayerViewHolder(
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
             viewBinding.run {
-                playerNameTextView.text = itemView.context.getString(R.string.username_computer)
+                playerNameTextView.text = playerInSetting.player.name
                 if (it.isSelectedForGame) {
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_green_pastel))
                 } else {
