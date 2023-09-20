@@ -51,7 +51,7 @@ class PlayersAdapter(
                 addPlayerClickListenerOwner.addPlayerClickListener
             )
 
-            COMPUTER_ITEM_TYPE -> TODO()
+//            COMPUTER_ITEM_TYPE -> TODO()
 
             else -> AddPlayerViewHolder(
                 FragmentMainMenuItemPlayerModeAddBinding.inflate(

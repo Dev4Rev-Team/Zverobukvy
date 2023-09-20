@@ -30,7 +30,7 @@ class MainMenuViewModelImpl @Inject constructor(
     private val namesPlayersSelectedForGame: MutableList<String> = mutableListOf()
     private val players: MutableList<PlayerInSettings?> = mutableListOf()
     private var lastEditablePlayer: PlayerInSettings? = null
-    private var saveEditablePlayer = Player("")
+    private var saveEditablePlayer = Player.HumanPlayer("")
     private var maxIdPlayer = 0L
     private val avatarList = mutableListOf<Avatar>()
     private var isClickAvatar = false
@@ -49,7 +49,14 @@ class MainMenuViewModelImpl @Inject constructor(
     init {
         loadTypeCardsSelectedForGame()
         loadPlayersSelectedForGame()
+        createComputer()
         loadPlayersFromRepository()
+    }
+
+    private fun createComputer() {
+        val computer: Player = Player.ComputerPlayer
+        val isSelectedForGame = namesPlayersSelectedForGame.contains(computer.name)
+        players.add(PlayerInSettings(computer, isSelectedForGame))
     }
 
     private suspend fun loadAvatarsFromRepositoryLocal(): MutableList<Avatar> {
@@ -94,8 +101,8 @@ class MainMenuViewModelImpl @Inject constructor(
                     }
                 })
 
-            if (namesPlayersSelectedForGame.size == 0 && players.size > 0) {
-                players[0]?.isSelectedForGame = true
+            if (namesPlayersSelectedForGame.size == 0 && players.size > ONE_PLAYER) {
+                players[ONE_PLAYER]?.isSelectedForGame = true
             }
 
             if (players.size > 0) {
@@ -295,7 +302,7 @@ class MainMenuViewModelImpl @Inject constructor(
     private suspend fun createAndSavePlayer(nameID: Long): PlayerInSettings {
         val name = newNamePlayer(nameID)
         val player = PlayerInSettings(
-            Player(name),
+            Player.HumanPlayer(name),
             isSelectedForGame = false
         )
         player.player.id = mainMenuRepository.insertPlayer(player.player)
@@ -325,7 +332,9 @@ class MainMenuViewModelImpl @Inject constructor(
 
         if (typesCardsSelectedForGame.size == 0) {
             sendError(StringEnum.MAIN_MENU_FRAGMENT_NO_CARD_SELECTED)
-        } else if (playersForGame.size == 0) {
+        } else if (playersForGame.size == 0 || (playersForGame.size == COUNT_COMPUTER
+                    && players[0]?.isSelectedForGame == true)
+        ) {
             sendError(StringEnum.MAIN_MENU_FRAGMENT_NO_PLAYER_SELECTED)
         } else {
             liveDataScreenState.postValue(
@@ -452,6 +461,8 @@ class MainMenuViewModelImpl @Inject constructor(
         private const val SHIFT_LAST_PLAYER = 2
         private const val QUANTITIES_AVATAR = 7
         private const val MAX_PLAYER = 15
+        private const val ONE_PLAYER = 1
+        private const val COUNT_COMPUTER = 1
         fun mapToPlayerInSettings(player: Player) = PlayerInSettings(player)
     }
 }
