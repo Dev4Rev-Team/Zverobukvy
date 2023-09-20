@@ -17,7 +17,6 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class MainMenuViewModelImpl @Inject constructor(
@@ -55,6 +54,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     private fun createComputer() {
         val computer: Player = Player.ComputerPlayer
+        computer.name = resourcesProvider.getString(StringEnum.MAIN_MENU_FRAGMENT_NAME_COMPUTER)
         val isSelectedForGame = namesPlayersSelectedForGame.contains(computer.name)
         players.add(PlayerInSettings(computer, isSelectedForGame))
     }
