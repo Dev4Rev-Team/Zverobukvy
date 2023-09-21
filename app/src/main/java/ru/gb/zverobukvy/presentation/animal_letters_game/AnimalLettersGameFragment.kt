@@ -6,8 +6,9 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.parcelize.Parcelize
-import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
@@ -25,8 +26,6 @@ import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
-import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
-import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
 
@@ -194,11 +193,7 @@ class AnimalLettersGameFragment :
     }
 
     private fun setPlayer(player: Player) {
-        binding.playerNameTextView.text =
-            when(player){
-                Player.ComputerPlayer -> getString(R.string.username_computer)
-                is Player.HumanPlayer -> player.name
-            }
+        binding.playerNameTextView.text = player.name
         imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
         binding.table.setWorkClick(true)
     }
