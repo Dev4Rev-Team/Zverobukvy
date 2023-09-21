@@ -3,11 +3,9 @@ package ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_di
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverItemBinding
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverItemBinding
 
 class PlayersRVAdapter(private val players: List<PlayerUI>) :
     RecyclerView.Adapter<PlayersRVAdapter.ViewHolder>() {
@@ -36,11 +34,7 @@ class PlayersRVAdapter(private val players: List<PlayerUI>) :
         private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
 
         fun setPlayer(playerUI: PlayerUI) {
-            binding.playerTextView.text =
-                when(playerUI.player){
-                    Player.ComputerPlayer -> itemView.context.getString(R.string.username_computer)
-                    is Player.HumanPlayer -> playerUI.player.name
-                }
+            binding.playerTextView.text = playerUI.player.name
             imageAvatarLoader.loadImageAvatar(playerUI.player.avatar, binding.playAvatarImageView)
             binding.scoreTextView.text = playerUI.scoreInCurrentGame.toString()
         }
