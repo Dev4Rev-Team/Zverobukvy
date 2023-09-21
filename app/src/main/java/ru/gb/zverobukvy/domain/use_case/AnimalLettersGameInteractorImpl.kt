@@ -1,8 +1,12 @@
 package ru.gb.zverobukvy.domain.use_case
 
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.buffer
 import ru.gb.zverobukvy.domain.entity.GameField
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.LetterCard
@@ -10,10 +14,13 @@ import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
 import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
+import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputer
+import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimple
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 /**
  * Возможные состояния игры GameState:
@@ -48,8 +55,15 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
 ) : AnimalLettersGameInteractor {
     private val checkData = CheckData()
     private val gamingWords: Queue<WordCard> = LinkedList()
+    private var positionCurrentLetterCard by Delegates.notNull<Int>()
     private var currentWalkingPlayer: PlayerInGame
     private val gameStateFlow: MutableStateFlow<GameState?> = MutableStateFlow(null)
+    private val computerSharedFlow: MutableSharedFlow<Int> by lazy {
+        MutableSharedFlow<Int>().apply {
+            buffer(Channel.RENDEZVOUS)
+        }
+    }
+    private var computer: AnimalLettersComputer? = null
 
     /**
      * При инициализации проверяются на корректность список типов карточек и список игроков.
@@ -89,6 +103,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
 
     override fun selectionLetterCard(positionSelectedLetterCard: Int) {
         Timber.d("selectionLetterCard")
+        positionCurrentLetterCard = positionSelectedLetterCard
         gameStateFlow.value?.run {
             // проверяется, что пришла корректная позиция выбранной-карточки
             checkData.checkPositionSelectedLetterCard(
@@ -111,7 +126,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                         )
                     // выбранная буква отсутствует в отгадываемом слове
                     else
-                        selectionWrongLetterCard(this@run)
+                        selectionWrongLetterCard(this@run, positionSelectedLetterCard)
                 }
             }
         }
@@ -130,7 +145,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                     },
                     // в данной ситуации очередь карточек-слов не может быть пустой
                     gamingWordCard = gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
-                ),
+                ).also { computer?.setCurrentGameField(it, positionCurrentLetterCard) },
                 walkingPlayer = newWalkingPlayer.also {
                     currentWalkingPlayer = it
                 },
@@ -140,19 +155,19 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     }
 
     override fun getNextWalkingPlayer() {
-        //TODO перевернуть неверную карточку!
         Timber.d("getNextWalkingPlayer")
-        // gameStateFlow обновляет value, т.к. отличается walkingPlayer и nextWalkingPlayer
-        // когда один игрок, педварительно обнуляем walkingPlayer и nextWalkingPlayer в текущем
-        // состоянии gameStateFlow
-        gameStateFlow.value?.let {currentGameState ->
-            if (currentGameState.players.size == 1)
-                currentGameState.apply {
-                    walkingPlayer = null
-                    nextWalkingPlayer = null
-                }
+        // gameStateFlow обновляет value, т.к. отличается gameField (letterField), walkingPlayer и
+        // nextWalkingPlayer (если более одного игрока)
+        gameStateFlow.value?.let { currentGameState ->
             val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
             gameStateFlow.value = currentGameState.copy(
+                gameField = GameField(
+                    lettersField = flipLetterCard(
+                        currentGameState.gameField.lettersField,
+                        positionCurrentLetterCard
+                    ),
+                    gamingWordCard = currentGameState.gameField.gamingWordCard
+                ).also { computer?.setCurrentGameField(it, positionCurrentLetterCard) },
                 walkingPlayer = newWalkingPlayer.also {
                     currentWalkingPlayer = it
                 },
@@ -179,12 +194,21 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
             )
     }
 
-    override fun getSelectedLetterCardByComputer() {
-        TODO("Not yet implemented")
+    override suspend fun getSelectedLetterCardByComputer() {
+        Timber.d("getSelectedLetterCardByComputer")
+        computer?.let {
+            computerSharedFlow.emit(it.getSelectedLetterCard())
+        }
     }
 
-    override fun subscribeToComputer(): StateFlow<Int> {
-        TODO("Not yet implemented")
+    override fun subscribeToComputer(): SharedFlow<Int> {
+        Timber.d("subscribeToComputer")
+        // value в gameStateFlow не может быть null, т.к. этот метод вызывается после
+        // получения во viewModel стартового состояния игры
+        gameStateFlow.value?.let {
+            computer = AnimalLettersComputerSimple(DEFAULT_SMART_LEVEL, it.gameField)
+        }
+        return computerSharedFlow
     }
 
     /**
@@ -224,18 +248,20 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
      * @param currentGameState текущее состояние игры
      * @return текущее состояние игры
      */
-    private fun selectionWrongLetterCard(currentGameState: GameState) {
-        //TODO отображать неверную карточку видимой!
+    private fun selectionWrongLetterCard(
+        currentGameState: GameState,
+        positionWrongLetterCard: Int
+    ) {
         Timber.d("selectionWrongLetterCard")
-        // gameStateFlow обновляет value, т.к. отличаются walkingPlayer и nextWalkingPlayer
-        // (предварительно их обнуляем в текущем состоянии gameStateFlow)
-            currentGameState.apply {
-                walkingPlayer = null
-                nextWalkingPlayer = null
-            }
+        // gameStateFlow обновляет value, т.к. отличается gameField (lettersField)
         gameStateFlow.value = currentGameState.copy(
-            walkingPlayer = currentWalkingPlayer,
-            nextWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
+            gameField = GameField(
+                lettersField = flipLetterCard(
+                    currentGameState.gameField.lettersField,
+                    positionWrongLetterCard
+                ),
+                gamingWordCard = currentGameState.gameField.gamingWordCard
+            )
         )
     }
 
@@ -284,7 +310,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // gameStateFlow обновляет value, т.к. отличается gameField
         gameStateFlow.value = currentGameState.copy(
             gameField = GameField(
-                lettersField = changeLetterFieldAfterCorrectLetterCard(
+                lettersField = flipLetterCard(
                     currentGameState.gameField.lettersField,
                     positionCorrectLetterCard
                 ),
@@ -292,7 +318,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                     currentGameState.gameField.gamingWordCard,
                     positionCorrectLetterCardInGamingWordCard
                 )
-            )
+            ).also { computer?.setCurrentGameField(it, positionCurrentLetterCard) }
         )
     }
 
@@ -312,7 +338,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         //nextWalkingPlayer и isActive
         gameStateFlow.value = currentGameState.copy(
             gameField = GameField(
-                lettersField = changeLetterFieldAfterCorrectLetterCard(
+                lettersField = flipLetterCard(
                     currentGameState.gameField.lettersField,
                     positionCorrectLetterCard
                 ),
@@ -343,7 +369,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // gameStateFlow обновляет value, т.к. отличается gameField, player
         gameStateFlow.value = currentGameState.copy(
             gameField = GameField(
-                lettersField = changeLetterFieldAfterCorrectLetterCard(
+                lettersField = flipLetterCard(
                     currentGameState.gameField.lettersField,
                     positionCorrectLetterCard
                 ),
@@ -386,21 +412,21 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     )
 
     /**
-     * Метод создает список карточек-букв для формирования gameState после отгаданной буквы:
-     * isVisible = true для соответствующей буквы
+     * Метод создает список карточек-букв для формирования gameState после переворота карточки-буквы:
+     * изменяется isVisible для соответствующей буквы
      * @param currentLetterField текущий список карточек-букв
-     * @param positionCorrectLetterCard позиция отгаданной буквы
+     * @param positionLetterCard позиция переворачиваемой карточки-буквы
      * @return измененный список карточек-букв
      */
-    private fun changeLetterFieldAfterCorrectLetterCard(
+    private fun flipLetterCard(
         currentLetterField: List<LetterCard>,
-        positionCorrectLetterCard: Int
+        positionLetterCard: Int
     ): List<LetterCard> =
         mutableListOf<LetterCard>().apply {
             addAll(currentLetterField)
-            this[positionCorrectLetterCard] =
-                currentLetterField[positionCorrectLetterCard].copy(
-                    isVisible = true
+            this[positionLetterCard] =
+                currentLetterField[positionLetterCard].copy(
+                    isVisible = !currentLetterField[positionLetterCard].isVisible
                 )
         }
 
@@ -479,5 +505,9 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 return LinkedList(checkGamingWords(DealCards.getKitCards(it, typesCards)))
             }
         }
+    }
+
+    companion object {
+        private const val DEFAULT_SMART_LEVEL = 0.5F
     }
 }
