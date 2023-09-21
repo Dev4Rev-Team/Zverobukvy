@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.domain.use_case
 
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.gb.zverobukvy.domain.entity.GameState
 
@@ -36,14 +37,15 @@ interface AnimalLettersGameInteractor {
     fun selectionLetterCard(positionSelectedLetterCard: Int)
 
     /**
-     Метод вызывается после того, как отгадано слово, для получения состояни со следующим
+     Метод вызывается после того, как отгадано слово, для получения состояния со следующим
      отгадываемым словом.
      */
     fun getNextWordCard()
 
     /**
      * Метод вызывается после некорректно выбранной буквенной карточки. Интерактор испускает
-     * полное текущее состояние игры с измененным ходящим игроком.
+     * полное текущее состояние игры с измененным ходящим игроком и перевернутой обратно неверной
+     *  буквенной карточкой.
      */
     fun getNextWalkingPlayer()
 
@@ -57,10 +59,10 @@ interface AnimalLettersGameInteractor {
      * Метод вызывается, когда необходим ход компьютера. В этом методе интерактор испускает
      * позицию карточки, выбранную компьютером
      */
-    fun getSelectedLetterCardByComputer()
+    suspend fun getSelectedLetterCardByComputer()
 
     /**
      * Метод для подписки ViewModel на ход компьютера (карточку, выбранную компьютером).
      */
-    fun subscribeToComputer(): StateFlow<Int>
+    fun subscribeToComputer(): SharedFlow<Int>
 }

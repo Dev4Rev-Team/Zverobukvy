@@ -4,12 +4,12 @@ import ru.gb.zverobukvy.domain.entity.GameField
 
 interface AnimalLettersComputer {
     /**
-     * Метод для установки текущего состояния игрового поля
+     * Метод для установки текущего состояния игрового поля и передачи последней открытой карточки.
      */
-    fun setCurrentGameField(currentGameField: GameField, selectedPosition: Int)
+    fun setCurrentGameField(currentGameField: GameField, positionLastSelectionLetterCard: Int)
 
     /**
-     * Метод для получения позиции карточки-буквы, которую выбрал для хода компютер
+     * Метод для получения позиции карточки-буквы, которую выбрал для хода компьютер
      */
     fun getSelectedLetterCard(): Int
 }

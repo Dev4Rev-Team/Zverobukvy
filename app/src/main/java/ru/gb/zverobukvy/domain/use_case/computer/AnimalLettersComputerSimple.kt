@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.domain.use_case.computer
 
 import ru.gb.zverobukvy.domain.entity.GameField
+import timber.log.Timber
 
 /**
  * @param smartLevel
@@ -19,12 +20,14 @@ class AnimalLettersComputerSimple(
     private val lettersRemember: MutableList<Int> = mutableListOf()
     private val lettersForGame: MutableSet<Int> = mutableSetOf()
 
-    override fun setCurrentGameField(currentGameField: GameField, selectedPosition: Int) {
+    override fun setCurrentGameField(currentGameField: GameField, positionLastSelectionLetterCard: Int) {
+        Timber.d("setCurrentGameField, position $positionLastSelectionLetterCard")
         updateLettersInvisible(currentGameField)
-        updateLettersRemember(selectedPosition)
+        updateLettersRemember(positionLastSelectionLetterCard)
     }
 
     override fun getSelectedLetterCard(): Int {
+        Timber.d("getSelectedLetterCard")
         updateLettersForGame()
         return lettersForGame.random()
     }
