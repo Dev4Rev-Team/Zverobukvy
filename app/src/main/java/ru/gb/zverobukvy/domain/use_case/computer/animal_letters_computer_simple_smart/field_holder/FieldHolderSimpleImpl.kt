@@ -5,7 +5,6 @@ import ru.gb.zverobukvy.domain.entity.GameField
 class FieldHolderSimpleImpl : FieldHolderSimple {
     private var word: String = ""
     private var countLetters: Int = 0
-    private val invisibleLetters: MutableSet<Int> = mutableSetOf()
     private val incorrectLetters: MutableSet<Int> = mutableSetOf()
     private val invisibleCorrectLetters: MutableSet<Int> = mutableSetOf()
     private var lastPosition: Int = 0
@@ -24,7 +23,6 @@ class FieldHolderSimpleImpl : FieldHolderSimple {
                 }
             }
         }
-        invisibleLetters.clear()
         invisibleCorrectLetters.clear()
         gameField.lettersField.forEachIndexed { index, letterCard ->
             if (!letterCard.isVisible && word.contains(letterCard.letter)) {
