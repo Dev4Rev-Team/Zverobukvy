@@ -14,13 +14,20 @@ import timber.log.Timber
 
 class AnimalLettersComputerSimple(
     private val smartLevel: Float,
-    private var gameField: GameField,
+    gameField: GameField,
 ) : AnimalLettersComputer {
     private val lettersInvisible: MutableSet<Int> = mutableSetOf()
     private val lettersRemember: MutableList<Int> = mutableListOf()
     private val lettersForGame: MutableSet<Int> = mutableSetOf()
 
-    override fun setCurrentGameField(currentGameField: GameField, positionLastSelectionLetterCard: Int) {
+    init {
+        setCurrentGameField(gameField, -1)
+    }
+
+    override fun setCurrentGameField(
+        currentGameField: GameField,
+        positionLastSelectionLetterCard: Int,
+    ) {
         Timber.d("setCurrentGameField, position $positionLastSelectionLetterCard")
         updateLettersInvisible(currentGameField)
         updateLettersRemember(positionLastSelectionLetterCard)
