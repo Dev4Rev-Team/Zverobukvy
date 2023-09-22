@@ -9,10 +9,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.StringEnum
-import ru.gb.zverobukvy.domain.entity.GameState
-import ru.gb.zverobukvy.domain.entity.LetterCard
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatch
+import ru.gb.zverobukvy.domain.entity.GameState
+import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.PlayerInGame
+import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
@@ -23,7 +24,7 @@ import javax.inject.Inject
 class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
-    private val provider: ResourcesProvider
+    private val provider: ResourcesProvider,
 ) : AnimalLettersGameViewModel, ViewModel() {
 
     private var isClickNextWalkingPlayer: Boolean = false
@@ -141,7 +142,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      * в список из одного или двух [AnimalLettersGameState].
      * * Вторым состоянием может быть только [EntireState.EndGameState]
      */
-    private fun convert(oldState: GameState?, newState: GameState?): List<AnimalLettersGameState> {
+    private suspend fun convert(
+        oldState: GameState?,
+        newState: GameState?,
+    ): List<AnimalLettersGameState> {
 
         /** Проверка на Null newState :
          * Срабатывает сразу после подписки на данные в Interactor
@@ -164,7 +168,21 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     isWaitingNextPlayer,
                     provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_DEFAULT_SCREEN_DIMMING)
                 )
-            )
+            ).also {
+                if (newState.players.any { it.player is Player.ComputerPlayer }) {
+                    viewModelScope.launch {
+                        animalLettersGameInteractor.subscribeToComputer()
+                            .collect(::onComputerClickLetterCard)
+                    }
+
+                    viewModelScope.launch {
+                        isCardClick = true
+
+                        delay(COMPUTER_DELAY)
+                        animalLettersGameInteractor.getSelectedLetterCardByComputer()
+                    }
+                }
+            }
         }
 
         /** Список для хранения нескольких стэйтов
@@ -235,6 +253,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 changingLiveData.value = ChangingState.NextPlayer(
                     nextWalkingPlayer
                 )
+                if (isComputerPlayer(nextWalkingPlayer)) {
+                    isCardClick = true
+                    delay(COMPUTER_DELAY)
+                    animalLettersGameInteractor.getSelectedLetterCardByComputer()
+                }
             }
         }
 
@@ -254,7 +277,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     /** Событие отгаданного слова */
                     isCardClick = false
 
-                    if (newState.isActive)  {
+                    if (newState.isActive) {
                         isGuessedWord = true
                     }
                     val screenDimmingText = textOfGuessedWord(newState)
@@ -296,6 +319,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         return stateList
     }
 
+    private fun isComputerPlayer(player: PlayerInGame): Boolean {
+        return player.player is Player.ComputerPlayer
+    }
+
     private fun textOfInvalidLetter(state: GameState): String {
         return if (isMultiplayerGame(state)) provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_INVALID_LETTER_MULTIPLAYER) + state.nextWalkingPlayer?.player?.name
         else provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_INVALID_LETTER_SINGLE_PLAYER)
@@ -325,14 +352,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
             if (guessesWord != null && walkingPlayer != null) {
                 entireLiveData.value = EntireState.StartGameState(
-                    mutableListOf<LetterCard>().apply {
-                        state.gameField.lettersField.forEach {
-                            add(it.copy())
-                        }
-                        if (isWaitingNextPlayer) {
-                            this[mLastClickCardPosition].isVisible = true
-                        }
-                    },
+                    state.gameField.lettersField,
                     state.gameField.gamingWordCard!!,
                     state.players,
                     state.walkingPlayer!!,
@@ -368,6 +388,16 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             mLastClickCardPosition = positionSelectedLetterCard
             animalLettersGameInteractor.selectionLetterCard(positionSelectedLetterCard)
         }
+
+    }
+
+    private fun onComputerClickLetterCard(positionSelectedLetterCard: Int) {
+        isClickNextWalkingPlayer = false
+
+        isCardClick = true
+        mLastClickCardPosition = positionSelectedLetterCard
+        animalLettersGameInteractor.selectionLetterCard(positionSelectedLetterCard)
+
 
     }
 
@@ -419,6 +449,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         const val INIT_CARD_CLICK_POSITION = -1
 
         const val STATE_DELAY = 2000L
+        const val COMPUTER_DELAY = 700L
 
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"
