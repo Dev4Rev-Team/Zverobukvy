@@ -4,12 +4,15 @@ import ru.gb.zverobukvy.domain.entity.GameField
 
 class FieldHolderSimpleImpl : FieldHolderSimple {
     private var word: String = ""
+    private var countLetters: Int = 0
+    private val invisibleLetters: MutableSet<Int> = mutableSetOf()
     private val incorrectLetters: MutableSet<Int> = mutableSetOf()
     private val invisibleCorrectLetters: MutableSet<Int> = mutableSetOf()
     private var lastPosition: Int = 0
     override fun update(gameField: GameField, lastPosition: Int) {
         val newWord = gameField.gamingWordCard?.word
             ?: throw IllegalArgumentException("gameField.gamingWordCard == null")
+        countLetters = gameField.lettersField.size
         this.lastPosition = lastPosition
 
         if (newWord != word) {
@@ -21,6 +24,7 @@ class FieldHolderSimpleImpl : FieldHolderSimple {
                 }
             }
         }
+        invisibleLetters.clear()
         invisibleCorrectLetters.clear()
         gameField.lettersField.forEachIndexed { index, letterCard ->
             if (!letterCard.isVisible && word.contains(letterCard.letter)) {
