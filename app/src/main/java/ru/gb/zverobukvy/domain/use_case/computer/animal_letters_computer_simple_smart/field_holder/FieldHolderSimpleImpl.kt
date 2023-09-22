@@ -1,8 +1,8 @@
-package ru.gb.zverobukvy.domain.use_case.computer.animal_letters_computer_complex.field_holder
+package ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSmart.field_holder
 
 import ru.gb.zverobukvy.domain.entity.GameField
 
-class FieldHolderImpl : FieldHolder {
+class FieldHolderSimpleImpl : FieldHolderSimple {
     private var word: String = ""
     private var countLetters: Int = 0
     private val invisibleLetters: MutableSet<Int> = mutableSetOf()
@@ -27,23 +27,15 @@ class FieldHolderImpl : FieldHolder {
         invisibleLetters.clear()
         invisibleCorrectLetters.clear()
         gameField.lettersField.forEachIndexed { index, letterCard ->
-            if (!letterCard.isVisible) {
-                invisibleLetters.add(index)
-                if (word.contains(letterCard.letter)) {
-                    invisibleCorrectLetters.add(index)
-                }
+            if (!letterCard.isVisible && word.contains(letterCard.letter)) {
+                invisibleCorrectLetters.add(index)
             }
         }
-
     }
 
     override fun getLastPosition(): Int = lastPosition
 
-    override fun getWord(): String = word
-
-    override fun getInvisibleLetters(): Set<Int> = invisibleLetters
-
     override fun getIncorrectLetters(): Set<Int> = incorrectLetters
 
-    override fun gerInvisibleCorrectLetters(): Set<Int> = invisibleCorrectLetters
+    override fun getInvisibleCorrectLetters(): Set<Int> = invisibleCorrectLetters
 }
