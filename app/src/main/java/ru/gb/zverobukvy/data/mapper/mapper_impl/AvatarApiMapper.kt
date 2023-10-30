@@ -1,5 +1,6 @@
-package ru.gb.zverobukvy.data.mapper
+package ru.gb.zverobukvy.data.mapper.mapper_impl
 
+import ru.gb.zverobukvy.data.mapper.EntityMapperToDomain
 import ru.gb.zverobukvy.data.retrofit.AvatarApi
 import ru.gb.zverobukvy.domain.entity.Avatar
 

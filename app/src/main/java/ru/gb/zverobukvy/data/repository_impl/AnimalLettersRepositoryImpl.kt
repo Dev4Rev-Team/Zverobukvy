@@ -6,13 +6,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.data.data_source.LocalDataSource
 import ru.gb.zverobukvy.data.data_source.RemoteDataSource
-import ru.gb.zverobukvy.data.mapper.AvatarApiMapper
-import ru.gb.zverobukvy.data.mapper.AvatarRoomMapper
-import ru.gb.zverobukvy.data.mapper.LetterCardMapperToDomain
-import ru.gb.zverobukvy.data.mapper.PlayerMapperToData
-import ru.gb.zverobukvy.data.mapper.PlayerMapperToDomain
-import ru.gb.zverobukvy.data.mapper.TypeCardsMapper
-import ru.gb.zverobukvy.data.mapper.WordCardMapperToDomain
+import ru.gb.zverobukvy.data.mapper.mapper_impl.AvatarApiMapper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.AvatarRoomMapper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.LetterCardMapperToDomain
+import ru.gb.zverobukvy.data.mapper.mapper_impl.PlayerMapperToData
+import ru.gb.zverobukvy.data.mapper.mapper_impl.PlayerMapperToDomain
+import ru.gb.zverobukvy.data.mapper.mapper_impl.SharedPreferencesTypeCardsMapper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.WordCardMapperToDomain
 import ru.gb.zverobukvy.data.network_state.NetworkStatusImpl
 import ru.gb.zverobukvy.data.preferences.SharedPreferencesForGame
 import ru.gb.zverobukvy.domain.entity.Avatar
@@ -34,7 +34,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
 
     private val wordCardMapperToDomain = WordCardMapperToDomain()
 
-    private val typeCardsMapper = TypeCardsMapper()
+    private val sharedPreferencesTypeCardsMapper = SharedPreferencesTypeCardsMapper()
 
     private val playersMapperDomain = PlayerMapperToDomain()
 
@@ -94,13 +94,13 @@ class AnimalLettersRepositoryImpl @Inject constructor(
 
     override fun getTypesCardsSelectedForGame(): List<TypeCards> =
         sharedPreferencesForGame.readTypesCardsSelectedForGame().map {
-            typeCardsMapper.mapToDomain(it)
+            sharedPreferencesTypeCardsMapper.mapToDomain(it)
         }
 
     override fun saveTypesCardsSelectedForGame(typesCardsSelectedForGame: List<TypeCards>) =
         sharedPreferencesForGame.saveTypesCardsSelectedForGame(
             typesCardsSelectedForGame.map {
-                typeCardsMapper.mapToData(it)
+                sharedPreferencesTypeCardsMapper.mapToData(it)
             }
         )
 
