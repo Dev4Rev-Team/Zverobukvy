@@ -50,7 +50,7 @@ class AnimalLettersComputerSimple(
             lettersRemember.add(selectedPosition)
         }
         if (lettersRemember.size >= MAX_REMEMBER) {
-            lettersRemember.removeLast()
+            lettersRemember.removeFirst()
         }
     }
 
