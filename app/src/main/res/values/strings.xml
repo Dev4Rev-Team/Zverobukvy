@@ -45,5 +45,6 @@
     <string name="game_view_model_text_guessed_word_multiplayer">"Ходит "</string>
     <string name="game_view_model_text_guessed_word_single_player"> </string>
     <string name="game_view_model_default_text_for_screen_dimming"> </string>
+    <string name="username_bot">Компьютер</string>
 
 </resources>
