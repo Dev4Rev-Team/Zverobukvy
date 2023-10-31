@@ -15,7 +15,7 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
 import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputer
-import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimple
+import ru.gb.zverobukvy.domain.use_case.computer.animal_letters_computer_simple_smart.AnimalLettersComputerSimpleSmart
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
@@ -206,7 +206,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // value в gameStateFlow не может быть null, т.к. этот метод вызывается после
         // получения во viewModel стартового состояния игры
         gameStateFlow.value?.let {
-            computer = AnimalLettersComputerSimple(DEFAULT_SMART_LEVEL, it.gameField)
+            computer = AnimalLettersComputerSimpleSmart(DEFAULT_SMART_LEVEL, it.gameField)
         }
         return computerSharedFlow
     }

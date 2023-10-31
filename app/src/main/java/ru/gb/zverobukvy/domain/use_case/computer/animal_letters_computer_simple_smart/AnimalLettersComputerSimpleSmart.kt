@@ -21,7 +21,7 @@ class AnimalLettersComputerSimpleSmart(
     private val lettersForGame: MutableSet<Int> = mutableSetOf()
 
     init {
-        fieldHolder.update(gameField, -1)
+        fieldHolder.update(gameField, NO_SELECT)
     }
 
     override fun setCurrentGameField(
@@ -41,30 +41,42 @@ class AnimalLettersComputerSimpleSmart(
 
     private fun updateLettersForGame() {
         lettersForGame.clear()
+        if (isRememberLettersFromLastWord()) return
+
         if (Random.nextFloat() <= probabilityIsCorrect) {
             lettersForGame.addAll(fieldHolder.getInvisibleCorrectLetters())
         } else {
             lettersForGame.addAll(fieldHolder.getIncorrectLetters())
-            if (lettersForGame.size > 1) {
-                lettersForGame.remove(fieldHolder.getLastPosition())
-            }
-            if (lettersForGame.size > lettersRemember.size) {
-                lettersForGame.removeAll(lettersRemember.toSet())
+            lettersForGame.removeAll(lettersRemember.toSet())
+            lettersForGame.remove(fieldHolder.getLastPosition())
+
+            if (lettersForGame.size == 0) {
+                throw IllegalStateException("Not incorrect letters for game")
             }
         }
+    }
+
+    private fun isRememberLettersFromLastWord(): Boolean {
+        val intersect = lettersRemember.intersect(fieldHolder.getInvisibleCorrectLetters())
+        if (intersect.isNotEmpty()) {
+            lettersForGame.addAll(intersect)
+            return true
+        }
+        return false
     }
 
     private fun updateLettersRemember(selectedPosition: Int) {
         if (selectedPosition >= 0) {
             lettersRemember.add(selectedPosition)
         }
-        if (lettersRemember.size >= MAX_REMEMBER) {
+        if (lettersRemember.size > MAX_REMEMBER) {
             lettersRemember.removeFirst()
         }
     }
 
     companion object {
         const val MAX_REMEMBER = 3
+        const val NO_SELECT = -1
     }
 
 }
