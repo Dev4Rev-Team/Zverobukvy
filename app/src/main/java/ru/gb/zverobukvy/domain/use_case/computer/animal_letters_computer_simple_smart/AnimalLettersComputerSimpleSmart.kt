@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.domain.use_case.computer.animal_letters_computer_simple_smart
 
 import ru.gb.zverobukvy.domain.entity.GameField
+import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputer
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSmart.field_holder.FieldHolderSimple
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSmart.field_holder.FieldHolderSimpleImpl
@@ -77,6 +78,14 @@ class AnimalLettersComputerSimpleSmart(
     companion object {
         const val MAX_REMEMBER = 3
         const val NO_SELECT = -1
+
+        fun newInstance(gamePlayers: List<Player>, gameField: GameField): AnimalLettersComputer {
+            return AnimalLettersComputerSimpleSmart(0.3f, gameField)
+        }
+
+        fun newInstance(probabilityIsCorrect: Float, gameField: GameField): AnimalLettersComputer {
+            return AnimalLettersComputerSimpleSmart(probabilityIsCorrect, gameField)
+        }
     }
 
 }
