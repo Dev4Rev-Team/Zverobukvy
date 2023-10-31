@@ -12,6 +12,7 @@ class WordCardMapperToDomain: EntityMapperToDomain<WordCard, WordCardInDatabase>
                 word = it.word,
                 typesCards = ExtractTypesCardsHelper.extractTypesCards(it.typeCardsInDatabase),
                 faceImageName = it.faceImageName,
+                soundName = it.soundName
             )
         }
 }

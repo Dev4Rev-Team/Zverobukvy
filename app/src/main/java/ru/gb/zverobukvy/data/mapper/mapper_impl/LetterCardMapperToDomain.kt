@@ -12,7 +12,8 @@ class LetterCardMapperToDomain : EntityMapperToDomain<LetterCard, LetterCardInDa
                 letter = it.letter.first(),
                 typesCards = ExtractTypesCardsHelper.extractTypesCards(it.typeCardsInDatabase),
                 faceImageName = it.faceImageName,
-                backImageName = it.backImageName
+                backImageName = it.backImageName,
+                soundName = it.soundName
             )
         }
 }
