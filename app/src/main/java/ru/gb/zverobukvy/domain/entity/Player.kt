@@ -9,8 +9,8 @@ sealed class Player(
     open var name: String,
     open var id: Long = 0,
     open var avatar: Avatar,
-    open var rating: Rating = Rating(),
-    open var lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel()
+    open val rating: Rating = Rating(),
+    open val lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel()
 ) : Parcelable,
     DomainEntity {
 
@@ -19,8 +19,8 @@ sealed class Player(
         override var name: String,
         override var id: Long = 0,
         override var avatar: Avatar = Avatar.DEFAULT_AVATAR,
-        override var rating: Rating = Rating(),
-        override var lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel()
+        override val rating: Rating = Rating(),
+        override val lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel()
     ) : Player(name, id, avatar, rating, lettersGuessingLevel)
 
     @Parcelize

@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import ru.gb.zverobukvy.data.mapper.DataEntity
-import ru.gb.zverobukvy.domain.entity.LettersGuessingLevel
 import ru.gb.zverobukvy.domain.entity.Rating
 
 @Entity(
@@ -28,5 +27,5 @@ data class PlayerInDatabase(
     @Embedded
     val rating: Rating,
     @Embedded
-    var lettersGuessingLevel: LettersGuessingLevel
+    var lettersGuessingLevel: LettersGuessingLevelInDatabase
 ) : DataEntity
