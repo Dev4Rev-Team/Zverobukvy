@@ -2,6 +2,7 @@ package ru.gb.zverobukvy.data.data_source
 
 import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
 import ru.gb.zverobukvy.data.room.entity.AvatarInDatabase
+import ru.gb.zverobukvy.data.room.entity.CardsSetInDatabase
 import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase
 import ru.gb.zverobukvy.data.room.entity.PlayerInDatabase
 import ru.gb.zverobukvy.data.room.entity.PlayerWithAvatar
@@ -39,4 +40,7 @@ class LocalDataSourceImpl @Inject constructor(
 
     override suspend fun insertAvatar(avatar: AvatarInDatabase): Long =
        avatarsDao.insertAvatar(avatar)
+
+    override suspend fun getCardsSetByColor(color: String): List<CardsSetInDatabase> =
+        animalLettersDatabase.cardsSetDao().getCardsSetByColor(color)
 }

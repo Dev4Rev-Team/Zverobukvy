@@ -65,4 +65,5 @@ interface AnimalLettersGameInteractor {
      * Метод для подписки ViewModel на ход компьютера (карточку, выбранную компьютером).
      */
     fun subscribeToComputer(): SharedFlow<Int>
+
 }

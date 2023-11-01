@@ -1,5 +1,7 @@
-package ru.gb.zverobukvy.data.mapper
+package ru.gb.zverobukvy.data.mapper.mapper_impl
 
+import ru.gb.zverobukvy.data.mapper.EntityMapperToDomain
+import ru.gb.zverobukvy.data.mapper.extract_helpers.ExtractTypesCardsHelper
 import ru.gb.zverobukvy.data.room.entity.WordCardInDatabase
 import ru.gb.zverobukvy.domain.entity.WordCard
 
@@ -10,6 +12,7 @@ class WordCardMapperToDomain: EntityMapperToDomain<WordCard, WordCardInDatabase>
                 word = it.word,
                 typesCards = ExtractTypesCardsHelper.extractTypesCards(it.typeCardsInDatabase),
                 faceImageName = it.faceImageName,
+                soundName = it.soundName
             )
         }
 }
