@@ -7,5 +7,6 @@ data class LetterCard(
     override val typesCards: List<TypeCards>,
     override var isVisible: Boolean = false,
     override val faceImageName: String,
-    override val backImageName: String
+    override val backImageName: String,
+    override val soundName: String
 ) : Card, CustomCardTable.LetterCardUI, DomainEntity
