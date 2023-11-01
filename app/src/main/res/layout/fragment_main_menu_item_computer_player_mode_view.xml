@@ -32,7 +32,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:gravity="center"
-                android:text="@string/username_bot"
+                android:text="@string/username_computer"
                 android:textSize="@dimen/text_medium_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
