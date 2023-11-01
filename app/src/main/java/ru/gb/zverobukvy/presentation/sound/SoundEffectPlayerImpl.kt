@@ -1,41 +1,112 @@
 package ru.gb.zverobukvy.presentation.sound
 
+import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.content.Context
-import android.media.MediaPlayer
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.SoundPool
+import android.os.Build
 import javax.inject.Inject
 
+
 class SoundEffectPlayerImpl @Inject constructor(val context: Context) : SoundEffectPlayer {
-    private val soundsMap = mutableMapOf<SoundEnum, MediaPlayer>()
+
+    private val soundPool: SoundPool
+    private val soundsMap = mutableMapOf<String, Int>()
+    private val soundsMapSystem = mutableMapOf<SoundEnum, Int>()
+    private val isLoad = mutableSetOf<Int>()
 
     init {
+        soundPool = createSoundPool()
+        soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+            if (status == 0) isLoad.add(sampleId)
+        }
         SoundEnum.values().forEach {
-
-            soundsMap[it] = MediaPlayer().apply {
-                val descriptor = context.assets.openFd(it.assetPath)
-                setDataSource(
-                    descriptor.fileDescriptor,
-                    descriptor.startOffset,
-                    descriptor.length
-                )
-                descriptor.close()
-
-                prepare()
-                setVolume(1f, 1f)
-                isLooping = false
-            }
-
+            soundsMapSystem[it] = loadSound(it.assetPath)
         }
     }
+
+    private fun loadSound(assetPath: String): Int {
+        val descriptor = context.assets.openFd(assetPath)
+        val idStream = soundPool.load(descriptor, DEFAULT_PRIORITY_LOAD)
+        descriptor.close()
+        return idStream
+    }
+
+    @SuppressLint("ObsoleteSdkInt")
+    fun createSoundPool(): SoundPool {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            createNewSoundPool()
+        } else {
+            createOldSoundPool()
+        }
+    }
+
+    @SuppressLint("ObsoleteSdkInt")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun createNewSoundPool(): SoundPool {
+        val attributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
+        return SoundPool.Builder().setMaxStreams(MAX_STREAM).setAudioAttributes(attributes).build()
+    }
+
+    @Suppress("deprecation")
+    private fun createOldSoundPool(): SoundPool {
+        return SoundPool(MAX_STREAM, AudioManager.STREAM_MUSIC, 0)
+    }
+
+    override fun loadSound(assetPath: Set<String>) {
+        soundsMap.clear()
+        isLoad.clear()
+        assetPath.forEach {
+            loadSound(it)
+        }
+    }
+
+    override fun removeSound() {
+        soundsMap.values.forEach {
+            soundPool.resume(it)
+        }
+    }
+
 
     override fun play(soundEnum: SoundEnum) {
-        soundsMap[soundEnum]?.let {
-            if (it.isPlaying) {
-                it.pause()
-                it.seekTo(0)
+        val idStream = soundsMapSystem[soundEnum]
+        playSound(idStream)
+    }
+
+    override fun play(key: String) {
+        val idStream = soundsMap[key]
+        playSound(idStream)
+    }
+
+    private fun playSound(idStream: Int?) {
+        if (isLoad.contains(idStream)) {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
+            audioManager?.let {
+                val curVolume = it.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
+                val maxVolume = it.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+                val leftVolume = curVolume / maxVolume
+                val rightVolume = curVolume / maxVolume
+                val priority = 1
+                val noLoop = 0
+                val normalPlaybackRate = 1f
+                soundPool.play(
+                    idStream!!,
+                    leftVolume,
+                    rightVolume,
+                    priority,
+                    noLoop,
+                    normalPlaybackRate
+                )
             }
-            it.start()
         }
     }
 
+    companion object {
+        const val MAX_STREAM = 3
+        const val DEFAULT_PRIORITY_LOAD = 1
+    }
 
 }
