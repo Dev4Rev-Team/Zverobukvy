@@ -120,5 +120,6 @@ class CustomWordView @JvmOverloads constructor(
     interface WordCardUI {
         val word: String
         val positionsGuessedLetters: MutableList<Int>
+        val soundName: String
     }
 }

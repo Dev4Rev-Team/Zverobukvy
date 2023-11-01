@@ -5,6 +5,7 @@ import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
+import timber.log.Timber
 
 class PlayerViewHolder(
     private val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
@@ -31,6 +32,8 @@ class PlayerViewHolder(
                     editMenuClickListener(this@PlayerViewHolder.adapterPosition)
                 }
                 imageAvatarLoader.loadImageAvatar(it.player.avatar, playerAvatarImageView)
+                Timber.d("${playerInSetting.player.lettersGuessingLevel.orangeLevel.first}")
+                Timber.d("${playerInSetting.player.lettersGuessingLevel.orangeLevel.second}")
             }
         }
     }

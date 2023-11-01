@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.data.data_source
 
 import ru.gb.zverobukvy.data.room.entity.AvatarInDatabase
+import ru.gb.zverobukvy.data.room.entity.CardsSetInDatabase
 import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase
 import ru.gb.zverobukvy.data.room.entity.PlayerInDatabase
 import ru.gb.zverobukvy.data.room.entity.PlayerWithAvatar
@@ -22,4 +23,6 @@ interface LocalDataSource {
     suspend fun getAvatars(): List<AvatarInDatabase>
 
     suspend fun insertAvatar(avatar: AvatarInDatabase): Long
+
+    suspend fun getCardsSetByColor(color: String): List<CardsSetInDatabase>
 }

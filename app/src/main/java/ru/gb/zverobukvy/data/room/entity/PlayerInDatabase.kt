@@ -1,10 +1,12 @@
 package ru.gb.zverobukvy.data.room.entity
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import ru.gb.zverobukvy.data.mapper.DataEntity
+import ru.gb.zverobukvy.domain.entity.Rating
 
 @Entity(
     tableName = "players", foreignKeys = [ForeignKey(
@@ -21,5 +23,9 @@ data class PlayerInDatabase(
     @field:ColumnInfo(name = "name")
     var name: String,
     @field:ColumnInfo(name = "id_avatar", defaultValue = "1")
-    val idAvatar: Long
+    val idAvatar: Long,
+    @Embedded
+    val rating: Rating,
+    @Embedded
+    var lettersGuessingLevel: LettersGuessingLevelInDatabase
 ) : DataEntity
