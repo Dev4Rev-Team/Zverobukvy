@@ -18,7 +18,9 @@ data class LetterCardInDatabase(
     @field:ColumnInfo(name = "back")
     val backImageName: String,
     @field:PrimaryKey(autoGenerate = true)
-    val id: Long = 0
+    val id: Long = 0,
+    @field:ColumnInfo(name = "sound")
+    val soundName: String
 ) : DataEntity
 
 

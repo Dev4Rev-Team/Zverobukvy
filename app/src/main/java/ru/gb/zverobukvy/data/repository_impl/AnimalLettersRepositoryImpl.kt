@@ -6,16 +6,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.data.data_source.LocalDataSource
 import ru.gb.zverobukvy.data.data_source.RemoteDataSource
-import ru.gb.zverobukvy.data.mapper.AvatarApiMapper
-import ru.gb.zverobukvy.data.mapper.AvatarRoomMapper
-import ru.gb.zverobukvy.data.mapper.LetterCardMapperToDomain
-import ru.gb.zverobukvy.data.mapper.PlayerMapperToData
-import ru.gb.zverobukvy.data.mapper.PlayerMapperToDomain
-import ru.gb.zverobukvy.data.mapper.TypeCardsMapper
-import ru.gb.zverobukvy.data.mapper.WordCardMapperToDomain
+import ru.gb.zverobukvy.data.mapper.extract_helpers.ExtractTypesCardsHelper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.AvatarApiMapper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.AvatarRoomMapper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.CardsSetMapperToDomain
+import ru.gb.zverobukvy.data.mapper.mapper_impl.LetterCardMapperToDomain
+import ru.gb.zverobukvy.data.mapper.mapper_impl.PlayerMapperToData
+import ru.gb.zverobukvy.data.mapper.mapper_impl.PlayerMapperToDomain
+import ru.gb.zverobukvy.data.mapper.mapper_impl.SharedPreferencesTypeCardsMapper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.WordCardMapperToDomain
 import ru.gb.zverobukvy.data.network_state.NetworkStatusImpl
 import ru.gb.zverobukvy.data.preferences.SharedPreferencesForGame
 import ru.gb.zverobukvy.domain.entity.Avatar
+import ru.gb.zverobukvy.domain.entity.CardsSet
 import ru.gb.zverobukvy.domain.entity.LetterCard
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.TypeCards
@@ -34,7 +37,9 @@ class AnimalLettersRepositoryImpl @Inject constructor(
 
     private val wordCardMapperToDomain = WordCardMapperToDomain()
 
-    private val typeCardsMapper = TypeCardsMapper()
+    private val sharedPreferencesTypeCardsMapper = SharedPreferencesTypeCardsMapper()
+
+    private val cardsSetMapperToDomain = CardsSetMapperToDomain()
 
     private val playersMapperDomain = PlayerMapperToDomain()
 
@@ -44,63 +49,79 @@ class AnimalLettersRepositoryImpl @Inject constructor(
 
     private val avatarApiMapper = AvatarApiMapper()
 
+    private var letterCards = listOf<LetterCard>()
+
+    private var wordCards = listOf<WordCard>()
+
     override var isOnline: Boolean = false
 
     private val repositoryCoroutineScope = CoroutineScope(
-    Dispatchers.IO
+        Dispatchers.IO
     )
 
-    init{
+    init {
         registerNetworkStatus()
     }
 
     override suspend fun getLetterCards(): List<LetterCard> =
-        withContext(Dispatchers.IO) {
-            localDataSource.getLetterCards().map {
-                letterCardMapperToDomain.mapToDomain(it)
+        letterCards.ifEmpty {
+            withContext(Dispatchers.IO) {
+                localDataSource.getLetterCards().map {
+                    letterCardMapperToDomain.mapToDomain(it)
+                }
             }
         }
 
     override suspend fun getWordCards(): List<WordCard> =
-        withContext(Dispatchers.IO){
-            localDataSource.getWordCards().map {
-                wordCardMapperToDomain.mapToDomain(it)
+        wordCards.ifEmpty {
+            withContext(Dispatchers.IO) {
+                localDataSource.getWordCards().map {
+                    wordCardMapperToDomain.mapToDomain(it)
+                }
             }
         }
 
+    override suspend fun getCardsSet(typeCards: TypeCards): List<CardsSet> =
+        withContext(Dispatchers.IO) {
+            localDataSource.getCardsSetByColor(ExtractTypesCardsHelper.extractColor(typeCards))
+                .map {
+                    cardsSetMapperToDomain.mapToDomain(it)
+                }
+        }
+
     override suspend fun getPlayers(): List<Player> =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             localDataSource.getPlayers().map {
                 playersMapperDomain.mapToDomain(it)
             }
         }
 
     override suspend fun deletePlayer(player: Player) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             localDataSource.deletePlayer(playersMapperData.mapToData(player))
         }
     }
 
     override suspend fun insertPlayer(player: Player): Long =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             localDataSource.insertPlayer(playersMapperData.mapToData(player))
         }
 
     override suspend fun updatePlayer(player: Player) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             localDataSource.updatePlayer(playersMapperData.mapToData(player))
         }
     }
 
     override fun getTypesCardsSelectedForGame(): List<TypeCards> =
         sharedPreferencesForGame.readTypesCardsSelectedForGame().map {
-            typeCardsMapper.mapToDomain(it)
+            sharedPreferencesTypeCardsMapper.mapToDomain(it)
         }
 
     override fun saveTypesCardsSelectedForGame(typesCardsSelectedForGame: List<TypeCards>) =
         sharedPreferencesForGame.saveTypesCardsSelectedForGame(
             typesCardsSelectedForGame.map {
-                typeCardsMapper.mapToData(it)
+                sharedPreferencesTypeCardsMapper.mapToData(it)
             }
         )
 
@@ -114,27 +135,27 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         sharedPreferencesForGame.isFirstLaunch()
 
     override suspend fun getAvatarsFromLocalDataSource(): List<Avatar> =
-        withContext(Dispatchers.IO){
-            localDataSource.getAvatars().map{
+        withContext(Dispatchers.IO) {
+            localDataSource.getAvatars().map {
                 avatarRoomMapper.mapToDomain(it)
             }
         }
 
     override suspend fun getAvatarsFromRemoteDataSource(quantities: Int): List<Avatar> =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             remoteDataSource.getRandomAvatars(quantities).map {
                 avatarApiMapper.mapToDomain(it)
             }
         }
 
     override suspend fun insertAvatar(avatar: Avatar): Long =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             localDataSource.insertAvatar(avatarRoomMapper.mapToData(avatar))
         }
 
     private fun registerNetworkStatus() {
         repositoryCoroutineScope.launch {
-            withContext(Dispatchers.Default){
+            withContext(Dispatchers.Default) {
                 networkStatus.registerNetworkCallback()
                     .collect {
                         isOnline = it
