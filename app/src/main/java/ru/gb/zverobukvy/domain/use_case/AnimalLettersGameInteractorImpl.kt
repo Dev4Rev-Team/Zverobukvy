@@ -58,7 +58,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     private var players: List<PlayerInGame>
 ) : AnimalLettersGameInteractor {
     private val checkData = CheckData()
-    private val levelCalculator = LevelCalculatorImpl(players.map { it.player }, typesCards)
+    private val calculator = LevelAndRatingCalculatorImpl(players.map { it.player }, typesCards)
     private val gamingWords: Queue<WordCard> = LinkedList()
     private var positionCurrentLetterCard by Delegates.notNull<Int>()
     private var currentWalkingPlayer: PlayerInGame
@@ -245,7 +245,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("selectionCorrectLetterCard")
         // обновляем уровень текущего игрока
         currentGameState.walkingPlayer?.player?.let {
-            levelCalculator.updateLettersGuessingLevel(it, true)
+            calculator.updateLettersGuessingLevel(it, true)
         }
         // в данной ситуации gamingWordCard не может быть null
         currentGameState.gameField.gamingWordCard?.let {
@@ -279,7 +279,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("selectionWrongLetterCard")
         // обновляем уровень текущего игрока
         currentGameState.walkingPlayer?.player?.let {
-            levelCalculator.updateLettersGuessingLevel(it, false)
+            calculator.updateLettersGuessingLevel(it, false)
         }
         // gameStateFlow обновляет value, т.к. отличается gameField (lettersField)
         gameStateFlow.value = currentGameState.copy(
@@ -306,6 +306,12 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
         Timber.d("selectionLastCorrectLetterCardInGamingWordCard")
+        // Обновляем рейтинг игрока, отгадавшего букву
+        currentGameState.walkingPlayer?.let {player ->
+            currentGameState.gameField.gamingWordCard?.let {wordCard ->
+                calculator.updateRating(player.player, wordCard)
+            }
+        }
         // нет больше карточек-слов для игры
         if (isLastGamingWordCard())
             guessedLastGamingWordCard(
@@ -364,7 +370,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("guessedLastGamingWordCard")
         // в конце игры сохраняем в БД актуальный рейтинг игроков
         CoroutineScope(Dispatchers.IO).launch {
-            levelCalculator.getPlayersWithActualLevel().forEach {
+            calculator.getUpdatedPlayers().forEach {
                 animalLettersGameRepository.updatePlayer(it)
             }
         }
