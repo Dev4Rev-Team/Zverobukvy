@@ -12,7 +12,9 @@ import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import java.io.IOException
 import java.io.InputStream
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AssertsImageCashImpl @Inject constructor(
     context: Context,
     animalLettersCardsRepository: AnimalLettersGameRepository,

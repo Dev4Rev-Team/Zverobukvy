@@ -1,5 +1,7 @@
 package ru.gb.zverobukvy.domain.use_case
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -7,6 +9,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.domain.entity.CardsSet
 import ru.gb.zverobukvy.domain.entity.GameField
 import ru.gb.zverobukvy.domain.entity.GameState
@@ -16,7 +19,7 @@ import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
 import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputer
-import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimple
+import ru.gb.zverobukvy.domain.use_case.computer.animal_letters_computer_simple_smart.AnimalLettersComputerSimpleSmart
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
@@ -55,6 +58,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     private var players: List<PlayerInGame>
 ) : AnimalLettersGameInteractor {
     private val checkData = CheckData()
+    private val calculator = LevelAndRatingCalculatorImpl(players.map { it.player }, typesCards)
     private val gamingWords: Queue<WordCard> = LinkedList()
     private var positionCurrentLetterCard by Delegates.notNull<Int>()
     private var currentWalkingPlayer: PlayerInGame
@@ -87,7 +91,8 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
 
     override suspend fun startGame() {
         Timber.d("startGame")
-        val selectedColorsCardsSets = getSelectedColorsCardsSets(typesCards) // получаем все наборы карточек по выбранным цветам (typesCards)
+        val selectedColorsCardsSets =
+            getSelectedColorsCardsSets(typesCards) // получаем все наборы карточек по выбранным цветам (typesCards)
         gamingWords.addAll(getGamingWords(selectedColorsCardsSets)) // формируется очередь карточек-слов
         // начальное состояние игры
         gameStateFlow.value = GameState(
@@ -208,7 +213,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // value в gameStateFlow не может быть null, т.к. этот метод вызывается после
         // получения во viewModel стартового состояния игры
         gameStateFlow.value?.let {
-            computer = AnimalLettersComputerSimple(DEFAULT_SMART_LEVEL, it.gameField)
+            computer = AnimalLettersComputerSimpleSmart(DEFAULT_SMART_LEVEL, it.gameField)
         }
         return computerSharedFlow
     }
@@ -218,7 +223,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
      * @param typesCards выбранные для игры цвета
      * @return список (от одного до четырех элементов), включающий в себя все наборы по выбранным цветам
      */
-    private suspend fun getSelectedColorsCardsSets(typesCards: List<TypeCards>): List<List<CardsSet>>{
+    private suspend fun getSelectedColorsCardsSets(typesCards: List<TypeCards>): List<List<CardsSet>> {
         val selectedColorsCardsSets = mutableListOf<List<CardsSet>>()
         typesCards.forEach {
             selectedColorsCardsSets.add(animalLettersGameRepository.getCardsSet(it))
@@ -238,6 +243,10 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
         Timber.d("selectionCorrectLetterCard")
+        // обновляем уровень текущего игрока
+        currentGameState.walkingPlayer?.player?.let {
+            calculator.updateLettersGuessingLevel(it, true)
+        }
         // в данной ситуации gamingWordCard не может быть null
         currentGameState.gameField.gamingWordCard?.let {
             // выбранная буква последняя в отгадываемом слове
@@ -268,6 +277,10 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         positionWrongLetterCard: Int
     ) {
         Timber.d("selectionWrongLetterCard")
+        // обновляем уровень текущего игрока
+        currentGameState.walkingPlayer?.player?.let {
+            calculator.updateLettersGuessingLevel(it, false)
+        }
         // gameStateFlow обновляет value, т.к. отличается gameField (lettersField)
         gameStateFlow.value = currentGameState.copy(
             gameField = GameField(
@@ -293,6 +306,12 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
         Timber.d("selectionLastCorrectLetterCardInGamingWordCard")
+        // Обновляем рейтинг игрока, отгадавшего букву
+        currentGameState.walkingPlayer?.let {player ->
+            currentGameState.gameField.gamingWordCard?.let {wordCard ->
+                calculator.updateRating(player.player, wordCard)
+            }
+        }
         // нет больше карточек-слов для игры
         if (isLastGamingWordCard())
             guessedLastGamingWordCard(
@@ -349,6 +368,12 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
         Timber.d("guessedLastGamingWordCard")
+        // в конце игры сохраняем в БД актуальный рейтинг игроков
+        CoroutineScope(Dispatchers.IO).launch {
+            calculator.getUpdatedPlayers().forEach {
+                animalLettersGameRepository.updatePlayer(it)
+            }
+        }
         // gameStateFlow обновляет value, т.к. отличается gameField, players, walkingPlayer,
         //nextWalkingPlayer и isActive
         gameStateFlow.value = currentGameState.copy(
@@ -500,7 +525,12 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         checkData.apply {
             animalLettersGameRepository.getLetterCards().also {
                 checkLetterCardsFromRepository(it)
-                return checkLettersField(DealCards.getKitLetterCards(it, selectedColorsCardsSets)).toMutableList()
+                return checkLettersField(
+                    DealCards.getKitLetterCards(
+                        it,
+                        selectedColorsCardsSets
+                    )
+                ).toMutableList()
             }
         }
     }
@@ -517,7 +547,14 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         checkData.apply {
             animalLettersGameRepository.getWordCards().also {
                 checkWordCardsFromRepository(it)
-                return LinkedList(checkGamingWords(DealCards.getKitWordCards(it, selectedColorsCardsSets)))
+                return LinkedList(
+                    checkGamingWords(
+                        DealCards.getKitWordCards(
+                            it,
+                            selectedColorsCardsSets
+                        )
+                    )
+                )
             }
         }
     }
