@@ -2,11 +2,12 @@ package ru.gb.zverobukvy.domain.use_case
 
 import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.domain.entity.WordCard
 
-class LevelCalculatorImpl(players: List<Player>, typesCards: List<TypeCards>) :
-    LevelCalculator {
+class LevelAndRatingCalculatorImpl(players: List<Player>, typesCards: List<TypeCards>) :
+    LevelCalculator, RatingCalculator {
 
-    private val mostDifficultTypeCards = extractMostDifficultTypeCards(typesCards)
+    private val mostDifficultTypeCards = extractMostDifficultTypeCards(typesCards.toSet())
 
     private val humanPlayersWithLevelInGame = HashMap<Player.HumanPlayer, Pair<Int, Int>>().apply {
         extractHumanPlayers(players).forEach {
@@ -21,7 +22,19 @@ class LevelCalculatorImpl(players: List<Player>, typesCards: List<TypeCards>) :
             }
     }
 
-    override fun getPlayersWithActualLevel(): List<Player.HumanPlayer> {
+    override fun updateRating(player: Player, guessedWordCard: WordCard) {
+        if (player is Player.HumanPlayer)
+            humanPlayersWithLevelInGame.keys.find {it == player }?.let {
+                when(extractMostDifficultTypeCards(guessedWordCard.typesCards)){
+                    TypeCards.ORANGE -> it.rating.orangeRating++
+                    TypeCards.GREEN -> it.rating.greenRating++
+                    TypeCards.BLUE -> it.rating.blueRating++
+                    TypeCards.VIOLET -> it.rating.violetRating++
+                }
+            }
+    }
+
+    override fun getUpdatedPlayers(): List<Player.HumanPlayer> {
         when (mostDifficultTypeCards) {
             TypeCards.ORANGE -> humanPlayersWithLevelInGame.forEach {
                 it.key.lettersGuessingLevel.orangeLevel =
@@ -64,7 +77,7 @@ class LevelCalculatorImpl(players: List<Player>, typesCards: List<TypeCards>) :
     ): Float =
         (1 - LEVEL_RATIO) * generalLevel + LEVEL_RATIO * (levelInGame.first) / levelInGame.second
 
-    private fun extractMostDifficultTypeCards(typesCards: List<TypeCards>) =
+    private fun extractMostDifficultTypeCards(typesCards: Set<TypeCards>) =
         if (typesCards.contains(TypeCards.VIOLET))
             TypeCards.VIOLET
         else if (typesCards.contains(TypeCards.BLUE))

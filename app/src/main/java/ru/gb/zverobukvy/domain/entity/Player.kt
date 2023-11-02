@@ -9,8 +9,8 @@ sealed class Player(
     open var name: String,
     open var id: Long = 0,
     open var avatar: Avatar,
-    open val rating: Rating = Rating(),
-    open val lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel()
+    open val rating: Rating = Rating(),// кол-во отгаданных слов по цветам
+    open val lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel() // доля угаданных букв по цветам
 ) : Parcelable,
     DomainEntity {
 
