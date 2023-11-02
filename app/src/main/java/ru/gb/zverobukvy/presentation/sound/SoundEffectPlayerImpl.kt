@@ -44,20 +44,26 @@ class SoundEffectPlayerImpl @Inject constructor(
         job = myCoroutineScope.launch {
             animalLettersCardsRepository.getLetterCards().forEach {
                 try {
-                    soundsMap[it.soundName] = loadSound(it.soundName)
+                    soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_LETTERS + it.soundName)
+
                 } catch (e: Exception) {
-                    //TODO
+                    throw IllegalStateException("no element LettersCards ${it.soundName}")
                 }
             }
             animalLettersCardsRepository.getWordCards().forEach {
                 try {
-                    soundsMap[it.soundName] = loadSound("RU_" + it.soundName)
+                    soundsMap[it.soundName] =
+                        loadSound(ASSETS_PATH_SOUND_WORDS + "RU_" + it.soundName)
                 } catch (e: Exception) {
-                    //TODO
+                    throw IllegalStateException("no element WordCard ${it.soundName}")
                 }
             }
             SoundEnum.values().forEach {
-                soundsMapSystem[it] = loadSound(it.assetPath)
+                try {
+                    soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
+                } catch (e: Exception) {
+                    throw IllegalStateException("no element systemSound ${it.assetPath}")
+                }
             }
         }
     }
@@ -135,6 +141,9 @@ class SoundEffectPlayerImpl @Inject constructor(
     companion object {
         const val MAX_STREAM = 3
         const val DEFAULT_PRIORITY_LOAD = 1
+        const val ASSETS_PATH_SOUND_SYSTEM = "sounds/system/"
+        const val ASSETS_PATH_SOUND_WORDS = "sounds/words/"
+        const val ASSETS_PATH_SOUND_LETTERS = "sounds/letters/"
     }
 
 }
