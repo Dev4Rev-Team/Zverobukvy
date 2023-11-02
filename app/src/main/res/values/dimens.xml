@@ -19,5 +19,6 @@
     <dimen name="corner_radius_default">10dp</dimen>
     <dimen name="corner_radius_small">6dp</dimen>
     <dimen name="margin_avatar_image">5dp</dimen>
-    <dimen name="star_size">20dp</dimen>
+    <dimen name="star_size">30dp</dimen>
+    <dimen name="margin_rating_card_horisontal">1dp</dimen>
 </resources>

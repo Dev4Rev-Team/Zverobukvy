@@ -90,41 +90,65 @@
                     android:src="@drawable/ic_done" />
             </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/rating_star_orange_image_view"
-                android:layout_width="@dimen/star_size"
-                android:layout_height="@dimen/star_size"
-                app:layout_constraintEnd_toStartOf="@+id/rating_star_green_image_view"
+            <TextView
+                android:id="@+id/rating_orange_text_view"
+                android:layout_width="@dimen/auto_layout"
+                android:layout_height="@dimen/auto_layout"
+                android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                android:background="@drawable/background_orange"
+                android:gravity="center"
+                tools:text="1250"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_tiny"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/rating_green_text_view"
                 app:layout_constraintStart_toStartOf="@+id/player_name_text_view"
-                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view"
-                app:srcCompat="@drawable/rating_star_orange" />
+                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view" />
 
-            <ImageView
-                android:id="@+id/rating_star_green_image_view"
-                android:layout_width="@dimen/star_size"
-                android:layout_height="@dimen/star_size"
-                app:layout_constraintEnd_toStartOf="@+id/rating_star_blue_image_view"
-                app:layout_constraintStart_toEndOf="@+id/rating_star_orange_image_view"
-                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view"
-                app:srcCompat="@drawable/rating_star_green" />
+            <TextView
+                android:id="@+id/rating_green_text_view"
+                android:layout_width="@dimen/auto_layout"
+                android:layout_height="@dimen/auto_layout"
+                android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                android:background="@drawable/background_green"
+                android:gravity="center"
+                tools:text="500"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_tiny"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/rating_blue_text_view"
+                app:layout_constraintStart_toEndOf="@+id/rating_orange_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view" />
 
-            <ImageView
-                android:id="@+id/rating_star_blue_image_view"
-                android:layout_width="@dimen/star_size"
-                android:layout_height="@dimen/star_size"
-                app:layout_constraintEnd_toStartOf="@+id/rating_star_violet_image_view"
-                app:layout_constraintStart_toEndOf="@+id/rating_star_green_image_view"
-                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view"
-                app:srcCompat="@drawable/rating_star_blue" />
+            <TextView
+                android:id="@+id/rating_blue_text_view"
+                android:layout_width="@dimen/auto_layout"
+                android:layout_height="@dimen/auto_layout"
+                android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                android:background="@drawable/background_blue"
+                android:gravity="center"
+                tools:text="10"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_tiny"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/rating_violet_text_view"
+                app:layout_constraintStart_toEndOf="@+id/rating_green_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view" />
 
-            <ImageView
-                android:id="@+id/rating_star_violet_image_view"
-                android:layout_width="@dimen/star_size"
-                android:layout_height="@dimen/star_size"
+            <TextView
+                android:id="@+id/rating_violet_text_view"
+                android:layout_width="@dimen/auto_layout"
+                android:layout_height="@dimen/auto_layout"
+                android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                android:background="@drawable/background_violet"
+                android:gravity="center"
+                tools:text="2"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_tiny"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/player_name_text_view"
-                app:layout_constraintStart_toEndOf="@+id/rating_star_blue_image_view"
-                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view"
-                app:srcCompat="@drawable/rating_star_violet" />
+                app:layout_constraintStart_toEndOf="@+id/rating_blue_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
