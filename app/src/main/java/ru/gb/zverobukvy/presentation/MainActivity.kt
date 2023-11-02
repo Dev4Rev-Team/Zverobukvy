@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.presentation
 
+import android.media.AudioManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        volumeControlStream = AudioManager.STREAM_MUSIC
         initMainMenu(savedInstanceState)
         initBottomSheet()
     }

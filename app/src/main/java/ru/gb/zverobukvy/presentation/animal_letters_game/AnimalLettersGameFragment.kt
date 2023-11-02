@@ -209,6 +209,7 @@ class AnimalLettersGameFragment :
         binding.wordView.setWord(wordCard) {
             CustomLetterView(requireContext())
         }
+        soundEffectPlayer.play(wordCard.soundName)
     }
 
     private fun requestNextPlayer(screenDimmingText: String) {
@@ -248,6 +249,7 @@ class AnimalLettersGameFragment :
                 setWorkClick(false)
                 viewModel.onClickLetterCard(pos)
                 soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
+                soundEffectPlayer.play(startGameState.lettersCards[pos].soundName)
             }
             setRatioForTable(
                 countCardHorizontally,
