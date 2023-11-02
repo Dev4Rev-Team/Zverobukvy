@@ -4,7 +4,7 @@ import ru.gb.zverobukvy.domain.entity.Player
 
 interface LevelCalculator {
 
-    fun updateLettersGuessingLevel(idPlayer: Long, isCorrectStep: Boolean)
+    fun updateLettersGuessingLevel(player: Player, isCorrectStep: Boolean)
 
     fun getPlayersWithActualLevel(): List<Player.HumanPlayer>
 }

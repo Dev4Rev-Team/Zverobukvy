@@ -1,12 +1,24 @@
 package ru.gb.zverobukvy.domain.entity
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class LettersGuessingLevel(
-    var orangeLevel: Pair<Int, Int> = 0 to 0, // first - угаданные буквы, second - все буквы
-    var greenLevel: Pair<Int, Int> = 0 to 0,
-    var blueLevel: Pair<Int, Int> = 0 to 0,
-    var violetLevel: Pair<Int, Int> = 0 to 0
-): Parcelable
+    @ColumnInfo(name = "orange_level")
+    var orangeLevel: Float = DEFAULT_ORANGE_LEVEL,
+    @ColumnInfo(name = "green_level")
+    var greenLevel: Float = DEFAULT_GREEN_LEVEL,
+    @ColumnInfo(name = "blue_level")
+    var blueLevel: Float = DEFAULT_BLUE_LEVEL,
+    @ColumnInfo(name = "violet_level")
+    var violetLevel: Float = DEFAULT_VIOLET_LEVEL
+): Parcelable{
+    companion object {
+        private const val DEFAULT_ORANGE_LEVEL = 0.111F
+        private const val DEFAULT_GREEN_LEVEL = 0.083F
+        private const val DEFAULT_BLUE_LEVEL = 0.062F
+        private const val DEFAULT_VIOLET_LEVEL = 0.05F
+    }
+}

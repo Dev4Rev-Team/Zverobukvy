@@ -32,8 +32,10 @@ class PlayerViewHolder(
                     editMenuClickListener(this@PlayerViewHolder.adapterPosition)
                 }
                 imageAvatarLoader.loadImageAvatar(it.player.avatar, playerAvatarImageView)
-                Timber.d("${playerInSetting.player.lettersGuessingLevel.orangeLevel.first}")
-                Timber.d("${playerInSetting.player.lettersGuessingLevel.orangeLevel.second}")
+                Timber.d("${playerInSetting.player.lettersGuessingLevel.orangeLevel}")
+                Timber.d("${playerInSetting.player.lettersGuessingLevel.greenLevel}")
+                Timber.d("${playerInSetting.player.lettersGuessingLevel.blueLevel}")
+                Timber.d("${playerInSetting.player.lettersGuessingLevel.violetLevel}")
             }
         }
     }

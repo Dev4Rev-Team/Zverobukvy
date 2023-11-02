@@ -8,38 +8,61 @@ class LevelCalculatorImpl(players: List<Player>, typesCards: List<TypeCards>) :
 
     private val mostDifficultTypeCards = extractMostDifficultTypeCards(typesCards)
 
-    private val humanPlayer = extractHumanPlayers(players)
-
-    override fun updateLettersGuessingLevel(idPlayer: Long, isCorrectStep: Boolean) {
-        humanPlayer.find { it.id == idPlayer }?.let {
-                when (mostDifficultTypeCards) {
-                    TypeCards.ORANGE -> it.lettersGuessingLevel.orangeLevel =
-                        calculateLevel(it.lettersGuessingLevel.orangeLevel, isCorrectStep)
-
-                    TypeCards.GREEN -> it.lettersGuessingLevel.greenLevel =
-                        calculateLevel(it.lettersGuessingLevel.greenLevel, isCorrectStep)
-
-                    TypeCards.BLUE -> it.lettersGuessingLevel.blueLevel =
-                        calculateLevel(it.lettersGuessingLevel.blueLevel, isCorrectStep)
-
-                    TypeCards.VIOLET -> it.lettersGuessingLevel.violetLevel =
-                        calculateLevel(it.lettersGuessingLevel.violetLevel, isCorrectStep)
-                }
+    private val humanPlayersWithLevelInGame = HashMap<Player.HumanPlayer, Pair<Int, Int>>().apply {
+        extractHumanPlayers(players).forEach {
+            put(it, 0 to 0)
         }
     }
 
-    override fun getPlayersWithActualLevel(): List<Player.HumanPlayer> = humanPlayer
+    override fun updateLettersGuessingLevel(player: Player, isCorrectStep: Boolean) {
+        if (player is Player.HumanPlayer)
+            humanPlayersWithLevelInGame[player]?.let {
+                humanPlayersWithLevelInGame[player] = calculateLevelInGame(it, isCorrectStep)
+            }
+    }
 
-    private fun calculateLevel(
-        currentLevel: Pair<Int, Int>,
+    override fun getPlayersWithActualLevel(): List<Player.HumanPlayer> {
+        when (mostDifficultTypeCards) {
+            TypeCards.ORANGE -> humanPlayersWithLevelInGame.forEach {
+                it.key.lettersGuessingLevel.orangeLevel =
+                    calculateGeneralLevel(it.value, it.key.lettersGuessingLevel.orangeLevel)
+            }
+
+            TypeCards.GREEN -> humanPlayersWithLevelInGame.forEach {
+                it.key.lettersGuessingLevel.greenLevel =
+                    calculateGeneralLevel(it.value, it.key.lettersGuessingLevel.greenLevel)
+            }
+
+            TypeCards.BLUE -> humanPlayersWithLevelInGame.forEach {
+                it.key.lettersGuessingLevel.blueLevel =
+                    calculateGeneralLevel(it.value, it.key.lettersGuessingLevel.blueLevel)
+            }
+
+            TypeCards.VIOLET -> humanPlayersWithLevelInGame.forEach {
+                it.key.lettersGuessingLevel.violetLevel =
+                    calculateGeneralLevel(it.value, it.key.lettersGuessingLevel.violetLevel)
+            }
+        }
+        return humanPlayersWithLevelInGame.keys.toList()
+    }
+
+
+    private fun calculateLevelInGame(
+        currentLevelInGame: Pair<Int, Int>,
         isCorrectStep: Boolean
     ): Pair<Int, Int> =
         Pair(
             if (isCorrectStep)
-                currentLevel.first + 1
+                currentLevelInGame.first + 1
             else
-                currentLevel.first, currentLevel.second + 1
+                currentLevelInGame.first, currentLevelInGame.second + 1
         )
+
+    private fun calculateGeneralLevel(
+        levelInGame: Pair<Int, Int>,
+        generalLevel: Float
+    ): Float =
+        (1 - LEVEL_RATIO) * generalLevel + LEVEL_RATIO * (levelInGame.first) / levelInGame.second
 
     private fun extractMostDifficultTypeCards(typesCards: List<TypeCards>) =
         if (typesCards.contains(TypeCards.VIOLET))
@@ -54,8 +77,12 @@ class LevelCalculatorImpl(players: List<Player>, typesCards: List<TypeCards>) :
     private fun extractHumanPlayers(players: List<Player>): List<Player.HumanPlayer> =
         mutableListOf<Player.HumanPlayer>().apply {
             players.forEach {
-                if(it is Player.HumanPlayer)
+                if (it is Player.HumanPlayer)
                     add(it)
             }
         }
+
+    companion object {
+        private const val LEVEL_RATIO = 0.2F
+    }
 }
