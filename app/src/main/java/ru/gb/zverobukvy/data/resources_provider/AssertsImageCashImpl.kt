@@ -26,16 +26,35 @@ class AssertsImageCashImpl @Inject constructor(
     init {
         job = myCoroutineScope.launch {
             animalLettersCardsRepository.getLetterCards().forEach {
-                addToMap(context, it.faceImageName)
-                addToMap(context, it.backImageName)
+                try {
+                    addToMap(
+                        context,
+                        it.faceImageName,
+                        ASSETS_PATH_IMAGE_LETTERS + it.faceImageName
+                    )
+                } catch (e: Exception) {
+                    throw IllegalStateException("no element image letter ${it.faceImageName}")
+                }
+                try {
+                    addToMap(context, it.backImageName, ASSETS_PATH_IMAGE_SYSTEM + it.backImageName)
+                } catch (e: Exception) {
+                    throw IllegalStateException("no element image system ${it.backImageName}")
+                }
             }
 
             animalLettersCardsRepository.getWordCards().forEach {
-                addToMap(context, it.faceImageName)
+                try {
+                    addToMap(context, it.faceImageName, ASSETS_PATH_IMAGE_WORDS + it.faceImageName)
+                } catch (e: Exception) {
+                    throw IllegalStateException("no element image word ${it.faceImageName}")
+                }
             }
 
-            addToMap(context, "FACE.webp")
-
+            try {
+                addToMap(context, IMAGE_FACE_CARD, ASSETS_PATH_IMAGE_SYSTEM + IMAGE_FACE_CARD)
+            } catch (e: Exception) {
+                throw IllegalStateException("no element image system $IMAGE_FACE_CARD ")
+            }
         }
     }
 
@@ -50,10 +69,11 @@ class AssertsImageCashImpl @Inject constructor(
 
     private fun addToMap(
         context: Context,
+        name: String,
         url: String,
     ) {
-        if (!mapImages.contains(url)) {
-            mapImages[url] = getImageFromAssert(context, url)
+        if (!mapImages.contains(name)) {
+            mapImages[name] = getImageFromAssert(context, url)
         }
     }
 
@@ -66,5 +86,13 @@ class AssertsImageCashImpl @Inject constructor(
         } catch (ex: IOException) {
             throw IllegalArgumentException("asset $src not found")
         }
+    }
+
+    companion object {
+        const val ASSETS_PATH_IMAGE_LETTERS = "images/letters/"
+        const val ASSETS_PATH_IMAGE_WORDS = "images/words/"
+        const val ASSETS_PATH_IMAGE_SYSTEM = "images/system/"
+
+        const val IMAGE_FACE_CARD = "FACE.webp"
     }
 }
