@@ -15,13 +15,18 @@ import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
+import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
+import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
 import javax.inject.Inject
 
+@Suppress("UNUSED_PARAMETER")
 class MainMenuViewModelImpl @Inject constructor(
     private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
+    assetsImageCash: AssetsImageCash,
+    soundEffectPlayer: SoundEffectPlayer
 ) :
     MainMenuViewModel, ViewModel() {
     private val typesCardsSelectedForGame: MutableList<TypeCards> = mutableListOf()
