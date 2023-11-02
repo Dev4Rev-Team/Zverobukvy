@@ -245,7 +245,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("selectionCorrectLetterCard")
         // обновляем уровень текущего игрока
         currentGameState.walkingPlayer?.player?.let {
-            levelCalculator.updateLettersGuessingLevel(it.id, true)
+            levelCalculator.updateLettersGuessingLevel(it, true)
         }
         // в данной ситуации gamingWordCard не может быть null
         currentGameState.gameField.gamingWordCard?.let {
@@ -279,7 +279,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("selectionWrongLetterCard")
         // обновляем уровень текущего игрока
         currentGameState.walkingPlayer?.player?.let {
-            levelCalculator.updateLettersGuessingLevel(it.id, false)
+            levelCalculator.updateLettersGuessingLevel(it, false)
         }
         // gameStateFlow обновляет value, т.к. отличается gameField (lettersField)
         gameStateFlow.value = currentGameState.copy(
