@@ -1,7 +1,6 @@
 package ru.gb.zverobukvy.data.room.entity
 
 import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -11,14 +10,14 @@ import ru.gb.zverobukvy.data.mapper.DataEntity
 data class LetterCardInDatabase(
     @field:ColumnInfo(name = "letter")
     val letter: String,
-    @Embedded
-    val typeCardsInDatabase: TypeCardsInDatabase,
     @field:ColumnInfo(name = "face")
     val faceImageName: String,
     @field:ColumnInfo(name = "back")
     val backImageName: String,
     @field:PrimaryKey(autoGenerate = true)
-    val id: Long = 0
+    val id: Long = 0,
+    @field:ColumnInfo(name = "sound")
+    val soundName: String
 ) : DataEntity
 
 

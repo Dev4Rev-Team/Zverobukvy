@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.domain.use_case.computer.animal_letters_computer_simple_smart
 
 import ru.gb.zverobukvy.domain.entity.GameField
+import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputer
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSmart.field_holder.FieldHolderSimple
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSmart.field_holder.FieldHolderSimpleImpl
@@ -21,7 +22,7 @@ class AnimalLettersComputerSimpleSmart(
     private val lettersForGame: MutableSet<Int> = mutableSetOf()
 
     init {
-        fieldHolder.update(gameField, -1)
+        fieldHolder.update(gameField, NO_SELECT)
     }
 
     override fun setCurrentGameField(
@@ -41,30 +42,50 @@ class AnimalLettersComputerSimpleSmart(
 
     private fun updateLettersForGame() {
         lettersForGame.clear()
+        if (isRememberLettersFromLastWord()) return
+
         if (Random.nextFloat() <= probabilityIsCorrect) {
             lettersForGame.addAll(fieldHolder.getInvisibleCorrectLetters())
         } else {
             lettersForGame.addAll(fieldHolder.getIncorrectLetters())
-            if (lettersForGame.size > 1) {
-                lettersForGame.remove(fieldHolder.getLastPosition())
-            }
-            if (lettersForGame.size > lettersRemember.size) {
-                lettersForGame.removeAll(lettersRemember.toSet())
+            lettersForGame.removeAll(lettersRemember.toSet())
+            lettersForGame.remove(fieldHolder.getLastPosition())
+
+            if (lettersForGame.size == 0) {
+                throw IllegalStateException("Not incorrect letters for game")
             }
         }
+    }
+
+    private fun isRememberLettersFromLastWord(): Boolean {
+        val intersect = lettersRemember.intersect(fieldHolder.getInvisibleCorrectLetters())
+        if (intersect.isNotEmpty()) {
+            lettersForGame.addAll(intersect)
+            return true
+        }
+        return false
     }
 
     private fun updateLettersRemember(selectedPosition: Int) {
         if (selectedPosition >= 0) {
             lettersRemember.add(selectedPosition)
         }
-        if (lettersRemember.size >= MAX_REMEMBER) {
+        if (lettersRemember.size > MAX_REMEMBER) {
             lettersRemember.removeFirst()
         }
     }
 
     companion object {
         const val MAX_REMEMBER = 3
+        const val NO_SELECT = -1
+
+        fun newInstance(gamePlayers: List<Player>, gameField: GameField): AnimalLettersComputer {
+            return AnimalLettersComputerSimpleSmart(0.3f, gameField)
+        }
+
+        fun newInstance(probabilityIsCorrect: Float, gameField: GameField): AnimalLettersComputer {
+            return AnimalLettersComputerSimpleSmart(probabilityIsCorrect, gameField)
+        }
     }
 
 }
