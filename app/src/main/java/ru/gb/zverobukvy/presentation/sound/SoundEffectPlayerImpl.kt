@@ -7,23 +7,58 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class SoundEffectPlayerImpl @Inject constructor(val context: Context) : SoundEffectPlayer {
-
+@Singleton
+class SoundEffectPlayerImpl @Inject constructor(
+    val context: Context,
+    animalLettersCardsRepository: AnimalLettersGameRepository
+) : SoundEffectPlayer {
     private val soundPool: SoundPool
     private val soundsMap = mutableMapOf<String, Int>()
     private val soundsMapSystem = mutableMapOf<SoundEnum, Int>()
     private val isLoad = mutableSetOf<Int>()
+    private val queueSound = mutableSetOf<Int>()
+
+    private val myCoroutineScope = CoroutineScope(Dispatchers.Default)
+    private val job: Job
 
     init {
         soundPool = createSoundPool()
+
         soundPool.setOnLoadCompleteListener { _, sampleId, status ->
             if (status == 0) isLoad.add(sampleId)
+            if (queueSound.contains(sampleId)) {
+                playSound(sampleId)
+                queueSound.remove(sampleId)
+            }
         }
-        SoundEnum.values().forEach {
-            soundsMapSystem[it] = loadSound(it.assetPath)
+
+        job = myCoroutineScope.launch {
+            animalLettersCardsRepository.getLetterCards().forEach {
+                try {
+                    soundsMap[it.soundName] = loadSound(it.soundName)
+                } catch (e: Exception) {
+                    //TODO
+                }
+            }
+            animalLettersCardsRepository.getWordCards().forEach {
+                try {
+                    soundsMap[it.soundName] = loadSound("RU_" + it.soundName)
+                } catch (e: Exception) {
+                    //TODO
+                }
+            }
+            SoundEnum.values().forEach {
+                soundsMapSystem[it] = loadSound(it.assetPath)
+            }
         }
     }
 
@@ -56,21 +91,6 @@ class SoundEffectPlayerImpl @Inject constructor(val context: Context) : SoundEff
         return SoundPool(MAX_STREAM, AudioManager.STREAM_MUSIC, 0)
     }
 
-    override fun loadSound(assetPath: Set<String>) {
-        soundsMap.clear()
-        isLoad.clear()
-        assetPath.forEach {
-            loadSound(it)
-        }
-    }
-
-    override fun removeSound() {
-        soundsMap.values.forEach {
-            soundPool.resume(it)
-        }
-    }
-
-
     override fun play(soundEnum: SoundEnum) {
         val idStream = soundsMapSystem[soundEnum]
         playSound(idStream)
@@ -82,6 +102,12 @@ class SoundEffectPlayerImpl @Inject constructor(val context: Context) : SoundEff
     }
 
     private fun playSound(idStream: Int?) {
+        if (!job.isCompleted) {
+            runBlocking {
+                job.join()
+            }
+        }
+
         if (isLoad.contains(idStream)) {
             val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
             audioManager?.let {
@@ -101,6 +127,8 @@ class SoundEffectPlayerImpl @Inject constructor(val context: Context) : SoundEff
                     normalPlaybackRate
                 )
             }
+        } else {
+            idStream?.let { queueSound.add(it) }
         }
     }
 
