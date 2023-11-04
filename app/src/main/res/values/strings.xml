@@ -46,4 +46,12 @@
     <string name="game_view_model_text_guessed_word_single_player"> </string>
     <string name="game_view_model_default_text_for_screen_dimming"> </string>
 
+    <!--Уровни-->
+    <string name="learner">ученик</string>
+    <string name="expert">эксперт</string>
+    <string name="master">мастер</string>
+    <string name="genius">гений</string>
+    <string name="hero">герой</string>
+    <string name="legend">легенда</string>
+
 </resources>

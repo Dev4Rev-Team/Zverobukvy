@@ -34,10 +34,21 @@
                 android:gravity="center"
                 android:text="@string/username_default"
                 android:textSize="@dimen/text_medium_small"
-                app:layout_constraintBottom_toTopOf="@+id/rating_star_orange_image_view"
+                app:layout_constraintBottom_toTopOf="@+id/rating_orange_text_view"
                 app:layout_constraintEnd_toStartOf="@+id/edit_image_button"
                 app:layout_constraintStart_toEndOf="@+id/player_avatar_card_vew"
                 app:layout_constraintTop_toTopOf="@+id/player_avatar_card_vew" />
+
+            <TextView
+                android:id="@+id/rank_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/player_avatar_card_vew"
+                app:layout_constraintEnd_toEndOf="@id/player_avatar_card_vew"
+                app:layout_constraintTop_toBottomOf="@id/player_avatar_card_vew"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="Ученик"
+                />
 
 
             <androidx.cardview.widget.CardView
@@ -47,9 +58,10 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:backgroundTint="@color/color_blue_pastel"
                 app:cardCornerRadius="8000dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/rank_text_view"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed">
 
                 <ImageView
                     android:id="@+id/player_avatar_image_view"
