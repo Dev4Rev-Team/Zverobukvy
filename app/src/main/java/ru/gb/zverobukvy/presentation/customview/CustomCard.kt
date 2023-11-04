@@ -22,6 +22,8 @@ class CustomCard @JvmOverloads constructor(
 
     var isOpen: Boolean = IS_OPEN
         private set
+    var position: Int = 0
+        private set
 
     private var srcClose: Int = SRC_CLOSE
     private var srcOpen: Int = SRC_OPEN
@@ -30,6 +32,11 @@ class CustomCard @JvmOverloads constructor(
     private lateinit var frontSideImageView: CustomImageView
     private lateinit var backSideImageView: CustomImageView
     private lateinit var frontBackgroundImageView: CustomImageView
+
+    private var clickOpen: ((pos: Int) -> Unit)? = null
+    fun setOnClickOpenCard(block: (pos: Int) -> Unit) {
+        clickOpen = block
+    }
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -120,8 +127,12 @@ class CustomCard @JvmOverloads constructor(
      *
      */
     fun setOnClickCardListener(pos: Int, click: (pos: Int) -> Unit) {
+        position = pos
         setOnClickListener {
-            click(pos)
+            if (isOpen) {
+                clickOpen?.invoke(position)
+            }
+            click(position)
         }
     }
 
