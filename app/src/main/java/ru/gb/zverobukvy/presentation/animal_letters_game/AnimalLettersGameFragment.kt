@@ -228,7 +228,7 @@ class AnimalLettersGameFragment :
                 CustomCard(requireContext()).apply {
                     enableClickAnimation()
                     setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
-                    setOnClickOpenCard { pos -> event.onClickOpenLetter(pos) }
+                    setOnClickCorrectCard { pos -> event.onClickCorrectLetter(pos) }
                 }
             }
             setOnClickListener { pos ->
@@ -287,6 +287,7 @@ class AnimalLettersGameFragment :
             soundEffectPlayer.play(SoundEnum.CARD_IS_SUCCESSFUL)
             setPositionLetterInWord(it.positionLetterInWord)
             binding.table.openCard(it.correctLetterCard)
+            binding.table.setCorrectlyCard(it.correctLetterCard)
             binding.table.setWorkClick(true)
         }
 
@@ -394,11 +395,11 @@ class AnimalLettersGameFragment :
         }
 
         fun onClickWordView() {
-            delayAndRun(0) { wordCardSoundName?.let { soundEffectPlayer.play(it) } }
+            delayAndRun(DELAY_SOUND_REPEAT) { wordCardSoundName?.let { soundEffectPlayer.play(it) } }
         }
 
-        fun onClickOpenLetter(position: Int) {
-            delayAndRun(0) {
+        fun onClickCorrectLetter(position: Int) {
+            delayAndRun(DELAY_SOUND_REPEAT) {
                 mapLettersSoundName[position]?.let { soundEffectPlayer.play(it) }
             }
         }
@@ -418,6 +419,8 @@ class AnimalLettersGameFragment :
 
         private const val DELAY_SOUND_WORD = 500L
         private const val DELAY_SOUND_LETTER = 500L
+        private const val DELAY_SOUND_REPEAT = 0L
+
 
 
         @JvmStatic
