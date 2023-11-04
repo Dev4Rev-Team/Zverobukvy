@@ -26,7 +26,9 @@ import ru.gb.zverobukvy.domain.entity.WordCard
 import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import ru.gb.zverobukvy.domain.repository.MainMenuRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AnimalLettersRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,

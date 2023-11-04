@@ -8,7 +8,9 @@ import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NetworkStatusImpl @Inject constructor (val context: Context) : NetworkStatus {
 
     private val connectivityManager =
