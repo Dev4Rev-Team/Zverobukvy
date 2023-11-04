@@ -176,13 +176,9 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                             .collect(::onComputerClickLetterCard)
                     }
 
-                    viewModelScope.launch {
-                        isCardClick = true
-
-                        delay(COMPUTER_DELAY)
-                        animalLettersGameInteractor.getSelectedLetterCardByComputer()
-                    }
                 }
+
+                initComputerStroke(newState)
             }
         }
 
@@ -281,6 +277,8 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
             Log.i("@@@", "lastClickCard visible ${lastClickCard.isVisible}")
             Log.i("@@@", "positionGuessedLetters != null : ${positionGuessedLetters != null}")
+            Log.i("@@@", "oldPositionGuessedLetters = ${oldWordCard.positionsGuessedLetters}")
+            Log.i("@@@", "newPositionGuessedLetters = ${newWordCard.positionsGuessedLetters}")
 
             if (lastClickCard.isVisible && positionGuessedLetters != null) {
 
