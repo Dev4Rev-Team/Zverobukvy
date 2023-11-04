@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.domain.use_case
 
 import ru.gb.zverobukvy.domain.entity.LetterCard
+import ru.gb.zverobukvy.domain.entity.Player
 import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.TypeCards
 import ru.gb.zverobukvy.domain.entity.WordCard
@@ -77,19 +78,32 @@ class CheckData {
     }
 
     /**
-     * Метод проверяет, что список игроков не пустой и обнуляет счет каждого игрока.
+     * Метод проверяет, что список игроков не пустой и обнуляет счет каждого игрока, перемешивает игроков
+     * и игрока-компьютер отправляет в конец списка
      * @param players список игроков
      * @exception IllegalArgumentException
      * @return список игроков
      */
-    fun checkPlayers(players: List<PlayerInGame>): List<PlayerInGame> {
-        with(players) {
+    fun getPlayersForGame(players: List<PlayerInGame>): List<PlayerInGame> {
+        val playersForGame = with(players.shuffled().toMutableList()) {
             if (isEmpty())
                 throw IllegalArgumentException(PLAYERS_IS_NOT_CORRECT)
-            return onEach {
+            onEach {
                 it.scoreInCurrentGame = START_SCORE
             }
         }
+        val computer = playersForGame.find {
+            it.player is Player.ComputerPlayer
+        }
+        computer?.let {
+            with(playersForGame) {
+                if (indexOf(it) != size - 1) {
+                    remove(it)
+                    add(it)
+                }
+            }
+        }
+        return playersForGame.toList()
     }
 
     /**
