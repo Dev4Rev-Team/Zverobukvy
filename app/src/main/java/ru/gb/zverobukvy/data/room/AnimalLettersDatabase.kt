@@ -24,7 +24,7 @@ import ru.gb.zverobukvy.data.room.entity.WordCardInDatabase
         CardsSetInDatabase::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class AnimalLettersDatabase : RoomDatabase() {
     abstract fun playersDao(): PlayersDao
