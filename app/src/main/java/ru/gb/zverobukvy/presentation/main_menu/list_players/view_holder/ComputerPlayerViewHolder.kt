@@ -12,7 +12,7 @@ class ComputerPlayerViewHolder(
 ) :
     BasePlayerViewHolder(viewBinding) {
 
-    private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+    private val imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {

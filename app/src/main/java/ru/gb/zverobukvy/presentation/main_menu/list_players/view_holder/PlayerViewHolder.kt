@@ -5,6 +5,9 @@ import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
+import ru.gb.zverobukvy.data.view_rating_provider.Rank
+import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProvider
+import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProviderImpl
 import timber.log.Timber
 
 class PlayerViewHolder(
@@ -14,10 +17,14 @@ class PlayerViewHolder(
 ) :
     BasePlayerViewHolder(viewBinding) {
 
-    private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+    private val imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+
+    private lateinit var viewRatingProvider: ViewRatingProvider
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
+            viewRatingProvider = ViewRatingProviderImpl(it.player.rating)
+            viewRating()
             viewBinding.run {
                 playerNameTextView.text = it.player.name
                 if (it.isSelectedForGame) {
@@ -36,11 +43,25 @@ class PlayerViewHolder(
                 Timber.d("${playerInSetting.player.name} greenLevel ${playerInSetting.player.lettersGuessingLevel.greenLevel}")
                 Timber.d("${playerInSetting.player.name} blueLevel ${playerInSetting.player.lettersGuessingLevel.blueLevel}")
                 Timber.d("${playerInSetting.player.name} violetLevel ${playerInSetting.player.lettersGuessingLevel.violetLevel}")
-                Timber.d("${playerInSetting.player.name} orangeRating ${playerInSetting.player.rating.orangeRating}")
-                Timber.d("${playerInSetting.player.name} greenRating ${playerInSetting.player.rating.greenRating}")
-                Timber.d("${playerInSetting.player.name} blueRating ${playerInSetting.player.rating.blueRating}")
-                Timber.d("${playerInSetting.player.name} violetRating ${playerInSetting.player.rating.violetRating}")
             }
+        }
+    }
+
+    private fun viewRating(){
+        viewBinding.run {
+            rankTextView.text = when(viewRatingProvider.getRank()){
+                Rank.LEARNER -> itemView.context.getString(R.string.learner)
+                Rank.EXPERT -> itemView.context.getString(R.string.expert)
+                Rank.MASTER -> itemView.context.getString(R.string.master)
+                Rank.GENIUS -> itemView.context.getString(R.string.genius)
+                Rank.HERO -> itemView.context.getString(R.string.hero)
+                Rank.LEGEND -> itemView.context.getString(R.string.legend)
+            }
+            ratingOrangeTextView.text = viewRatingProvider.getOrangeRating().rating.toString()
+            ratingGreenTextView.text = viewRatingProvider.getGreenRating().rating.toString()
+            ratingBlueTextView.text = viewRatingProvider.getBlueRating().rating.toString()
+            ratingVioletTextView.text = viewRatingProvider.getVioletRating().rating.toString()
+            //TODO view decoration
         }
     }
 }
