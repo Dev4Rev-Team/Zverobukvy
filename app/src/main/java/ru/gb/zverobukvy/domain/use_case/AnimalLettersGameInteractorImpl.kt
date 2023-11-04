@@ -78,7 +78,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // проверяются на корректность, переданные в конструктор данные
         checkData.apply {
             checkTypesCards(typesCards)
-            players = checkPlayers(players)
+            players = getPlayersForGame(players)
         }
         // определяется игрок, начинающий игру
         currentWalkingPlayer = players.first()
