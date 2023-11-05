@@ -57,6 +57,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     private val typesCards: List<TypeCards>,
     private var players: List<PlayerInGame>
 ) : AnimalLettersGameInteractor {
+    private lateinit var dealCards: DealCards
     private val checkData = CheckData()
     private val calculator = LevelAndRatingCalculatorImpl(players.map { it.player }, typesCards)
     private val gamingWords: Queue<WordCard> = LinkedList()
@@ -91,13 +92,13 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
 
     override suspend fun startGame() {
         Timber.d("startGame")
-        val selectedColorsCardsSets =
-            getSelectedColorsCardsSets(typesCards) // получаем все наборы карточек по выбранным цветам (typesCards)
-        gamingWords.addAll(getGamingWords(selectedColorsCardsSets)) // формируется очередь карточек-слов
+        // получаем все наборы карточек по выбранным цветам (typesCards)  и создаем dealCards
+        dealCards = DealCardsImpl(getSelectedColorsCardsSets(typesCards))
+        gamingWords.addAll(getGamingWords()) // формируется очередь карточек-слов
         // начальное состояние игры
         gameStateFlow.value = GameState(
             gameField = GameField(
-                getStartedLettersField(selectedColorsCardsSets), // формируется список карточек-букв
+                getStartedLettersField(), // формируется список карточек-букв
                 // в данной ситуации очередь карточек-слов не может быть пустой
                 gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
             ),
@@ -307,8 +308,8 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     ) {
         Timber.d("selectionLastCorrectLetterCardInGamingWordCard")
         // Обновляем рейтинг игрока, отгадавшего букву
-        currentGameState.walkingPlayer?.let {player ->
-            currentGameState.gameField.gamingWordCard?.let {wordCard ->
+        currentGameState.walkingPlayer?.let { player ->
+            currentGameState.gameField.gamingWordCard?.let { wordCard ->
                 calculator.updateRating(player.player, wordCard)
             }
         }
@@ -518,18 +519,14 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
      * стартового поля игры, исходя из заданного списка из заданного списка с наборами карточе.
      * Дополнительно выполняется проверка на корректность полученных из репозитория данных и
      * данных, сформированных для стартового поля игры.
-     * @param selectedColorsCardsSets список с набором карточек
      * @return список карточек-букв стартового поля игры
      */
-    private suspend fun getStartedLettersField(selectedColorsCardsSets: List<List<CardsSet>>): MutableList<LetterCard> {
+    private suspend fun getStartedLettersField(): MutableList<LetterCard> {
         checkData.apply {
             animalLettersGameRepository.getLetterCards().also {
                 checkLetterCardsFromRepository(it)
                 return checkLettersField(
-                    DealCards.getKitLetterCards(
-                        it,
-                        selectedColorsCardsSets
-                    )
+                    dealCards.getKitLetterCards(it)
                 ).toMutableList()
             }
         }
@@ -540,19 +537,15 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
      * для игры, исходя из заданного списка с наборами карточек.
      * Дополнительно выполняется проверка на корректность полученных из репозитория данных и
      * данных, сформированных для игры.
-     * @param selectedColorsCardsSets список с набором карточек
      * @return очередь карточек-слов для игры
      */
-    private suspend fun getGamingWords(selectedColorsCardsSets: List<List<CardsSet>>): Queue<WordCard> {
+    private suspend fun getGamingWords(): Queue<WordCard> {
         checkData.apply {
             animalLettersGameRepository.getWordCards().also {
                 checkWordCardsFromRepository(it)
                 return LinkedList(
                     checkGamingWords(
-                        DealCards.getKitWordCards(
-                            it,
-                            selectedColorsCardsSets
-                        )
+                        dealCards.getKitWordCards(it)
                     )
                 )
             }
