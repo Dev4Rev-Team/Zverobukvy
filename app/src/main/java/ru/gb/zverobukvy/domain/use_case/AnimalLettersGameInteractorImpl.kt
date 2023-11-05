@@ -213,8 +213,8 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("subscribeToComputer")
         // value в gameStateFlow не может быть null, т.к. этот метод вызывается после
         // получения во viewModel стартового состояния игры
-        gameStateFlow.value?.let {
-            computer = AnimalLettersComputerSimpleSmart(DEFAULT_SMART_LEVEL, it.gameField)
+        gameStateFlow.value?.let {gameState ->
+            computer = AnimalLettersComputerSimpleSmart.newInstance(players.map { it.player }, gameState.gameField)
         }
         return computerSharedFlow
     }
@@ -550,9 +550,5 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 )
             }
         }
-    }
-
-    companion object {
-        private const val DEFAULT_SMART_LEVEL = 0.5F
     }
 }
