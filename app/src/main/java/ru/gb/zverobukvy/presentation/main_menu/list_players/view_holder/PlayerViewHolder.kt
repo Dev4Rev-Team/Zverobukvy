@@ -1,13 +1,13 @@
 package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
-import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.data.view_rating_provider.Rank
 import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProvider
 import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProviderImpl
+import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
+import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 import timber.log.Timber
 
 class PlayerViewHolder(
@@ -47,15 +47,38 @@ class PlayerViewHolder(
         }
     }
 
-    private fun viewRating(){
+    private fun viewRating() {
         viewBinding.run {
-            rankTextView.text = when(viewRatingProvider.getRank()){
-                Rank.LEARNER -> itemView.context.getString(R.string.learner)
-                Rank.EXPERT -> itemView.context.getString(R.string.expert)
-                Rank.MASTER -> itemView.context.getString(R.string.master)
-                Rank.GENIUS -> itemView.context.getString(R.string.genius)
-                Rank.HERO -> itemView.context.getString(R.string.hero)
-                Rank.LEGEND -> itemView.context.getString(R.string.legend)
+            when (viewRatingProvider.getRank()) {
+                Rank.LEARNER -> {
+                    rankTextView.text = itemView.context.getString(R.string.learner)
+                    //TODO цвет ученика
+                }
+
+                Rank.EXPERT -> {
+                    rankTextView.text = itemView.context.getString(R.string.expert)
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.color_card_orange))
+                }
+
+                Rank.MASTER -> {
+                    rankTextView.text = itemView.context.getString(R.string.master)
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.color_card_green))
+                }
+
+                Rank.GENIUS -> {
+                    rankTextView.text = itemView.context.getString(R.string.genius)
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.color_card_blue))
+                }
+
+                Rank.HERO -> {
+                    rankTextView.text = itemView.context.getString(R.string.hero)
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.color_card_violet))
+                }
+
+                Rank.LEGEND -> {
+                    rankTextView.text = itemView.context.getString(R.string.legend)
+                    //TODO цвет легенды
+                }
             }
             ratingOrangeTextView.text = viewRatingProvider.getOrangeRating().rating.toString()
             ratingGreenTextView.text = viewRatingProvider.getGreenRating().rating.toString()
