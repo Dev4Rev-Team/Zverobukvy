@@ -1,6 +1,5 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import ru.gb.zverobukvy.data.resources_provider.StringEnum
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatch
 import ru.gb.zverobukvy.domain.entity.GameState
 import ru.gb.zverobukvy.domain.entity.Player
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
 import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
@@ -248,41 +246,29 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             )
 
             if (nextWalkingPlayer != null) {
-                changingLiveData.value = ChangingState.NextPlayer(
-                    nextWalkingPlayer
-                )
-                //TODO initComputer...
-                if (isComputerPlayer(nextWalkingPlayer)) {
-                    Log.e("@@@", "isComputerCardClickSuccess after if (nextWalkingPlayer != null)")
-
-                    isCardClick = true
-                    delay(COMPUTER_DELAY)
-                    animalLettersGameInteractor.getSelectedLetterCardByComputer()
+                return listOf(
+                    ChangingState.NextPlayer(
+                        nextWalkingPlayer
+                    )
+                ).also {
+                    initComputerStroke(newState)
                 }
             }
         }
 
         if (isCardClick) {
 
-            Log.w("@@@", "isCardClick Block")
-
             // Получем последнюю нажатую карточку
             val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
-            Log.w("@@@", "lastClickCard = ${lastClickCard.letter}")
+
             // Вычисляем позицию последней подсвеченой буквы в загаданном слове
             val positionGuessedLetters = positionGuessedLetters(
                 oldWordCard.positionsGuessedLetters,
                 newWordCard.positionsGuessedLetters
             )
 
-            Log.i("@@@", "lastClickCard visible ${lastClickCard.isVisible}")
-            Log.i("@@@", "positionGuessedLetters != null : ${positionGuessedLetters != null}")
-            Log.i("@@@", "oldPositionGuessedLetters = ${oldWordCard.positionsGuessedLetters}")
-            Log.i("@@@", "newPositionGuessedLetters = ${newWordCard.positionsGuessedLetters}")
 
             if (lastClickCard.isVisible && positionGuessedLetters != null) {
-
-                Log.w("@@@", "lastClickCard visible and ...")
 
                 if (newWordCard.word.length == newWordCard.positionsGuessedLetters.size) {
                     /** Событие отгаданного слова */
@@ -303,7 +289,6 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                         )
                     )
                 } else {
-                    Log.w("@@@", "lastClickCard Success")
 
                     /** Событие корректно отгаданной буквы */
                     isCardClick = false
@@ -319,7 +304,6 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
             } else {
                 /** Событие неверно отгаданной буквы */
-                Log.w("@@@", "lastClickCard UnSuccess")
 
                 isCardClick = false
                 isWaitingNextPlayer = true
@@ -344,10 +328,6 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 delay(COMPUTER_DELAY)
                 animalLettersGameInteractor.getSelectedLetterCardByComputer()
             }
-    }
-
-    private fun isComputerPlayer(player: PlayerInGame): Boolean {
-        return player.player is Player.ComputerPlayer
     }
 
     private fun textOfInvalidLetter(state: GameState): String {
@@ -410,16 +390,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
         isClickNextWalkingPlayer = false
-        Log.d("@@@", "walkingPlayer is Computer = ${mGameState?.walkingPlayer?.player is Player.ComputerPlayer}")
-        Log.d("@@@", "nextWalkingPlayer is Computer = ${mGameState?.nextWalkingPlayer?.player is Player.ComputerPlayer}")
-        Log.d("@@@", "positionSelectedLetterCard = ${positionSelectedLetterCard}")
 
         val isComputerPlayer: Boolean = mGameState?.walkingPlayer?.player is Player.ComputerPlayer
-        Log.d("@@@", "isNotComputerPlayer = ${!isComputerPlayer}")
-        Log.d("@@@", "isNotCardClick = ${!isCardClick}")
         if (!isCardClick)
             if (!isComputerPlayer) {
-                Log.e("@@@", "isCardClickSuccess")
 
                 isCardClick = true
                 mLastClickCardPosition = positionSelectedLetterCard
