@@ -286,7 +286,7 @@ class AnimalLettersGameFragment :
             setPositionLetterInWord(it.positionLetterInWord)
             binding.table.openCard(it.correctLetterCard)
             binding.table.setCorrectlyCard(it.correctLetterCard)
-            binding.table.setWorkClick(true)
+            delayAndRun(DELAY_ENABLE_CLICK_LETTERS_CARD) { binding.table.setWorkClick(true) }
         }
 
         fun changingStateInvalidLetter(it: AnimalLettersGameState.ChangingState.InvalidLetter) {
@@ -418,9 +418,9 @@ class AnimalLettersGameFragment :
         private const val DELAY_SOUND_WORD = 500L
         private const val DELAY_SOUND_LETTER = 500L
         private const val DELAY_SOUND_REPEAT = 0L
+        private const val DELAY_ENABLE_CLICK_LETTERS_CARD = 100L
 
         private const val IMAGE_CARD_FOREGROUND = "FACE.webp"
-
 
 
         @JvmStatic
