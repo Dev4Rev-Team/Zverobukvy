@@ -5,5 +5,6 @@ import androidx.viewbinding.ViewBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 
 abstract class BasePlayerViewHolder(viewBinding: ViewBinding) : ViewHolder(viewBinding.root) {
+
     abstract fun bindView(playerInSetting: PlayerInSettings?)
 }

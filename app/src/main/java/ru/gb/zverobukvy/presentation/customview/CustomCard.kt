@@ -22,6 +22,8 @@ class CustomCard @JvmOverloads constructor(
 
     var isOpen: Boolean = IS_OPEN
         private set
+    private var position: Int = 0
+    private var isCorrect: Boolean = false
 
     private var srcClose: Int = SRC_CLOSE
     private var srcOpen: Int = SRC_OPEN
@@ -30,6 +32,11 @@ class CustomCard @JvmOverloads constructor(
     private lateinit var frontSideImageView: CustomImageView
     private lateinit var backSideImageView: CustomImageView
     private lateinit var frontBackgroundImageView: CustomImageView
+
+    private var clickCorrectCard: ((pos: Int) -> Unit)? = null
+    fun setOnClickCorrectCard(block: (pos: Int) -> Unit) {
+        clickCorrectCard = block
+    }
 
     init {
         initAttributes(context, attrs, defStyle)
@@ -120,8 +127,12 @@ class CustomCard @JvmOverloads constructor(
      *
      */
     fun setOnClickCardListener(pos: Int, click: (pos: Int) -> Unit) {
+        position = pos
         setOnClickListener {
-            click(pos)
+            if (isCorrect) {
+                clickCorrectCard?.invoke(position)
+            }
+            click(position)
         }
     }
 
@@ -130,6 +141,13 @@ class CustomCard @JvmOverloads constructor(
             this.isOpen = isOpen
             startAnimationFlip()
         }
+        if(!isOpen){
+            isCorrect = false
+        }
+    }
+
+    fun setCorrectCard() {
+        this.isCorrect = true
     }
 
     fun setImageOpenBackground(openBackground: Drawable) {

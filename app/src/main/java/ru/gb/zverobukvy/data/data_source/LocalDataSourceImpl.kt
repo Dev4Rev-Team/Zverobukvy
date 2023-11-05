@@ -8,7 +8,9 @@ import ru.gb.zverobukvy.data.room.entity.PlayerInDatabase
 import ru.gb.zverobukvy.data.room.entity.PlayerWithAvatar
 import ru.gb.zverobukvy.data.room.entity.WordCardInDatabase
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LocalDataSourceImpl @Inject constructor(
     private val animalLettersDatabase: AnimalLettersDatabase,
 ) : LocalDataSource {

@@ -5,6 +5,11 @@ import android.os.Parcelable
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
@@ -18,6 +23,7 @@ import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dia
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.GameIsOverDialogFragment
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.customview.CustomCard
+import ru.gb.zverobukvy.presentation.customview.CustomCardTable
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
 import ru.gb.zverobukvy.presentation.customview.createAlphaShowAnimation
@@ -33,36 +39,31 @@ import kotlin.math.ceil
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
     private var gameStart: GameStart? = null
-
     private lateinit var assertsImageCash: AssetsImageCash
-
     private lateinit var soundEffectPlayer: SoundEffectPlayer
-
     private lateinit var viewModel: AnimalLettersGameViewModel
-
     private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
-
+    private val game = GameWork()
+    private val event = GameEvent()
+    private var wordCardSoundName: String? = null
+    private var mapLettersSoundName = mutableMapOf<Int, String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             gameStart = it.parcelable(GAME_START)
         }
         gameStart ?: throw IllegalArgumentException("not arg gameStart")
-
         initDagger()
-
-        viewModel.onActiveGame()
+        game.startNewGame()
     }
 
     private fun initDagger() {
         requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
-            gameStart!!.typesCards,
-            gameStart!!.players
+            gameStart!!.typesCards, gameStart!!.players
         ).also { fragmentComponent ->
             viewModel = ViewModelProvider(
                 this,
-                viewModelProviderFactoryOf { fragmentComponent.viewModel }
-            )[AnimalLettersGameViewModelImpl::class.java]
+                viewModelProviderFactoryOf { fragmentComponent.viewModel })[AnimalLettersGameViewModelImpl::class.java]
 
             assertsImageCash = fragmentComponent.assetsImageCash
             soundEffectPlayer = fragmentComponent.soundEffectPlayer
@@ -72,85 +73,57 @@ class AnimalLettersGameFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initChangingStateEvent()
+        intiGameStateEvent()
+        initView()
+    }
+
+    private fun initChangingStateEvent() {
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.ChangingState.CorrectLetter -> {
-                    soundEffectPlayer.play(SoundEnum.CARD_IS_SUCCESSFUL)
-                    setPositionLetterInWord(it.positionLetterInWord)
-                    binding.table.openCard(it.correctLetterCard)
-                    binding.table.setWorkClick(true)
-                }
-
-                is AnimalLettersGameState.ChangingState.GuessedWord -> {
-                    soundEffectPlayer.play(SoundEnum.WORD_IS_GUESSED)
-                    setPositionLetterInWord(it.positionLetterInWord)
-                    binding.table.openCard(it.correctLetterCard)
-                    if (it.hasNextWord) {
-                        requestNextWord(it.screenDimmingText)
-                    }
+                    game.changingStateCorrectLetter(it)
                 }
 
                 is AnimalLettersGameState.ChangingState.InvalidLetter -> {
-                    soundEffectPlayer.play(SoundEnum.CARD_IS_UNSUCCESSFUL)
-                    binding.table.openCard(it.invalidLetterCard)
-                    requestNextPlayer(it.screenDimmingText)
-                }
-
-                is AnimalLettersGameState.ChangingState.NextGuessWord -> {
-                    setPictureOfWord(it.wordCard.faceImageName)
-                    setWord(it.wordCard)
-                    binding.table.closeCardAll()
+                    game.changingStateInvalidLetter(it)
                 }
 
                 is AnimalLettersGameState.ChangingState.CloseInvalidLetter -> {
-                    binding.table.closeCard(it.invalidLetterCard)
+                    game.changingStateCloseInvalidLetter(it)
+                }
+
+                is AnimalLettersGameState.ChangingState.GuessedWord -> {
+                    game.changingStateGuessedWord(it)
+                }
+
+                is AnimalLettersGameState.ChangingState.NextGuessWord -> {
+                    game.changingStateNextGuessWord(it)
                 }
 
                 is AnimalLettersGameState.ChangingState.NextPlayer -> {
-                    setPlayer(it.nextWalkingPlayer.player)
+                    game.changingStateNextPlayer(it)
                 }
             }
         }
+    }
 
+    private fun intiGameStateEvent() {
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is AnimalLettersGameState.EntireState.EndGameState -> {
-                    if (it.isFastEndGame) {
-                        parentFragmentManager.popBackStack()
-                    } else {
-                        val players = DataGameIsOverDialog.map(it.players)
-                        val data = DataGameIsOverDialog(players, it.gameTime)
-                        soundEffectPlayer.play(SoundEnum.GAME_OVER)
-                        GameIsOverDialogFragment.instance(data)
-                            .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
-                    }
-
+                is AnimalLettersGameState.EntireState.StartGameState -> {
+                    game.changingStateStartGameState(it)
                 }
 
                 is AnimalLettersGameState.EntireState.IsEndGameState -> {
-                    IsEndGameDialogFragment.instance()
-                        .show(parentFragmentManager, IsEndGameDialogFragment.TAG)
+                    game.changingStateIsEndGameState()
                 }
 
-                is AnimalLettersGameState.EntireState.StartGameState -> {
-                    setPlayer(it.nextWalkingPlayer.player)
-                    initPictureWord(it.wordCard.faceImageName)
-                    setWord(it.wordCard)
-                    initTable(it)
-                    binding.root.visibility = View.VISIBLE
-
-                    if (it.nextPlayerBtnVisible) {
-                        requestNextPlayer(it.screenDimmingText)
-                    } else if (it.nextWordBtnVisible) {
-                        requestNextWord(it.screenDimmingText)
-                    } else {
-                        binding.table.setWorkClick(true)
-                    }
+                is AnimalLettersGameState.EntireState.EndGameState -> {
+                    game.changingStateEndGameState(it)
                 }
             }
         }
-
-        initView()
     }
 
     override fun onResume() {
@@ -166,23 +139,31 @@ class AnimalLettersGameFragment :
     private fun initView() {
         binding.nextWord.root.setOnClickListener {
             it.visibility = View.INVISIBLE
-            viewModel.onClickNextWord()
+            event.onClickNextWord()
         }
 
         GameIsOverDialogFragment.setOnListenerClose(this) {
-            parentFragmentManager.popBackStack()
+            event.popBackStack()
         }
 
         IsEndGameDialogFragment.setOnListenerYes(this) {
-            viewModel.onEndGameByUser()
+            event.onEndGameByUser()
         }
 
         IsEndGameDialogFragment.setOnListenerNo(this) {
-            viewModel.onLoadGame()
+            event.onLoadGame()
         }
 
         binding.backToMenuImageButton.setOnClickListener {
-            viewModel.onBackPressed()
+            event.onBackPressed()
+        }
+
+        binding.wordCustomCard.setOnClickCardListener(0) {
+            event.onClickImageWord()
+        }
+
+        binding.wordView.setOnClickListener {
+            event.onClickWordView()
         }
 
         binding.cardLevel.setCards(gameStart!!.typesCards)
@@ -193,9 +174,13 @@ class AnimalLettersGameFragment :
     }
 
     private fun setPlayer(player: Player) {
-        binding.playerNameTextView.text = player.name
-        imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
-        binding.table.setWorkClick(true)
+        if (binding.playerNameTextView.text != player.name) {
+            binding.playerNameTextView.text = player.name
+            imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
+        }
+        if (player !is Player.ComputerPlayer) {
+            binding.table.setWorkClick(true)
+        }
     }
 
     private fun setPictureOfWord(urlPicture: String) {
@@ -206,17 +191,18 @@ class AnimalLettersGameFragment :
     }
 
     private fun setWord(wordCard: CustomWordView.WordCardUI) {
+        wordCardSoundName = wordCard.soundName
         binding.wordView.setWord(wordCard) {
             CustomLetterView(requireContext())
         }
-        soundEffectPlayer.play(wordCard.soundName)
+        delayAndRun(DELAY_SOUND_WORD) { soundEffectPlayer.play(wordCard.soundName) }
     }
 
     private fun requestNextPlayer(screenDimmingText: String) {
         binding.nextPlayer.root.let { button ->
             button.setOnClickListener {
                 button.visibility = View.INVISIBLE
-                viewModel.onClickNextWalkingPlayer()
+                event.onClickNextWalkingPlayer()
             }
             createAlphaShowAnimation(button, START_DELAY_ANIMATION, DURATION_ANIMATION).start()
         }
@@ -225,15 +211,13 @@ class AnimalLettersGameFragment :
 
     private fun requestNextWord(screenDimmingText: String) {
         createAlphaShowAnimation(
-            binding.nextWord.root,
-            START_DELAY_ANIMATION,
-            DURATION_ANIMATION
+            binding.nextWord.root, START_DELAY_ANIMATION, DURATION_ANIMATION
         ).start()
         binding.nextWord.nextWordMoveTextView.text = screenDimmingText
     }
 
     override fun onBackPressed(): Boolean {
-        viewModel.onBackPressed()
+        event.onBackPressed()
         return false
     }
 
@@ -242,14 +226,13 @@ class AnimalLettersGameFragment :
             setListItem(startGameState.lettersCards, assertsImageCash) {
                 CustomCard(requireContext()).apply {
                     enableClickAnimation()
-                    setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
+                    setImageOpenBackground(assertsImageCash.getImage(IMAGE_CARD_FOREGROUND))
+                    setOnClickCorrectCard { pos -> event.onClickCorrectLetter(pos) }
                 }
             }
             setOnClickListener { pos ->
                 setWorkClick(false)
-                viewModel.onClickLetterCard(pos)
-                soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
-                soundEffectPlayer.play(startGameState.lettersCards[pos].soundName)
+                event.onClickLetterCard(pos, startGameState)
             }
             setRatioForTable(
                 countCardHorizontally,
@@ -270,9 +253,155 @@ class AnimalLettersGameFragment :
 
     private fun initPictureWord(picture: String) {
         binding.wordCustomCard.apply {
-            setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
+            setImageOpenBackground(assertsImageCash.getImage(IMAGE_CARD_FOREGROUND))
         }
         setPictureOfWord(picture)
+    }
+
+    private fun delayAndRun(time: Long, block: () -> Unit) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            withContext(Dispatchers.Default) {
+                delay(time)
+            }
+            withContext(Dispatchers.Main) {
+                block.invoke()
+            }
+        }
+    }
+
+    private fun saveLettersSoundName(lettersCards: List<CustomCardTable.LetterCardUI>) {
+        mapLettersSoundName.clear()
+        lettersCards.forEachIndexed { index, value ->
+            mapLettersSoundName[index] = value.soundName
+        }
+    }
+
+    private inner class GameWork() {
+        fun startNewGame() {
+            viewModel.onActiveGame()
+        }
+
+        fun changingStateCorrectLetter(it: AnimalLettersGameState.ChangingState.CorrectLetter) {
+            soundEffectPlayer.play(SoundEnum.CARD_IS_SUCCESSFUL)
+            setPositionLetterInWord(it.positionLetterInWord)
+            binding.table.openCard(it.correctLetterCard)
+            binding.table.setCorrectlyCard(it.correctLetterCard)
+            binding.table.setWorkClick(true)
+        }
+
+        fun changingStateInvalidLetter(it: AnimalLettersGameState.ChangingState.InvalidLetter) {
+            soundEffectPlayer.play(SoundEnum.CARD_IS_UNSUCCESSFUL)
+            binding.table.openCard(it.invalidLetterCard)
+            requestNextPlayer(it.screenDimmingText)
+        }
+
+        fun changingStateCloseInvalidLetter(it: AnimalLettersGameState.ChangingState.CloseInvalidLetter) {
+            binding.table.closeCard(it.invalidLetterCard)
+        }
+
+        fun changingStateGuessedWord(it: AnimalLettersGameState.ChangingState.GuessedWord) {
+            soundEffectPlayer.play(SoundEnum.WORD_IS_GUESSED)
+            setPositionLetterInWord(it.positionLetterInWord)
+            binding.table.openCard(it.correctLetterCard)
+            if (it.hasNextWord) {
+                requestNextWord(it.screenDimmingText)
+            }
+        }
+
+        fun changingStateNextGuessWord(it: AnimalLettersGameState.ChangingState.NextGuessWord) {
+            setPictureOfWord(it.wordCard.faceImageName)
+            setWord(it.wordCard)
+            binding.table.closeCardAll()
+        }
+
+        fun changingStateNextPlayer(it: AnimalLettersGameState.ChangingState.NextPlayer) {
+            setPlayer(it.nextWalkingPlayer.player)
+        }
+
+        fun changingStateStartGameState(it: AnimalLettersGameState.EntireState.StartGameState) {
+            setPlayer(it.nextWalkingPlayer.player)
+            initPictureWord(it.wordCard.faceImageName)
+            setWord(it.wordCard)
+            initTable(it)
+            saveLettersSoundName(it.lettersCards)
+            binding.root.visibility = View.VISIBLE
+            if (it.nextPlayerBtnVisible) {
+                requestNextPlayer(it.screenDimmingText)
+            } else if (it.nextWordBtnVisible) {
+                requestNextWord(it.screenDimmingText)
+            } else {
+                binding.table.setWorkClick(true)
+            }
+        }
+
+        fun changingStateIsEndGameState() {
+            IsEndGameDialogFragment.instance()
+                .show(parentFragmentManager, IsEndGameDialogFragment.TAG)
+        }
+
+        fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
+            if (it.isFastEndGame) {
+                event.popBackStack()
+            } else {
+                val players = DataGameIsOverDialog.map(it.players)
+                val data = DataGameIsOverDialog(players, it.gameTime)
+                soundEffectPlayer.play(SoundEnum.GAME_OVER)
+                GameIsOverDialogFragment.instance(data)
+                    .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
+            }
+        }
+
+    }
+
+    private inner class GameEvent() {
+        fun onEndGameByUser() {
+            viewModel.onEndGameByUser()
+        }
+
+        fun onLoadGame() {
+            viewModel.onLoadGame()
+        }
+
+        fun onBackPressed() {
+            viewModel.onBackPressed()
+        }
+
+        fun onClickNextWord() {
+            viewModel.onClickNextWord()
+        }
+
+        fun popBackStack() {
+            parentFragmentManager.popBackStack()
+        }
+
+        fun onClickLetterCard(
+            pos: Int, startGameState: AnimalLettersGameState.EntireState.StartGameState
+        ) {
+            viewModel.onClickLetterCard(pos)
+            soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
+            delayAndRun(DELAY_SOUND_LETTER) {
+                soundEffectPlayer.play(startGameState.lettersCards[pos].soundName)
+            }
+        }
+
+        fun onClickNextWalkingPlayer() {
+            viewModel.onClickNextWalkingPlayer()
+        }
+
+        fun onClickImageWord() {
+            onClickWordView()
+        }
+
+        fun onClickWordView() {
+            delayAndRun(DELAY_SOUND_REPEAT) { wordCardSoundName?.let { soundEffectPlayer.play(it) } }
+        }
+
+        fun onClickCorrectLetter(position: Int) {
+            delayAndRun(DELAY_SOUND_REPEAT) {
+                mapLettersSoundName[position]?.let { soundEffectPlayer.play(it) }
+            }
+        }
+
     }
 
     @Parcelize
@@ -285,6 +414,14 @@ class AnimalLettersGameFragment :
 
         private const val START_DELAY_ANIMATION = 550L
         private const val DURATION_ANIMATION = 300L
+
+        private const val DELAY_SOUND_WORD = 500L
+        private const val DELAY_SOUND_LETTER = 500L
+        private const val DELAY_SOUND_REPEAT = 0L
+
+        private const val IMAGE_CARD_FOREGROUND = "FACE.webp"
+
+
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {

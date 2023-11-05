@@ -32,7 +32,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:gravity="center"
-                android:text="@string/username_default"
+                android:text="@string/username_computer"
                 android:textSize="@dimen/text_medium_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +56,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/margin_avatar_image"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/avatar_drake" />
+                    android:src="@drawable/avatar_bot" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView

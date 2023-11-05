@@ -34,11 +34,21 @@
                 android:gravity="center"
                 android:text="@string/username_default"
                 android:textSize="@dimen/text_medium_small"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/rating_orange_text_view"
                 app:layout_constraintEnd_toStartOf="@+id/edit_image_button"
                 app:layout_constraintStart_toEndOf="@+id/player_avatar_card_vew"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/player_avatar_card_vew" />
 
+            <TextView
+                android:id="@+id/rank_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/player_avatar_card_vew"
+                app:layout_constraintEnd_toEndOf="@id/player_avatar_card_vew"
+                app:layout_constraintTop_toBottomOf="@id/player_avatar_card_vew"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="Ученик"
+                />
 
 
             <androidx.cardview.widget.CardView
@@ -48,9 +58,10 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:backgroundTint="@color/color_blue_pastel"
                 app:cardCornerRadius="8000dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/rank_text_view"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed">
 
                 <ImageView
                     android:id="@+id/player_avatar_image_view"
@@ -90,6 +101,66 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_done" />
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/rating_orange_text_view"
+                android:layout_width="@dimen/auto_layout"
+                android:layout_height="@dimen/auto_layout"
+                android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                android:background="@drawable/background_orange"
+                android:gravity="center"
+                tools:text="1250"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_tiny"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/rating_green_text_view"
+                app:layout_constraintStart_toStartOf="@+id/player_name_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view" />
+
+            <TextView
+                android:id="@+id/rating_green_text_view"
+                android:layout_width="@dimen/auto_layout"
+                android:layout_height="@dimen/auto_layout"
+                android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                android:background="@drawable/background_green"
+                android:gravity="center"
+                tools:text="500"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_tiny"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/rating_blue_text_view"
+                app:layout_constraintStart_toEndOf="@+id/rating_orange_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view" />
+
+            <TextView
+                android:id="@+id/rating_blue_text_view"
+                android:layout_width="@dimen/auto_layout"
+                android:layout_height="@dimen/auto_layout"
+                android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                android:background="@drawable/background_blue"
+                android:gravity="center"
+                tools:text="10"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_tiny"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/rating_violet_text_view"
+                app:layout_constraintStart_toEndOf="@+id/rating_green_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view" />
+
+            <TextView
+                android:id="@+id/rating_violet_text_view"
+                android:layout_width="@dimen/auto_layout"
+                android:layout_height="@dimen/auto_layout"
+                android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                android:background="@drawable/background_violet"
+                android:gravity="center"
+                tools:text="2"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_tiny"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/player_name_text_view"
+                app:layout_constraintStart_toEndOf="@+id/rating_blue_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/player_name_text_view" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

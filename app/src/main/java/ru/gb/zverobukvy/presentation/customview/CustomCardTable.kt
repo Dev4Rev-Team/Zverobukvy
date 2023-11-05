@@ -35,16 +35,13 @@ class CustomCardTable @JvmOverloads constructor(
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.CustomCardTable, defStyle, 0)
         horizontalGap = typedArray.getDimensionPixelSize(
-            R.styleable.CustomCardTable_horizontalGap,
-            context.dipToPixels(HORIZONTAL_GAP.toFloat())
+            R.styleable.CustomCardTable_horizontalGap, context.dipToPixels(HORIZONTAL_GAP.toFloat())
         )
         verticalGap = typedArray.getDimensionPixelSize(
-            R.styleable.CustomCardTable_verticalGap,
-            context.dipToPixels(VERTICAL_GAP.toFloat())
+            R.styleable.CustomCardTable_verticalGap, context.dipToPixels(VERTICAL_GAP.toFloat())
         )
         radiusCard = typedArray.getDimensionPixelSize(
-            R.styleable.CustomCardTable_radiusCards,
-            context.dipToPixels(RADIUS_CARD.toFloat())
+            R.styleable.CustomCardTable_radiusCards, context.dipToPixels(RADIUS_CARD.toFloat())
         )
         typedArray.recycle()
     }
@@ -109,8 +106,9 @@ class CustomCardTable @JvmOverloads constructor(
                 )
 
                 setOnClickCardListener(pos) {
-                    if (isWorkClick && !listOfCardsOnTable[pos].isOpen) {
-                        listOfCardsOnTable[pos].setOpenCard(true)
+
+                    val customCard = listOfCardsOnTable[pos]
+                    if (isWorkClick && !customCard.isOpen) {
                         click?.run { invoke(it) }
                     }
                 }
@@ -126,12 +124,18 @@ class CustomCardTable @JvmOverloads constructor(
         listOfCardsOnTable[getPositionCard(letterCard)].setOpenCard(true)
     }
 
+    fun setCorrectlyCard(letterCard: LetterCardUI) {
+        listOfCardsOnTable[getPositionCard(letterCard)].setCorrectCard()
+    }
+
     fun closeCard(letterCard: LetterCardUI) {
         listOfCardsOnTable[getPositionCard(letterCard)].setOpenCard(false)
     }
 
     fun closeCardAll() {
-        listOfCardsOnTable.forEach { it.setOpenCard(false) }
+        listOfCardsOnTable.forEach {
+            it.setOpenCard(false)
+        }
     }
 
     private fun getPositionCard(letterCard: LetterCardUI): Int {

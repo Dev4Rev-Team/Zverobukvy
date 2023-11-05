@@ -55,7 +55,7 @@ class SoundEffectPlayerImpl @Inject constructor(
                     soundsMap[it.soundName] =
                         loadSound(ASSETS_PATH_SOUND_WORDS + "RU_" + it.soundName)
                 } catch (e: Exception) {
-                    throw IllegalStateException("no element WordCard ${it.soundName}")
+                   // TODO включить, когда все слова будут озвучены throw IllegalStateException("no element WordCard ${it.soundName}")
                 }
             }
             SoundEnum.values().forEach {
