@@ -221,13 +221,12 @@ class AnimalLettersGameFragment :
         return false
     }
 
-    //TODO
     private fun initTable(startGameState: AnimalLettersGameState.EntireState.StartGameState) {
         binding.table.apply {
             setListItem(startGameState.lettersCards, assertsImageCash) {
                 CustomCard(requireContext()).apply {
                     enableClickAnimation()
-                    setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
+                    setImageOpenBackground(assertsImageCash.getImage(IMAGE_CARD_FOREGROUND))
                     setOnClickCorrectCard { pos -> event.onClickCorrectLetter(pos) }
                 }
             }
@@ -252,10 +251,9 @@ class AnimalLettersGameFragment :
         layoutParams.dimensionRatio = "$width:$height"
     }
 
-    //TODO
     private fun initPictureWord(picture: String) {
         binding.wordCustomCard.apply {
-            setImageOpenBackground(assertsImageCash.getImage("FACE.webp"))
+            setImageOpenBackground(assertsImageCash.getImage(IMAGE_CARD_FOREGROUND))
         }
         setPictureOfWord(picture)
     }
@@ -420,6 +418,8 @@ class AnimalLettersGameFragment :
         private const val DELAY_SOUND_WORD = 500L
         private const val DELAY_SOUND_LETTER = 500L
         private const val DELAY_SOUND_REPEAT = 0L
+
+        private const val IMAGE_CARD_FOREGROUND = "FACE.webp"
 
 
 
