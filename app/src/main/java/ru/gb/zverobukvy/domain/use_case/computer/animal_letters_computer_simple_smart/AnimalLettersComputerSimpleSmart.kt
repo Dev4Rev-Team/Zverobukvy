@@ -42,22 +42,28 @@ class AnimalLettersComputerSimpleSmart(
 
     private fun updateLettersForGame() {
         lettersForGame.clear()
-        if (isRememberLettersFromLastWord()) return
-
+        if (openRememberLettersFromLastWord()) return
         if (Random.nextFloat() <= probabilityIsCorrect) {
-            lettersForGame.addAll(fieldHolder.getInvisibleCorrectLetters())
+            openCorrectLetters()
         } else {
-            lettersForGame.addAll(fieldHolder.getIncorrectLetters())
-            lettersForGame.removeAll(lettersRemember.toSet())
-            lettersForGame.remove(fieldHolder.getLastPosition())
-
+            openIncorrectLetters()
             if (lettersForGame.size == 0) {
-                throw IllegalStateException("Not incorrect letters for game")
+                openCorrectLetters()
             }
         }
     }
 
-    private fun isRememberLettersFromLastWord(): Boolean {
+    private fun openCorrectLetters() {
+        lettersForGame.addAll(fieldHolder.getInvisibleCorrectLetters())
+    }
+
+    private fun openIncorrectLetters() {
+        lettersForGame.addAll(fieldHolder.getIncorrectLetters())
+        lettersForGame.removeAll(lettersRemember.toSet())
+        lettersForGame.remove(fieldHolder.getLastPosition())
+    }
+
+    private fun openRememberLettersFromLastWord(): Boolean {
         val intersect = lettersRemember.intersect(fieldHolder.getInvisibleCorrectLetters())
         if (intersect.isNotEmpty()) {
             lettersForGame.addAll(intersect)
@@ -79,8 +85,22 @@ class AnimalLettersComputerSimpleSmart(
         const val MAX_REMEMBER = 3
         const val NO_SELECT = -1
 
+        const val SMART_COMPUTER = 0.7f
+        const val SIZE_ORANGE = 9
+        const val SIZE_GREEN = 12
+        const val SIZE_BLUE = 15
+        const val SIZE_VIOLET = 20
+        const val SIZE_MAX = 33
+
         fun newInstance(gamePlayers: List<Player>, gameField: GameField): AnimalLettersComputer {
-            return AnimalLettersComputerSimpleSmart(0.3f, gameField)
+            val sizeField = gameField.lettersField.size
+            val smartList = mutableListOf<Float>()
+            gamePlayers.filter { it !is Player.ComputerPlayer }.forEach {
+                val smart = it.rating.violetRating.toFloat()
+                smartList.add(smart)
+            }
+            val probabilityRandom = 1f / sizeField
+            return AnimalLettersComputerSimpleSmart(probabilityRandom, gameField)
         }
 
         fun newInstance(probabilityIsCorrect: Float, gameField: GameField): AnimalLettersComputer {

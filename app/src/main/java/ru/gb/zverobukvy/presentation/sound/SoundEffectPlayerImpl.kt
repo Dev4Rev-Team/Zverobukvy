@@ -14,9 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class SoundEffectPlayerImpl @Inject constructor(
     val context: Context,
     animalLettersCardsRepository: AnimalLettersGameRepository
