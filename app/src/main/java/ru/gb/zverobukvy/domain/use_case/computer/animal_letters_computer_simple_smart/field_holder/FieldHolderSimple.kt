@@ -3,7 +3,9 @@ package ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSma
 import ru.gb.zverobukvy.domain.entity.GameField
 
 interface FieldHolderSimple {
-    fun update(gameField: GameField, lastPosition: Int)
+    fun update(gameField: GameField, lastPosition: Int, blockNewWord:(()->Unit)? = null)
+    fun getGuessedWord():Int
+    fun getMoveNumberInWord():Int
     fun getLastPosition(): Int
     fun getIncorrectLetters(): Set<Int>
     fun getInvisibleCorrectLetters(): Set<Int>
