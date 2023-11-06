@@ -8,13 +8,21 @@ class FieldHolderSimpleImpl : FieldHolderSimple {
     private val incorrectLetters: MutableSet<Int> = mutableSetOf()
     private val invisibleCorrectLetters: MutableSet<Int> = mutableSetOf()
     private var lastPosition: Int = 0
-    override fun update(gameField: GameField, lastPosition: Int) {
+    private var moveNumberInWord = 0
+    private var guessedWord = -1
+    override fun update(
+        gameField: GameField,
+        lastPosition: Int,
+        blockNewWord: (() -> Unit)?
+    ) {
         val newWord = gameField.gamingWordCard?.word
             ?: throw IllegalArgumentException("gameField.gamingWordCard == null")
         countLetters = gameField.lettersField.size
         this.lastPosition = lastPosition
-
+        moveNumberInWord++
         if (newWord != word) {
+            moveNumberInWord = 0
+            guessedWord++
             word = newWord
             incorrectLetters.clear()
             gameField.lettersField.forEachIndexed { index, letterCard ->
@@ -22,6 +30,7 @@ class FieldHolderSimpleImpl : FieldHolderSimple {
                     incorrectLetters.add(index)
                 }
             }
+            blockNewWord?.invoke()
         }
         invisibleCorrectLetters.clear()
         gameField.lettersField.forEachIndexed { index, letterCard ->
@@ -30,6 +39,10 @@ class FieldHolderSimpleImpl : FieldHolderSimple {
             }
         }
     }
+
+    override fun getGuessedWord(): Int = guessedWord
+
+    override fun getMoveNumberInWord(): Int = moveNumberInWord
 
     override fun getLastPosition(): Int = lastPosition
 
