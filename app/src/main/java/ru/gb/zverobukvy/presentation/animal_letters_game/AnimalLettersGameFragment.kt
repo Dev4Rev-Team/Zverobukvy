@@ -18,6 +18,7 @@ import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
+import ru.gb.zverobukvy.domain.entity.card.LetterCard
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.DataGameIsOverDialog
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.GameIsOverDialogFragment
@@ -232,7 +233,7 @@ class AnimalLettersGameFragment :
             }
             setOnClickListener { pos ->
                 setWorkClick(false)
-                event.onClickLetterCard(pos, startGameState)
+                event.onClickLetterCard(pos)
             }
             setRatioForTable(
                 countCardHorizontally,
@@ -282,7 +283,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateCorrectLetter(it: AnimalLettersGameState.ChangingState.CorrectLetter) {
-            soundEffectPlayer.play(SoundEnum.CARD_IS_SUCCESSFUL)
+            soundFlipLetter(SoundEnum.CARD_IS_SUCCESSFUL, it.correctLetterCard)
             setPositionLetterInWord(it.positionLetterInWord)
             binding.table.openCard(it.correctLetterCard)
             binding.table.setCorrectlyCard(it.correctLetterCard)
@@ -290,7 +291,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateInvalidLetter(it: AnimalLettersGameState.ChangingState.InvalidLetter) {
-            soundEffectPlayer.play(SoundEnum.CARD_IS_UNSUCCESSFUL)
+            soundFlipLetter(SoundEnum.CARD_IS_UNSUCCESSFUL, it.invalidLetterCard)
             binding.table.openCard(it.invalidLetterCard)
             requestNextPlayer(it.screenDimmingText)
         }
@@ -300,7 +301,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateGuessedWord(it: AnimalLettersGameState.ChangingState.GuessedWord) {
-            soundEffectPlayer.play(SoundEnum.WORD_IS_GUESSED)
+            soundFlipLetter(SoundEnum.WORD_IS_GUESSED, it.correctLetterCard)
             setPositionLetterInWord(it.positionLetterInWord)
             binding.table.openCard(it.correctLetterCard)
             if (it.hasNextWord) {
@@ -353,6 +354,15 @@ class AnimalLettersGameFragment :
 
     }
 
+    private fun soundFlipLetter(
+        effectSoundEnum: SoundEnum,
+        correctLetterCard: LetterCard
+    ) {
+        soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
+        delayAndRun(DELAY_SOUND_EFFECT) { soundEffectPlayer.play(effectSoundEnum) }
+        delayAndRun(DELAY_SOUND_LETTER) { soundEffectPlayer.play(correctLetterCard.soundName) }
+    }
+
     private inner class GameEvent() {
         fun onEndGameByUser() {
             viewModel.onEndGameByUser()
@@ -374,14 +384,8 @@ class AnimalLettersGameFragment :
             parentFragmentManager.popBackStack()
         }
 
-        fun onClickLetterCard(
-            pos: Int, startGameState: AnimalLettersGameState.EntireState.StartGameState
-        ) {
+        fun onClickLetterCard(pos: Int) {
             viewModel.onClickLetterCard(pos)
-            soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
-            delayAndRun(DELAY_SOUND_LETTER) {
-                soundEffectPlayer.play(startGameState.lettersCards[pos].soundName)
-            }
         }
 
         fun onClickNextWalkingPlayer() {
@@ -416,6 +420,7 @@ class AnimalLettersGameFragment :
         private const val DURATION_ANIMATION = 300L
 
         private const val DELAY_SOUND_WORD = 500L
+        private const val DELAY_SOUND_EFFECT = 700L
         private const val DELAY_SOUND_LETTER = 500L
         private const val DELAY_SOUND_REPEAT = 0L
         private const val DELAY_ENABLE_CLICK_LETTERS_CARD = 100L
