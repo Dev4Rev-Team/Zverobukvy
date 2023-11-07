@@ -10,11 +10,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.StringEnum
-import ru.gb.zverobukvy.domain.entity.Avatar
-import ru.gb.zverobukvy.domain.entity.Player
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.TypeCards
-import ru.gb.zverobukvy.domain.repository.MainMenuRepository
+import ru.gb.zverobukvy.domain.entity.player.Avatar
+import ru.gb.zverobukvy.domain.entity.player.Player
+import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
+import ru.gb.zverobukvy.domain.entity.card.TypeCards
+import ru.gb.zverobukvy.domain.repository.main_menu.MainMenuRepository
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData

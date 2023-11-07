@@ -1,6 +1,6 @@
 package ru.gb.zverobukvy.domain.use_case.computer
 
-import ru.gb.zverobukvy.domain.entity.GameField
+import ru.gb.zverobukvy.domain.entity.game_state.GameField
 
 interface AnimalLettersComputer {
     /**

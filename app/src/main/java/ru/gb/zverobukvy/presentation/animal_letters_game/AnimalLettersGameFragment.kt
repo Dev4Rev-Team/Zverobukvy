@@ -15,10 +15,10 @@ import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
-import ru.gb.zverobukvy.domain.entity.LetterCard
-import ru.gb.zverobukvy.domain.entity.Player
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.domain.entity.player.Player
+import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
+import ru.gb.zverobukvy.domain.entity.card.TypeCards
+import ru.gb.zverobukvy.domain.entity.card.LetterCard
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.DataGameIsOverDialog
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.GameIsOverDialogFragment

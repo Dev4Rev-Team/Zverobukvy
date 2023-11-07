@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemAvatarBinding
-import ru.gb.zverobukvy.domain.entity.Avatar
+import ru.gb.zverobukvy.domain.entity.player.Avatar
 import ru.gb.zverobukvy.presentation.main_menu.list_avatars.view_holder.AddAvatarViewHolder
 import ru.gb.zverobukvy.presentation.main_menu.list_avatars.view_holder.AvatarViewHolder
 import ru.gb.zverobukvy.presentation.main_menu.list_avatars.view_holder.BaseAvatarViewHolder

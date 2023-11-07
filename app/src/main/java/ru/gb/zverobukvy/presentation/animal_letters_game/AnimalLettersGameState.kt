@@ -1,8 +1,8 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
-import ru.gb.zverobukvy.domain.entity.LetterCard
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.WordCard
+import ru.gb.zverobukvy.domain.entity.card.LetterCard
+import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
+import ru.gb.zverobukvy.domain.entity.card.WordCard
 
 sealed interface AnimalLettersGameState {
 

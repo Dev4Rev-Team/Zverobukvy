@@ -1,6 +1,6 @@
 package ru.gb.zverobukvy.data.view_rating_provider
 
-import ru.gb.zverobukvy.domain.entity.Rating
+import ru.gb.zverobukvy.domain.entity.player.Rating
 
 class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
     override fun getRank(): Rank {

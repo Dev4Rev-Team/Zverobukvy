@@ -1,7 +1,7 @@
 package ru.gb.zverobukvy.presentation.main_menu
 
 import androidx.lifecycle.LiveData
-import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
 
 interface MainMenuViewModel {
