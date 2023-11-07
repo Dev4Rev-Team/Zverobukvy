@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
+import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
@@ -20,8 +22,8 @@ import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.card.LetterCard
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
-import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.DataGameIsOverDialog
-import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.game_is_over_dialog.GameIsOverDialogFragment
+import ru.gb.zverobukvy.presentation.animal_letters_game.game_is_over_dialog.DataGameIsOverDialog
+import ru.gb.zverobukvy.presentation.animal_letters_game.game_is_over_dialog.GameIsOverDialogFragment
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.customview.CustomCard
 import ru.gb.zverobukvy.presentation.customview.CustomCardTable
@@ -141,10 +143,6 @@ class AnimalLettersGameFragment :
         binding.nextWord.root.setOnClickListener {
             it.visibility = View.INVISIBLE
             event.onClickNextWord()
-        }
-
-        GameIsOverDialogFragment.setOnListenerClose(this) {
-            event.popBackStack()
         }
 
         IsEndGameDialogFragment.setOnListenerYes(this) {
@@ -346,17 +344,20 @@ class AnimalLettersGameFragment :
             } else {
                 val players = DataGameIsOverDialog.map(it.players)
                 val data = DataGameIsOverDialog(players, it.gameTime)
+                requireActivity().supportFragmentManager.beginTransaction().replace(
+                    R.id.container,
+                    GameIsOverDialogFragment.instance(data),
+                    GameIsOverDialogFragment.TAG
+                ).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commitAllowingStateLoss()
                 soundEffectPlayer.play(SoundEnum.GAME_OVER)
-                GameIsOverDialogFragment.instance(data)
-                    .show(parentFragmentManager, GameIsOverDialogFragment.TAG)
             }
         }
 
     }
 
     private fun soundFlipLetter(
-        effectSoundEnum: SoundEnum,
-        correctLetterCard: LetterCard
+        effectSoundEnum: SoundEnum, correctLetterCard: LetterCard
     ) {
         soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
         delayAndRun(DELAY_SOUND_EFFECT) { soundEffectPlayer.play(effectSoundEnum) }

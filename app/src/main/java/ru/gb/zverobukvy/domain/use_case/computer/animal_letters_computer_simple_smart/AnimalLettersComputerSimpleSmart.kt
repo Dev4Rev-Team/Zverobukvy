@@ -28,6 +28,7 @@ class AnimalLettersComputerSimpleSmart(
     init {
         fieldHolder.update(gameField, NO_SELECT)
         sizeTable = gameField.lettersField.size
+        Timber.tag("Computer").d("create  computer smart: $smart ")
     }
 
     override fun setCurrentGameField(
@@ -50,9 +51,9 @@ class AnimalLettersComputerSimpleSmart(
     private fun updateLettersForGame() {
         val calculationSmartLevel = calculationSmartLevel()
         val calculationProbabilityRandom = calculationProbabilityRandom()
-        val probability = calculationProbabilityRandom * calculationSmartLevel
+        val probability = calculationProbabilityRandom * calculationSmartLevel * SMART_COMPUTER
         Timber.tag("Computer").d(
-            "($calculationProbabilityRandom*$calculationSmartLevel=probability: $probability"
+            "((ProbabilityRandom:$calculationProbabilityRandom)*(SmartLevel:$calculationSmartLevel)*(SMART_COMPUTER:$SMART_COMPUTER)=probability: $probability"
         )
         lettersForGame.clear()
         if (openRememberLettersFromLastWord()) return
@@ -68,11 +69,10 @@ class AnimalLettersComputerSimpleSmart(
     }
 
     private fun calculationSmartLevel(): Float {
-        val mulMove =
-            min(SMART_START + fieldHolder.getMoveNumberInWord().toFloat() / sizeTable, SMART_MAX)
+        val mulMove = min(fieldHolder.getMoveNumberInWord().toFloat() / sizeTable, SMART_MAX)
         val mulWord = min(fieldHolder.getGuessedWord() * SMART_ADD_FOR_ONE_GUESSED_WORD, SMART_MAX)
         val smartLevel = 1 + (smart - 1) * mulMove + (smart - 1) * mulWord
-        Timber.tag("Computer").d("(mulMove=$mulMove   mulWord=$mulWord    smartLevel=$smartLevel")
+        Timber.tag("Computer").d("(smartBase:$smart)  (mulMove:$mulMove)   (mulWord:$mulWord)   ==> smartLevel=$smartLevel")
         return smartLevel
     }
 
@@ -115,32 +115,31 @@ class AnimalLettersComputerSimpleSmart(
         const val MAX_REMEMBER = 3
         const val NO_SELECT = -1
 
-        const val SMART_COMPUTER = 0.7f
-        const val SIZE_ORANGE = 9
-        const val SIZE_GREEN = 12
-        const val SIZE_BLUE = 15
-        const val SIZE_VIOLET = 20
-        const val SIZE_MAX = 33
+        const val SMART_COMPUTER = 1f
+        private const val SIZE_ORANGE = 9
+        private const val SIZE_GREEN = 12
+        private const val SIZE_BLUE = 15
+        private const val SIZE_VIOLET = 20
 
-        const val SMART_START = -0.5f
         const val SMART_MAX = 2f
         const val SMART_ADD_FOR_ONE_GUESSED_WORD = 0.1f
+
+        private const val AVERAGE_LETTERS_IN_WORD = 5f
 
         fun newInstance(gamePlayers: List<Player>, gameField: GameField): AnimalLettersComputer {
             val sizeField = gameField.lettersField.size
             val smartList = mutableListOf<Float>()
             gamePlayers.filter { it !is Player.ComputerPlayer }.forEach {
-                val smart = it.rating.violetRating.toFloat()
+                val smart = when {
+                    sizeField <= SIZE_ORANGE -> it.lettersGuessingLevel.orangeLevel / (AVERAGE_LETTERS_IN_WORD / SIZE_ORANGE)
+                    sizeField <= SIZE_GREEN -> it.lettersGuessingLevel.greenLevel / (AVERAGE_LETTERS_IN_WORD / SIZE_GREEN)
+                    sizeField <= SIZE_BLUE -> it.lettersGuessingLevel.blueLevel / (AVERAGE_LETTERS_IN_WORD / SIZE_BLUE)
+                    else -> it.lettersGuessingLevel.violetLevel / (AVERAGE_LETTERS_IN_WORD / SIZE_VIOLET)
+                }
                 smartList.add(smart)
             }
-            val probabilityRandom = 1f / sizeField
-            Timber.tag("Computer").d("create  computer smart: $probabilityRandom ")
-            return AnimalLettersComputerSimpleSmart(1.1f, gameField)
-        }
-
-        fun newInstance(probabilityIsCorrect: Float, gameField: GameField): AnimalLettersComputer {
-            return AnimalLettersComputerSimpleSmart(probabilityIsCorrect, gameField)
+            val smart = max(smartList.average().toFloat(), 1f)
+            return AnimalLettersComputerSimpleSmart(smart, gameField)
         }
     }
-
 }
