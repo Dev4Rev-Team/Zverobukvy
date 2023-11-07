@@ -15,8 +15,8 @@ import com.google.android.material.snackbar.Snackbar
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
+import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
 import ru.gb.zverobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT

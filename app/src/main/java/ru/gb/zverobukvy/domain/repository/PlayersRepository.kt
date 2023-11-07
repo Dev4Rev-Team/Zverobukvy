@@ -1,6 +1,6 @@
 package ru.gb.zverobukvy.domain.repository
 
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.player.Player
 
 interface PlayersRepository {
     suspend fun getPlayers(): List<Player>

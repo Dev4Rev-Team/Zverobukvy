@@ -1,11 +1,11 @@
 package ru.gb.zverobukvy.data.data_source
 
-import ru.gb.zverobukvy.data.room.entity.AvatarInDatabase
-import ru.gb.zverobukvy.data.room.entity.CardsSetInDatabase
-import ru.gb.zverobukvy.data.room.entity.LetterCardInDatabase
-import ru.gb.zverobukvy.data.room.entity.PlayerInDatabase
-import ru.gb.zverobukvy.data.room.entity.PlayerWithAvatar
-import ru.gb.zverobukvy.data.room.entity.WordCardInDatabase
+import ru.gb.zverobukvy.data.room.entity.player.AvatarInDatabase
+import ru.gb.zverobukvy.data.room.entity.card.CardsSetInDatabase
+import ru.gb.zverobukvy.data.room.entity.card.LetterCardInDatabase
+import ru.gb.zverobukvy.data.room.entity.player.PlayerInDatabase
+import ru.gb.zverobukvy.data.room.entity.player.PlayerWithAvatar
+import ru.gb.zverobukvy.data.room.entity.card.WordCardInDatabase
 
 interface LocalDataSource {
     suspend fun getPlayers(): List<PlayerWithAvatar>

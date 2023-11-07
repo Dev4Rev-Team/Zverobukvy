@@ -1,8 +1,8 @@
 package ru.gb.zverobukvy.presentation.main_menu
 
-import ru.gb.zverobukvy.domain.entity.Avatar
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.domain.entity.player.Avatar
+import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
+import ru.gb.zverobukvy.domain.entity.card.TypeCards
 
 sealed interface MainMenuState {
 

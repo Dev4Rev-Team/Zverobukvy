@@ -2,7 +2,7 @@ package ru.gb.zverobukvy.presentation.animal_letters_game.game_is_over_dialog
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import ru.gb.zverobukvy.domain.entity.PlayerInGame
+import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
 
 @Parcelize
 data class DataGameIsOverDialog(val list: List<PlayerUI>, val time: String = "") : Parcelable {
