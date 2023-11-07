@@ -1,7 +1,7 @@
 package ru.gb.zverobukvy.domain.use_case.computer.animal_letters_computer_simple_smart
 
-import ru.gb.zverobukvy.domain.entity.GameField
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.game_state.GameField
+import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputer
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSmart.field_holder.FieldHolderSimple
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSmart.field_holder.FieldHolderSimpleImpl

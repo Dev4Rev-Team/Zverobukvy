@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.StringEnum
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatch
-import ru.gb.zverobukvy.domain.entity.GameState
-import ru.gb.zverobukvy.domain.entity.Player
-import ru.gb.zverobukvy.domain.use_case.AnimalLettersGameInteractor
+import ru.gb.zverobukvy.domain.entity.game_state.GameState
+import ru.gb.zverobukvy.domain.entity.player.Player
+import ru.gb.zverobukvy.domain.use_case.interactor.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData

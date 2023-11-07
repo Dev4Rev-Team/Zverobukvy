@@ -3,7 +3,7 @@ package ru.gb.zverobukvy.data.image_avatar_loader
 import android.widget.ImageView
 import coil.decode.SvgDecoder
 import coil.load
-import ru.gb.zverobukvy.domain.entity.Avatar
+import ru.gb.zverobukvy.domain.entity.player.Avatar
 import java.nio.ByteBuffer
 
 object ImageAvatarLoaderImpl: ImageAvatarLoader {

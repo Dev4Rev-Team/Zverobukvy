@@ -1,6 +1,6 @@
 package ru.gb.zverobukvy.data.mapper.extract_helpers
 
-import ru.gb.zverobukvy.domain.entity.TypeCards
+import ru.gb.zverobukvy.domain.entity.card.TypeCards
 
 object ExtractTypesCardsHelper {
         private const val COLOR_ORANGE = "orange"

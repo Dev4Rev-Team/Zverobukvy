@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import ru.gb.zverobukvy.domain.repository.AnimalLettersGameRepository
+import ru.gb.zverobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import java.io.IOException
 import java.io.InputStream

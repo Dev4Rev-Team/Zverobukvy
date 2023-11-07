@@ -6,7 +6,7 @@ import ru.gb.zverobukvy.databinding.FragmentMainMenuItemComputerPlayerModeViewBi
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeAddBinding
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
-import ru.gb.zverobukvy.domain.entity.Player
+import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.AddPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
 import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner

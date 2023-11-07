@@ -1,6 +1,6 @@
 package ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputerSimpleSmart.field_holder
 
-import ru.gb.zverobukvy.domain.entity.GameField
+import ru.gb.zverobukvy.domain.entity.game_state.GameField
 
 class FieldHolderSimpleImpl : FieldHolderSimple {
     private var word: String = ""
