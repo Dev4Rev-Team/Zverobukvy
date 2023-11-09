@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
+import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
@@ -203,14 +204,14 @@ class AnimalLettersGameFragment :
                 button.visibility = View.INVISIBLE
                 event.onClickNextWalkingPlayer()
             }
-            createAlphaShowAnimation(button, START_DELAY_ANIMATION, DURATION_ANIMATION).start()
+            createAlphaShowAnimation(button, START_DELAY_ANIMATION_SCREEN_DIMMING, DURATION_ANIMATION_SCREEN_DIMMING).start()
         }
         binding.nextPlayer.nextPlayerTextView.text = screenDimmingText
     }
 
     private fun requestNextWord(screenDimmingText: String) {
         createAlphaShowAnimation(
-            binding.nextWord.root, START_DELAY_ANIMATION, DURATION_ANIMATION
+            binding.nextWord.root, START_DELAY_ANIMATION_SCREEN_DIMMING, DURATION_ANIMATION_SCREEN_DIMMING
         ).start()
         binding.nextWord.nextWordMoveTextView.text = screenDimmingText
     }
@@ -417,16 +418,16 @@ class AnimalLettersGameFragment :
         const val GAME_START = "GAME_START"
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
 
-        private const val START_DELAY_ANIMATION = 550L
-        private const val DURATION_ANIMATION = 300L
+        private const val START_DELAY_ANIMATION_SCREEN_DIMMING = Conf.START_DELAY_ANIMATION_SCREEN_DIMMING
+        private const val DURATION_ANIMATION_SCREEN_DIMMING = Conf.DURATION_ANIMATION_SCREEN_DIMMING
 
-        private const val DELAY_SOUND_WORD = 500L
-        private const val DELAY_SOUND_EFFECT = 700L
-        private const val DELAY_SOUND_LETTER = 500L
-        private const val DELAY_SOUND_REPEAT = 0L
-        private const val DELAY_ENABLE_CLICK_LETTERS_CARD = 100L
+        private const val DELAY_SOUND_WORD = Conf.DELAY_SOUND_WORD
+        private const val DELAY_SOUND_EFFECT = Conf.DELAY_SOUND_EFFECT
+        private const val DELAY_SOUND_LETTER = Conf.DELAY_SOUND_LETTER
+        private const val DELAY_SOUND_REPEAT = Conf.DELAY_SOUND_REPEAT
+        private const val DELAY_ENABLE_CLICK_LETTERS_CARD = Conf.DELAY_ENABLE_CLICK_LETTERS_CARD
 
-        private const val IMAGE_CARD_FOREGROUND = "FACE.webp"
+        private const val IMAGE_CARD_FOREGROUND = Conf.IMAGE_CARD_FOREGROUND
 
 
         @JvmStatic
