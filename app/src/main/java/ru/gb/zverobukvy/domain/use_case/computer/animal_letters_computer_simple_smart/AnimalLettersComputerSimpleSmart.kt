@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.domain.use_case.computer.animal_letters_computer_simple_smart
 
+import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.domain.entity.game_state.GameField
 import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputer
@@ -22,7 +23,6 @@ class AnimalLettersComputerSimpleSmart(
     private val fieldHolder: FieldHolderSimple = FieldHolderSimpleImpl()
     private val lettersRemember: MutableList<Int> = mutableListOf()
     private val lettersForGame: MutableSet<Int> = mutableSetOf()
-
     private val sizeTable: Int
 
     init {
@@ -69,10 +69,12 @@ class AnimalLettersComputerSimpleSmart(
     }
 
     private fun calculationSmartLevel(): Float {
-        val mulMove = min(fieldHolder.getMoveNumberInWord().toFloat() / sizeTable, SMART_MAX)
-        val mulWord = min(fieldHolder.getGuessedWord() * SMART_ADD_FOR_ONE_GUESSED_WORD, SMART_MAX)
+        val mulMove = min(fieldHolder.getMoveNumberInWord().toFloat() / sizeTable, SMART_MAX_MOVE)
+        val mulWord =
+            min(fieldHolder.getGuessedWord() * SMART_ADD_FOR_ONE_GUESSED_WORD, SMART_MAX_WORD)
         val smartLevel = 1 + (smart - 1) * mulMove + (smart - 1) * mulWord
-        Timber.tag("Computer").d("(smartBase:$smart)  (mulMove:$mulMove)   (mulWord:$mulWord)   ==> smartLevel=$smartLevel")
+        Timber.tag("Computer")
+            .d("(smartBase:$smart)  (mulMove:$mulMove)   (mulWord:$mulWord)   ==> smartLevel=$smartLevel")
         return smartLevel
     }
 
@@ -112,19 +114,22 @@ class AnimalLettersComputerSimpleSmart(
     }
 
     companion object {
-        const val MAX_REMEMBER = 3
-        const val NO_SELECT = -1
+        private const val NO_SMART = 1f
+        private const val NO_SELECT = -1
 
-        const val SMART_COMPUTER = 1f
-        private const val SIZE_ORANGE = 9
-        private const val SIZE_GREEN = 12
-        private const val SIZE_BLUE = 15
-        private const val SIZE_VIOLET = 20
+        private const val MAX_REMEMBER = Conf.MAX_REMEMBER
+        private const val SMART_COMPUTER = Conf.SMART_COMPUTER
 
-        const val SMART_MAX = 2f
-        const val SMART_ADD_FOR_ONE_GUESSED_WORD = 0.1f
+        private const val SIZE_ORANGE = Conf.SIZE_ORANGE
+        private const val SIZE_GREEN = Conf.SIZE_GREEN
+        private const val SIZE_BLUE = Conf.SIZE_BLUE
+        private const val SIZE_VIOLET = Conf.SIZE_VIOLET
 
-        private const val AVERAGE_LETTERS_IN_WORD = 5f
+        private const val SMART_MAX_MOVE = Conf.SMART_MAX_MOVE
+        private const val SMART_MAX_WORD = Conf.SMART_MAX_WORD
+        private const val SMART_ADD_FOR_ONE_GUESSED_WORD = Conf.SMART_ADD_FOR_ONE_GUESSED_WORD
+
+        private const val AVERAGE_LETTERS_IN_WORD = Conf.AVERAGE_LETTERS_IN_WORD
 
         fun newInstance(gamePlayers: List<Player>, gameField: GameField): AnimalLettersComputer {
             val sizeField = gameField.lettersField.size
@@ -138,7 +143,7 @@ class AnimalLettersComputerSimpleSmart(
                 }
                 smartList.add(smart)
             }
-            val smart = max(smartList.average().toFloat(), 1f)
+            val smart = max(smartList.average().toFloat(), NO_SMART)
             return AnimalLettersComputerSimpleSmart(smart, gameField)
         }
     }
