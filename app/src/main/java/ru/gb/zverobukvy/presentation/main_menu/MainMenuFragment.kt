@@ -211,8 +211,8 @@ class MainMenuFragment :
                 )
             }
 
-            MainMenuState.ScreenState.CloseApp -> {
-                Timber.d("CloseApp")
+            MainMenuState.ScreenState.CloseAppState -> {
+                Timber.d("CloseAppState")
                 requireActivity().finish()
             }
         }

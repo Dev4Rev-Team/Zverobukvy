@@ -78,7 +78,7 @@ sealed interface MainMenuState {
         /**
          * Состояние для закрытия приложения
          */
-        object CloseApp: ScreenState
+        object CloseAppState: ScreenState
     }
 
     /**
