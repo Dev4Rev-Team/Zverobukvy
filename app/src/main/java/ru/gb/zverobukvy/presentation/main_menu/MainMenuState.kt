@@ -61,12 +61,11 @@ sealed interface MainMenuState {
          * Состояние для информационных сообщений:
          * - некорректное или повторяющееся имя игрока при редактировании данных игрока;
          * - не выбраны игроки или выбрано слишком много игроков для игры;
-         * - не выбраны уровни игры.
+         * - не выбраны уровни игры
          */
         data class ErrorState(
             val error: String
         ): ScreenState
-
 
         /**
          * Состояние для запуска игры "Зверобуквы"
@@ -75,6 +74,11 @@ sealed interface MainMenuState {
             val typesCardsSelectedForGame: List<TypeCards>,
             val playersSelectedForGame: List<PlayerInGame>
         ) : ScreenState
+
+        /**
+         * Состояние для закрытия приложения
+         */
+        object CloseApp: ScreenState
     }
 
     /**

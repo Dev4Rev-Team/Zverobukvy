@@ -1,16 +1,14 @@
 package ru.gb.zverobukvy.data.data_source
 
 import ru.gb.zverobukvy.data.room.AnimalLettersDatabase
-import ru.gb.zverobukvy.data.room.entity.player.AvatarInDatabase
 import ru.gb.zverobukvy.data.room.entity.card.CardsSetInDatabase
 import ru.gb.zverobukvy.data.room.entity.card.LetterCardInDatabase
+import ru.gb.zverobukvy.data.room.entity.card.WordCardInDatabase
+import ru.gb.zverobukvy.data.room.entity.player.AvatarInDatabase
 import ru.gb.zverobukvy.data.room.entity.player.PlayerInDatabase
 import ru.gb.zverobukvy.data.room.entity.player.PlayerWithAvatar
-import ru.gb.zverobukvy.data.room.entity.card.WordCardInDatabase
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class LocalDataSourceImpl @Inject constructor(
     private val animalLettersDatabase: AnimalLettersDatabase,
 ) : LocalDataSource {

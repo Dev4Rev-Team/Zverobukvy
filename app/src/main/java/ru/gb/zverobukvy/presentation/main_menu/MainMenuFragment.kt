@@ -94,8 +94,11 @@ class MainMenuFragment :
 
     override fun onBackPressed(): Boolean {
         Timber.d("onBackPressed")
-        requireActivity().finish()
-        return super.onBackPressed()
+        if(snackbar.isShown)
+            hideError()
+        else
+            viewModel.onBackPressed()
+        return false
     }
 
     private fun initView() {
@@ -206,6 +209,11 @@ class MainMenuFragment :
                 initTypesCardsToggleButtons(
                     mainMenuState.typesCard
                 )
+            }
+
+            MainMenuState.ScreenState.CloseApp -> {
+                Timber.d("CloseApp")
+                requireActivity().finish()
             }
         }
     }
