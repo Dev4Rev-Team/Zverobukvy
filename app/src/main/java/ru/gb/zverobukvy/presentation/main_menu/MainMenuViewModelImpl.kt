@@ -365,7 +365,11 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onBackPressed() {
         Timber.d("onBackPressed")
-        //TODO("Not yet implemented")
+        if (lastEditablePlayer != null) {
+            closeEditablePlayer(true)
+        } else {
+            liveDataScreenState.value = MainMenuState.ScreenState.CloseAppState
+        }
     }
 
     override fun onQueryShowInstruction() {
