@@ -363,6 +363,11 @@ class MainMenuViewModelImpl @Inject constructor(
         closeEditablePlayer(true)
     }
 
+    override fun onBackPressed() {
+        Timber.d("onBackPressed")
+        //TODO("Not yet implemented")
+    }
+
     override fun onQueryShowInstruction() {
         Timber.d("onQueryInstruction")
         closeEditablePlayer(true)

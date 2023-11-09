@@ -4,9 +4,7 @@ import androidx.annotation.IntRange
 import ru.gb.zverobukvy.data.retrofit.AvatarApi
 import ru.gb.zverobukvy.data.retrofit.RandomAvatarService
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class RemoteDataSourceImpl @Inject constructor(
     private val retrofitApi: RandomAvatarService,
 ) : RemoteDataSource {
