@@ -80,8 +80,7 @@ class AnimalLettersComputerSimpleSmart(
 
     private fun calculationProbabilityRandom(): Float {
         val correctCard = fieldHolder.getInvisibleCorrectLetters().size
-        val invisibleCard =
-            correctCard + fieldHolder.getIncorrectLetters().size - lettersRemember.size
+        val invisibleCard = correctCard + fieldHolder.getIncorrectLetters().size
         return correctCard.toFloat() / invisibleCard
     }
 

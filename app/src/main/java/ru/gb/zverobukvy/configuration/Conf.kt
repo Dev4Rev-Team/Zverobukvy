@@ -22,8 +22,7 @@ class Conf {
          * smartLevel = 1 + (smart - 1) * mulMove + (smart - 1) * mulWord
          *
          * val correctCard = InvisibleCorrectLetters.size
-         * lettersRemember.size() = 0:MAX_REMEMBER
-         * val invisibleCard = correctCard + IncorrectLetters.size - lettersRemember.size()
+         * val invisibleCard = correctCard + IncorrectLetters.size
          * probabilityRandom = correctCard / invisibleCard
          *
          * probability = probabilityRandom * smartLevel * SMART_COMPUTER
@@ -44,7 +43,7 @@ class Conf {
         /**
          * Настройка игры
          */
-        // задержка начала затемнения экрана
+        // задержка начала затемнения экрана(переход хода)
         const val START_DELAY_ANIMATION_SCREEN_DIMMING = 500L
         // время за которое происходит затемнение экрана
         const val DURATION_ANIMATION_SCREEN_DIMMING = 300L
