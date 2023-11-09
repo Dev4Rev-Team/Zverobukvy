@@ -22,7 +22,8 @@ class Conf {
          * smartLevel = 1 + (smart - 1) * mulMove + (smart - 1) * mulWord
          *
          * val correctCard = InvisibleCorrectLetters.size
-         * val invisibleCard = correctCard + IncorrectLetters.size
+         * lettersRemember.size() = 0:MAX_REMEMBER
+         * val invisibleCard = correctCard + IncorrectLetters.size - lettersRemember.size()
          * probabilityRandom = correctCard / invisibleCard
          *
          * probability = probabilityRandom * smartLevel * SMART_COMPUTER
