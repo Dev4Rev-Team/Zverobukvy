@@ -204,14 +204,20 @@ class AnimalLettersGameFragment :
                 button.visibility = View.INVISIBLE
                 event.onClickNextWalkingPlayer()
             }
-            createAlphaShowAnimation(button, START_DELAY_ANIMATION_SCREEN_DIMMING, DURATION_ANIMATION_SCREEN_DIMMING).start()
+            createAlphaShowAnimation(
+                button,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING
+            ).start()
         }
         binding.nextPlayer.nextPlayerTextView.text = screenDimmingText
     }
 
     private fun requestNextWord(screenDimmingText: String) {
         createAlphaShowAnimation(
-            binding.nextWord.root, START_DELAY_ANIMATION_SCREEN_DIMMING, DURATION_ANIMATION_SCREEN_DIMMING
+            binding.nextWord.root,
+            START_DELAY_ANIMATION_SCREEN_DIMMING,
+            DURATION_ANIMATION_SCREEN_DIMMING
         ).start()
         binding.nextWord.nextWordMoveTextView.text = screenDimmingText
     }
@@ -315,6 +321,9 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateNextPlayer(it: AnimalLettersGameState.ChangingState.NextPlayer) {
+            binding.nextPlayer.root.let {
+                if (it.visibility == View.VISIBLE) it.visibility = View.INVISIBLE
+            }
             setPlayer(it.nextWalkingPlayer.player)
         }
 
@@ -350,7 +359,7 @@ class AnimalLettersGameFragment :
                     GameIsOverDialogFragment.instance(data),
                     GameIsOverDialogFragment.TAG
                 ).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commitAllowingStateLoss()
+                    .commitAllowingStateLoss()
                 soundEffectPlayer.play(SoundEnum.GAME_OVER)
             }
         }
@@ -418,7 +427,8 @@ class AnimalLettersGameFragment :
         const val GAME_START = "GAME_START"
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
 
-        private const val START_DELAY_ANIMATION_SCREEN_DIMMING = Conf.START_DELAY_ANIMATION_SCREEN_DIMMING
+        private const val START_DELAY_ANIMATION_SCREEN_DIMMING =
+            Conf.START_DELAY_ANIMATION_SCREEN_DIMMING
         private const val DURATION_ANIMATION_SCREEN_DIMMING = Conf.DURATION_ANIMATION_SCREEN_DIMMING
 
         private const val DELAY_SOUND_WORD = Conf.DELAY_SOUND_WORD
