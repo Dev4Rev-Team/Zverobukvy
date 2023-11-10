@@ -14,10 +14,10 @@ import java.io.InputStream
 import javax.inject.Inject
 
 class AssetsImageCashImpl @Inject constructor(
-    context: Context,
+    val context: Context,
     animalLettersCardsRepository: AnimalLettersGameRepository,
 ) : AssetsImageCash {
-    private val mapImages: MutableMap<String, Drawable> = mutableMapOf()
+    private val mapImagesLettersAndSystem: MutableMap<String, Drawable> = mutableMapOf()
     private val myCoroutineScope = CoroutineScope(Dispatchers.Default)
     private val job: Job
 
@@ -40,14 +40,6 @@ class AssetsImageCashImpl @Inject constructor(
                 }
             }
 
-            animalLettersCardsRepository.getWordCards().forEach {
-                try {
-                    addToMap(context, it.faceImageName, ASSETS_PATH_IMAGE_WORDS + it.faceImageName)
-                } catch (e: Exception) {
-                    throw IllegalStateException("no element image word ${it.faceImageName}")
-                }
-            }
-
             try {
                 addToMap(context, IMAGE_FACE_CARD, ASSETS_PATH_IMAGE_SYSTEM + IMAGE_FACE_CARD)
             } catch (e: Exception) {
@@ -62,7 +54,8 @@ class AssetsImageCashImpl @Inject constructor(
                 job.join()
             }
         }
-        return mapImages[url] ?: throw IllegalArgumentException("asset $url not found")
+        return mapImagesLettersAndSystem[url]
+            ?: getImageFromAssert(context, ASSETS_PATH_IMAGE_WORDS + url)
     }
 
     private fun addToMap(
@@ -70,8 +63,8 @@ class AssetsImageCashImpl @Inject constructor(
         name: String,
         url: String,
     ) {
-        if (!mapImages.contains(name)) {
-            mapImages[name] = getImageFromAssert(context, url)
+        if (!mapImagesLettersAndSystem.contains(name)) {
+            mapImagesLettersAndSystem[name] = getImageFromAssert(context, url)
         }
     }
 
