@@ -318,6 +318,9 @@ class AnimalLettersGameFragment :
             setPictureOfWord(it.wordCard.faceImageName)
             setWord(it.wordCard)
             binding.table.closeCardAll()
+            binding.nextWord.root.let {
+                if (it.visibility == View.VISIBLE) it.visibility = View.INVISIBLE
+            }
         }
 
         fun changingStateNextPlayer(it: AnimalLettersGameState.ChangingState.NextPlayer) {
