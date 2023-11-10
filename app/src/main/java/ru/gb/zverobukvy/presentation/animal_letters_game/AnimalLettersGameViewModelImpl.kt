@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,8 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private val gameStopwatch: GameStopwatch,
     private val provider: ResourcesProvider,
 ) : AnimalLettersGameViewModel, ViewModel() {
+
+    private var isAutomaticPlayerChange: Boolean = true
 
     private var isClickNextWalkingPlayer: Boolean = false
 
@@ -84,6 +87,18 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
             viewState.forEachIndexed { index, state ->
                 updateViewModels(state)
+
+                Log.d("@@@", "$isAutomaticPlayerChange")
+                Log.d("@@@", "${state.javaClass.simpleName}")
+                if (isAutomaticPlayerChange && state is ChangingState.InvalidLetter) {
+                    Log.e("@@@", "Условия выполнены")
+                    viewModelScope.launch {
+                        Log.e("@@@", "Старт")
+                        delay(5000L)
+                        Log.e("@@@", "Конец")
+                        onClickNextWalkingPlayer()
+                    }
+                }
                 calculateDelayBetweenStates(index, viewState)
             }
         }
