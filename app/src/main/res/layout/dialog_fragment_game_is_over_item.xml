@@ -26,11 +26,11 @@
             android:textSize="@dimen/text_medium_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/score_text_view"
-            app:layout_constraintStart_toEndOf="@+id/player_avatar_card_vew"
+            app:layout_constraintStart_toEndOf="@+id/avatar"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/player_avatar_card_vew"
+            android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:strokeColor="@color/transparent"

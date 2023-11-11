@@ -37,11 +37,11 @@
                 android:textSize="@dimen/text_medium_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/player_avatar_card_vew"
+                app:layout_constraintStart_toEndOf="@+id/avatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/player_avatar_card_vew"
+                android:id="@+id/avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="@dimen/margin_medium"
@@ -68,8 +68,8 @@
                 android:layout_marginStart="-12dp"
                 android:layout_marginBottom="-12dp"
                 app:cardCornerRadius="80000dp"
-                app:layout_constraintBottom_toTopOf="@+id/player_avatar_card_vew"
-                app:layout_constraintStart_toEndOf="@+id/player_avatar_card_vew"
+                app:layout_constraintBottom_toTopOf="@+id/avatar"
+                app:layout_constraintStart_toEndOf="@+id/avatar"
                 tools:backgroundTint="@color/color_green_pastel">
 
                 <com.google.android.material.imageview.ShapeableImageView

@@ -41,11 +41,11 @@
                 android:singleLine="true"
                 android:textSize="@dimen/text_medium_small"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/player_avatar_card_vew"
+                app:layout_constraintStart_toEndOf="@+id/avatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/player_avatar_card_vew"
+                android:id="@+id/avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
