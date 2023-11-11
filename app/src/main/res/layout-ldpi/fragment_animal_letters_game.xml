@@ -98,17 +98,18 @@
             app:radiusCards="@dimen/corner_radius_default" />
 
         <ToggleButton
-            android:id="@+id/sound_toggle_button"
+            android:id="@+id/toggleButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             android:background="@drawable/ic_sound_on"
-            android:backgroundTint="@drawable/background_white"
+            android:elevation="@dimen/elevation_default"
+            android:text="sound"
             android:textOff="@string/space"
             android:textOn="@string/space"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/sector_menu_guidline" />
+            app:layout_constraintTop_toBottomOf="@+id/card_level" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/sector_menu_guidline"
