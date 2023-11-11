@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="@dimen/elevation_default"
+    app:strokeColor="@color/transparent"
     app:cardCornerRadius="24dp">
 
-    <LinearLayout
+    <com.google.android.material.circularreveal.CircularRevealLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/header_image_view"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -36,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/button_primary">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/rules_text_view"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="wrap_content"
@@ -49,7 +50,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/prepare_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,7 +62,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rules_text_view" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/prepare_text_part1_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,7 +73,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/prepare_text_view" />
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/prepare_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -82,7 +83,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/prepare_text_part1_text_view" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/prepare_text_part2_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -93,7 +94,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/prepare_image_view" />
 
-                <LinearLayout
+                <com.google.android.material.circularreveal.CircularRevealLinearLayout
                     android:id="@+id/card_group"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="wrap_content"
@@ -104,7 +105,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/prepare_text_part2_text_view">
 
-                    <ToggleButton
+                    <com.google.android.material.button.MaterialButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
@@ -115,7 +116,7 @@
                         android:textOff="@string/space"
                         android:textOn="@string/choose" />
 
-                    <ToggleButton
+                    <com.google.android.material.button.MaterialButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
@@ -125,7 +126,7 @@
                         android:textOff="@string/space"
                         android:textOn="@string/choose" />
 
-                    <ToggleButton
+                    <com.google.android.material.button.MaterialButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
@@ -135,7 +136,7 @@
                         android:textOff="@string/space"
                         android:textOn="@string/choose" />
 
-                    <ToggleButton
+                    <com.google.android.material.button.MaterialButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
@@ -144,9 +145,9 @@
                         android:textColor="@color/white"
                         android:textOff="@string/space"
                         android:textOn="@string/choose" />
-                </LinearLayout>
+                </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/game_player_one_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -158,7 +159,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/card_group" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/game_player_one_text_part1_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -169,7 +170,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_player_one_text_view" />
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_player_one_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="350dp"
@@ -179,7 +180,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_player_one_text_part1_text_view" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/game_player_one_text_part2_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -190,7 +191,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_player_one_image_view" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/game_multiplayer_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -202,7 +203,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_player_one_text_part2_text_view" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/game_multiplayer_text_part1_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -213,7 +214,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_view" />
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_multiplayer_card_view"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
@@ -223,9 +224,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_part1_text_view">
 
-                </ImageView>
+                </com.google.android.material.imageview.ShapeableImageView>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/game_multiplayer_text_part2_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -236,7 +237,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_card_view" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_game_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -248,7 +249,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_part2_text_view" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_game_text_part1_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -259,7 +260,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/end_game_text_view" />
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/end_game_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="220dp"
@@ -270,7 +271,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/end_game_text_part1_text_view" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/say_goodbye_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -288,6 +289,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
-    </LinearLayout>
+    </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

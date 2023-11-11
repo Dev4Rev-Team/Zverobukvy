@@ -2,12 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
 
     <color name="color_red">#FF0000</color>
     <color name="color_orange">#FF9800</color>
     <color name="color_blue">#03A9F4</color>
     <color name="color_green">#4CAF50</color>
     <color name="color_violet">#673AB7</color>
+    <color name="color_pink">#FF269B</color>
 
     <color name="color_gold">#ffd700</color>
     <color name="color_silver">#c0c0c0</color>
@@ -19,6 +21,7 @@
     <color name="color_blue_pastel">#6DD2FF</color>
     <color name="color_green_pastel">#8EFF93</color>
     <color name="color_violet_pastel">#A47AEF</color>
+    <color name="color_pink_pastel">#FE62B6</color>
     <!--Cards colors-->
     <color name="color_card_orange">@color/color_orange_pastel</color>
     <color name="color_card_green">@color/color_green</color>
@@ -31,4 +34,17 @@
     <color name="button_primary.dark">@color/secondary_color</color>
     <color name="button_primary">@color/white</color>
 
+    <color name="rank_learner">@color/secondary_color</color>
+    <color name="rank_expert">@color/color_orange_pastel</color>
+    <color name="rank_master">@color/color_green_pastel</color>
+    <color name="rank_genius">@color/color_blue_pastel</color>
+    <color name="rank_hero">@color/color_violet_pastel</color>
+    <color name="rank_legend">@color/color_pink_pastel</color>
+
+    <color name="border_rank_learner">@color/transparent</color>
+    <color name="border_rank_expert">@color/color_orange_pastel</color>
+    <color name="border_rank_master">@color/color_green_pastel</color>
+    <color name="border_rank_genius">@color/color_blue_pastel</color>
+    <color name="border_rank_hero">@color/color_violet_pastel</color>
+    <color name="border_rank_legend">@color/color_pink_pastel</color>
 </resources>

@@ -29,7 +29,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="60dp" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/next_word_move_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/word_guidline2" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/next_word_tap_to_screen_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

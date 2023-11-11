@@ -7,7 +7,7 @@
     android:background="@color/color_violet_pastel"
     android:clickable="true">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         app:layout_constraintRight_toLeftOf="@id/time_text_view"
         app:layout_constraintTop_toBottomOf="@id/title_text_view" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         app:layout_constraintTop_toTopOf="@id/title_time_text_view"
         tools:text="45 мин 35 сек" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/ok_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

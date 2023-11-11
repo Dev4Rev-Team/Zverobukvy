@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".presentation.MainActivity">
 
-    <FrameLayout
+    <com.google.android.material.carousel.MaskableFrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/primary_color" />
 
-    <FrameLayout
+    <com.google.android.material.carousel.MaskableFrameLayout
         android:id="@+id/containerBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
