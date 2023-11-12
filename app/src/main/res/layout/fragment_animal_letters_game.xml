@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/back_to_menu_image_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -23,39 +23,42 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
+            android:scaleType="center"
             android:src="@drawable/ic_arrow_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/player_name_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:visibility="invisible"
             app:cardCornerRadius="@dimen/corner_radius_medium"
+            app:strokeColor="@color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
 
-            <LinearLayout
+            <com.google.android.material.circularreveal.CircularRevealLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/margin_medium"
                 android:layout_marginVertical="@dimen/margin_small"
                 android:orientation="horizontal">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/player_avatar_card_view"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
+                    app:strokeColor="@color/transparent"
                     android:layout_weight="1"
                     android:backgroundTint="@color/color_blue_pastel"
                     app:cardCornerRadius="8000dp">
-
+                    <!--todo migrate to material design-->
                     <ImageView
                         android:id="@+id/player_avatar_image_view"
                         android:layout_width="wrap_content"
@@ -64,12 +67,12 @@
                         android:layout_margin="@dimen/margin_avatar_image"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/avatar_cat" />
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <Space
                     android:layout_width="10dp"
                     android:layout_height="@dimen/auto_layout" />
-
+                <!--todo migrate to material design-->
                 <TextView
                     android:id="@+id/player_name_text_view"
                     android:layout_width="wrap_content"
@@ -79,8 +82,8 @@
                     android:text="@string/username_default"
                     android:textSize="@dimen/text_medium_small" />
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <ru.gb.zverobukvy.presentation.customview.CustomLevelView
             android:id="@+id/card_level"
@@ -176,13 +179,14 @@
             android:id="@+id/toggleButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/ic_sound_on"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
+            android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
             android:text="sound"
-            android:textOn="@string/space"
-            android:textOff="@string/space"
+            android:checked="true"
+            android:textOff="🔈"
+            android:textOn="🔊"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_level" />
 

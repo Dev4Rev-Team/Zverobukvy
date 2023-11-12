@@ -17,7 +17,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="100dp" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/show_instruction_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintStart_toEndOf="@+id/app_name_text_view"
         app:layout_constraintTop_toTopOf="@+id/app_name_text_view" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/app_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_end="270dp" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/cards_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sector_recycle_view_guideline" />
 
-    <LinearLayout
+    <com.google.android.material.circularreveal.CircularRevealLinearLayout
         android:layout_width="@dimen/auto_layout"
         android:layout_height="@dimen/auto_layout"
         android:gravity="center"
@@ -124,7 +124,7 @@
             android:textColor="@color/white"
             android:textOff="@string/space"
             android:textOn="@string/choose" />
-    </LinearLayout>
+    </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/sector_game_cards_guideline"
@@ -134,7 +134,7 @@
         app:layout_constraintGuide_end="149dp" />
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/play_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sector_game_cards_guideline" />
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/avatars_recycler_view_layout"
         android:layout_width="@dimen/auto_layout"
         android:layout_height="@dimen/auto_layout"
@@ -166,6 +166,6 @@
             android:layout_height="match_parent"
             android:background="@color/secondary_color"/>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

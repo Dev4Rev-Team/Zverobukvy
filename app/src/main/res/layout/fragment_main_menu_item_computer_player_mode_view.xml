@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="4dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/player_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,8 @@
         app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -25,7 +26,7 @@
             android:layout_height="match_parent"
             android:layout_margin="@dimen/margin_default">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/player_name_text_view"
                 android:layout_width="@dimen/auto_layout"
                 android:layout_height="wrap_content"
@@ -36,11 +37,11 @@
                 android:textSize="@dimen/text_medium_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/player_avatar_card_vew"
+                app:layout_constraintStart_toEndOf="@+id/avatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/player_avatar_card_vew"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="@dimen/margin_medium"
@@ -48,37 +49,38 @@
                 app:cardCornerRadius="8000dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/transparent">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/player_avatar_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/margin_avatar_image"
                     android:scaleType="fitCenter"
                     android:src="@drawable/avatar_bot" />
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/player_state_card_view"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_marginStart="-12dp"
                 android:layout_marginBottom="-12dp"
                 app:cardCornerRadius="80000dp"
-                app:layout_constraintBottom_toTopOf="@+id/player_avatar_card_vew"
-                app:layout_constraintStart_toEndOf="@+id/player_avatar_card_vew"
+                app:layout_constraintBottom_toTopOf="@+id/avatar"
+                app:layout_constraintStart_toEndOf="@+id/avatar"
                 tools:backgroundTint="@color/color_green_pastel">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/player_state_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_done" />
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,14 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_violet_pastel"
+    android:background="@drawable/background_winner"
     android:clickable="true">
 
-    <TextView
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/winner1_avatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:backgroundTint="@color/color_blue_pastel"
+        app:cardCornerRadius="8000dp"
+        app:cardElevation="@dimen/cardview_default_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_text_view"
+        app:strokeColor="@color/color_gold"
+        app:strokeWidth="@dimen/winner_avatar_stroke_width">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/winner1_avatar_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_avatar_image"
+            android:scaleType="fitCenter"
+            android:src="@drawable/avatar_fox" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/winner2_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:backgroundTint="@color/color_blue_pastel"
+        app:cardCornerRadius="8000dp"
+        app:cardElevation="@dimen/cardview_default_elevation"
+        app:layout_constraintEnd_toStartOf="@+id/winner1_avatar"
+        app:layout_constraintTop_toTopOf="@+id/winner1_avatar"
+        app:strokeColor="@color/color_silver"
+        app:strokeWidth="@dimen/winner_avatar_stroke_width">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/winner2_avatar_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_avatar_image"
+            android:scaleType="fitCenter"
+            android:src="@drawable/avatar_cat" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/winner3_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:backgroundTint="@color/color_blue_pastel"
+        app:cardCornerRadius="8000dp"
+        app:cardElevation="@dimen/cardview_default_elevation"
+        app:layout_constraintStart_toEndOf="@+id/winner1_avatar"
+        app:layout_constraintTop_toTopOf="@+id/winner1_avatar"
+        app:strokeColor="@color/color_bronze"
+        app:strokeWidth="@dimen/winner_avatar_stroke_width">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/winner3_avatar_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_avatar_image"
+            android:scaleType="fitCenter"
+            android:src="@drawable/avatar_mouse" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/text_small"
+        android:layout_marginTop="32dp"
         android:text="@string/game_end_text"
         android:textColor="@color/white"
         android:textSize="@dimen/text_medium"
@@ -19,41 +86,40 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="32dp"
         android:text="@string/game_time_text"
         android:textColor="@color/white"
         android:textSize="@dimen/text_small"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/time_text_view"
-        app:layout_constraintTop_toBottomOf="@id/title_text_view" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/winner1_avatar" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="@dimen/text_small"
-        app:layout_constraintBottom_toBottomOf="@id/title_time_text_view"
-        app:layout_constraintLeft_toRightOf="@id/title_time_text_view"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/title_time_text_view"
+        app:layout_constraintEnd_toEndOf="@+id/title_time_text_view"
+        app:layout_constraintStart_toStartOf="@+id/title_time_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/title_time_text_view"
         tools:text="45 мин 35 сек" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="24dp"
         android:text="@string/points_text"
         android:textColor="@color/white"
         android:textSize="@dimen/text_medium_small"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_time_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/time_text_view" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/players_recycler_view"
@@ -68,18 +134,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_score"
-        app:layout_constraintVertical_bias="1.0" >
+        app:layout_constraintVertical_bias="1.0">
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/ok_button"
+        style="@style/Button.Big"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/Button.Big"
         android:layout_marginBottom="@dimen/margin_medium"
         android:text="@string/ok"
-        android:textColor="@color/color_violet_pastel"
+        android:textColor="@color/color_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
