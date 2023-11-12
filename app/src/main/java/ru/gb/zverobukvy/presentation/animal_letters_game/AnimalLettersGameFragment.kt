@@ -31,6 +31,7 @@ import ru.gb.zverobukvy.presentation.customview.CustomCardTable
 import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
 import ru.gb.zverobukvy.presentation.customview.createAlphaShowAnimation
+import ru.gb.zverobukvy.presentation.customview.createInSideAnimation
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
@@ -38,7 +39,6 @@ import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
-
 
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
@@ -175,8 +175,13 @@ class AnimalLettersGameFragment :
 
     private fun setPlayer(player: Player) {
         if (binding.playerNameTextView.text != player.name) {
-            binding.playerNameTextView.text = player.name
-            imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
+            createInSideAnimation(binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
+                SHIFT_ANIMATOR_PLAYER_NEXT_DP
+            ){ _->
+                binding.playerNameCard.visibility = View.VISIBLE
+                binding.playerNameTextView.text = player.name
+                imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
+            }.start()
         }
         if (player !is Player.ComputerPlayer) {
             binding.table.setWorkClick(true)
@@ -428,6 +433,10 @@ class AnimalLettersGameFragment :
         private const val DELAY_ENABLE_CLICK_LETTERS_CARD = Conf.DELAY_ENABLE_CLICK_LETTERS_CARD
 
         private const val IMAGE_CARD_FOREGROUND = Conf.IMAGE_CARD_FOREGROUND
+
+        private const val DURATION_ANIMATOR_NEXT_PLAYER = 650L
+        private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 55f
+
 
 
         @JvmStatic
