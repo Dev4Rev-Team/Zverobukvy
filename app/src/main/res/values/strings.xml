@@ -47,11 +47,11 @@
     <string name="game_view_model_default_text_for_screen_dimming"> </string>
 
     <!--Уровни-->
-    <string name="learner">ученик</string>
-    <string name="expert">эксперт</string>
-    <string name="master">мастер</string>
-    <string name="genius">гений</string>
-    <string name="hero">герой</string>
-    <string name="legend">легенда</string>
+    <string name="learner">Ученик</string>
+    <string name="expert">Эксперт</string>
+    <string name="master">Мастер</string>
+    <string name="genius">Гений</string>
+    <string name="hero">Герой</string>
+    <string name="legend">Легенда</string>
 
 </resources>
