@@ -30,7 +30,7 @@ class PlayersAdapter(
                     LayoutInflater.from(parent.context), parent, false
                 ),
                 playerClickListenerOwner.itemPlayerClickListener,
-                playerClickListenerOwner.editMenuClickListener
+                playerClickListenerOwner.editMenuClickListener,
             )
 
             EDIT_ITEM_TYPE -> EditPlayerViewHolder(

@@ -1,19 +1,35 @@
 package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
 import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.data.view_rating_provider.Rank
 import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProvider
-import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProviderImpl
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.gb.zverobukvy.presentation.main_menu.PlayerInSettings
 import timber.log.Timber
 
+/*@AssistedFactory
+interface PlayerViewHolderFactory {
+    fun create(
+        @Assisted viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
+        @Assisted("itemPlayerClickListener") itemPlayerClickListener: (Int) -> Unit,
+        @Assisted("editMenuClickListener") editMenuClickListener: (Int) -> Unit,
+    ): PlayerViewHolder
+}
+
+class PlayerViewHolder @AssistedInject constructor(
+    @Assisted private val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
+    @Assisted("itemPlayerClickListener") private val itemPlayerClickListener: (Int) -> Unit,
+    @Assisted("editMenuClickListener") private val editMenuClickListener: (Int) -> Unit,
+    private val viewRatingProviderFactory: ViewRatingProviderFactory,
+)*/
+
 class PlayerViewHolder(
     private val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
     private val itemPlayerClickListener: (Int) -> Unit,
-    private val editMenuClickListener: (Int) -> Unit
+    private val editMenuClickListener: (Int) -> Unit,
 ) :
     BasePlayerViewHolder(viewBinding) {
 
@@ -23,7 +39,10 @@ class PlayerViewHolder(
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
-            viewRatingProvider = ViewRatingProviderImpl(it.player.rating)
+
+            val factory = itemView.context.appComponent.getViewRatingProviderFactory()
+
+            viewRatingProvider = factory.create(it.player.rating)
             viewRating()
             viewBinding.run {
                 playerNameTextView.text = it.player.name

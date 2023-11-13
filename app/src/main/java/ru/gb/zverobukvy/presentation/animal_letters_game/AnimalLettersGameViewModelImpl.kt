@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.StringEnum
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatch
@@ -25,8 +26,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
     private val provider: ResourcesProvider,
-    private val soundStatusRepository: SoundStatusRepository
+    private val soundStatusRepository: SoundStatusRepository,
 ) : AnimalLettersGameViewModel, ViewModel() {
+
+    private var isEndGameByUser: Boolean = false
+    private var isAutomaticPlayerChange: Boolean = true
 
     private var isClickNextWalkingPlayer: Boolean = false
 
@@ -86,11 +90,24 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
             viewState.forEachIndexed { index, state ->
                 updateViewModels(state)
+
+                initAutoNextPlayerClick(state)
+
                 calculateDelayBetweenStates(index, viewState)
             }
         }
 
         updateMGameState(newState)
+    }
+
+    private fun initAutoNextPlayerClick(state: AnimalLettersGameState) {
+        if (isAutomaticPlayerChange && state is ChangingState.InvalidLetter) {
+            viewModelScope.launch {
+                delay(AUTO_NEXT_PLAYER_DELAY)
+                if (isWaitingNextPlayer)
+                    onClickNextWalkingPlayer()
+            }
+        }
     }
 
     /** Метод расчитывает задержку между отправками состояний во View
@@ -196,7 +213,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
             stateList.addFirst(
                 EntireState.EndGameState(
-                    isNonCardClickStateGame(),
+                    isFastEndGame(),
                     newState.players,
                     gameStopwatch.getGameRunningTime()
                 )
@@ -294,7 +311,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
                     /** Событие корректно отгаданной буквы */
                     isCardClick = false
-                    initComputerStroke(newState)
+                    initRepeatComputerStroke(newState)
 
                     stateList.addFirst(
                         ChangingState.CorrectLetter(
@@ -321,15 +338,23 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         return stateList
     }
 
-    private fun initComputerStroke(currentGameState: GameState) {
+    private fun isFastEndGame(): Boolean {
+        return isNonCardClickStateGame() || isEndGameByUser
+    }
+
+    private fun initComputerStroke(currentGameState: GameState, delay: Long = COMPUTER_DELAY) {
 
         if (currentGameState.walkingPlayer!!.player is Player.ComputerPlayer)
             viewModelScope.launch {
                 isCardClick = true
 
-                delay(COMPUTER_DELAY)
+                delay(delay)
                 animalLettersGameInteractor.getSelectedLetterCardByComputer()
             }
+    }
+
+    private fun initRepeatComputerStroke(currentGameState: GameState) {
+        initComputerStroke(currentGameState, REPEAT_COMPUTER_DELAY)
     }
 
     private fun textOfInvalidLetter(state: GameState): String {
@@ -424,9 +449,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
     override fun onClickNextWalkingPlayer() {
         isWaitingNextPlayer = false
-        isClickNextWalkingPlayer = true
 
-        animalLettersGameInteractor.getNextWalkingPlayer()
+        if (!isClickNextWalkingPlayer) {
+            isClickNextWalkingPlayer = true
+            animalLettersGameInteractor.getNextWalkingPlayer()
+        }
     }
 
     override fun onClickNextWord() {
@@ -450,6 +477,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     override fun onEndGameByUser() {
+        isEndGameByUser = true
         animalLettersGameInteractor.endGameByUser()
     }
 
@@ -469,8 +497,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     companion object {
         const val INIT_CARD_CLICK_POSITION = -1
 
-        const val STATE_DELAY = 2000L
-        const val COMPUTER_DELAY = 700L
+        const val STATE_DELAY = Conf.STATE_DELAY
+        const val COMPUTER_DELAY = Conf.COMPUTER_DELAY
+        const val REPEAT_COMPUTER_DELAY = Conf.REPEAT_COMPUTER_DELAY
+        const val AUTO_NEXT_PLAYER_DELAY = Conf.AUTO_NEXT_PLAYER_DELAY
 
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"
