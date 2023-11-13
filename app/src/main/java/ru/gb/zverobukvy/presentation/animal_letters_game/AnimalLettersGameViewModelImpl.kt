@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,9 +27,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
     private val provider: ResourcesProvider,
-    private val soundStatusRepository: SoundStatusRepository
+    private val soundStatusRepository: SoundStatusRepository,
 ) : AnimalLettersGameViewModel, ViewModel() {
 
+    private var isEndGameByUser: Boolean = false
     private var isAutomaticPlayerChange: Boolean = true
 
     private var isClickNextWalkingPlayer: Boolean = false
@@ -212,7 +214,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
             stateList.addFirst(
                 EntireState.EndGameState(
-                    isNonCardClickStateGame(),
+                    isFastEndGame(),
                     newState.players,
                     gameStopwatch.getGameRunningTime()
                 )
@@ -335,6 +337,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         }
 
         return stateList
+    }
+
+    private fun isFastEndGame(): Boolean {
+        return isNonCardClickStateGame() || isEndGameByUser
     }
 
     private fun initComputerStroke(currentGameState: GameState) {
@@ -468,6 +474,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     override fun onEndGameByUser() {
+        isEndGameByUser = true
         animalLettersGameInteractor.endGameByUser()
     }
 
