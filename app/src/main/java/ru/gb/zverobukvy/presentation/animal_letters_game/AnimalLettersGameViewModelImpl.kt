@@ -1,6 +1,5 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -88,22 +87,23 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             viewState.forEachIndexed { index, state ->
                 updateViewModels(state)
 
-                Log.d("@@@", "$isAutomaticPlayerChange")
-                Log.d("@@@", "${state.javaClass.simpleName}")
-                if (isAutomaticPlayerChange && state is ChangingState.InvalidLetter) {
-                    Log.e("@@@", "Условия выполнены")
-                    viewModelScope.launch {
-                        Log.e("@@@", "Старт")
-                        delay(5000L)
-                        Log.e("@@@", "Конец")
-                        onClickNextWalkingPlayer()
-                    }
-                }
+                initAutoNextPlayerClick(state)
+
                 calculateDelayBetweenStates(index, viewState)
             }
         }
 
         updateMGameState(newState)
+    }
+
+    private fun initAutoNextPlayerClick(state: AnimalLettersGameState) {
+        if (isAutomaticPlayerChange && state is ChangingState.InvalidLetter) {
+            viewModelScope.launch {
+                delay(AUTO_NEXT_PLAYER_DELAY)
+                if (isWaitingNextPlayer)
+                    onClickNextWalkingPlayer()
+            }
+        }
     }
 
     /** Метод расчитывает задержку между отправками состояний во View
@@ -429,9 +429,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
     override fun onClickNextWalkingPlayer() {
         isWaitingNextPlayer = false
-        isClickNextWalkingPlayer = true
 
-        animalLettersGameInteractor.getNextWalkingPlayer()
+        if (!isClickNextWalkingPlayer) {
+            isClickNextWalkingPlayer = true
+            animalLettersGameInteractor.getNextWalkingPlayer()
+        }
     }
 
     override fun onClickNextWord() {
@@ -476,6 +478,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
         const val STATE_DELAY = 2000L
         const val COMPUTER_DELAY = 700L
+        const val AUTO_NEXT_PLAYER_DELAY = 1500L
 
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"
