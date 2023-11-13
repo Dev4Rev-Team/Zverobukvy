@@ -62,6 +62,16 @@ class Conf {
         // фон открытой карту с буквой
         const val IMAGE_CARD_FOREGROUND = "FACE.webp"
 
+        /**
+         * Задержки во viewModel
+         */
+        // Стандартная задержка между отправляемыми состояниями
+        const val STATE_DELAY = 2000L
+        // Задержка перед ходом компьютера после смены игрока
+        const val COMPUTER_DELAY = 700L
+        // Задержка между состояниям InvalidLetters и автоматической сменой игрока
+        // Слишком маленкое значение приводит к багам !!
+        const val AUTO_NEXT_PLAYER_DELAY = 1500L
 
     }
 }

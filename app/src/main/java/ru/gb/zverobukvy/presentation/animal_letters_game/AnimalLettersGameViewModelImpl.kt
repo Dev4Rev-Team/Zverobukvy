@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.data.resources_provider.ResourcesProvider
 import ru.gb.zverobukvy.data.resources_provider.StringEnum
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatch
@@ -486,9 +487,9 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     companion object {
         const val INIT_CARD_CLICK_POSITION = -1
 
-        const val STATE_DELAY = 2000L
-        const val COMPUTER_DELAY = 700L
-        const val AUTO_NEXT_PLAYER_DELAY = 1500L
+        const val STATE_DELAY = Conf.STATE_DELAY
+        const val COMPUTER_DELAY = Conf.COMPUTER_DELAY
+        const val AUTO_NEXT_PLAYER_DELAY = Conf.AUTO_NEXT_PLAYER_DELAY
 
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"
