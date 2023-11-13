@@ -71,32 +71,32 @@ class PlayerViewHolder(
             when (viewRatingProvider.getRank()) {
                 Rank.LEARNER -> {
                     rankTextView.text = itemView.context.getString(R.string.learner)
-                    //TODO цвет ученика
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.rank_learner))
                 }
 
                 Rank.EXPERT -> {
                     rankTextView.text = itemView.context.getString(R.string.expert)
-                    rankTextView.setTextColor(itemView.context.getColor(R.color.color_card_orange))
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.rank_expert))
                 }
 
                 Rank.MASTER -> {
                     rankTextView.text = itemView.context.getString(R.string.master)
-                    rankTextView.setTextColor(itemView.context.getColor(R.color.color_card_green))
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.rank_master))
                 }
 
                 Rank.GENIUS -> {
                     rankTextView.text = itemView.context.getString(R.string.genius)
-                    rankTextView.setTextColor(itemView.context.getColor(R.color.color_card_blue))
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.rank_genius))
                 }
 
                 Rank.HERO -> {
                     rankTextView.text = itemView.context.getString(R.string.hero)
-                    rankTextView.setTextColor(itemView.context.getColor(R.color.color_card_violet))
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.rank_hero))
                 }
 
                 Rank.LEGEND -> {
                     rankTextView.text = itemView.context.getString(R.string.legend)
-                    //TODO цвет легенды
+                    rankTextView.setTextColor(itemView.context.getColor(R.color.rank_legend))
                 }
             }
             ratingOrangeTextView.text = viewRatingProvider.getOrangeRating().rating.toString()
