@@ -28,6 +28,8 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private val soundStatusRepository: SoundStatusRepository
 ) : AnimalLettersGameViewModel, ViewModel() {
 
+    private var isAutomaticPlayerChange: Boolean = true
+
     private var isClickNextWalkingPlayer: Boolean = false
 
     /** Флаг для события нажатия на карточку с буквой :
@@ -86,11 +88,24 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
             viewState.forEachIndexed { index, state ->
                 updateViewModels(state)
+
+                initAutoNextPlayerClick(state)
+
                 calculateDelayBetweenStates(index, viewState)
             }
         }
 
         updateMGameState(newState)
+    }
+
+    private fun initAutoNextPlayerClick(state: AnimalLettersGameState) {
+        if (isAutomaticPlayerChange && state is ChangingState.InvalidLetter) {
+            viewModelScope.launch {
+                delay(AUTO_NEXT_PLAYER_DELAY)
+                if (isWaitingNextPlayer)
+                    onClickNextWalkingPlayer()
+            }
+        }
     }
 
     /** Метод расчитывает задержку между отправками состояний во View
@@ -424,9 +439,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
     override fun onClickNextWalkingPlayer() {
         isWaitingNextPlayer = false
-        isClickNextWalkingPlayer = true
 
-        animalLettersGameInteractor.getNextWalkingPlayer()
+        if (!isClickNextWalkingPlayer) {
+            isClickNextWalkingPlayer = true
+            animalLettersGameInteractor.getNextWalkingPlayer()
+        }
     }
 
     override fun onClickNextWord() {
@@ -471,6 +488,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
         const val STATE_DELAY = 2000L
         const val COMPUTER_DELAY = 700L
+        const val AUTO_NEXT_PLAYER_DELAY = 1500L
 
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"
