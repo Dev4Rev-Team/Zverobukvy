@@ -69,6 +69,8 @@ class Conf {
         const val STATE_DELAY = 2000L
         // Задержка перед ходом компьютера после смены игрока
         const val COMPUTER_DELAY = 700L
+        // Задержка перед повторным ходом компьютера
+        const val REPEAT_COMPUTER_DELAY = 1500L
         // Задержка между состояниям InvalidLetters и автоматической сменой игрока
         // Слишком маленкое значение приводит к багам !!
         const val AUTO_NEXT_PLAYER_DELAY = 1500L

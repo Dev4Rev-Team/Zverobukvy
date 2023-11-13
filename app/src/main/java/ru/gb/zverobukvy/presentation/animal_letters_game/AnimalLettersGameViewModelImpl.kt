@@ -1,6 +1,5 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -312,7 +311,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
                     /** Событие корректно отгаданной буквы */
                     isCardClick = false
-                    initComputerStroke(newState)
+                    initRepeatComputerStroke(newState)
 
                     stateList.addFirst(
                         ChangingState.CorrectLetter(
@@ -343,15 +342,19 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         return isNonCardClickStateGame() || isEndGameByUser
     }
 
-    private fun initComputerStroke(currentGameState: GameState) {
+    private fun initComputerStroke(currentGameState: GameState, delay: Long = COMPUTER_DELAY) {
 
         if (currentGameState.walkingPlayer!!.player is Player.ComputerPlayer)
             viewModelScope.launch {
                 isCardClick = true
 
-                delay(COMPUTER_DELAY)
+                delay(delay)
                 animalLettersGameInteractor.getSelectedLetterCardByComputer()
             }
+    }
+
+    private fun initRepeatComputerStroke(currentGameState: GameState) {
+        initComputerStroke(currentGameState, REPEAT_COMPUTER_DELAY)
     }
 
     private fun textOfInvalidLetter(state: GameState): String {
@@ -496,6 +499,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
         const val STATE_DELAY = Conf.STATE_DELAY
         const val COMPUTER_DELAY = Conf.COMPUTER_DELAY
+        const val REPEAT_COMPUTER_DELAY = Conf.REPEAT_COMPUTER_DELAY
         const val AUTO_NEXT_PLAYER_DELAY = Conf.AUTO_NEXT_PLAYER_DELAY
 
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
