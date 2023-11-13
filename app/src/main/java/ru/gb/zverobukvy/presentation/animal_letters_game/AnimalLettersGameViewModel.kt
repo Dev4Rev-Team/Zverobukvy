@@ -31,6 +31,16 @@ interface AnimalLettersGameViewModel {
     fun getChangingGameStateLiveData(): LiveData<AnimalLettersGameState.ChangingState>
 
     /**
+     * Метод для подписки view на состояния звука (on/off)
+     */
+    fun getSoundStatusLiveData(): LiveData<Boolean>
+
+    /**
+     * Метод вызывается при нажатии на элемент отключения/включения звука
+     */
+    fun onSoundClick()
+
+    /**
     Метод вызывается при выборе буквенной карточки, в этом методе viewModel вызывает
     метод интерактора selectionLetterCard() и после получения ответа присваивает
     сhangingGameStateLiveData изменения состояния игры (реакция на выбор буквенной карточки)
