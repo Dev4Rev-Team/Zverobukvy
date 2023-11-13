@@ -12,6 +12,7 @@ import ru.gb.zverobukvy.data.resources_provider.StringEnum
 import ru.gb.zverobukvy.data.stopwatch.GameStopwatch
 import ru.gb.zverobukvy.domain.entity.game_state.GameState
 import ru.gb.zverobukvy.domain.entity.player.Player
+import ru.gb.zverobukvy.domain.repository.SoundStatusRepository
 import ru.gb.zverobukvy.domain.use_case.interactor.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
@@ -24,6 +25,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
     private val provider: ResourcesProvider,
+    private val soundStatusRepository: SoundStatusRepository
 ) : AnimalLettersGameViewModel, ViewModel() {
 
     private var isClickNextWalkingPlayer: Boolean = false
@@ -386,6 +388,14 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
     override fun getChangingGameStateLiveData(): SingleEventLiveData<ChangingState> {
         return changingLiveData
+    }
+
+    override fun getSoundStatusLiveData(): LiveData<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSoundClick() {
+        TODO("Not yet implemented")
     }
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {

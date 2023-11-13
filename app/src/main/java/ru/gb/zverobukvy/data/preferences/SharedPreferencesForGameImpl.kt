@@ -5,7 +5,8 @@ import android.content.SharedPreferences
 import timber.log.Timber
 import javax.inject.Inject
 
-class SharedPreferencesForGameImpl @Inject constructor(context: Context) : SharedPreferencesForGame {
+class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
+    SharedPreferencesForGame {
     private val sharedPreferencesForGame: SharedPreferences = context.getSharedPreferences(
         NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE
     )
@@ -50,10 +51,23 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) : Share
         return isFirstLaunch
     }
 
+    override fun readSoundStatus(): Boolean {
+        Timber.d("readSoundStatus")
+        return sharedPreferencesForGame.getBoolean(KEY_SOUND, true)
+    }
+
+    override fun saveSoundStatus(isSoundOn: Boolean) {
+        Timber.d("saveSoundStatus")
+        sharedPreferencesForGame.edit()
+            .putBoolean(KEY_SOUND, isSoundOn)
+            .apply()
+    }
+
     companion object {
         private const val KEY_TYPES_CARDS = "KeyTypesCards"
         private const val KEY_NAMES_PLAYERS = "KeyNamesPlayers"
         private const val KEY_FIRST_LAUNCH = "KeyFirstLaunch"
+        private const val KEY_SOUND = "KeySound"
         private const val NAME_SHARED_PREFERENCES = "animal_letters_pref"
     }
 }

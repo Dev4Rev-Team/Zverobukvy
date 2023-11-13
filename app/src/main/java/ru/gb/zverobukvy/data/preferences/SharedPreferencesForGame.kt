@@ -9,5 +9,9 @@ interface SharedPreferencesForGame {
 
     fun saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame: List<String>)
 
-    fun isFirstLaunch():Boolean
+    fun isFirstLaunch(): Boolean
+
+    fun readSoundStatus(): Boolean
+
+    fun saveSoundStatus(isSoundOn: Boolean)
 }
