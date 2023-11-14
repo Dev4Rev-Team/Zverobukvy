@@ -56,6 +56,9 @@ fun <T : View> createInSideAnimation(
     blockOut: (v: T) -> Unit
 ): AnimatorSet {
     val animatorSet = AnimatorSet()
+    val animatorSetOut = AnimatorSet()
+    val animatorSetIn = AnimatorSet()
+
     val pixelShift = view.context.dipToPixels(shift).toFloat()
     val moveOut =
         ObjectAnimator.ofFloat(view, View.TRANSLATION_X, pixelShift).apply {
@@ -63,9 +66,15 @@ fun <T : View> createInSideAnimation(
                 blockOut(view)
             }
         }
+    val alphaOut = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f)
+    animatorSetOut.playTogether(moveOut, alphaOut)
+
     val moveIn = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -pixelShift, 0f)
+    val alphaIn = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f)
+    animatorSetIn.playTogether(moveIn, alphaIn)
+
     animatorSet.interpolator = DecelerateInterpolator()
-    animatorSet.playSequentially(moveOut, moveIn)
+    animatorSet.playSequentially(animatorSetOut, animatorSetIn)
     animatorSet.duration = duration
     return animatorSet
 }
