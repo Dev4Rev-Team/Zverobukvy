@@ -94,7 +94,7 @@ class MainMenuFragment :
 
     override fun onBackPressed(): Boolean {
         Timber.d("onBackPressed")
-        if(snackbar.isShown)
+        if (snackbar.isShown)
             hideError()
         else
             viewModel.onBackPressed()
@@ -198,7 +198,7 @@ class MainMenuFragment :
 
             is MainMenuState.ScreenState.StartGame -> {
                 Timber.d("StartGame")
-                openAnimalLettersFragment(
+                openAnimalLettersGameFragment(
                     mainMenuState.typesCardsSelectedForGame,
                     mainMenuState.playersSelectedForGame
                 )
@@ -218,7 +218,7 @@ class MainMenuFragment :
         }
     }
 
-    private fun openAnimalLettersFragment(
+    private fun openAnimalLettersGameFragment(
         typesCardsSelectedForGame: List<TypeCards>, playersSelectedForGame: List<PlayerInGame>,
     ) {
         requireActivity().supportFragmentManager.beginTransaction().replace(
@@ -313,12 +313,17 @@ class MainMenuFragment :
 
     private fun clickQueryRemovePlayer(position: Int) {
         hideError()
-        RemovePlayerDialogFragment.newInstance().also {
-            it.arguments = bundleOf(
-                RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER to position
-            )
-            it.show(requireActivity().supportFragmentManager, TAG_REMOVE_PLAYER_DIALOG_FRAGMENT)
-        }
+        // проверяем, что диалог-фрагмент не существует (защита от двойного нажатия на удаление игрока)
+        if (requireActivity().supportFragmentManager.findFragmentByTag(
+                TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
+            ) == null
+        )
+            RemovePlayerDialogFragment.newInstance().also {
+                it.arguments = bundleOf(
+                    RemovePlayerDialogFragment.KEY_POSITION_REMOVE_PLAYER to position
+                )
+                it.show(requireActivity().supportFragmentManager, TAG_REMOVE_PLAYER_DIALOG_FRAGMENT)
+            }
     }
 
     private fun inputEditNameChangedPlayerClickListener(name: String) {
