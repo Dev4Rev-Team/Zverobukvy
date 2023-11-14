@@ -70,6 +70,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      */
     private val changingLiveData = SingleEventLiveData<ChangingState>()
 
+    /** LiveData для отправки состояний вкл/выкл звука в игре
+     */
+    private val soundStatusLiveData =
+        MutableLiveData<Boolean>(soundStatusRepository.getSoundStatus())
+
     /** Инициализация viewModel :
      */
     init {
@@ -416,11 +421,15 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     override fun getSoundStatusLiveData(): LiveData<Boolean> {
-        TODO("Not yet implemented")
+        return soundStatusLiveData
     }
 
     override fun onSoundClick() {
-        TODO("Not yet implemented")
+        // TODO ??? viewModelScope.launch {  }
+        soundStatusRepository.getSoundStatus().also { soundStatus ->
+            soundStatusRepository.saveSoundStatus(!soundStatus)
+            soundStatusLiveData.value = !soundStatus
+        }
     }
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
