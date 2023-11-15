@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.domain.use_case.deal_cards
 
+import ru.gb.zverobukvy.configuration.Conf.Companion.MAX_NUMBER_OF_WORD
 import ru.gb.zverobukvy.domain.entity.card.CardsSet
 import ru.gb.zverobukvy.domain.entity.card.LetterCard
 import ru.gb.zverobukvy.domain.entity.card.WordCard
@@ -67,6 +68,5 @@ class DealCardsImpl(
     companion object {
         private const val LETTER_CARD_IS_NOT_FIND = "Не найдена карточка-буква"
         private const val WORD_CARD_IS_NOT_FIND = "Не найдена карточка-слово"
-        private const val MAX_NUMBER_OF_WORD = 10
     }
 }
