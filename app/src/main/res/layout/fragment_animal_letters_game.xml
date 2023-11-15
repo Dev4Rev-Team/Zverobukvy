@@ -176,7 +176,7 @@
             app:layout_constraintGuide_end="20dp" />
 
         <ToggleButton
-            android:id="@+id/toggleButton"
+            android:id="@+id/sound_toggle_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="@dimen/margin_medium"
