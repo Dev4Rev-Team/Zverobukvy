@@ -79,7 +79,15 @@ class AnimalLettersGameFragment :
 
         initChangingStateEvent()
         intiGameStateEvent()
+        initSystemEvent()
         initView()
+    }
+
+    private fun initSystemEvent() {
+        viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
+            soundEffectPlayer.setEnable(it)
+            binding.toggleButton?.isChecked = it
+        }
     }
 
     private fun initChangingStateEvent() {
@@ -166,6 +174,10 @@ class AnimalLettersGameFragment :
             event.onClickWordView()
         }
 
+        binding.soundToggleButton?.setOnClickListener {
+            viewModel.onSoundClick()
+        }
+
         binding.cardLevel.setCards(gameStart!!.typesCards)
     }
 
@@ -175,9 +187,10 @@ class AnimalLettersGameFragment :
 
     private fun setPlayer(player: Player) {
         if (binding.playerNameTextView.text != player.name) {
-            createInSideAnimation(binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
+            createInSideAnimation(
+                binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
                 SHIFT_ANIMATOR_PLAYER_NEXT_DP
-            ){ _->
+            ) { _ ->
                 binding.playerNameCard.visibility = View.VISIBLE
                 binding.playerNameTextView.text = player.name
                 imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
@@ -449,7 +462,6 @@ class AnimalLettersGameFragment :
 
         private const val DURATION_ANIMATOR_NEXT_PLAYER = 650L
         private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 55f
-
 
 
         @JvmStatic

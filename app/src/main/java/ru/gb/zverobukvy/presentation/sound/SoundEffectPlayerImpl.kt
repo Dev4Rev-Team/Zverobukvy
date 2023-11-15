@@ -28,6 +28,8 @@ class SoundEffectPlayerImpl @Inject constructor(
     private val myCoroutineScope = CoroutineScope(Dispatchers.Default)
     private val job: Job
 
+    private var enable = true
+
     init {
         soundPool = createSoundPool()
 
@@ -53,7 +55,7 @@ class SoundEffectPlayerImpl @Inject constructor(
                     soundsMap[it.soundName] =
                         loadSound(ASSETS_PATH_SOUND_WORDS + "RU_" + it.soundName)
                 } catch (e: Exception) {
-                   // TODO включить, когда все слова будут озвучены throw IllegalStateException("no element WordCard ${it.soundName}")
+                    // TODO включить, когда все слова будут озвучены throw IllegalStateException("no element WordCard ${it.soundName}")
                 }
             }
             SoundEnum.values().forEach {
@@ -101,8 +103,13 @@ class SoundEffectPlayerImpl @Inject constructor(
     }
 
     override fun play(key: String) {
+        if (!enable) return
         val idStream = soundsMap[key]
         playSound(idStream)
+    }
+
+    override fun setEnable(enable: Boolean) {
+        this.enable = enable
     }
 
     private fun playSound(idStream: Int?) {
