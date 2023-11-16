@@ -19,11 +19,11 @@
             android:id="@+id/back_to_menu_image_button"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:scaleType="center"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
+            android:scaleType="center"
             android:src="@drawable/ic_arrow_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,8 +54,8 @@
                     android:layout_weight="1"
                     android:backgroundTint="@color/color_blue_pastel"
                     app:cardCornerRadius="8000dp">
-                    <!--todo migrate to material design-->
-                    <ImageView
+
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/player_avatar_image_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -68,8 +68,8 @@
                 <Space
                     android:layout_width="10dp"
                     android:layout_height="@dimen/auto_layout" />
-                <!--todo migrate to material design-->
-                <TextView
+
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/player_name_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

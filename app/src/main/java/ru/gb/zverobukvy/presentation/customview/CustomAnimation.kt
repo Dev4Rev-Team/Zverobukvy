@@ -68,11 +68,13 @@ fun <T : View> createInSideAnimation(
             }
         }
     val alphaOut = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f)
-    animatorSetOut.playTogether(moveOut, alphaOut)
+    val scaleOut = createScaleAnimation(view,1f,0f)
+    animatorSetOut.playTogether(moveOut, alphaOut, scaleOut)
 
     val moveIn = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -pixelShift, 0f)
     val alphaIn = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f)
-    animatorSetIn.playTogether(moveIn, alphaIn)
+    val scaleIn = createScaleAnimation(view,0f,1f)
+    animatorSetIn.playTogether(moveIn, alphaIn, scaleIn)
 
     animatorSetOut.interpolator = AccelerateInterpolator()
     animatorSetIn.interpolator = DecelerateInterpolator()

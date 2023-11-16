@@ -77,7 +77,7 @@ class Conf {
         const val IMAGE_CARD_FOREGROUND = "FACE.webp"
 
         // движение карусели
-        const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 135f
+        const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 75f
         // время исчезновения игрока в карусели
         const val DURATION_ANIMATOR_NEXT_PLAYER = 350L
 
