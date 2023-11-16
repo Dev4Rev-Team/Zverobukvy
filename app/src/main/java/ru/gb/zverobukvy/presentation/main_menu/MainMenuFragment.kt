@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
+import ru.gb.zverobukvy.configuration.Conf.Companion.SPAN_COUNT_AVATARS_RECYCLER_VIEW
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
@@ -400,7 +401,6 @@ class MainMenuFragment :
         const val TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS = "MainMenuFragmentShowInstructions"
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"
-        const val SPAN_COUNT_AVATARS_RECYCLER_VIEW = 4
 
         @JvmStatic
         fun newInstance() = MainMenuFragment()

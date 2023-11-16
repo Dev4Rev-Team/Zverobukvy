@@ -1,5 +1,11 @@
 package ru.gb.zverobukvy.data.view_rating_provider
 
+import ru.gb.zverobukvy.configuration.Conf.Companion.DECORATION_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.EXPERT_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.GENIUS_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.HERO_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.LEGEND_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.MASTER_RATING
 import ru.gb.zverobukvy.domain.entity.player.Rating
 
 class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
@@ -44,14 +50,4 @@ class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
             else
                 ViewRating(Decoration.DIAMOND, rating)
         }
-
-    companion object {
-        private const val EXPERT_RATING = 50
-        private const val MASTER_RATING = 75
-        private const val GENIUS_RATING = 100
-        private const val HERO_RATING = 125
-        private const val LEGEND_RATING = 150
-        private const val DECORATION_RATING = 100
-    }
-
 }
