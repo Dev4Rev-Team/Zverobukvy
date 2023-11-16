@@ -86,7 +86,7 @@ class AnimalLettersGameFragment :
     private fun initSystemEvent() {
         viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
             soundEffectPlayer.setEnable(it)
-            binding.soundToggleButton?.isChecked = it
+            binding.soundToggleButton.isChecked = it
         }
     }
 
@@ -174,7 +174,7 @@ class AnimalLettersGameFragment :
             event.onClickWordView()
         }
 
-        binding.soundToggleButton?.setOnClickListener {
+        binding.soundToggleButton.setOnClickListener {
             viewModel.onSoundClick()
         }
 

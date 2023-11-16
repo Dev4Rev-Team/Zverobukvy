@@ -76,7 +76,6 @@ fun <T : View> createInSideAnimation(
 
     animatorSetOut.interpolator = AccelerateInterpolator()
     animatorSetIn.interpolator = DecelerateInterpolator()
-    //animatorSet.interpolator = LinearInterpolator()
     animatorSet.playSequentially(animatorSetOut, animatorSetIn)
     animatorSet.duration = duration
     return animatorSet
