@@ -3,6 +3,7 @@ package ru.gb.zverobukvy.presentation.customview
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -73,7 +74,9 @@ fun <T : View> createInSideAnimation(
     val alphaIn = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f)
     animatorSetIn.playTogether(moveIn, alphaIn)
 
-    animatorSet.interpolator = DecelerateInterpolator()
+    animatorSetOut.interpolator = AccelerateInterpolator()
+    animatorSetIn.interpolator = DecelerateInterpolator()
+    //animatorSet.interpolator = LinearInterpolator()
     animatorSet.playSequentially(animatorSetOut, animatorSetIn)
     animatorSet.duration = duration
     return animatorSet
