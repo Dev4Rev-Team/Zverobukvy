@@ -460,8 +460,8 @@ class AnimalLettersGameFragment :
 
         private const val IMAGE_CARD_FOREGROUND = Conf.IMAGE_CARD_FOREGROUND
 
-        private const val DURATION_ANIMATOR_NEXT_PLAYER = 650L
-        private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 55f
+        private const val DURATION_ANIMATOR_NEXT_PLAYER = Conf.DURATION_ANIMATOR_NEXT_PLAYER
+        private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = Conf.SHIFT_ANIMATOR_PLAYER_NEXT_DP
 
 
         @JvmStatic
