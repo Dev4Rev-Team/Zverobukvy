@@ -60,7 +60,7 @@
                 app:strokeColor="@color/transparent"
                 app:cardElevation="@dimen/cardview_default_elevation"
                 android:backgroundTint="@color/color_blue_pastel"
-                app:cardCornerRadius="8000dp"
+                app:cardCornerRadius="20dp"
                 app:layout_constraintBottom_toTopOf="@id/rank_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
