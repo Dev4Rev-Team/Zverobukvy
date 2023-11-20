@@ -3,11 +3,12 @@ package ru.gb.zverobukvy.domain.use_case.deal_cards
 import ru.gb.zverobukvy.configuration.Conf.Companion.MAX_NUMBER_OF_WORD
 import ru.gb.zverobukvy.domain.entity.card.CardsSet
 import ru.gb.zverobukvy.domain.entity.card.LetterCard
+import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.card.WordCard
 
 class DealCardsImpl(
     private val selectedColorsCardsSets: List<List<CardsSet>>
-): DealCards {
+) : DealCards {
 
     private val cardsSetsForGame: List<CardsSet> = extractCardsSetsForGame()
 
@@ -17,16 +18,20 @@ class DealCardsImpl(
      * @return список выбранных карточек для игры
      */
     override fun getKitLetterCards(allLetterCards: List<LetterCard>): List<LetterCard> {
-        val letterCards = mutableSetOf<LetterCard>()
-        cardsSetsForGame.forEach {cardsSet ->
-           cardsSet.letters.forEach {letter ->
-               letterCards.add(allLetterCards.find { letterCard ->
-                   letterCard.letter == letter
-               } ?: throw IllegalStateException("$LETTER_CARD_IS_NOT_FIND $letter")
-               )
-           }
+        return if (selectedColorsCardsSets.size == TypeCards.values().size) // выбраны четыре цвета
+            allLetterCards.shuffled()
+        else {
+            val letterCards = mutableSetOf<LetterCard>()
+            cardsSetsForGame.forEach { cardsSet ->
+                cardsSet.letters.forEach { letter ->
+                    letterCards.add(allLetterCards.find { letterCard ->
+                        letterCard.letter == letter
+                    } ?: throw IllegalStateException("$LETTER_CARD_IS_NOT_FIND $letter")
+                    )
+                }
+            }
+            letterCards.shuffled()
         }
-        return letterCards.shuffled()
     }
 
     /**
@@ -36,7 +41,7 @@ class DealCardsImpl(
      */
     override fun getKitWordCards(allWordCards: List<WordCard>): List<WordCard> {
         val wordCards = mutableSetOf<WordCard>()
-        cardsSetsForGame.forEach {cardsSet ->
+        cardsSetsForGame.forEach { cardsSet ->
             cardsSet.words.forEach { word ->
                 wordCards.find { it.word == word }?.typesCards?.add(cardsSet.typeCards)
                     ?: wordCards.add(extractWordCard(allWordCards, word).apply {
@@ -57,7 +62,7 @@ class DealCardsImpl(
             it.word == word
         } ?: throw IllegalStateException("$WORD_CARD_IS_NOT_FIND $word")
 
-    private fun extractCardsSetsForGame(): List<CardsSet>{
+    private fun extractCardsSetsForGame(): List<CardsSet> {
         val cardsSetsForGame = mutableListOf<CardsSet>()
         selectedColorsCardsSets.forEach {
             cardsSetsForGame.add(it.shuffled().first())
