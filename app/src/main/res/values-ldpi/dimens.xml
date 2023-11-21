@@ -17,4 +17,8 @@
     <dimen name="corner_radius_medium">10dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="corner_radius_default">10dp</dimen>
+
+    <!-- RatingCardView -->
+    <dimen name="rating_card_view_card_corner_radius">6dp</dimen>
+    <dimen name="rating_card_view_stroke_width">3dp</dimen>
 </resources>

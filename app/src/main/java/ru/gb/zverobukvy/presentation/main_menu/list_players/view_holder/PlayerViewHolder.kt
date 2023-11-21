@@ -1,9 +1,11 @@
 package ru.gb.zverobukvy.presentation.main_menu.list_players.view_holder
 
+import android.view.View
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
+import ru.gb.zverobukvy.data.view_rating_provider.Decoration
 import ru.gb.zverobukvy.data.view_rating_provider.Rank
 import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProvider
 import ru.gb.zverobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
@@ -43,7 +45,8 @@ class PlayerViewHolder(
             val factory = itemView.context.appComponent.getViewRatingProviderFactory()
 
             viewRatingProvider = factory.create(it.player.rating)
-            viewRating()
+            initViewRank()
+            initViewRating()
             viewBinding.run {
                 playerNameTextView.text = it.player.name
                 if (it.isSelectedForGame) {
@@ -66,7 +69,7 @@ class PlayerViewHolder(
         }
     }
 
-    private fun viewRating() {
+    private fun initViewRank() {
         viewBinding.run {
             when (viewRatingProvider.getRank()) {
                 Rank.LEARNER -> {
@@ -105,11 +108,49 @@ class PlayerViewHolder(
                     avatar.strokeColor = itemView.context.getColor(R.color.border_rank_legend)
                 }
             }
-            ratingOrangeTextView.text = viewRatingProvider.getOrangeRating().rating.toString()
-            ratingGreenTextView.text = viewRatingProvider.getGreenRating().rating.toString()
-            ratingBlueTextView.text = viewRatingProvider.getBlueRating().rating.toString()
-            ratingVioletTextView.text = viewRatingProvider.getVioletRating().rating.toString()
-            //TODO view decoration
+        }
+    }
+
+    private fun initViewRating() {
+        viewBinding.run {
+            viewRatingProvider.getOrangeRating().let {
+                if (it.decoration == Decoration.DIAMOND) {
+                    orangeDiamondImageView.visibility = View.VISIBLE
+                } else if (it.decoration != Decoration.DEFAULT || it.rating != 0) {
+                    orangeRatingCardView.visibility = View.VISIBLE
+                    orangeRatingTextView.text = it.rating.toString()
+                    orangeRatingCardView.strokeColor =
+                        itemView.context.getColor(it.decoration.color)
+                }
+            }
+            viewRatingProvider.getGreenRating().let {
+                if (it.decoration == Decoration.DIAMOND) {
+                    greenDiamondImageView.visibility = View.VISIBLE
+                } else if (it.decoration != Decoration.DEFAULT || it.rating != 0) {
+                    greenRatingCardView.visibility = View.VISIBLE
+                    greenRatingTextView.text = it.rating.toString()
+                    greenRatingCardView.strokeColor = itemView.context.getColor(it.decoration.color)
+                }
+            }
+            viewRatingProvider.getBlueRating().let {
+                if (it.decoration == Decoration.DIAMOND) {
+                    blueDiamondImageView.visibility = View.VISIBLE
+                } else if (it.decoration != Decoration.DEFAULT || it.rating != 0) {
+                    blueRatingCardView.visibility = View.VISIBLE
+                    blueRatingTextView.text = it.rating.toString()
+                    blueRatingCardView.strokeColor = itemView.context.getColor(it.decoration.color)
+                }
+            }
+            viewRatingProvider.getVioletRating().let {
+                if (it.decoration == Decoration.DIAMOND) {
+                    violetDiamondImageView.visibility = View.VISIBLE
+                } else if (it.decoration != Decoration.DEFAULT || it.rating != 0) {
+                    violetRatingCardView.visibility = View.VISIBLE
+                    violetRatingTextView.text = it.rating.toString()
+                    violetRatingCardView.strokeColor =
+                        itemView.context.getColor(it.decoration.color)
+                }
+            }
         }
     }
 }

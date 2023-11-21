@@ -46,7 +46,7 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:backgroundTint="@color/color_blue_pastel"
-                app:cardCornerRadius="8000dp"
+                app:cardCornerRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
