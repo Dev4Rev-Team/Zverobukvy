@@ -7,23 +7,28 @@
     android:background="@drawable/background_winner"
     android:clickable="true">
 
-    <ru.gb.zverobukvy.presentation.customview.CustomImageRatingView
-        android:id="@+id/winner_avatar_custom_image_rating_view"
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/winner_avatar_custom_nested_scroll_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_width="150dp"
-        tools:layout_height="150dp"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:backgroundTint="@color/color_blue_pastel"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="@dimen/cardview_default_elevation"
+        android:layout_height="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_text_view"
-        tools:strokeColor="@color/color_gold"
-        app:strokeWidth="@dimen/winner_avatar_stroke_width">
-    </ru.gb.zverobukvy.presentation.customview.CustomImageRatingView>
+        app:layout_constraintTop_toBottomOf="@+id/title_text_view">
 
+        <ru.gb.zverobukvy.presentation.customview.CustomImageRatingView
+            android:id="@+id/winner_avatar_custom_image_rating_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:backgroundTint="@color/color_blue_pastel"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:strokeWidth="@dimen/winner_avatar_stroke_width"
+            tools:layout_height="150dp"
+            tools:layout_width="150dp"
+            tools:strokeColor="@color/color_gold" />
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
@@ -47,7 +52,7 @@
         android:textSize="@dimen/text_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/winner_avatar_custom_image_rating_view" />
+        app:layout_constraintTop_toBottomOf="@+id/winner_avatar_custom_nested_scroll_view" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/time_text_view"

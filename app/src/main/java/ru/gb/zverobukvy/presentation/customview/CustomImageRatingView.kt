@@ -2,7 +2,6 @@ package ru.gb.zverobukvy.presentation.customview
 
 import android.content.Context
 import android.graphics.Color
-import android.print.PrintAttributes.Margins
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.cardview.widget.CardView
@@ -62,7 +61,9 @@ class CustomImageRatingView @JvmOverloads constructor(
 
         val flowRatingMap = mutableMapOf<Int, Flow>()
         for (i in 0 until COUNT_WINNER) {
-            flowRatingMap[i] = createNewFlow()
+            flowRatingMap[i] = createNewFlow().apply {
+                paddingTop = context.dipToPixels(shiftDownList[i])
+            }
         }
 
         mainFlow?.apply {
@@ -103,10 +104,10 @@ class CustomImageRatingView @JvmOverloads constructor(
         val cardView = MaterialCardView(context).apply {
             id = generateViewId()
             radius = sizeDp / 2f
+            elevation = 1f
             layoutParams = LayoutParams(sizeDp, sizeDp)
             strokeColor = colorAvatarList[place]
             strokeWidth = context.dipToPixels(STROKE_WIDTH)
-            Margins(0, shiftDownList[place], 0, 0)
             this@CustomImageRatingView.addView(this)
         }
         val imageView = CustomImageView(context).apply {
@@ -118,6 +119,7 @@ class CustomImageRatingView @JvmOverloads constructor(
             imageAvatarLoader.loadImageAvatar(player.player.avatar, this)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             setPadding(context.dipToPixels(PADDING_IMAGE))
+            setBackgroundColor(colorAvatarList[place])
         }
         cardView.addView(imageView)
         return cardView
@@ -126,20 +128,20 @@ class CustomImageRatingView @JvmOverloads constructor(
 
     companion object {
         private const val COUNT_WINNER = 3
-        const val MAX_AVATAR_HORIZONTAL = 3
+        const val MAX_AVATAR_HORIZONTAL = 2
         const val HORIZONTAL_GAP = 15
         const val VERTICAL_GAP = 15
         const val PADDING_IMAGE = 7
-        val COLOR_STROKE_ONE = Color.parseColor("#FFFF89")
+        val COLOR_STROKE_ONE = Color.parseColor("#EEE020")
         val COLOR_STROKE_TWO = Color.parseColor("#C0C0C0")
-        val COLOR_STROKE_THREE = Color.parseColor("#E6AC48")
+        val COLOR_STROKE_THREE = Color.parseColor("#C48322")
         const val STROKE_WIDTH = 5
         const val SIZE_AVATAR_ONE = 60
-        const val SIZE_AVATAR_TWO = 50
-        const val SIZE_AVATAR_THREE = 40
+        const val SIZE_AVATAR_TWO = 55
+        const val SIZE_AVATAR_THREE = 50
         const val SHIFT_DOWN_ONE = 0
-        const val SHIFT_DOWN_TWO = 20
-        const val SHIFT_DOWN_THREE = 40
+        const val SHIFT_DOWN_TWO = 30
+        const val SHIFT_DOWN_THREE = 30
 
 
     }
