@@ -107,6 +107,8 @@ class PlayerViewHolder(
                     rankTextView.setTextColor(itemView.context.getColor(R.color.rank_legend))
                     avatar.strokeColor = itemView.context.getColor(R.color.border_rank_legend)
                 }
+
+                Rank.DEFAULT -> rankTextView.visibility = View.GONE
             }
         }
     }
