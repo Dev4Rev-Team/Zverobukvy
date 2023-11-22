@@ -406,7 +406,12 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                     positionCorrectLetterCardInGamingWordCard
                 )
             ),
-            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players),
+            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players).apply {
+                // сортировка игроков по кол-ву отгаданных слов (по убыванию)
+                sortBy {
+                    - it.scoreInCurrentGame
+                }
+            },
             walkingPlayer = null,
             nextWalkingPlayer = null,
             isActive = false
