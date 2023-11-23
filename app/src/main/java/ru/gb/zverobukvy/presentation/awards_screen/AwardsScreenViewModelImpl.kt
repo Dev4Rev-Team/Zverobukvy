@@ -50,7 +50,6 @@ class AwardsScreenViewModelImpl @Inject constructor(
             if (newRatingProvider.getRank() != oldRatingProvider.getRank()) {
                 (awardsList).add(
                     AwardsScreenState.Second.RankIncreaseState(
-                        TypeCards.ORANGE,
                         oldRatingProvider.getRank(),
                         newRatingProvider.getRank()
                     )
@@ -59,40 +58,40 @@ class AwardsScreenViewModelImpl @Inject constructor(
 
             if (newRatingProvider.getOrangeRating() != oldRatingProvider.getOrangeRating()) {
                 (awardsList).add(
-                    AwardsScreenState.Second.RankIncreaseState(
+                    AwardsScreenState.Second.ViewRatingIncreaseState(
                         TypeCards.ORANGE,
-                        oldRatingProvider.getRank(),
-                        newRatingProvider.getRank()
+                        oldRatingProvider.getOrangeRating(),
+                        newRatingProvider.getOrangeRating()
                     )
                 )
             }
 
             if (newRatingProvider.getGreenRating() != oldRatingProvider.getGreenRating()) {
                 (awardsList).add(
-                    AwardsScreenState.Second.RankIncreaseState(
+                    AwardsScreenState.Second.ViewRatingIncreaseState(
                         TypeCards.GREEN,
-                        oldRatingProvider.getRank(),
-                        newRatingProvider.getRank()
+                        oldRatingProvider.getGreenRating(),
+                        newRatingProvider.getGreenRating()
                     )
                 )
             }
 
             if (newRatingProvider.getBlueRating() != oldRatingProvider.getBlueRating()) {
                 (awardsList).add(
-                    AwardsScreenState.Second.RankIncreaseState(
+                    AwardsScreenState.Second.ViewRatingIncreaseState(
                         TypeCards.BLUE,
-                        oldRatingProvider.getRank(),
-                        newRatingProvider.getRank()
+                        oldRatingProvider.getBlueRating(),
+                        newRatingProvider.getBlueRating()
                     )
                 )
             }
 
             if (newRatingProvider.getVioletRating() != oldRatingProvider.getVioletRating()) {
                 (awardsList).add(
-                    AwardsScreenState.Second.RankIncreaseState(
+                    AwardsScreenState.Second.ViewRatingIncreaseState(
                         TypeCards.VIOLET,
-                        oldRatingProvider.getRank(),
-                        newRatingProvider.getRank()
+                        oldRatingProvider.getVioletRating(),
+                        newRatingProvider.getVioletRating()
                     )
                 )
             }

@@ -32,7 +32,6 @@ sealed interface AwardsScreenState {
         /** Состояние повышения ранга игрока
          */
         data class RankIncreaseState(
-            val typeCards: TypeCards,
             val oldRank: Rank,
             val newRank: Rank,
         ) : AwardsScreenState.Second
@@ -40,6 +39,7 @@ sealed interface AwardsScreenState {
         /** Состояние повышения визуального рейтинга игрока
          */
         data class ViewRatingIncreaseState(
+            val typeCards: TypeCards,
             val oldViewRating: ViewRating,
             val newViewRating: ViewRating,
         ) : AwardsScreenState.Second
