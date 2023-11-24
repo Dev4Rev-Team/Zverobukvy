@@ -1,7 +1,7 @@
 package ru.gb.zverobukvy.presentation.awards_screen
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProviderFactory
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.player.Player
@@ -13,8 +13,8 @@ class AwardsScreenViewModelImpl @Inject constructor(
     private val viewRatingProviderFactory: ViewRatingProviderFactory,
 ) : AwardsScreenViewModel {
 
-    private val mainAwardsLiveData = MediatorLiveData<AwardsScreenState.Main>()
-    private val secondAwardsLiveData = MediatorLiveData<AwardsScreenState.Second>()
+    private val mainAwardsLiveData = MutableLiveData<AwardsScreenState.Main>()
+    private val secondAwardsLiveData = MutableLiveData<AwardsScreenState.Second>()
 
     private val listOfAwardedPlayers: List<PlayerInVM>
 
