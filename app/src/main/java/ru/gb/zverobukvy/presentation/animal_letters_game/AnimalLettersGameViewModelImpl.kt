@@ -265,6 +265,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             val nextWalkingPlayer = newState.walkingPlayer
             val invalidLetterCard = newState.gameField.lettersField[mLastClickCardPosition]
 
+            if (oldState.walkingPlayer?.player is Player.ComputerPlayer) {
+                delay(AFTER_INVALID_COMPUTER_MOVE_DELAY)
+            }
+
             changingLiveData.value = ChangingState.CloseInvalidLetter(
                 invalidLetterCard
             )
@@ -510,6 +514,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         const val COMPUTER_DELAY = Conf.COMPUTER_DELAY
         const val REPEAT_COMPUTER_DELAY = Conf.REPEAT_COMPUTER_DELAY
         const val AUTO_NEXT_PLAYER_DELAY = Conf.AUTO_NEXT_PLAYER_DELAY
+        const val AFTER_INVALID_COMPUTER_MOVE_DELAY = Conf.AFTER_INVALID_COMPUTER_MOVE_DELAY
 
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"

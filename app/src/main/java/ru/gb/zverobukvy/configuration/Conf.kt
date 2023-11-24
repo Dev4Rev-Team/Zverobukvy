@@ -100,6 +100,9 @@ class Conf {
         // Слишком маленкое значение приводит к багам !!
         const val AUTO_NEXT_PLAYER_DELAY = 1500L
 
+        // Задержка перед отправкой CloseInvalidLetter и т.д. после неудачного хода компьютера
+        const val AFTER_INVALID_COMPUTER_MOVE_DELAY = 500L
+
         /**
          * Настройки рейтинга
          */
