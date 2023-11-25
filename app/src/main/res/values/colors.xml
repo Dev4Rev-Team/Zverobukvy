@@ -34,6 +34,8 @@
     <color name="button_primary.dark">@color/secondary_color</color>
     <color name="button_primary">@color/white</color>
 
+    <color name="avatar_background">#B7C0FF</color>
+
     <color name="rank_learner">@color/secondary_color</color>
     <color name="rank_expert">@color/color_orange_pastel</color>
     <color name="rank_master">@color/color_green_pastel</color>

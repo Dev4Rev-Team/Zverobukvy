@@ -40,28 +40,7 @@ class GameIsOverDialogFragment :
         }
 
         data?.time.also { binding.timeTextView.text = it }
-        //todo deleter test
-//        data?.let {
-//            it.list[0].scoreInCurrentGame = 1
-//            it.list[1].scoreInCurrentGame = 2
-//            it.list[2].scoreInCurrentGame = 3
-//            it.list[3].scoreInCurrentGame = 1
-//            it.list[4].scoreInCurrentGame = 2
-//            it.list[5].scoreInCurrentGame = 2
-//            it.list[6].scoreInCurrentGame = 2
-//            it.list[7].scoreInCurrentGame = 2
-//            it.list[8].scoreInCurrentGame = 4
-//            it.list[9].scoreInCurrentGame = 4
-//            it.list[10].scoreInCurrentGame = 4
-//            it.list[11].scoreInCurrentGame = 4
-//            it.list[12].scoreInCurrentGame = 4
-//            it.list[13].scoreInCurrentGame = 4
-//            it.list[14].scoreInCurrentGame = 4
-//        }
-        data?.let {
-            binding.winnerAvatarCustomImageRatingView.show(it.list)
-//            binding.winnerAvatarCustomImageRatingView.show(it.list.sortedByDescending { srt -> srt.scoreInCurrentGame })
-        }
+
     }
 
     companion object {

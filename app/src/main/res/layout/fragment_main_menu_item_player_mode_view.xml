@@ -40,17 +40,13 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                style="@style/Avatar"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:backgroundTint="@color/color_blue_pastel"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="@dimen/cardview_default_elevation"
+                android:backgroundTint="@color/avatar_background"
                 app:layout_constraintBottom_toTopOf="@id/rank_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
-                app:strokeColor="@color/transparent"
                 app:strokeWidth="@dimen/avatar_stroke">
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -64,15 +60,9 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/player_state_card_view"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginStart="-12dp"
-                android:layout_marginBottom="-12dp"
-                app:cardCornerRadius="80000dp"
-                app:cardElevation="@dimen/cardview_default_elevation"
+                style="@style/Avatar.Status"
                 app:layout_constraintBottom_toTopOf="@+id/avatar"
                 app:layout_constraintStart_toEndOf="@+id/avatar"
-                app:strokeColor="@color/transparent"
                 tools:backgroundTint="@color/color_green_pastel">
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -165,7 +155,7 @@
                     style="@style/RatingCardView"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:layout_marginEnd="@dimen/margin_rating_card_horisontal"
+                    android:layout_marginEnd="@dimen/margin_rating_card_horizontal"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/color_orange_pastel"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -202,7 +192,7 @@
                     style="@style/RatingCardView"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                    android:layout_marginHorizontal="@dimen/margin_rating_card_horizontal"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/color_green_pastel"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -239,7 +229,7 @@
                     style="@style/RatingCardView"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:layout_marginHorizontal="@dimen/margin_rating_card_horisontal"
+                    android:layout_marginHorizontal="@dimen/margin_rating_card_horizontal"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/color_blue_pastel"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -276,7 +266,7 @@
                     style="@style/RatingCardView"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:layout_marginStart="@dimen/margin_rating_card_horisontal"
+                    android:layout_marginStart="@dimen/margin_rating_card_horizontal"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/color_violet_pastel"
                     app:layout_constraintBottom_toBottomOf="parent"
