@@ -83,7 +83,7 @@ class CustomImageRatingView @JvmOverloads constructor(
 
         val flowRatingMap = mutableMapOf<Int, Flow>()
         for (i in 0 until COUNT_WINNER) {
-            flowRatingMap[i] = createNewFlow().apply {
+            flowRatingMap[i] = createNewFlow(i).apply {
                 paddingTop = context.dipToPixels(shiftDownList[i])
             }
         }
@@ -98,7 +98,11 @@ class CustomImageRatingView @JvmOverloads constructor(
 
     private fun createMainFlow() = Flow(context).apply {
         id = generateViewId()
-        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        layoutParams = LayoutParams(
+            context.dipToPixels(SiZE_AVATARS_PLACE * 3) +
+                    context.dipToPixels(MAIN_HORIZONTAL_GAP * 2),
+            LayoutParams.MATCH_PARENT
+        )
         setHorizontalGap(context.dipToPixels(MAIN_HORIZONTAL_GAP))
         setMaxElementsWrap(context.dipToPixels(COUNT_WINNER))
         setWrapMode(Flow.WRAP_CHAIN)
@@ -108,13 +112,29 @@ class CustomImageRatingView @JvmOverloads constructor(
         this@CustomImageRatingView.addView(this)
     }
 
-    private fun createNewFlow() = Flow(context).apply {
+    private fun createNewFlow(place: Int) = Flow(context).apply {
         id = generateViewId()
-        layoutParams =
-            Constraints.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
-        setWrapMode(Flow.WRAP_ALIGNED)
-        setHorizontalStyle(Flow.CHAIN_PACKED)
-        setVerticalStyle(Flow.CHAIN_PACKED)
+        when (place) {
+            0 -> {
+                layoutParams =
+                    Constraints.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
+            }
+
+            1 -> {
+                layoutParams =
+                    LayoutParams(context.dipToPixels(SiZE_AVATARS_PLACE), LayoutParams.MATCH_PARENT)
+                setHorizontalBias(1f)
+            }
+
+            else -> {
+                layoutParams =
+                    LayoutParams(context.dipToPixels(SiZE_AVATARS_PLACE), LayoutParams.MATCH_PARENT)
+                setHorizontalBias(0f)
+            }
+        }
+        //setWrapMode(Flow.WRAP_CHAIN)
+        //setHorizontalStyle(Flow.CHAIN_PACKED)
+        //setVerticalStyle(Flow.CHAIN_PACKED)
         this@CustomImageRatingView.addView(this)
     }
 
