@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Зверобуквы</string>
+    <string name="app_name">Зообуквы</string>
     <!--Строки в интерфейсе-->
     <string name="color_text">Цвет</string>
     <string name="points_text">Счет</string>

@@ -18,7 +18,7 @@
     <dimen name="margin_small">4dp</dimen>
     <dimen name="corner_radius_default">10dp</dimen>
     <dimen name="corner_radius_small">6dp</dimen>
-    <dimen name="margin_avatar_image">7dp</dimen>
+    <dimen name="margin_avatar_image">8dp</dimen>
     <dimen name="star_size">30dp</dimen>
     <dimen name="margin_rating_card_horisontal">1dp</dimen>
     <dimen name="avatar_stroke">2dp</dimen>
@@ -27,10 +27,11 @@
     <!-- RatingCardView -->
     <dimen name="rating_card_view_card_corner_radius">8dp</dimen>
     <dimen name="rating_card_view_stroke_width">2dp</dimen>
-    <dimen name="avatar_corner_radius">20dp</dimen>
+    <dimen name="avatar_corner_radius">@dimen/avatar_size_huge</dimen>
     <dimen name="avatar_size">40dp</dimen>
     <dimen name="avatar_size_small">26dp</dimen>
     <dimen name="avatar_size_medium">32dp</dimen>
     <dimen name="avtar_size_big">50dp</dimen>
     <dimen name="avatar_size_huge">60dp</dimen>
+    <dimen name="margin_huge_player_cards">60dp</dimen>
 </resources>

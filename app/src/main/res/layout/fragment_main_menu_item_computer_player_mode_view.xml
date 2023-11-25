@@ -42,15 +42,12 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/avatar"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                android:layout_marginStart="@dimen/margin_medium"
+                style="@style/Avatar"
                 android:backgroundTint="@color/avatar_background"
-                app:cardCornerRadius="@dimen/avatar_corner_radius"
+                android:layout_marginStart="@dimen/margin_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:strokeColor="@color/transparent">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/player_avatar_image_view"
@@ -63,11 +60,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/player_state_card_view"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginStart="-12dp"
-                android:layout_marginBottom="-12dp"
-                app:cardCornerRadius="80000dp"
+                style="@style/Avatar.Status"
                 app:layout_constraintBottom_toTopOf="@+id/avatar"
                 app:layout_constraintStart_toEndOf="@+id/avatar"
                 tools:backgroundTint="@color/color_green_pastel">
