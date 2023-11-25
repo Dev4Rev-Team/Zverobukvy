@@ -46,5 +46,7 @@
     <dimen name="avatar_size_medium">32dp</dimen>
     <dimen name="avtar_size_big">50dp</dimen>
     <dimen name="avatar_size_huge">60dp</dimen>
+    <dimen name="avatar_status_size">16dp</dimen>
+    <dimen name="margin_big">35dp</dimen>
 
 </resources>

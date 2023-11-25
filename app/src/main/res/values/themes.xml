@@ -77,8 +77,8 @@
     </style>
 
     <style name="Avatar.Status" parent="Widget.Material3.CardView.Filled">
-        <item name="android:layout_width">15dp</item>
-        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_width">@dimen/avatar_status_size</item>
+        <item name="android:layout_height">@dimen/avatar_status_size</item>
         <item name="backgroundTint">@color/color_green_pastel</item>
         <item name="cardCornerRadius">@dimen/avatar_corner_radius</item>
         <item name="strokeColor">@color/transparent</item>
