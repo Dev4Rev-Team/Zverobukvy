@@ -15,6 +15,3 @@ fun CardView.enableClickAnimation() {
 fun Context.dipToPixels(dipValue: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, resources.displayMetrics)
         .toInt()
-fun Context.dipToPixels(dipValue: Int) =
-    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue.toFloat(), resources.displayMetrics)
-        .toInt()

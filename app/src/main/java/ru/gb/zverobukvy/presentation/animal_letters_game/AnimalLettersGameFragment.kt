@@ -47,10 +47,19 @@ class AnimalLettersGameFragment :
     private lateinit var soundEffectPlayer: SoundEffectPlayer
     private lateinit var viewModel: AnimalLettersGameViewModel
     private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
-    private val game = GameProcessingState()
+    private val game = GameWork()
     private val event = GameEvent()
     private var wordCardSoundName: String? = null
     private var mapLettersSoundName = mutableMapOf<Int, String>()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            gameStart = it.parcelable(GAME_START)
+        }
+        gameStart ?: throw IllegalArgumentException("not arg gameStart")
+        initDagger()
+        game.startNewGame()
+    }
 
     private fun initDagger() {
         requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
@@ -63,16 +72,6 @@ class AnimalLettersGameFragment :
             assertsImageCash = fragmentComponent.assetsImageCash
             soundEffectPlayer = fragmentComponent.soundEffectPlayer
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            gameStart = it.parcelable(GAME_START)
-        }
-        gameStart ?: throw IllegalArgumentException("not arg gameStart")
-        initDagger()
-        game.startNewGame()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -301,7 +300,7 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private inner class GameProcessingState() {
+    private inner class GameWork() {
         fun startNewGame() {
             viewModel.onActiveGame()
         }
@@ -371,9 +370,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
-            //todo
-            //if (it.isFastEndGame) {
-            if (false) {
+            if (it.isFastEndGame) {
                 event.popBackStack()
             } else {
                 val players = DataGameIsOverDialog.map(it.players)

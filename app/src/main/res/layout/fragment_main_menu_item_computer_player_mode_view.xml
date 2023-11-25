@@ -42,11 +42,11 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/avatar_size"
+                android:layout_height="@dimen/avatar_size"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:backgroundTint="@color/color_blue_pastel"
-                app:cardCornerRadius="20dp"
+                android:backgroundTint="@color/avatar_background"
+                app:cardCornerRadius="@dimen/avatar_corner_radius"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

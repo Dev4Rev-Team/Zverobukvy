@@ -43,12 +43,9 @@ class Conf {
         const val SMART_MAX_WORD = 2f
         const val SMART_ADD_FOR_ONE_GUESSED_WORD = 0.1f
 
-        // Среднее количество букв в словах для расчета насколько сильно играет игрок
+        // Среднее количество бувк в словах
         const val AVERAGE_LETTERS_IN_WORD = 5f
 
-        /**
-         * Расчет статистики игроков
-         */
         // Степень влияния результатов раунда игры на уровень отгадывания букв игрока
         const val LEVEL_RATIO = 0.2F
 

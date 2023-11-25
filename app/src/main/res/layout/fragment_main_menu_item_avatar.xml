@@ -15,11 +15,11 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/background_avatar_card_view"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/avatar_size"
+            android:layout_height="@dimen/avatar_size"
             app:strokeColor="@color/transparent"
-            app:cardBackgroundColor="@color/color_blue_pastel"
-            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/avatar_background"
+            app:cardCornerRadius="@dimen/avatar_corner_radius"
             android:layout_margin="@dimen/margin_default"
             >
 
