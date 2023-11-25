@@ -132,9 +132,9 @@ class CustomImageRatingView @JvmOverloads constructor(
                 setHorizontalBias(0f)
             }
         }
-        setWrapMode(Flow.WRAP_ALIGNED)
-        setHorizontalStyle(Flow.CHAIN_PACKED)
-        setVerticalStyle(Flow.CHAIN_PACKED)
+        //setWrapMode(Flow.WRAP_CHAIN)
+        //setHorizontalStyle(Flow.CHAIN_PACKED)
+        //setVerticalStyle(Flow.CHAIN_PACKED)
         this@CustomImageRatingView.addView(this)
     }
 
