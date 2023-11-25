@@ -24,8 +24,10 @@ class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
                 Rank.MASTER
             else if (orangeAndHarderRating > EXPERT_RATING)
                 Rank.EXPERT
-            else
+            else if (orangeAndHarderRating>0)
                 Rank.LEARNER
+            else
+                Rank.DEFAULT
         }
     }
 
