@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Main menu settings-->
     <dimen name="main_menu_card_corner_radius">8dp</dimen>
     <dimen name="main_menu_card_vertical_margin">4dp</dimen>
     <dimen name="main_menu_toggle_button_width">40dp</dimen>
     <dimen name="main_menu_toggle_button_height">60dp</dimen>
+
+    <!--Text settings-->
     <dimen name="text_tiny">10sp</dimen>
     <dimen name="text_small">16sp</dimen>
     <dimen name="text_medium">26sp</dimen>
     <dimen name="text_medium_small">20sp</dimen>
     <dimen name="text_big">36sp</dimen>
     <dimen name="text_huge">42sp</dimen>
+
+    <!--Universal settings-->
     <dimen name="auto_layout">0dp</dimen>
+    <dimen name="elevation_default">8dp</dimen>
+
+    <!--Margin settings-->
     <dimen name="margin_default">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
-    <dimen name="elevation_default">8dp</dimen>
-    <dimen name="corner_radius_medium">10dp</dimen>
     <dimen name="margin_small">4dp</dimen>
-    <dimen name="corner_radius_default">10dp</dimen>
-    <dimen name="corner_radius_small">6dp</dimen>
     <dimen name="margin_avatar_image">8dp</dimen>
+    <dimen name="margin_huge_player_cards">60dp</dimen>
+
     <dimen name="star_size">30dp</dimen>
-    <dimen name="margin_rating_card_horisontal">1dp</dimen>
+    <dimen name="margin_rating_card_horizontal">1dp</dimen>
     <dimen name="avatar_stroke">2dp</dimen>
     <dimen name="winner_avatar_stroke_width">4dp</dimen>
+
+    <!--Corner radius settings-->
+    <dimen name="corner_radius_default">10dp</dimen>
+    <dimen name="corner_radius_small">6dp</dimen>
+    <dimen name="corner_radius_medium">10dp</dimen>
 
     <!-- RatingCardView -->
     <dimen name="rating_card_view_card_corner_radius">8dp</dimen>
     <dimen name="rating_card_view_stroke_width">2dp</dimen>
+
+    <!--Avatar settings-->
     <dimen name="avatar_corner_radius">@dimen/avatar_size_huge</dimen>
     <dimen name="avatar_size">40dp</dimen>
     <dimen name="avatar_size_small">26dp</dimen>
     <dimen name="avatar_size_medium">32dp</dimen>
     <dimen name="avtar_size_big">50dp</dimen>
     <dimen name="avatar_size_huge">60dp</dimen>
-    <dimen name="margin_huge_player_cards">60dp</dimen>
+
 </resources>
