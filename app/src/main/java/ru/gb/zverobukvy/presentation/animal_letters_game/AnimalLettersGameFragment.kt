@@ -52,6 +52,8 @@ class AnimalLettersGameFragment :
     private var wordCardSoundName: String? = null
     private var mapLettersSoundName = mutableMapOf<Int, String>()
 
+    private var isEnableClick = true
+
     private fun initDagger() {
         requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
             gameStart!!.typesCards, gameStart!!.players
@@ -78,20 +80,20 @@ class AnimalLettersGameFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initChangingStateEvent()
-        intiGameStateEvent()
-        initSystemEvent()
+        initChangingStateEventVM()
+        intiGameStateEventVM()
+        initSystemEventVM()
         initView()
     }
 
-    private fun initSystemEvent() {
+    private fun initSystemEventVM() {
         viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
             soundEffectPlayer.setEnable(it)
             binding.soundToggleButton.isChecked = it
         }
     }
 
-    private fun initChangingStateEvent() {
+    private fun initChangingStateEventVM() {
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.ChangingState.CorrectLetter -> {
@@ -121,7 +123,7 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private fun intiGameStateEvent() {
+    private fun intiGameStateEventVM() {
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.EntireState.StartGameState -> {
@@ -151,8 +153,10 @@ class AnimalLettersGameFragment :
 
     private fun initView() {
         binding.nextWord.root.setOnClickListener {
-            it.visibility = View.INVISIBLE
-            event.onClickNextWord()
+            isClick {
+                it.visibility = View.INVISIBLE
+                event.onClickNextWord()
+            }
         }
 
         IsEndGameDialogFragment.setOnListenerYes(this) {
@@ -164,22 +168,32 @@ class AnimalLettersGameFragment :
         }
 
         binding.backToMenuImageButton.setOnClickListener {
-            event.onBackPressed()
+            isClick {
+                event.onBackPressed()
+            }
         }
 
         binding.wordCustomCard.setOnClickCardListener(0) {
-            event.onClickImageWord()
+            isClick {
+                event.onClickImageWord()
+            }
         }
 
         binding.wordView.setOnClickListener {
-            event.onClickWordView()
+            isClick {
+                event.onClickWordView()
+            }
         }
 
         binding.soundToggleButton.setOnClickListener {
-            viewModel.onSoundClick()
+            isClick {
+                viewModel.onSoundClick()
+            }
         }
 
         binding.cardLevel.setCards(gameStart!!.typesCards)
+
+        isEnableClick = true
     }
 
     private fun setPositionLetterInWord(pos: Int) {
@@ -219,10 +233,6 @@ class AnimalLettersGameFragment :
 
     private fun requestNextPlayer(screenDimmingText: String) {
         binding.nextPlayer.root.let { button ->
-            button.setOnClickListener {
-                button.visibility = View.INVISIBLE
-                event.onClickNextWalkingPlayer()
-            }
             createAlphaShowAnimation(
                 button,
                 START_DELAY_ANIMATION_SCREEN_DIMMING,
@@ -256,8 +266,10 @@ class AnimalLettersGameFragment :
                 }
             }
             setOnClickListener { pos ->
-                setWorkClick(false)
-                event.onClickLetterCard(pos)
+                isClick {
+                    setWorkClick(false)
+                    event.onClickLetterCard(pos)
+                }
             }
             setRatioForTable(
                 countCardHorizontally,
@@ -301,7 +313,15 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private inner class GameProcessingState() {
+    private fun isClick(block: () -> Unit) {
+        if (isEnableClick) {
+            isEnableClick = false
+            delayAndRun(DELAY_NEXT_CLICK) { isEnableClick = true }
+            block.invoke()
+        }
+    }
+
+    private inner class GameProcessingState {
         fun startNewGame() {
             viewModel.onActiveGame()
         }
@@ -398,7 +418,7 @@ class AnimalLettersGameFragment :
         delayAndRun(DELAY_SOUND_LETTER) { soundEffectPlayer.play(correctLetterCard.soundName) }
     }
 
-    private inner class GameEvent() {
+    private inner class GameEvent {
         fun onEndGameByUser() {
             viewModel.onEndGameByUser()
         }
@@ -421,10 +441,6 @@ class AnimalLettersGameFragment :
 
         fun onClickLetterCard(pos: Int) {
             viewModel.onClickLetterCard(pos)
-        }
-
-        fun onClickNextWalkingPlayer() {
-            viewModel.onClickNextWalkingPlayer()
         }
 
         fun onClickImageWord() {
@@ -450,6 +466,8 @@ class AnimalLettersGameFragment :
     companion object {
         const val GAME_START = "GAME_START"
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
+
+        const val DELAY_NEXT_CLICK = 300L
 
         private const val START_DELAY_ANIMATION_SCREEN_DIMMING =
             Conf.START_DELAY_ANIMATION_SCREEN_DIMMING

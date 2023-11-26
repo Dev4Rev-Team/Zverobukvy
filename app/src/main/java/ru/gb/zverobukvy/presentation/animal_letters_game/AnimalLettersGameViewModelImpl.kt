@@ -73,7 +73,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     /** LiveData для отправки состояний вкл/выкл звука в игре
      */
     private val soundStatusLiveData =
-        MutableLiveData<Boolean>(soundStatusRepository.getSoundStatus())
+        MutableLiveData(soundStatusRepository.getSoundStatus())
 
     /** Инициализация viewModel :
      */
