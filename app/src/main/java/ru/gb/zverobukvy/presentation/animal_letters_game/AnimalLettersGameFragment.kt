@@ -52,6 +52,8 @@ class AnimalLettersGameFragment :
     private var wordCardSoundName: String? = null
     private var mapLettersSoundName = mutableMapOf<Int, String>()
 
+    private var isEnableClick = true
+
     private fun initDagger() {
         requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
             gameStart!!.typesCards, gameStart!!.players
@@ -151,8 +153,10 @@ class AnimalLettersGameFragment :
 
     private fun initView() {
         binding.nextWord.root.setOnClickListener {
-            it.visibility = View.INVISIBLE
-            event.onClickNextWord()
+            isClick {
+                it.visibility = View.INVISIBLE
+                event.onClickNextWord()
+            }
         }
 
         IsEndGameDialogFragment.setOnListenerYes(this) {
@@ -164,22 +168,32 @@ class AnimalLettersGameFragment :
         }
 
         binding.backToMenuImageButton.setOnClickListener {
-            event.onBackPressed()
+            isClick {
+                event.onBackPressed()
+            }
         }
 
         binding.wordCustomCard.setOnClickCardListener(0) {
-            event.onClickImageWord()
+            isClick {
+                event.onClickImageWord()
+            }
         }
 
         binding.wordView.setOnClickListener {
-            event.onClickWordView()
+            isClick {
+                event.onClickWordView()
+            }
         }
 
         binding.soundToggleButton.setOnClickListener {
-            viewModel.onSoundClick()
+            isClick {
+                viewModel.onSoundClick()
+            }
         }
 
         binding.cardLevel.setCards(gameStart!!.typesCards)
+
+        isEnableClick = true
     }
 
     private fun setPositionLetterInWord(pos: Int) {
@@ -252,8 +266,10 @@ class AnimalLettersGameFragment :
                 }
             }
             setOnClickListener { pos ->
-                setWorkClick(false)
-                event.onClickLetterCard(pos)
+                isClick {
+                    setWorkClick(false)
+                    event.onClickLetterCard(pos)
+                }
             }
             setRatioForTable(
                 countCardHorizontally,
@@ -294,6 +310,14 @@ class AnimalLettersGameFragment :
         mapLettersSoundName.clear()
         lettersCards.forEachIndexed { index, value ->
             mapLettersSoundName[index] = value.soundName
+        }
+    }
+
+    private fun isClick(block: () -> Unit) {
+        if (isEnableClick) {
+            isEnableClick = false
+            delayAndRun(DELAY_NEXT_CLICK) { isEnableClick = true }
+            block.invoke()
         }
     }
 
@@ -442,6 +466,8 @@ class AnimalLettersGameFragment :
     companion object {
         const val GAME_START = "GAME_START"
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
+
+        const val DELAY_NEXT_CLICK = 300L
 
         private const val START_DELAY_ANIMATION_SCREEN_DIMMING =
             Conf.START_DELAY_ANIMATION_SCREEN_DIMMING
