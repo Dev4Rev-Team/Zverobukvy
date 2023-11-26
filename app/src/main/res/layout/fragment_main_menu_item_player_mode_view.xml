@@ -35,8 +35,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/avatar"
                 app:layout_constraintStart_toStartOf="@id/avatar"
-                app:layout_constraintTop_toBottomOf="@id/avatar"
-                />
+                app:layout_constraintTop_toBottomOf="@id/avatar" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/avatar"
@@ -96,33 +95,12 @@
                 app:layout_constraintStart_toEndOf="@+id/player_state_card_view"
                 app:layout_constraintTop_toTopOf="@+id/avatar">
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/rating_cards_view_container_guide_line_0.25"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.25" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/rating_cards_view_container_guide_line_0.5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.5" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/rating_cards_view_container_guide_line_0.75"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.75" />
-
                 <androidx.constraintlayout.widget.Barrier
                     android:id="@+id/rating_cards_view_barrier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:barrierDirection="top"
-                    app:constraint_referenced_ids="orange_diamond_image_view, green_diamond_image_view, blue_diamond_image_view, violet_diamond_image_view, orange_rating_card_view, green_rating_card_view, blue_rating_card_view, violet_rating_card_view" />
+                    app:constraint_referenced_ids="orange_rating_card_view, green_rating_card_view, blue_rating_card_view, violet_rating_card_view" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/player_name_text_view"
@@ -137,33 +115,37 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="@string/username_default" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/orange_diamond_image_view"
+                <androidx.constraintlayout.helper.widget.Flow
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:tint="@color/color_orange_pastel"
-                    android:visibility="gone"
+                    app:constraint_referenced_ids="orange_rating_card_view, green_rating_card_view, blue_rating_card_view, violet_rating_card_view"
+                    app:flow_horizontalGap="@dimen/rating_card_view_flow_horizontal_gap"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_wrapMode="chain"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/rating_cards_view_container_guide_line_0.25"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
-                    app:srcCompat="@drawable/diamond"
-                    tools:visibility="visible" />
+                    app:layout_constraintTop_toBottomOf="@id/player_name_text_view" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/orange_rating_card_view"
                     style="@style/RatingCardView"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:layout_marginEnd="@dimen/margin_rating_card_horizontal"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/color_orange_pastel"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/rating_cards_view_container_guide_line_0.25"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
                     app:strokeColor="@color/color_orange_pastel"
                     tools:visibility="visible">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/orange_diamond_image_view"
+                        style="@style/DiamondImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/orange_rating_text_view"
@@ -174,33 +156,25 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/green_diamond_image_view"
-                    android:layout_width="@dimen/auto_layout"
-                    android:layout_height="@dimen/auto_layout"
-                    android:tint="@color/color_green_pastel"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/rating_cards_view_container_guide_line_0.5"
-                    app:layout_constraintStart_toStartOf="@id/rating_cards_view_container_guide_line_0.25"
-                    app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
-                    app:srcCompat="@drawable/diamond"
-                    tools:visibility="visible" />
-
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/green_rating_card_view"
                     style="@style/RatingCardView"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:layout_marginHorizontal="@dimen/margin_rating_card_horizontal"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/color_green_pastel"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/rating_cards_view_container_guide_line_0.5"
-                    app:layout_constraintStart_toStartOf="@id/rating_cards_view_container_guide_line_0.25"
                     app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
                     app:strokeColor="@color/color_green_pastel"
                     tools:visibility="visible">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/green_diamond_image_view"
+                        style="@style/DiamondImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/green_rating_text_view"
@@ -211,33 +185,25 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/blue_diamond_image_view"
-                    android:layout_width="@dimen/auto_layout"
-                    android:layout_height="@dimen/auto_layout"
-                    android:tint="@color/color_blue_pastel"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/rating_cards_view_container_guide_line_0.75"
-                    app:layout_constraintStart_toStartOf="@id/rating_cards_view_container_guide_line_0.5"
-                    app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
-                    app:srcCompat="@drawable/diamond"
-                    tools:visibility="visible" />
-
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/blue_rating_card_view"
                     style="@style/RatingCardView"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:layout_marginHorizontal="@dimen/margin_rating_card_horizontal"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/color_blue_pastel"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/rating_cards_view_container_guide_line_0.75"
-                    app:layout_constraintStart_toStartOf="@id/rating_cards_view_container_guide_line_0.5"
                     app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
                     app:strokeColor="@color/color_blue_pastel"
                     tools:visibility="visible">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/blue_diamond_image_view"
+                        style="@style/DiamondImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/blue_rating_text_view"
@@ -248,33 +214,25 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/violet_diamond_image_view"
-                    android:layout_width="@dimen/auto_layout"
-                    android:layout_height="@dimen/auto_layout"
-                    android:tint="@color/color_violet_pastel"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/rating_cards_view_container_guide_line_0.75"
-                    app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
-                    app:srcCompat="@drawable/diamond"
-                    tools:visibility="visible" />
-
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/violet_rating_card_view"
                     style="@style/RatingCardView"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
-                    android:layout_marginStart="@dimen/margin_rating_card_horizontal"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/color_violet_pastel"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/rating_cards_view_container_guide_line_0.75"
                     app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
                     app:strokeColor="@color/color_violet_pastel"
                     tools:visibility="visible">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/violet_diamond_image_view"
+                        style="@style/DiamondImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/violet_rating_text_view"
