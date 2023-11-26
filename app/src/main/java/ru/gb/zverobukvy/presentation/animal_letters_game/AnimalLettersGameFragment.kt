@@ -78,20 +78,20 @@ class AnimalLettersGameFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initChangingStateEvent()
-        intiGameStateEvent()
-        initSystemEvent()
+        initChangingStateEventVM()
+        intiGameStateEventVM()
+        initSystemEventVM()
         initView()
     }
 
-    private fun initSystemEvent() {
+    private fun initSystemEventVM() {
         viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
             soundEffectPlayer.setEnable(it)
             binding.soundToggleButton.isChecked = it
         }
     }
 
-    private fun initChangingStateEvent() {
+    private fun initChangingStateEventVM() {
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.ChangingState.CorrectLetter -> {
@@ -121,7 +121,7 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private fun intiGameStateEvent() {
+    private fun intiGameStateEventVM() {
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.EntireState.StartGameState -> {
@@ -219,10 +219,6 @@ class AnimalLettersGameFragment :
 
     private fun requestNextPlayer(screenDimmingText: String) {
         binding.nextPlayer.root.let { button ->
-            button.setOnClickListener {
-                button.visibility = View.INVISIBLE
-                event.onClickNextWalkingPlayer()
-            }
             createAlphaShowAnimation(
                 button,
                 START_DELAY_ANIMATION_SCREEN_DIMMING,
@@ -301,7 +297,7 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private inner class GameProcessingState() {
+    private inner class GameProcessingState {
         fun startNewGame() {
             viewModel.onActiveGame()
         }
@@ -398,7 +394,7 @@ class AnimalLettersGameFragment :
         delayAndRun(DELAY_SOUND_LETTER) { soundEffectPlayer.play(correctLetterCard.soundName) }
     }
 
-    private inner class GameEvent() {
+    private inner class GameEvent {
         fun onEndGameByUser() {
             viewModel.onEndGameByUser()
         }
@@ -421,10 +417,6 @@ class AnimalLettersGameFragment :
 
         fun onClickLetterCard(pos: Int) {
             viewModel.onClickLetterCard(pos)
-        }
-
-        fun onClickNextWalkingPlayer() {
-            viewModel.onClickNextWalkingPlayer()
         }
 
         fun onClickImageWord() {

@@ -15,7 +15,7 @@
         app:size_avatar_one="60dp"
         app:size_avatar_two="52dp"
         app:size_avatar_three="48dp"
-        app:main_horizontal_gap="8dp"
+        app:main_horizontal_gap="16dp"
         app:padding_image="8dp"
         app:color_one="#EEE020"
         app:color_two="#C0C0C0"

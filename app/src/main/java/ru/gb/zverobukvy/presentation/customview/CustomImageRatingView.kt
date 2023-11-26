@@ -19,28 +19,28 @@ import ru.gb.zverobukvy.utility.ui.dipToPixels
 class CustomImageRatingView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
 ) : ConstraintLayout(context, attrs, defStyle) {
-    private var main_horizontal_gap = MAIN_HORIZONTAL_GAP
-    private var padding_image = PADDING_IMAGE
+    private var mainHorizontalGap = MAIN_HORIZONTAL_GAP
+    private var paddingImage = PADDING_IMAGE
 
-    private var color_one = COLOR_ONE
-    private var color_two = COLOR_TWO
-    private var color_three = COLOR_THREE
-    private var color_stroke_one = COLOR_STROKE_ONE
-    private var color_stroke_two = COLOR_STROKE_TWO
-    private var color_stroke_three = COLOR_STROKE_THREE
-    private var stroke_width = STROKE_WIDTH
+    private var colorOne = COLOR_ONE
+    private var colorTwo = COLOR_TWO
+    private var colorThree = COLOR_THREE
+    private var colorStrokeOne = COLOR_STROKE_ONE
+    private var colorStrokeTwo = COLOR_STROKE_TWO
+    private var colorStrokeThree = COLOR_STROKE_THREE
+    private var strokeWidth = STROKE_WIDTH
 
-    private var size_avatar_one = SIZE_AVATAR_ONE
-    private var size_avatar_two = SIZE_AVATAR_TWO
-    private var size_avatar_three = SIZE_AVATAR_THREE
+    private var sizeAvatarOne = SIZE_AVATAR_ONE
+    private var sizeAvatarTwo = SIZE_AVATAR_TWO
+    private var sizeAvatarThree = SIZE_AVATAR_THREE
 
-    private var size_avatars_place = SIZE_AVATARS_PLACE
+    private var sizeAvatarsPlace = SIZE_AVATARS_PLACE
 
-    private var shift_down_one = SHIFT_DOWN_ONE
-    private var shift_down_two = SHIFT_DOWN_TWO
-    private var shift_down_three = SHIFT_DOWN_THREE
+    private var shiftDownOne = SHIFT_DOWN_ONE
+    private var shiftDownTwo = SHIFT_DOWN_TWO
+    private var shiftDownThree = SHIFT_DOWN_THREE
 
-    private var duration_animation_one_item = DURATION_ANIMATION_ONE_ITEM
+    private var durationAnimationOneItem = DURATION_ANIMATION_ONE_ITEM
 
     private var mainFlow: Flow? = null
     private val cardViewWinnerList = mutableMapOf<Int, MutableList<CardView>>()
@@ -61,10 +61,10 @@ class CustomImageRatingView @JvmOverloads constructor(
     }
 
     private fun initVal() {
-        sizeAvatarList.addAll(listOf(size_avatar_one, size_avatar_two, size_avatar_three))
-        colorAvatarList.addAll(listOf(color_one, color_two, color_three))
-        colorAvatarStrokeList.addAll(listOf(color_stroke_one, color_stroke_two, color_stroke_three))
-        shiftDownList.addAll(listOf(shift_down_one, shift_down_two, shift_down_three))
+        sizeAvatarList.addAll(listOf(sizeAvatarOne, sizeAvatarTwo, sizeAvatarThree))
+        colorAvatarList.addAll(listOf(colorOne, colorTwo, colorThree))
+        colorAvatarStrokeList.addAll(listOf(colorStrokeOne, colorStrokeTwo, colorStrokeThree))
+        shiftDownList.addAll(listOf(shiftDownOne, shiftDownTwo, shiftDownThree))
     }
 
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyle: Int) {
@@ -72,76 +72,76 @@ class CustomImageRatingView @JvmOverloads constructor(
             context.obtainStyledAttributes(attrs, R.styleable.CustomImageRatingView, defStyle, 0)
 
 
-        main_horizontal_gap = typedArray.getDimensionPixelSize(
+        mainHorizontalGap = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_main_horizontal_gap,
             context.dipToPixels(MAIN_HORIZONTAL_GAP)
         )
-        padding_image = typedArray.getDimensionPixelSize(
+        paddingImage = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_padding_image,
             context.dipToPixels(PADDING_IMAGE)
         )
 
-        color_one = typedArray.getColor(
+        colorOne = typedArray.getColor(
             R.styleable.CustomImageRatingView_color_one,
             COLOR_ONE
         )
-        color_two = typedArray.getColor(
+        colorTwo = typedArray.getColor(
             R.styleable.CustomImageRatingView_color_two,
             COLOR_TWO
         )
-        color_three = typedArray.getColor(
+        colorThree = typedArray.getColor(
             R.styleable.CustomImageRatingView_color_three,
             COLOR_THREE
         )
-        color_stroke_one = typedArray.getColor(
+        colorStrokeOne = typedArray.getColor(
             R.styleable.CustomImageRatingView_color_stroke_one,
             COLOR_STROKE_ONE
         )
-        color_stroke_two = typedArray.getColor(
+        colorStrokeTwo = typedArray.getColor(
             R.styleable.CustomImageRatingView_color_stroke_two,
             COLOR_STROKE_TWO
         )
-        color_stroke_three = typedArray.getColor(
+        colorStrokeThree = typedArray.getColor(
             R.styleable.CustomImageRatingView_color_stroke_three,
             COLOR_STROKE_THREE
         )
-        stroke_width = typedArray.getDimensionPixelSize(
+        strokeWidth = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_stroke_width,
             context.dipToPixels(STROKE_WIDTH)
         )
 
-        size_avatar_one = typedArray.getDimensionPixelSize(
+        sizeAvatarOne = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_size_avatar_one,
             context.dipToPixels(SIZE_AVATAR_ONE)
         )
-        size_avatar_two = typedArray.getDimensionPixelSize(
+        sizeAvatarTwo = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_size_avatar_two,
             context.dipToPixels(SIZE_AVATAR_TWO)
         )
-        size_avatar_three = typedArray.getDimensionPixelSize(
+        sizeAvatarThree = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_size_avatar_three,
             context.dipToPixels(SIZE_AVATAR_THREE)
         )
 
-        size_avatars_place = typedArray.getDimensionPixelSize(
+        sizeAvatarsPlace = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_size_avatars_place,
             context.dipToPixels(SIZE_AVATARS_PLACE)
         )
 
-        shift_down_one = typedArray.getDimensionPixelSize(
+        shiftDownOne = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_shift_down_one,
             context.dipToPixels(SHIFT_DOWN_ONE)
         )
-        shift_down_two = typedArray.getDimensionPixelSize(
+        shiftDownTwo = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_shift_down_two,
             context.dipToPixels(SHIFT_DOWN_TWO)
         )
-        shift_down_three = typedArray.getDimensionPixelSize(
+        shiftDownThree = typedArray.getDimensionPixelSize(
             R.styleable.CustomImageRatingView_shift_down_three,
             context.dipToPixels(SHIFT_DOWN_THREE)
         )
 
-        duration_animation_one_item = typedArray.getInteger(
+        durationAnimationOneItem = typedArray.getInteger(
             R.styleable.CustomImageRatingView_duration_animation_one_item,
             DURATION_ANIMATION_ONE_ITEM
         )
@@ -173,7 +173,7 @@ class CustomImageRatingView @JvmOverloads constructor(
         for (i in 0 until COUNT_WINNER) {
             val countWinner = cardViewWinnerList[i]?.size ?: 1
             if (countWinner > 0) {
-                val naxGap = size_avatars_place - sizeAvatarList[i]
+                val naxGap = sizeAvatarsPlace - sizeAvatarList[i]
                 val gap = sizeAvatarList[i] - (naxGap / countWinner)
                 ratingFlow[i]?.setHorizontalGap(-1 * gap)
             }
@@ -182,7 +182,7 @@ class CustomImageRatingView @JvmOverloads constructor(
         var cnt = 1
         for (i in 0 until COUNT_WINNER) {
             cardViewWinnerList[i]?.forEach {
-                delayAndRun(cnt * duration_animation_one_item.toLong()) {
+                delayAndRun(cnt * durationAnimationOneItem.toLong()) {
                     it.visibility = VISIBLE
                     val durationAnimation = DURATION_ANIMATION_ONE_ITEM
                     createScaleAnimation(it, 1.1f, 1f).apply {
@@ -216,10 +216,10 @@ class CustomImageRatingView @JvmOverloads constructor(
     private fun createMainFlow() = Flow(context).apply {
         id = generateViewId()
         layoutParams = LayoutParams(
-            size_avatars_place * 3 + main_horizontal_gap * 2,
+            sizeAvatarsPlace * 3 + mainHorizontalGap * 2,
             LayoutParams.MATCH_PARENT
         )
-        setHorizontalGap(main_horizontal_gap)
+        setHorizontalGap(mainHorizontalGap)
         setMaxElementsWrap(COUNT_WINNER)
         setWrapMode(Flow.WRAP_CHAIN)
         setHorizontalStyle(Flow.CHAIN_PACKED)
@@ -238,13 +238,13 @@ class CustomImageRatingView @JvmOverloads constructor(
 
             1 -> {
                 layoutParams =
-                    LayoutParams(size_avatars_place, LayoutParams.MATCH_PARENT)
+                    LayoutParams(sizeAvatarsPlace, LayoutParams.MATCH_PARENT)
                 setHorizontalBias(1f)
             }
 
             else -> {
                 layoutParams =
-                    LayoutParams(size_avatars_place, LayoutParams.MATCH_PARENT)
+                    LayoutParams(sizeAvatarsPlace, LayoutParams.MATCH_PARENT)
                 setHorizontalBias(0f)
             }
         }
@@ -259,7 +259,7 @@ class CustomImageRatingView @JvmOverloads constructor(
             visibility = INVISIBLE
             layoutParams = LayoutParams(size, size)
             strokeColor = colorAvatarStrokeList[place]
-            strokeWidth = stroke_width
+            strokeWidth = strokeWidth
             this@CustomImageRatingView.addView(this)
         }
         val imageView = CustomImageView(context).apply {
@@ -269,7 +269,7 @@ class CustomImageRatingView @JvmOverloads constructor(
             id = generateViewId()
             imageAvatarLoader.loadImageAvatar(player.player.avatar, this)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-            setPadding(padding_image)
+            setPadding(paddingImage)
             setBackgroundColor(colorAvatarList[place])
         }
         cardView.addView(imageView)
