@@ -45,9 +45,11 @@
         android:layout_width="@dimen/auto_layout"
         android:layout_height="@dimen/auto_layout"
         android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_players_recycler_view"
+        android:layout_marginEnd="@dimen/margin_players_recycler_view"
         app:layout_constraintBottom_toTopOf="@+id/sector_recycle_view_guideline"
-        app:layout_constraintEnd_toEndOf="@id/app_name_text_view"
-        app:layout_constraintStart_toStartOf="@id/app_name_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sector_header_guideline" />
 
 
