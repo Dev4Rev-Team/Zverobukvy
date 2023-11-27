@@ -53,7 +53,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:backgroundTint="@color/avatar_background"
-                    app:cardCornerRadius="@dimen/avatar_corner_radius">
+                    app:cardCornerRadius="@dimen/avatar_corner_radius_small">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/player_avatar_image_view"
