@@ -49,4 +49,6 @@
     <color name="border_rank_genius">@color/color_blue_pastel</color>
     <color name="border_rank_hero">@color/color_violet_pastel</color>
     <color name="border_rank_legend">@color/color_pink_pastel</color>
+
+    <color name="splash_screen_background_color">#2C7DF5</color>
 </resources>
