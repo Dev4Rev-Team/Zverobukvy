@@ -120,7 +120,7 @@ class PlayerViewHolder(
         diamondImageView: AppCompatImageView
     ) {
         viewRating.let {
-            if (it.rating != 0 || it.decoration != Decoration.DEFAULT) {
+            if (it.rating != 0) {
                 ratingCardView.visibility = View.VISIBLE
                 ratingCardView.strokeColor =
                     itemView.context.getColor(it.decoration.idColor)
@@ -129,11 +129,8 @@ class PlayerViewHolder(
                     ratingTextView.visibility = View.GONE
                 } else {
                     diamondImageView.visibility = View.GONE
-                    if (it.rating != 0) {
-                        ratingTextView.visibility = View.VISIBLE
-                        ratingTextView.text = it.rating.toString()
-                    } else
-                        ratingTextView.visibility = View.GONE
+                    ratingTextView.visibility = View.VISIBLE
+                    ratingTextView.text = it.rating.toString()
                 }
             } else
                 ratingCardView.visibility = View.GONE
