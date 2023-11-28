@@ -24,7 +24,7 @@ class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
                 Rank.MASTER
             else if (orangeAndHarderRating > EXPERT_RATING)
                 Rank.EXPERT
-            else if (orangeAndHarderRating>0)
+            else if (orangeAndHarderRating > 0)
                 Rank.LEARNER
             else
                 Rank.DEFAULT
@@ -41,14 +41,14 @@ class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
 
     private fun getViewRating(rating: Int): ViewRating =
         DECORATION_RATING.let {
-            if (rating < it)
+            if (rating <= it - 1)
                 ViewRating(Decoration.DEFAULT, rating)
-            else if (rating < 2 * it)
-                ViewRating(Decoration.BRONZE, rating - it)
-            else if (rating < 3 * it)
-                ViewRating(Decoration.SILVER, rating - 2 * it)
-            else if (rating < 4 * it)
-                ViewRating(Decoration.GOLD, rating - 3 * it)
+            else if (rating <= 2 * (it - 1))
+                ViewRating(Decoration.BRONZE, rating - (it - 1))
+            else if (rating <= 3 * (it - 1))
+                ViewRating(Decoration.SILVER, rating - 2 * (it - 1))
+            else if (rating <= 4 * (it - 1))
+                ViewRating(Decoration.GOLD, rating - 3 * (it - 1))
             else
                 ViewRating(Decoration.DIAMOND, rating)
         }
