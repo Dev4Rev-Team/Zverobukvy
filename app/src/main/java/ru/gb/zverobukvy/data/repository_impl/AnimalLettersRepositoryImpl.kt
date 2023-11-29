@@ -7,22 +7,23 @@ import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.data.data_source.LocalDataSource
 import ru.gb.zverobukvy.data.data_source.RemoteDataSource
 import ru.gb.zverobukvy.data.mapper.extract_helpers.ExtractTypesCardsHelper
-import ru.gb.zverobukvy.data.mapper.mapper_impl.player.AvatarApiMapper
-import ru.gb.zverobukvy.data.mapper.mapper_impl.player.AvatarRoomMapper
 import ru.gb.zverobukvy.data.mapper.mapper_impl.card.CardsSetMapperToDomain
 import ru.gb.zverobukvy.data.mapper.mapper_impl.card.LetterCardMapperToDomain
-import ru.gb.zverobukvy.data.mapper.mapper_impl.player.PlayerMapperToData
-import ru.gb.zverobukvy.data.mapper.mapper_impl.player.PlayerMapperToDomain
 import ru.gb.zverobukvy.data.mapper.mapper_impl.card.SharedPreferencesTypeCardsMapper
 import ru.gb.zverobukvy.data.mapper.mapper_impl.card.WordCardMapperToDomain
+import ru.gb.zverobukvy.data.mapper.mapper_impl.player.AvatarApiMapper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.player.AvatarRoomMapper
+import ru.gb.zverobukvy.data.mapper.mapper_impl.player.PlayerMapperToData
+import ru.gb.zverobukvy.data.mapper.mapper_impl.player.PlayerMapperToDomain
 import ru.gb.zverobukvy.data.network_state.NetworkStatusImpl
 import ru.gb.zverobukvy.data.preferences.SharedPreferencesForGame
-import ru.gb.zverobukvy.domain.entity.player.Avatar
 import ru.gb.zverobukvy.domain.entity.card.CardsSet
 import ru.gb.zverobukvy.domain.entity.card.LetterCard
-import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.card.WordCard
+import ru.gb.zverobukvy.domain.entity.player.Avatar
+import ru.gb.zverobukvy.domain.entity.player.Player
+import ru.gb.zverobukvy.domain.repository.LoadingDataRepository
 import ru.gb.zverobukvy.domain.repository.SoundStatusRepository
 import ru.gb.zverobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
 import ru.gb.zverobukvy.domain.repository.main_menu.MainMenuRepository
@@ -35,7 +36,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val sharedPreferencesForGame: SharedPreferencesForGame,
     private val networkStatus: NetworkStatusImpl
-) : AnimalLettersGameRepository, MainMenuRepository, SoundStatusRepository {
+) : AnimalLettersGameRepository, MainMenuRepository, SoundStatusRepository, LoadingDataRepository {
     private val letterCardMapperToDomain = LetterCardMapperToDomain()
 
     private val wordCardMapperToDomain = WordCardMapperToDomain()
@@ -55,6 +56,8 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     private var letterCards = listOf<LetterCard>()
 
     private var wordCards = listOf<WordCard>()
+
+    private var players: List<Player>? = null
 
     override var isOnline: Boolean = false
 
@@ -93,7 +96,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         }
 
     override suspend fun getPlayers(): List<Player> =
-        withContext(Dispatchers.IO) {
+        players ?: withContext(Dispatchers.IO) {
             localDataSource.getPlayers().map {
                 playersMapperDomain.mapToDomain(it)
             }
@@ -114,6 +117,17 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             localDataSource.updatePlayer(playersMapperData.mapToData(player))
         }
+    }
+
+    override suspend fun loadingData() {
+        if (players == null)
+            withContext(Dispatchers.IO){
+                players = withContext(Dispatchers.IO) {
+                    localDataSource.getPlayers().map {
+                        playersMapperDomain.mapToDomain(it)
+                    }
+                }
+            }
     }
 
     override fun getTypesCardsSelectedForGame(): List<TypeCards> =
@@ -168,7 +182,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     }
 
     override fun getSoundStatus(): Boolean =
-      sharedPreferencesForGame.readSoundStatus()
+        sharedPreferencesForGame.readSoundStatus()
 
     override fun saveSoundStatus(isSoundOn: Boolean) =
         sharedPreferencesForGame.saveSoundStatus(isSoundOn)

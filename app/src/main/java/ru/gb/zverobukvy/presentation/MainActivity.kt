@@ -6,14 +6,21 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
-import java.util.Timer
-import kotlin.concurrent.schedule
+import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel: LoadindDataViewModel by lazy {
+        ViewModelProvider(this, viewModelProviderFactoryOf {
+            appComponent.loadingDataViewModel
+        })[LoadingDataViewModelImpl::class.java]
+    }
 
     private var isHideSplashScreen = false
 
@@ -88,8 +95,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadingData() {
-        Timer().schedule(3000L) {
-            isHideSplashScreen = true
+        viewModel.getLiveDataLoadingData().observe(this){
+            isHideSplashScreen = it
         }
     }
 }
