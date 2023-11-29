@@ -3,22 +3,29 @@ package ru.gb.zverobukvy.presentation
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 
 class MainActivity : AppCompatActivity() {
+
+    private var isHideSplashScreen = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        loadingData()
         volumeControlStream = AudioManager.STREAM_MUSIC
         initMainMenu(savedInstanceState)
         initBottomSheet()
+        setHideSplashScreen()
     }
 
     private fun initMainMenu(savedInstanceState: Bundle?) {
@@ -64,5 +71,25 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    private fun setHideSplashScreen() {
+        val content: View = findViewById(android.R.id.content)
+        content.viewTreeObserver.addOnPreDrawListener(
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    return if (isHideSplashScreen) {
+                        content.viewTreeObserver.removeOnPreDrawListener(this)
+                        true
+                    } else false
+                }
+            }
+        )
+    }
+
+    private fun loadingData() {
+        Timer().schedule(3000L) {
+            isHideSplashScreen = true
+        }
     }
 }
