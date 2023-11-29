@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.domain.use_case.level_and_rating
 
+import ru.gb.zverobukvy.configuration.Conf.Companion.LEVEL_RATIO
 import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.card.WordCard
@@ -83,8 +84,4 @@ class LevelAndRatingCalculatorImpl(players: List<Player.HumanPlayer>, typesCards
             TypeCards.GREEN
         else
             TypeCards.ORANGE
-
-    companion object {
-        private const val LEVEL_RATIO = 0.2F
-    }
 }

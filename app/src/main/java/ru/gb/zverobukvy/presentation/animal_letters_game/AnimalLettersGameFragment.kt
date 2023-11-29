@@ -47,19 +47,12 @@ class AnimalLettersGameFragment :
     private lateinit var soundEffectPlayer: SoundEffectPlayer
     private lateinit var viewModel: AnimalLettersGameViewModel
     private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
-    private val game = GameWork()
+    private val game = GameProcessingState()
     private val event = GameEvent()
     private var wordCardSoundName: String? = null
     private var mapLettersSoundName = mutableMapOf<Int, String>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            gameStart = it.parcelable(GAME_START)
-        }
-        gameStart ?: throw IllegalArgumentException("not arg gameStart")
-        initDagger()
-        game.startNewGame()
-    }
+
+    private var isEnableClick = true
 
     private fun initDagger() {
         requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
@@ -74,15 +67,33 @@ class AnimalLettersGameFragment :
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            gameStart = it.parcelable(GAME_START)
+        }
+        gameStart ?: throw IllegalArgumentException("not arg gameStart")
+        initDagger()
+        game.startNewGame()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initChangingStateEvent()
-        intiGameStateEvent()
+        initChangingStateEventVM()
+        intiGameStateEventVM()
+        initSystemEventVM()
         initView()
     }
 
-    private fun initChangingStateEvent() {
+    private fun initSystemEventVM() {
+        viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
+            soundEffectPlayer.setEnable(it)
+            binding.soundToggleButton.isChecked = it
+        }
+    }
+
+    private fun initChangingStateEventVM() {
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.ChangingState.CorrectLetter -> {
@@ -112,7 +123,7 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private fun intiGameStateEvent() {
+    private fun intiGameStateEventVM() {
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.EntireState.StartGameState -> {
@@ -142,8 +153,10 @@ class AnimalLettersGameFragment :
 
     private fun initView() {
         binding.nextWord.root.setOnClickListener {
-            it.visibility = View.INVISIBLE
-            event.onClickNextWord()
+            isClick {
+                it.visibility = View.INVISIBLE
+                event.onClickNextWord()
+            }
         }
 
         IsEndGameDialogFragment.setOnListenerYes(this) {
@@ -155,18 +168,32 @@ class AnimalLettersGameFragment :
         }
 
         binding.backToMenuImageButton.setOnClickListener {
-            event.onBackPressed()
+            isClick {
+                event.onBackPressed()
+            }
         }
 
         binding.wordCustomCard.setOnClickCardListener(0) {
-            event.onClickImageWord()
+            isClick {
+                event.onClickImageWord()
+            }
         }
 
         binding.wordView.setOnClickListener {
-            event.onClickWordView()
+            isClick {
+                event.onClickWordView()
+            }
+        }
+
+        binding.soundToggleButton.setOnClickListener {
+            isClick {
+                viewModel.onSoundClick()
+            }
         }
 
         binding.cardLevel.setCards(gameStart!!.typesCards)
+
+        isEnableClick = true
     }
 
     private fun setPositionLetterInWord(pos: Int) {
@@ -175,9 +202,10 @@ class AnimalLettersGameFragment :
 
     private fun setPlayer(player: Player) {
         if (binding.playerNameTextView.text != player.name) {
-            createInSideAnimation(binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
+            createInSideAnimation(
+                binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
                 SHIFT_ANIMATOR_PLAYER_NEXT_DP
-            ){ _->
+            ) { _ ->
                 binding.playerNameCard.visibility = View.VISIBLE
                 binding.playerNameTextView.text = player.name
                 imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
@@ -205,10 +233,6 @@ class AnimalLettersGameFragment :
 
     private fun requestNextPlayer(screenDimmingText: String) {
         binding.nextPlayer.root.let { button ->
-            button.setOnClickListener {
-                button.visibility = View.INVISIBLE
-                event.onClickNextWalkingPlayer()
-            }
             createAlphaShowAnimation(
                 button,
                 START_DELAY_ANIMATION_SCREEN_DIMMING,
@@ -242,8 +266,10 @@ class AnimalLettersGameFragment :
                 }
             }
             setOnClickListener { pos ->
-                setWorkClick(false)
-                event.onClickLetterCard(pos)
+                isClick {
+                    setWorkClick(false)
+                    event.onClickLetterCard(pos)
+                }
             }
             setRatioForTable(
                 countCardHorizontally,
@@ -287,7 +313,15 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private inner class GameWork() {
+    private fun isClick(block: () -> Unit) {
+        if (isEnableClick) {
+            isEnableClick = false
+            delayAndRun(DELAY_NEXT_CLICK) { isEnableClick = true }
+            block.invoke()
+        }
+    }
+
+    private inner class GameProcessingState {
         fun startNewGame() {
             viewModel.onActiveGame()
         }
@@ -357,7 +391,9 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
-            if (it.isFastEndGame) {
+            //todo
+            //if (it.isFastEndGame) {
+            if (false) {
                 event.popBackStack()
             } else {
                 val players = DataGameIsOverDialog.map(it.players)
@@ -382,7 +418,7 @@ class AnimalLettersGameFragment :
         delayAndRun(DELAY_SOUND_LETTER) { soundEffectPlayer.play(correctLetterCard.soundName) }
     }
 
-    private inner class GameEvent() {
+    private inner class GameEvent {
         fun onEndGameByUser() {
             viewModel.onEndGameByUser()
         }
@@ -405,10 +441,6 @@ class AnimalLettersGameFragment :
 
         fun onClickLetterCard(pos: Int) {
             viewModel.onClickLetterCard(pos)
-        }
-
-        fun onClickNextWalkingPlayer() {
-            viewModel.onClickNextWalkingPlayer()
         }
 
         fun onClickImageWord() {
@@ -435,6 +467,8 @@ class AnimalLettersGameFragment :
         const val GAME_START = "GAME_START"
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
 
+        const val DELAY_NEXT_CLICK = 300L
+
         private const val START_DELAY_ANIMATION_SCREEN_DIMMING =
             Conf.START_DELAY_ANIMATION_SCREEN_DIMMING
         private const val DURATION_ANIMATION_SCREEN_DIMMING = Conf.DURATION_ANIMATION_SCREEN_DIMMING
@@ -447,9 +481,8 @@ class AnimalLettersGameFragment :
 
         private const val IMAGE_CARD_FOREGROUND = Conf.IMAGE_CARD_FOREGROUND
 
-        private const val DURATION_ANIMATOR_NEXT_PLAYER = 650L
-        private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 55f
-
+        private const val DURATION_ANIMATOR_NEXT_PLAYER = Conf.DURATION_ANIMATOR_NEXT_PLAYER
+        private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = Conf.SHIFT_ANIMATOR_PLAYER_NEXT_DP
 
 
         @JvmStatic

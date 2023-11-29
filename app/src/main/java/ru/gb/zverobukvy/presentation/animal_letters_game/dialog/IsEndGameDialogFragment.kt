@@ -8,7 +8,7 @@ import ru.gb.zverobukvy.utility.ui.BaseDialogFragment
 
 
 class IsEndGameDialogFragment : BaseDialogFragment() {
-    var event = EVENT_NO
+    private var event = EVENT_NO
 
     override fun initMessageTextView() {
         binding.messageTextView.text = getString(R.string.end_game_question_text)

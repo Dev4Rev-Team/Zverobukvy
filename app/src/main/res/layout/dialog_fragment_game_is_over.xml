@@ -4,75 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_winner"
-    android:clickable="true">
+    android:background="@color/color_violet_pastel"
+    android:clickable="true"
+    android:focusable="true">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/winner1_avatar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <ru.gb.zverobukvy.presentation.customview.CustomImageRatingView
+        android:id="@+id/winner_avatar_custom_image_rating_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
-        android:backgroundTint="@color/color_blue_pastel"
-        app:cardCornerRadius="8000dp"
-        app:cardElevation="@dimen/cardview_default_elevation"
+        app:size_avatar_one="60dp"
+        app:size_avatar_two="52dp"
+        app:size_avatar_three="48dp"
+        app:main_horizontal_gap="16dp"
+        app:padding_image="8dp"
+        app:color_one="#EEE020"
+        app:color_two="#C0C0C0"
+        app:color_three="#C48322"
+        app:color_stroke_one="#55000000"
+        app:color_stroke_two="#55000000"
+        app:color_stroke_three="#55000000"
+        app:stroke_width="1dp"
+        app:size_avatars_place="96dp"
+        app:shift_down_one="0dp"
+        app:shift_down_two="24dp"
+        app:shift_down_three="24dp"
+        app:duration_animation_one_item="300"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_text_view"
-        app:strokeColor="@color/color_gold"
-        app:strokeWidth="@dimen/winner_avatar_stroke_width">
+        tools:layout_height="@dimen/avatar_size_huge"
+        tools:layout_width="@dimen/avatar_size_huge">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/winner1_avatar_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_avatar_image"
-            android:scaleType="fitCenter"
-            android:src="@drawable/avatar_fox" />
-    </com.google.android.material.card.MaterialCardView>
+    </ru.gb.zverobukvy.presentation.customview.CustomImageRatingView>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/winner2_avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:backgroundTint="@color/color_blue_pastel"
-        app:cardCornerRadius="8000dp"
-        app:cardElevation="@dimen/cardview_default_elevation"
-        app:layout_constraintEnd_toStartOf="@+id/winner1_avatar"
-        app:layout_constraintTop_toTopOf="@+id/winner1_avatar"
-        app:strokeColor="@color/color_silver"
-        app:strokeWidth="@dimen/winner_avatar_stroke_width">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/winner2_avatar_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_avatar_image"
-            android:scaleType="fitCenter"
-            android:src="@drawable/avatar_cat" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/winner3_avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:backgroundTint="@color/color_blue_pastel"
-        app:cardCornerRadius="8000dp"
-        app:cardElevation="@dimen/cardview_default_elevation"
-        app:layout_constraintStart_toEndOf="@+id/winner1_avatar"
-        app:layout_constraintTop_toTopOf="@+id/winner1_avatar"
-        app:strokeColor="@color/color_bronze"
-        app:strokeWidth="@dimen/winner_avatar_stroke_width">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/winner3_avatar_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_avatar_image"
-            android:scaleType="fitCenter"
-            android:src="@drawable/avatar_mouse" />
-    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
@@ -96,7 +62,7 @@
         android:textSize="@dimen/text_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/winner1_avatar" />
+        app:layout_constraintTop_toBottomOf="@+id/winner_avatar_custom_image_rating_view" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/time_text_view"
@@ -145,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
         android:text="@string/ok"
-        android:textColor="@color/color_blue"
+        android:textColor="@color/color_violet_pastel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

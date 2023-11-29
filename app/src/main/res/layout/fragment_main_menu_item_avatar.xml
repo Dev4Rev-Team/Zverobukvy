@@ -8,20 +8,16 @@
         android:id="@+id/avatar_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="@dimen/margin_default"
         app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
-        app:strokeColor="@color/transparent"
-        android:layout_gravity="center">
+        app:strokeColor="@color/transparent">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/background_avatar_card_view"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:strokeColor="@color/transparent"
-            app:cardBackgroundColor="@color/color_blue_pastel"
-            app:cardCornerRadius="8000dp"
-            android:layout_margin="@dimen/margin_default"
-            >
+            style="@style/Avatar"
+            android:layout_margin="@dimen/margin_small"
+            app:cardBackgroundColor="@color/avatar_background">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/player_avatar_image_view"

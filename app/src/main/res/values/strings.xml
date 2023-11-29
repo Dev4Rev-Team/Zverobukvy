@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Зверобуквы</string>
+    <string name="app_name">ЗооБуквы</string>
     <!--Строки в интерфейсе-->
     <string name="color_text">Цвет</string>
     <string name="points_text">Счет</string>
@@ -15,6 +15,7 @@
     <string name="main_menu_fragment_play_game_text_button">Играть</string>
     <string name="main_menu_fragment_add_player_text">Добавить игрока</string>
     <string name="main_menu_fragment_open_rules_text">Изучить правила</string>
+    <!-- Универсальные слова-->
     <string name="space">" "</string>
     <string name="choose">✓</string>
     <string name="ok">OK</string>
@@ -22,6 +23,7 @@
     <string name="no">Нет</string>
     <string name="cancel">"Отмена"</string>
     <string name="save">"Сохранить"</string>
+    <!--Фразы в главном меню -->
     <string name="main_menu_fragment_no_card_selected">Выбери набор карточек</string>
     <string name="main_menu_fragment_no_player_selected">Выбери, кто будет играть</string>
     <string name="main_menu_fragment_the_name_field_is_empty">Введи имя игрока</string>
@@ -31,15 +33,18 @@
     <string name="main_menu_fragment_new_player">Игрок %d</string>
     <string name="main_menu_fragment_no_server_connection">Сервер временно не работает</string>
     <string name="game_view_model_max_players">Превышено максимальное количество игроков</string>
-    <string name="player_state_ready">Хочет играть</string>
-    <string name="player_state_not_ready">Не играет</string>
+
+    <!--Экран с результатами-->
     <string name="game_end_text">Игра завершена</string>
     <string name="game_time_text">Время игры</string>
+
+    <!--Экран игры-->
     <string name="end_game_question_text">Закончить игру?</string>
     <string name="next_player_move_text">Ход следующего игрока</string>
     <string name="press_to_continue_text">Нажми, чтобы продолжить</string>
     <string name="word_guessed_text">Слово отгадано</string>
 
+    <!--Смена ходов-->
     <string name="game_view_model_text_invalid_letters_multiplayer">"Ходит "</string>
     <string name="game_view_model_text_invalid_letters_single_player"> </string>
     <string name="game_view_model_text_guessed_word_multiplayer">"Ходит "</string>

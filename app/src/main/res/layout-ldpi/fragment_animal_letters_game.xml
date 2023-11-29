@@ -19,11 +19,11 @@
             android:id="@+id/back_to_menu_image_button"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:scaleType="center"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
+            android:scaleType="center"
             android:src="@drawable/ic_arrow_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -48,14 +48,14 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/player_avatar_card_view"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="@dimen/avatar_size_small"
+                    android:layout_height="@dimen/avatar_size_small"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/color_blue_pastel"
-                    app:cardCornerRadius="8000dp">
-                    <!--todo migrate to material design-->
-                    <ImageView
+                    android:backgroundTint="@color/avatar_background"
+                    app:cardCornerRadius="@dimen/avatar_corner_radius_small">
+
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/player_avatar_image_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -68,8 +68,8 @@
                 <Space
                     android:layout_width="10dp"
                     android:layout_height="@dimen/auto_layout" />
-                <!--todo migrate to material design-->
-                <TextView
+
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/player_name_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -99,16 +99,16 @@
             app:radiusCards="@dimen/corner_radius_default" />
 
         <ToggleButton
-            android:id="@+id/toggleButton"
+            android:id="@+id/sound_toggle_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
-            android:background="@drawable/ic_sound_on"
+            android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
             android:text="sound"
-            android:textOff="@string/space"
-            android:textOn="@string/space"
+            android:textOff="🔈"
+            android:textOn="🔊"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_level" />
 
@@ -151,7 +151,7 @@
             app:colorUnsolved="@color/white"
             app:horizontalGap="@dimen/margin_default"
             app:layout_constraintBottom_toTopOf="@+id/word_guidline"
-            app:layout_constraintDimensionRatio="H,6:1"
+            app:layout_constraintDimensionRatio="H,7:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/sector_word_card_image_guidline"

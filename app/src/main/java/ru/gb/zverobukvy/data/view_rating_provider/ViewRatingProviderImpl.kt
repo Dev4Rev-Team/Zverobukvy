@@ -1,5 +1,11 @@
 package ru.gb.zverobukvy.data.view_rating_provider
 
+import ru.gb.zverobukvy.configuration.Conf.Companion.DECORATION_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.EXPERT_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.GENIUS_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.HERO_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.LEGEND_RATING
+import ru.gb.zverobukvy.configuration.Conf.Companion.MASTER_RATING
 import ru.gb.zverobukvy.domain.entity.player.Rating
 
 class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
@@ -18,8 +24,10 @@ class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
                 Rank.MASTER
             else if (orangeAndHarderRating > EXPERT_RATING)
                 Rank.EXPERT
-            else
+            else if (orangeAndHarderRating > 0)
                 Rank.LEARNER
+            else
+                Rank.DEFAULT
         }
     }
 
@@ -33,25 +41,15 @@ class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
 
     private fun getViewRating(rating: Int): ViewRating =
         DECORATION_RATING.let {
-            if (rating < it)
+            if (rating <= it - 1)
                 ViewRating(Decoration.DEFAULT, rating)
-            else if (rating < 2 * it)
-                ViewRating(Decoration.BRONZE, rating - it)
-            else if (rating < 3 * it)
-                ViewRating(Decoration.SILVER, rating - 2 * it)
-            else if (rating < 4 * it)
-                ViewRating(Decoration.GOLD, rating - 3 * it)
+            else if (rating <= 2 * (it - 1))
+                ViewRating(Decoration.BRONZE, rating - (it - 1))
+            else if (rating <= 3 * (it - 1))
+                ViewRating(Decoration.SILVER, rating - 2 * (it - 1))
+            else if (rating <= 4 * (it - 1))
+                ViewRating(Decoration.GOLD, rating - 3 * (it - 1))
             else
                 ViewRating(Decoration.DIAMOND, rating)
         }
-
-    companion object {
-        private const val EXPERT_RATING = 50
-        private const val MASTER_RATING = 75
-        private const val GENIUS_RATING = 100
-        private const val HERO_RATING = 125
-        private const val LEGEND_RATING = 150
-        private const val DECORATION_RATING = 100
-    }
-
 }

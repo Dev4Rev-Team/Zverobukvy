@@ -3,6 +3,7 @@ package ru.gb.zverobukvy.presentation.customview
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -56,6 +57,9 @@ fun <T : View> createInSideAnimation(
     blockOut: (v: T) -> Unit
 ): AnimatorSet {
     val animatorSet = AnimatorSet()
+    val animatorSetOut = AnimatorSet()
+    val animatorSetIn = AnimatorSet()
+
     val pixelShift = view.context.dipToPixels(shift).toFloat()
     val moveOut =
         ObjectAnimator.ofFloat(view, View.TRANSLATION_X, pixelShift).apply {
@@ -63,9 +67,18 @@ fun <T : View> createInSideAnimation(
                 blockOut(view)
             }
         }
+    val alphaOut = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f)
+    val scaleOut = createScaleAnimation(view,1f,0f)
+    animatorSetOut.playTogether(moveOut, alphaOut, scaleOut)
+
     val moveIn = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -pixelShift, 0f)
-    animatorSet.interpolator = DecelerateInterpolator()
-    animatorSet.playSequentially(moveOut, moveIn)
+    val alphaIn = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f)
+    val scaleIn = createScaleAnimation(view,0f,1f)
+    animatorSetIn.playTogether(moveIn, alphaIn, scaleIn)
+
+    animatorSetOut.interpolator = AccelerateInterpolator()
+    animatorSetIn.interpolator = DecelerateInterpolator()
+    animatorSet.playSequentially(animatorSetOut, animatorSetIn)
     animatorSet.duration = duration
     return animatorSet
 }
