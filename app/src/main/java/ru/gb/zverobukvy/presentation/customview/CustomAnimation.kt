@@ -2,6 +2,7 @@ package ru.gb.zverobukvy.presentation.customview
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.graphics.PointF
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -31,10 +32,10 @@ fun createFlipAnimation(view: View, changeFace: (() -> Unit)? = null): AnimatorS
     return animatorSet
 }
 
-fun createScaleAnimation(view: View, x1: Float, x2: Float): AnimatorSet {
+fun createScaleAnimation(view: View, vararg value: Float): AnimatorSet {
     val animatorSet = AnimatorSet()
-    val scaleX = ObjectAnimator.ofFloat(view, View.SCALE_X, x1, x2)
-    val scaleY = ObjectAnimator.ofFloat(view, View.SCALE_Y, x1, x2)
+    val scaleX = ObjectAnimator.ofFloat(view, View.SCALE_X, *value)
+    val scaleY = ObjectAnimator.ofFloat(view, View.SCALE_Y, *value)
     animatorSet.playTogether(scaleX, scaleY)
     return animatorSet
 }
@@ -47,6 +48,20 @@ fun createAlphaShowAnimation(view: View, startDelay: Long, duration: Long): Obje
             view.visibility = View.VISIBLE
         }
     }
+}
+
+
+fun createMoveAnimation(view: View, pos1: PointF, pos2: PointF): AnimatorSet {
+    val animatorSet = AnimatorSet()
+    val moveX = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, pos1.x, pos2.x)
+    val moveY = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, pos1.y, pos2.y)
+    val scaleAnimation = createScaleAnimation(view, 1f, 1.3f, 1f).apply {
+        duration = 50L
+    }
+//    todo синхронизация с вьюмоделью
+//    animatorSet.play(scaleAnimation).after(moveX).with(moveY)
+    animatorSet.playTogether(moveX, moveY)
+    return animatorSet
 }
 
 
@@ -68,12 +83,12 @@ fun <T : View> createInSideAnimation(
             }
         }
     val alphaOut = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f)
-    val scaleOut = createScaleAnimation(view,1f,0f)
+    val scaleOut = createScaleAnimation(view, 1f, 0f)
     animatorSetOut.playTogether(moveOut, alphaOut, scaleOut)
 
     val moveIn = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -pixelShift, 0f)
     val alphaIn = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f)
-    val scaleIn = createScaleAnimation(view,0f,1f)
+    val scaleIn = createScaleAnimation(view, 0f, 1f)
     animatorSetIn.playTogether(moveIn, alphaIn, scaleIn)
 
     animatorSetOut.interpolator = AccelerateInterpolator()

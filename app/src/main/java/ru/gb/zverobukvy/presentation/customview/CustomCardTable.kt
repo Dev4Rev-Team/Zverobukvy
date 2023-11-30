@@ -1,6 +1,7 @@
 package ru.gb.zverobukvy.presentation.customview
 
 import android.content.Context
+import android.graphics.PointF
 import android.util.AttributeSet
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -122,6 +123,13 @@ class CustomCardTable @JvmOverloads constructor(
 
     fun openCard(letterCard: LetterCardUI) {
         listOfCardsOnTable[getPositionCard(letterCard)].setOpenCard(true)
+    }
+
+    fun getLocationCard(letterCard: LetterCardUI): PointF {
+        val customCard = listOfCardsOnTable[getPositionCard(letterCard)]
+        val location = IntArray(2)
+        customCard.getLocationOnScreen(location)
+        return PointF(location[0].toFloat() + customCard.width / 3, location[1].toFloat())
     }
 
     fun setCorrectlyCard(letterCard: LetterCardUI) {

@@ -40,13 +40,13 @@ class GameIsOverDialogFragment :
         }
 
         data?.time.also { binding.timeTextView.text = it }
-        //todo deleter test
+        //todo delete test
 //        data?.let {
 //            it.list[0].scoreInCurrentGame = 1
 //            it.list[1].scoreInCurrentGame = 2
 //            it.list[2].scoreInCurrentGame = 3
 //            it.list[3].scoreInCurrentGame = 1
-//            it.list[4].scoreInCurrentGame = 2
+//            it.list[4].scoreInCurrentGame = 3
 //            it.list[5].scoreInCurrentGame = 2
 //            it.list[6].scoreInCurrentGame = 2
 //            it.list[7].scoreInCurrentGame = 2

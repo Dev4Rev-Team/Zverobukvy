@@ -1,9 +1,12 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
+import android.graphics.PointF
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -32,6 +35,7 @@ import ru.gb.zverobukvy.presentation.customview.CustomLetterView
 import ru.gb.zverobukvy.presentation.customview.CustomWordView
 import ru.gb.zverobukvy.presentation.customview.createAlphaShowAnimation
 import ru.gb.zverobukvy.presentation.customview.createInSideAnimation
+import ru.gb.zverobukvy.presentation.customview.createMoveAnimation
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.parcelable
@@ -39,6 +43,7 @@ import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import kotlin.math.ceil
+
 
 class AnimalLettersGameFragment :
     ViewBindingFragment<FragmentAnimalLettersGameBinding>(FragmentAnimalLettersGameBinding::inflate) {
@@ -52,6 +57,35 @@ class AnimalLettersGameFragment :
     private var wordCardSoundName: String? = null
     private var mapLettersSoundName = mutableMapOf<Int, String>()
 
+    private val computer = object {
+        var isWalking = false
+            set(value) {
+                hand?.visibility = if (value) {
+                    View.VISIBLE
+                } else {
+                    View.INVISIBLE
+                }
+                field = value
+            }
+
+        val pointHand = PointF()
+        var hand: View? = null
+        fun animation(pointNext: PointF, block: () -> Unit) {
+            if (isWalking) {
+                hand?.let { view ->
+                    val moveAnimation = createMoveAnimation(view, pointHand, pointNext)
+                    pointHand.set(pointNext)
+                    moveAnimation.doOnEnd {
+                        block.invoke()
+                    }
+                    moveAnimation.duration = DURATION_ANIMATION_COMPUTER_WALKING
+                    moveAnimation.start()
+                }
+            } else {
+                block.invoke()
+            }
+        }
+    }
     private var isEnableClick = true
 
     private fun initDagger() {
@@ -84,6 +118,21 @@ class AnimalLettersGameFragment :
         intiGameStateEventVM()
         initSystemEventVM()
         initView()
+        initComputer(view)
+    }
+
+    private fun initComputer(view: View) {
+        view.viewTreeObserver
+            .addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        computer.pointHand.set(view.width / 2f, view.height / 2f)
+                        binding.handImageView?.x = computer.pointHand.x
+                        binding.handImageView?.y = computer.pointHand.y
+                        view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
+        computer.hand = binding.handImageView
     }
 
     private fun initSystemEventVM() {
@@ -213,6 +262,9 @@ class AnimalLettersGameFragment :
         }
         if (player !is Player.ComputerPlayer) {
             binding.table.setWorkClick(true)
+            computer.isWalking = false
+        } else {
+            computer.isWalking = true
         }
     }
 
@@ -327,17 +379,21 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateCorrectLetter(it: AnimalLettersGameState.ChangingState.CorrectLetter) {
-            soundFlipLetter(SoundEnum.CARD_IS_SUCCESSFUL, it.correctLetterCard)
-            setPositionLetterInWord(it.positionLetterInWord)
-            binding.table.openCard(it.correctLetterCard)
-            binding.table.setCorrectlyCard(it.correctLetterCard)
-            delayAndRun(DELAY_ENABLE_CLICK_LETTERS_CARD) { binding.table.setWorkClick(true) }
+            computer.animation(binding.table.getLocationCard(it.correctLetterCard)) {
+                soundFlipLetter(SoundEnum.CARD_IS_SUCCESSFUL, it.correctLetterCard)
+                setPositionLetterInWord(it.positionLetterInWord)
+                binding.table.openCard(it.correctLetterCard)
+                binding.table.setCorrectlyCard(it.correctLetterCard)
+                delayAndRun(DELAY_ENABLE_CLICK_LETTERS_CARD) { binding.table.setWorkClick(true) }
+            }
         }
 
         fun changingStateInvalidLetter(it: AnimalLettersGameState.ChangingState.InvalidLetter) {
-            soundFlipLetter(SoundEnum.CARD_IS_UNSUCCESSFUL, it.invalidLetterCard)
-            binding.table.openCard(it.invalidLetterCard)
-            requestNextPlayer(it.screenDimmingText)
+            computer.animation(binding.table.getLocationCard(it.invalidLetterCard)) {
+                soundFlipLetter(SoundEnum.CARD_IS_UNSUCCESSFUL, it.invalidLetterCard)
+                binding.table.openCard(it.invalidLetterCard)
+                requestNextPlayer(it.screenDimmingText)
+            }
         }
 
         fun changingStateCloseInvalidLetter(it: AnimalLettersGameState.ChangingState.CloseInvalidLetter) {
@@ -345,11 +401,13 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateGuessedWord(it: AnimalLettersGameState.ChangingState.GuessedWord) {
-            soundFlipLetter(SoundEnum.WORD_IS_GUESSED, it.correctLetterCard)
-            setPositionLetterInWord(it.positionLetterInWord)
-            binding.table.openCard(it.correctLetterCard)
-            if (it.hasNextWord) {
-                requestNextWord(it.screenDimmingText)
+            computer.animation(binding.table.getLocationCard(it.correctLetterCard)) {
+                soundFlipLetter(SoundEnum.WORD_IS_GUESSED, it.correctLetterCard)
+                setPositionLetterInWord(it.positionLetterInWord)
+                binding.table.openCard(it.correctLetterCard)
+                if (it.hasNextWord) {
+                    requestNextWord(it.screenDimmingText)
+                }
             }
         }
 
@@ -391,9 +449,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
-            //todo
-            //if (it.isFastEndGame) {
-            if (false) {
+            if (it.isFastEndGame) {
                 event.popBackStack()
             } else {
                 val players = DataGameIsOverDialog.map(it.players)
@@ -483,6 +539,9 @@ class AnimalLettersGameFragment :
 
         private const val DURATION_ANIMATOR_NEXT_PLAYER = Conf.DURATION_ANIMATOR_NEXT_PLAYER
         private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = Conf.SHIFT_ANIMATOR_PLAYER_NEXT_DP
+
+        private const val DURATION_ANIMATION_COMPUTER_WALKING =
+            Conf.DURATION_ANIMATION_COMPUTER_WALKING
 
 
         @JvmStatic
