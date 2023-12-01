@@ -57,7 +57,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
 
     private var wordCards = listOf<WordCard>()
 
-    private var players: List<Player>? = null
+    private var players: MutableList<Player>? = null
 
     override var isOnline: Boolean = false
 
@@ -106,16 +106,30 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             localDataSource.deletePlayer(playersMapperData.mapToData(player))
         }
+        players?.remove(player)
     }
 
-    override suspend fun insertPlayer(player: Player): Long =
-        withContext(Dispatchers.IO) {
+    override suspend fun insertPlayer(player: Player): Long {
+        val playerId = withContext(Dispatchers.IO) {
             localDataSource.insertPlayer(playersMapperData.mapToData(player))
         }
+        players?.add(player.apply {
+            id = playerId
+        })
+        return playerId
+    }
 
     override suspend fun updatePlayer(player: Player) {
         withContext(Dispatchers.IO) {
             localDataSource.updatePlayer(playersMapperData.mapToData(player))
+        }
+        players?.run {
+           indexOf(find {
+                it.id == player.id
+            }).let { index ->
+                players?.removeAt(index)
+                players?.add(index,player)
+            }
         }
     }
 
@@ -126,7 +140,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
                     localDataSource.getPlayers().map {
                         playersMapperDomain.mapToDomain(it)
                     }
-                }
+                }.toMutableList()
             }
     }
 
