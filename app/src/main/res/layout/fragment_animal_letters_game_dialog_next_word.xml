@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_green_transparent"
     android:clickable="true"
-    android:visibility="invisible">
+    android:visibility="invisible"
+    android:focusable="true">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/sector_word_card_image_guidline2"
@@ -41,7 +42,8 @@
         android:layout_marginTop="@dimen/margin_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/word_guidline2" />
+        app:layout_constraintTop_toTopOf="@+id/word_guidline2"
+        android:visibility="gone"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/next_word_tap_to_screen_text_view"
@@ -55,5 +57,6 @@
         android:textSize="@dimen/text_medium_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
