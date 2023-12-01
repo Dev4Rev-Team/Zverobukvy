@@ -29,8 +29,7 @@
         app:shift_down_one="0dp"
         app:shift_down_two="24dp"
         app:shift_down_three="24dp"
-        app:duration_animation_one_item="300"
-
+        app:duration_animation_one_item="700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_text_view"
