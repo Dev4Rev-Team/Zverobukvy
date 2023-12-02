@@ -2,6 +2,10 @@ package ru.gb.zverobukvy.presentation.awards_screen
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProviderFactory
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.player.Player
@@ -11,31 +15,36 @@ import javax.inject.Inject
 class AwardsScreenViewModelImpl @Inject constructor(
     changeRatingRepository: ChangeRatingRepository,
     private val viewRatingProviderFactory: ViewRatingProviderFactory,
-) : AwardsScreenViewModel {
+) : AwardsScreenViewModel, ViewModel() {
 
     private val mainAwardsLiveData = MutableLiveData<AwardsScreenState.Main>()
     private val secondAwardsLiveData = MutableLiveData<AwardsScreenState.Second>()
 
-    private val listOfAwardedPlayers: List<PlayerInVM>
+    private var listOfAwardedPlayers: List<PlayerInVM> = listOf()
 
     private var playerIndex: Int = INIT_INDEX
     private var awardIndex: Int = INIT_INDEX
 
     init {
-        val playerBeforeGame = changeRatingRepository.getPlayersBeforeGame()
-        val playerAfterGame = changeRatingRepository.getPlayersAfterGame()
+        viewModelScope.launch {
+            val playerBeforeGame = changeRatingRepository.getPlayersBeforeGame()
+            val playerAfterGame = changeRatingRepository.getPlayersAfterGame()
 
-        listOfAwardedPlayers = convert(playerBeforeGame, playerAfterGame).orEmpty()
+            listOfAwardedPlayers = convert(playerBeforeGame, playerAfterGame).orEmpty()
 
-        if (listOfAwardedPlayers.isEmpty())
-            mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
-        else {
-            mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
-            secondAwardsLiveData.value = listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
+            if (listOfAwardedPlayers.isEmpty())
+                mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
+            else {
+                delay(1000L)
+
+                mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
+                secondAwardsLiveData.value =
+                    listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
+            }
         }
     }
 
-    private fun convert(
+    private suspend fun convert(
         playerBeforeGame: List<Player.HumanPlayer>,
         playerAfterGame: List<Player.HumanPlayer>,
     ): List<PlayerInVM>? {
@@ -56,7 +65,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 )
             }
 
-            if (newRatingProvider.getOrangeRating() != oldRatingProvider.getOrangeRating()) {
+            if (newRatingProvider.getOrangeRating().decoration != oldRatingProvider.getOrangeRating().decoration) {
                 (awardsList).add(
                     AwardsScreenState.Second.ViewRatingIncreaseState(
                         TypeCards.ORANGE,
@@ -66,7 +75,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 )
             }
 
-            if (newRatingProvider.getGreenRating() != oldRatingProvider.getGreenRating()) {
+            if (newRatingProvider.getGreenRating().decoration != oldRatingProvider.getGreenRating().decoration) {
                 (awardsList).add(
                     AwardsScreenState.Second.ViewRatingIncreaseState(
                         TypeCards.GREEN,
@@ -76,7 +85,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 )
             }
 
-            if (newRatingProvider.getBlueRating() != oldRatingProvider.getBlueRating()) {
+            if (newRatingProvider.getBlueRating().decoration != oldRatingProvider.getBlueRating().decoration) {
                 (awardsList).add(
                     AwardsScreenState.Second.ViewRatingIncreaseState(
                         TypeCards.BLUE,
@@ -86,7 +95,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 )
             }
 
-            if (newRatingProvider.getVioletRating() != oldRatingProvider.getVioletRating()) {
+            if (newRatingProvider.getVioletRating().decoration != oldRatingProvider.getVioletRating().decoration) {
                 (awardsList).add(
                     AwardsScreenState.Second.ViewRatingIncreaseState(
                         TypeCards.VIOLET,

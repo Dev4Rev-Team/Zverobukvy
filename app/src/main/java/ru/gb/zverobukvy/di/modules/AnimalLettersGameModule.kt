@@ -13,6 +13,7 @@ import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewMo
 @Module(
     includes = [
         GameStopwatchModule::class,
+        AwardsScreenModule::class,
     ]
 )
 interface AnimalLettersGameModule {
@@ -25,7 +26,7 @@ interface AnimalLettersGameModule {
     @AnimalLettersGameScope
     fun bindAnimalLettersViewModel(interactor: AnimalLettersGameViewModelImpl): AnimalLettersGameViewModel
 
-    @Binds
+    /*@Binds
     @AnimalLettersGameScope
-    fun bindChangeRatingRepository(changeRatingRepository: ChangeRatingRepositoryImpl): ChangeRatingRepository
+    fun bindChangeRatingRepository(changeRatingRepository: ChangeRatingRepositoryImpl): ChangeRatingRepository*/
 }

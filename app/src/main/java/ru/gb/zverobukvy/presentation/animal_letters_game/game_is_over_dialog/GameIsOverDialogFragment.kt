@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverBinding
+import ru.gb.zverobukvy.presentation.awards_screen.AwardsScreenFragment
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 
@@ -36,7 +38,12 @@ class GameIsOverDialogFragment :
         }
 
         binding.okButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            //parentFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.beginTransaction().replace(
+                R.id.container,
+                AwardsScreenFragment.newInstance(),
+                AwardsScreenFragment.TAG
+            ).commit()
         }
 
         data?.time.also { binding.timeTextView.text = it }
