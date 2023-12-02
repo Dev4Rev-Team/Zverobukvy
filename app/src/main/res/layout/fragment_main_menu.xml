@@ -44,6 +44,7 @@
         android:id="@+id/players_recycler_view"
         android:layout_width="@dimen/auto_layout"
         android:layout_height="@dimen/auto_layout"
+        app:layout_constraintWidth_max="@dimen/tablet_max_width_player"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_players_recycler_view"
         android:layout_marginEnd="@dimen/margin_players_recycler_view"
