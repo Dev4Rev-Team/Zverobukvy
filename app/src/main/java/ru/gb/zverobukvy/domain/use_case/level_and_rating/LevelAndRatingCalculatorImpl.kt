@@ -6,7 +6,7 @@ import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.card.WordCard
 
 class LevelAndRatingCalculatorImpl(players: List<Player.HumanPlayer>, typesCards: List<TypeCards>) :
-    LevelCalculator, RatingCalculator {
+   LevelAndRatingCalculator {
 
     private val mostDifficultTypeCards = extractMostDifficultTypeCards(typesCards.toSet())
 
