@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnStart
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -213,6 +214,8 @@ class AnimalLettersGameFragment :
         }
         if (player !is Player.ComputerPlayer) {
             binding.table.setWorkClick(true)
+        } else {
+            binding.walkComputer.root.visibility = View.VISIBLE
         }
     }
 
@@ -232,17 +235,23 @@ class AnimalLettersGameFragment :
     }
 
     private fun requestNextPlayer(screenDimmingText: String) {
+
         binding.nextPlayer.root.let { button ->
             createAlphaShowAnimation(
                 button,
                 START_DELAY_ANIMATION_SCREEN_DIMMING,
                 DURATION_ANIMATION_SCREEN_DIMMING
-            ).start()
+            ).apply {
+                doOnStart {
+                    binding.walkComputer.root.visibility = View.INVISIBLE
+                }
+            }.start()
         }
         binding.nextPlayer.nextPlayerTextView.text = screenDimmingText
     }
 
     private fun requestNextWord(screenDimmingText: String) {
+        binding.walkComputer.root.visibility = View.INVISIBLE
         createAlphaShowAnimation(
             binding.nextWord.root,
             START_DELAY_ANIMATION_SCREEN_DIMMING,
@@ -391,9 +400,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
-            //todo
-            //if (it.isFastEndGame) {
-            if (false) {
+            if (it.isFastEndGame) {
                 event.popBackStack()
             } else {
                 val players = DataGameIsOverDialog.map(it.players)
