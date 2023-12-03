@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/main_menu_card_vertical_margin">
 
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/player_card_view"
         android:layout_width="match_parent"
@@ -50,9 +49,9 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:backgroundTint="@color/color_green_pastel"
                 android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/player_name_text_input_view"
-                android:focusable="true">
+                app:layout_constraintTop_toTopOf="@+id/player_name_text_input_view">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/player_avatar_image_view"
@@ -60,7 +59,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/margin_avatar_image"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/avatar_chicken" />
+                    app:srcCompat="@drawable/avatar_chicken" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
@@ -96,12 +95,12 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/delete_button"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        app:cardCornerRadius="80000dp"
-        app:strokeColor="@color/transparent"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        app:cardCornerRadius="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/transparent"
         tools:backgroundTint="@color/white">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -110,6 +109,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_avatar_image"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_close" />
+            app:srcCompat="@drawable/ic_close" />
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

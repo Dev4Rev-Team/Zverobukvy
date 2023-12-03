@@ -54,5 +54,6 @@
     <dimen name="avatar_status_size">16dp</dimen>
     <dimen name="avatar_status_corner_radius">8dp</dimen>
     <dimen name="margin_big">35dp</dimen>
+    <dimen name="tablet_max_width_player">420dp</dimen>
 
 </resources>
