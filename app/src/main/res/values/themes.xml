@@ -73,7 +73,6 @@
         <item name="srcCompat">@drawable/diamond</item>
         <item name="tint">@color/border_rank_legend</item>
         <item name="android:layout_margin">@dimen/diamond_image_view_margin</item>
-
     </style>
 
     <style name="Avatar" parent="Widget.Material3.CardView.Filled">

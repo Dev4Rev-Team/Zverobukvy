@@ -54,7 +54,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/margin_avatar_image"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/avatar_drake" />
+                    app:srcCompat="@drawable/avatar_drake" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_done" />
+                    app:srcCompat="@drawable/ic_done" />
             </com.google.android.material.card.MaterialCardView>
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -133,10 +133,10 @@
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
                     android:visibility="gone"
-                    app:cardBackgroundColor="@color/color_orange_pastel"
+                    app:cardBackgroundColor="@color/color_card_orange"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
-                    app:strokeColor="@color/color_orange_pastel"
+                    app:strokeColor="@color/color_card_orange"
                     tools:visibility="visible">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -162,10 +162,10 @@
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
                     android:visibility="gone"
-                    app:cardBackgroundColor="@color/color_green_pastel"
+                    app:cardBackgroundColor="@color/color_card_green"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
-                    app:strokeColor="@color/color_green_pastel"
+                    app:strokeColor="@color/color_card_green"
                     tools:visibility="visible">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -191,10 +191,10 @@
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
                     android:visibility="gone"
-                    app:cardBackgroundColor="@color/color_blue_pastel"
+                    app:cardBackgroundColor="@color/color_card_blue"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
-                    app:strokeColor="@color/color_blue_pastel"
+                    app:strokeColor="@color/color_card_blue"
                     tools:visibility="visible">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -220,10 +220,10 @@
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="@dimen/auto_layout"
                     android:visibility="gone"
-                    app:cardBackgroundColor="@color/color_violet_pastel"
+                    app:cardBackgroundColor="@color/color_card_violet"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/player_name_text_view"
-                    app:strokeColor="@color/color_violet_pastel"
+                    app:strokeColor="@color/color_card_violet"
                     tools:visibility="visible">
 
                     <androidx.appcompat.widget.AppCompatImageView

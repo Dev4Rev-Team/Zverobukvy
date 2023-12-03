@@ -2,12 +2,11 @@
 
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="@dimen/elevation_default"
-    app:strokeColor="@color/transparent"
-    app:cardCornerRadius="24dp">
+    app:cardCornerRadius="24dp"
+    app:strokeColor="@color/transparent">
 
     <com.google.android.material.circularreveal.CircularRevealLinearLayout
         android:layout_width="match_parent"
@@ -21,7 +20,7 @@
             android:clickable="true"
             android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_minus" />
+            app:srcCompat="@drawable/ic_minus" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
@@ -78,10 +77,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_default"
-                    android:src="@drawable/player"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/prepare_text_part1_text_view" />
+                    app:layout_constraintTop_toBottomOf="@+id/prepare_text_part1_text_view"
+                    app:srcCompat="@drawable/player" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/prepare_text_part2_text_view"
@@ -109,7 +108,7 @@
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
-                        android:background="@drawable/background_orange"
+                        android:background="@drawable/background_card_orange"
                         android:checked="true"
                         android:enabled="false"
                         android:textColor="@color/white"
@@ -120,7 +119,7 @@
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
-                        android:background="@drawable/background_green"
+                        android:background="@drawable/background_card_green"
                         android:enabled="false"
                         android:textColor="@color/white"
                         android:textOff="@string/space"
@@ -130,7 +129,7 @@
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
-                        android:background="@drawable/background_blue"
+                        android:background="@drawable/background_card_blue"
                         android:enabled="false"
                         android:textColor="@color/white"
                         android:textOff="@string/space"
@@ -140,7 +139,7 @@
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
-                        android:background="@drawable/background_violet"
+                        android:background="@drawable/background_card_violet"
                         android:enabled="false"
                         android:textColor="@color/white"
                         android:textOff="@string/space"
@@ -175,10 +174,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="350dp"
                     android:layout_marginTop="@dimen/margin_default"
-                    android:src="@drawable/game"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/game_player_one_text_part1_text_view" />
+                    app:layout_constraintTop_toBottomOf="@+id/game_player_one_text_part1_text_view"
+                    app:srcCompat="@drawable/game" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/game_player_one_text_part2_text_view"
@@ -219,10 +218,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:src="@drawable/game_player"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_part1_text_view">
+                    app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_part1_text_view"
+                    app:srcCompat="@drawable/game_player">
 
                 </com.google.android.material.imageview.ShapeableImageView>
 
@@ -264,18 +263,17 @@
                     android:id="@+id/end_game_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="220dp"
-                    android:maxHeight="50dp"
-                    android:src="@drawable/game_end"
                     android:layout_marginTop="@dimen/margin_default"
+                    android:maxHeight="50dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/end_game_text_part1_text_view" />
+                    app:layout_constraintTop_toBottomOf="@+id/end_game_text_part1_text_view"
+                    app:srcCompat="@drawable/game_end" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/say_goodbye_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_marginTop="@dimen/margin_medium"
                     android:layout_marginBottom="32dp"
                     android:gravity="center_horizontal"
