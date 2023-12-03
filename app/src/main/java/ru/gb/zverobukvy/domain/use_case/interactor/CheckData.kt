@@ -1,9 +1,6 @@
 package ru.gb.zverobukvy.domain.use_case.interactor
 
 import ru.gb.zverobukvy.domain.entity.card.LetterCard
-import ru.gb.zverobukvy.domain.entity.player.Player
-import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.card.WordCard
 
 class CheckData {
@@ -31,7 +28,6 @@ class CheckData {
 
     /**
      * Метод проверяет полный набор карточек-слов по следующим критериям:
-     * - количество карточек-слов должно быть не менее минимального, предусмотренного настольной игрой,
      * - каждая карточка-слово должна быть уникальной,
      * - буквы в каждом слове должны быть уникальными.
      * @param wordCards полный список карточек-слов
@@ -39,7 +35,7 @@ class CheckData {
      */
     fun checkWordCardsFromRepository(wordCards: List<WordCard>) {
         with(wordCards) {
-            if (size < MINIMUM_QUANTITY_WORD_CARDS_FROM_REPOSITORY || !checkUniquenessWordCards(this))
+            if (!checkUniquenessWordCards(this))
                 throw IllegalArgumentException(WORD_CARDS_IS_NOT_CORRECT)
             forEach {
                 checkUniquenessLettersInWordCard(it)
@@ -67,108 +63,9 @@ class CheckData {
         }
     }
 
-    /**
-     * Метод проверяет, что список типов карточек (цвета игры) не пустой.
-     * @param typesCards список типов карточек (цвета игры)
-     * @exception IllegalArgumentException
-     */
-    fun checkTypesCards(typesCards: List<TypeCards>) {
-        if (typesCards.isEmpty())
-            throw IllegalArgumentException(TYPES_CARDS_IS_NOT_CORRECT)
-    }
-
-    /**
-     * Метод проверяет, что список игроков не пустой и обнуляет счет каждого игрока, перемешивает игроков
-     * и игрока-компьютер отправляет в конец списка
-     * @param players список игроков
-     * @exception IllegalArgumentException
-     * @return список игроков
-     */
-    fun getPlayersForGame(players: List<PlayerInGame>): List<PlayerInGame> {
-        val playersForGame = with(players.shuffled().toMutableList()) {
-            if (isEmpty())
-                throw IllegalArgumentException(PLAYERS_IS_NOT_CORRECT)
-            onEach {
-                it.scoreInCurrentGame = START_SCORE
-            }
-        }
-        val computer = playersForGame.find {
-            it.player is Player.ComputerPlayer
-        }
-        computer?.let {
-            with(playersForGame) {
-                if (indexOf(it) != size - 1) {
-                    remove(it)
-                    add(it)
-                }
-            }
-        }
-        return playersForGame.toList()
-    }
-
-    /**
-     * Метод проверяет, что количество карточек-слов для конкретной игры не менее минимального,
-     * предусмотренного настольной игрой и для каждой карточки переводит слова в нижний регистр и
-     * очищает список позиций угаданных букв в данном слове.
-     * @param gamingWords список карточек-слов для конкретной игры
-     * @exception IllegalArgumentException
-     * @return список карточек-слов для конкретной игры
-     */
-    fun checkGamingWords(gamingWords: List<WordCard>): List<WordCard> {
-        with(gamingWords) {
-            if (size < MINIMUM_QUANTITY_WORD_CARDS_FOR_START_GAME)
-                throw IllegalArgumentException(WORD_CARDS_IS_NOT_CORRECT)
-            return this@with.onEach {
-                it.word.lowercase()
-                it.positionsGuessedLetters.clear()
-            }
-        }
-    }
-
-    /**
-     * Метод проверяет, что количество карточек-букв для конкретной игры не менее минимального,
-     * предусмотренного настольной игрой и для каждой карточки переводит букву в нижний регистр и
-     * устанавливает isVisible = false.
-     * @param lettersField список карточек-букв для конкретной игры (игровое поле)
-     * @exception IllegalArgumentException
-     * @return список карточек-букв для конкретной игры
-     */
-    fun checkLettersField(lettersField: List<LetterCard>): List<LetterCard> {
-        with(lettersField) {
-            if (size < MINIMUM_QUANTITY_LETTER_CARDS_FOR_START_GAME)
-                throw IllegalArgumentException(LETTER_CARDS_IS_NOT_CORRECT)
-            return this@with.onEach {
-                it.letter.lowercaseChar()
-                it.isVisible = false
-            }
-        }
-    }
-
-    /**
-     * Метод проверяет, что позиция выбранной карточки-слова корректная, т.е. имеется на игровом поле.
-     * @param lettersField список карточек-букв для конкретной игры (игровое поле)
-     * @param positionSelectedLetterCard позиция выбранной карточки-слова
-     * @exception IllegalArgumentException
-     */
-    fun checkPositionSelectedLetterCard(
-        lettersField: List<LetterCard>,
-        positionSelectedLetterCard: Int
-    ) {
-        if (positionSelectedLetterCard >= lettersField.size)
-            throw IllegalArgumentException(POSITION_SELECTED_LETTER_CARD_IS_NOT_CORRECT)
-    }
-
     companion object {
-        private const val TYPES_CARDS_IS_NOT_CORRECT = "Некорректный список типа карточек"
-        private const val PLAYERS_IS_NOT_CORRECT = "Некорректный список игроков"
         private const val WORD_CARDS_IS_NOT_CORRECT = "Некорректный список карточек-слов"
         private const val LETTER_CARDS_IS_NOT_CORRECT = "Некорректный список карточек-букв"
-        private const val POSITION_SELECTED_LETTER_CARD_IS_NOT_CORRECT =
-            "Некорректная позиция выбранной карточки-буквы"
-        private const val START_SCORE = 0
-        private const val MINIMUM_QUANTITY_LETTER_CARDS_FOR_START_GAME = 9
         private const val QUANTITY_LETTER_CARDS_FROM_REPOSITORY = 33
-        private const val MINIMUM_QUANTITY_WORD_CARDS_FOR_START_GAME = 8
-        private const val MINIMUM_QUANTITY_WORD_CARDS_FROM_REPOSITORY = 33
     }
 }
