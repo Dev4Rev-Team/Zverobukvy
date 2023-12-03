@@ -24,6 +24,7 @@ class AnimalLettersComputerSimpleSmart(
     private val lettersRemember: MutableList<Int> = mutableListOf()
     private val lettersForGame: MutableSet<Int> = mutableSetOf()
     private val sizeTable: Int
+    private var remember = MAX_REMEMBER
 
     init {
         fieldHolder.update(gameField, NO_SELECT)
@@ -40,6 +41,9 @@ class AnimalLettersComputerSimpleSmart(
         Timber.tag("Computer").d(
             "setCurrentGameField, position: $positionLastSelectionLetterCard " + "moveNumberInWord: ${fieldHolder.getMoveNumberInWord()}"
         )
+        if (currentGameField.lettersField.size == 9) {
+            remember = 2
+        }
     }
 
     override fun getSelectedLetterCard(): Int {
@@ -81,7 +85,7 @@ class AnimalLettersComputerSimpleSmart(
     private fun calculationProbabilityRandom(): Float {
         val correctCard = fieldHolder.getInvisibleCorrectLetters().size
         val invisibleCard = correctCard + fieldHolder.getIncorrectLetters().size -
-                    lettersRemember.intersect(fieldHolder.getIncorrectLetters()).size
+                lettersRemember.intersect(fieldHolder.getIncorrectLetters()).size
         return correctCard.toFloat() / invisibleCard
     }
 
@@ -108,7 +112,7 @@ class AnimalLettersComputerSimpleSmart(
         if (selectedPosition >= 0) {
             lettersRemember.add(selectedPosition)
         }
-        if (lettersRemember.size > MAX_REMEMBER) {
+        if (lettersRemember.size > remember) {
             lettersRemember.removeFirst()
         }
     }
