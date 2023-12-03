@@ -24,7 +24,7 @@
         android:layout_marginStart="-10dp"
         android:layout_marginTop="@dimen/margin_default"
         android:rotation="-90"
-        android:src="@drawable/ic_bookmark"
+        app:srcCompat="@drawable/ic_bookmark"
         app:layout_constraintStart_toEndOf="@+id/app_name_text_view"
         app:layout_constraintTop_toTopOf="@+id/app_name_text_view" />
 
@@ -39,17 +39,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/players_recycler_view"
         android:layout_width="@dimen/auto_layout"
         android:layout_height="@dimen/auto_layout"
+        app:layout_constraintWidth_max="@dimen/tablet_max_width_player"
         android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_players_recycler_view"
+        android:layout_marginEnd="@dimen/margin_players_recycler_view"
         app:layout_constraintBottom_toTopOf="@+id/sector_recycle_view_guideline"
-        app:layout_constraintEnd_toEndOf="@id/app_name_text_view"
-        app:layout_constraintStart_toStartOf="@id/app_name_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sector_header_guideline" />
-
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/sector_recycle_view_guideline"
@@ -84,7 +85,7 @@
             android:layout_height="@dimen/main_menu_toggle_button_height"
             android:layout_marginHorizontal="5dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/background_orange"
+            android:background="@drawable/background_card_orange"
             android:checked="true"
             android:rotation="-10"
             android:textColor="@color/white"
@@ -96,7 +97,7 @@
             android:layout_width="@dimen/main_menu_toggle_button_width"
             android:layout_height="@dimen/main_menu_toggle_button_height"
             android:layout_marginHorizontal="5dp"
-            android:background="@drawable/background_green"
+            android:background="@drawable/background_card_green"
             android:rotation="-5"
             android:textColor="@color/white"
             android:textOff="@string/space"
@@ -107,7 +108,7 @@
             android:layout_width="@dimen/main_menu_toggle_button_width"
             android:layout_height="@dimen/main_menu_toggle_button_height"
             android:layout_marginHorizontal="5dp"
-            android:background="@drawable/background_blue"
+            android:background="@drawable/background_card_blue"
             android:rotation="5"
             android:textColor="@color/white"
             android:textOff="@string/space"
@@ -119,7 +120,7 @@
             android:layout_height="@dimen/main_menu_toggle_button_height"
             android:layout_marginHorizontal="5dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/background_violet"
+            android:background="@drawable/background_card_violet"
             android:rotation="10"
             android:textColor="@color/white"
             android:textOff="@string/space"
@@ -132,7 +133,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_end="149dp" />
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/play_button"

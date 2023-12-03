@@ -21,6 +21,7 @@
     <!--Margin settings-->
     <dimen name="margin_default">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_players_recycler_view">32dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_avatar_image">8dp</dimen>
     <dimen name="margin_huge_player_cards">60dp</dimen>
@@ -42,13 +43,17 @@
     <dimen name="diamond_image_view_margin">2dp</dimen>
 
     <!--Avatar settings-->
-    <dimen name="avatar_corner_radius">@dimen/avatar_size_huge</dimen>
+    <dimen name="avatar_corner_radius">20dp</dimen>
     <dimen name="avatar_size">40dp</dimen>
     <dimen name="avatar_size_small">26dp</dimen>
+    <dimen name="avatar_corner_radius_small">13dp</dimen>
     <dimen name="avatar_size_medium">32dp</dimen>
+    <dimen name="avatar_corner_radius_medium">16dp</dimen>
     <dimen name="avtar_size_big">50dp</dimen>
     <dimen name="avatar_size_huge">60dp</dimen>
     <dimen name="avatar_status_size">16dp</dimen>
+    <dimen name="avatar_status_corner_radius">8dp</dimen>
     <dimen name="margin_big">35dp</dimen>
+    <dimen name="tablet_max_width_player">420dp</dimen>
 
 </resources>

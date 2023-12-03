@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_winner"
-    android:clickable="true">
+    android:background="@color/color_violet_pastel"
+    android:clickable="true"
+    android:focusable="true">
 
     <ru.gb.zverobukvy.presentation.customview.CustomImageRatingView
         android:id="@+id/winner_avatar_custom_image_rating_view"
@@ -28,8 +29,7 @@
         app:shift_down_one="0dp"
         app:shift_down_two="24dp"
         app:shift_down_three="24dp"
-        app:duration_animation_one_item="300"
-
+        app:duration_animation_one_item="700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_text_view"
@@ -110,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
         android:text="@string/ok"
-        android:textColor="@color/color_blue"
+        android:textColor="@color/color_violet_pastel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

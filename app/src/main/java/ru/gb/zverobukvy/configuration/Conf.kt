@@ -3,8 +3,6 @@ package ru.gb.zverobukvy.configuration
 class Conf {
     companion object {
 
-
-
         /**
          * Игровое поле
          */
