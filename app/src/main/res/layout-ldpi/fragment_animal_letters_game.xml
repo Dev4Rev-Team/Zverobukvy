@@ -195,4 +195,8 @@
         android:id="@+id/next_player"
         layout="@layout/fragment_animal_letters_game_dialog_next_player" />
 
+    <include
+        android:id="@+id/walk_computer"
+        layout="@layout/fragment_animal_letters_game_dialog_walk_computer" />
+
 </RelativeLayout>
