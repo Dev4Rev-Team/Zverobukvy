@@ -14,15 +14,15 @@ class ViewRatingProviderImpl(private val rating: Rating) : ViewRatingProvider {
             val orangeAndHarderRating = orangeRating + greenRating + blueRating + violetRating
             val greenAndHarderRating = greenRating + blueRating + violetRating
             val blueAndHarderRating = blueRating + violetRating
-            return if (LEGEND_RATING.let { orangeRating > it && greenRating > it && blueRating > it && violetRating > it })
+            return if (LEGEND_RATING.let { orangeRating >= it && greenRating >= it && blueRating >= it && violetRating >= it })
                 Rank.LEGEND
-            else if (violetRating > HERO_RATING)
+            else if (violetRating >= HERO_RATING)
                 Rank.HERO
-            else if (blueAndHarderRating > GENIUS_RATING)
+            else if (blueAndHarderRating >= GENIUS_RATING)
                 Rank.GENIUS
-            else if (greenAndHarderRating > MASTER_RATING)
+            else if (greenAndHarderRating >= MASTER_RATING)
                 Rank.MASTER
-            else if (orangeAndHarderRating > EXPERT_RATING)
+            else if (orangeAndHarderRating >= EXPERT_RATING)
                 Rank.EXPERT
             else if (orangeAndHarderRating > 0)
                 Rank.LEARNER
