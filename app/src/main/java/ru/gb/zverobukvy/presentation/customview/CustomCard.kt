@@ -33,6 +33,8 @@ class CustomCard @JvmOverloads constructor(
     private lateinit var backSideImageView: CustomImageView
     private lateinit var frontBackgroundImageView: CustomImageView
 
+    private var animationFlipSet: AnimatorSet? = null
+
     private var clickCorrectCard: ((pos: Int) -> Unit)? = null
     fun setOnClickCorrectCard(block: (pos: Int) -> Unit) {
         clickCorrectCard = block
@@ -41,6 +43,8 @@ class CustomCard @JvmOverloads constructor(
     init {
         initAttributes(context, attrs, defStyle)
         initContentView(context)
+        initAnimator()
+
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -86,8 +90,9 @@ class CustomCard @JvmOverloads constructor(
         scaleType = ImageView.ScaleType.CENTER_CROP
     }
 
-    private fun startAnimationFlip() {
-        val animatorSet = AnimatorSet()
+
+    private fun initAnimator() {
+        animationFlipSet = AnimatorSet()
 
         val scaleUp = createScaleAnimation(this, NORMAL, SCALE).apply {
             duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_UP).toLong()
@@ -101,11 +106,15 @@ class CustomCard @JvmOverloads constructor(
             duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_DOWN).toLong()
         }
 
-        animatorSet.playSequentially(scaleUp, rotation, scaleNormal)
-        animatorSet.doOnStart { bringToFront() }
-        animatorSet.start()
+        animationFlipSet?.playSequentially(scaleUp, rotation, scaleNormal)
+        animationFlipSet?.doOnStart { bringToFront() }
 
         cameraDistance = 7500 * context.resources.displayMetrics.density
+
+    }
+
+    private fun startAnimationFlip() {
+        animationFlipSet?.start()
     }
 
     private fun setOpenDisplay(isOpen: Boolean) {
@@ -141,7 +150,7 @@ class CustomCard @JvmOverloads constructor(
             this.isOpen = isOpen
             startAnimationFlip()
         }
-        if(!isOpen){
+        if (!isOpen) {
             isCorrect = false
         }
     }
