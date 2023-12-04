@@ -124,5 +124,13 @@ class Conf {
         // кол-во аватарок в одном ряду
         const val SPAN_COUNT_AVATARS_RECYCLER_VIEW = 4
 
+
+        /**
+         * DEBUG
+         */
+        // проверить файлы картинок
+        const val DEBUG_IMAGE_FILES = true
+
+
     }
 }
