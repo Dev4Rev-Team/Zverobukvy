@@ -129,7 +129,7 @@ class Conf {
          * DEBUG
          */
         // проверить файлы картинок
-        const val DEBUG_IMAGE_FILES = true
+        const val DEBUG_IMAGE_FILES = false
 
 
     }
