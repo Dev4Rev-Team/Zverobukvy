@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import ru.gb.zverobukvy.BuildConfig
 import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.domain.repository.LoadingDataRepository
-import ru.gb.zverobukvy.domain.use_case.check_data.CheckData
+import ru.gb.zverobukvy.data.check_data.CheckData
 import javax.inject.Inject
 
 class LoadingDataViewModelImpl @Inject constructor(

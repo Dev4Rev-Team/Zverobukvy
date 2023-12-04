@@ -16,7 +16,7 @@ class Conf {
         // максимальное кол-во букв в слове
         const val MAX_NUMBER_OF_LETTERS_IN_WORD = 7
         // проверить базу данных на корректность
-        const val IS_CHECK_DATA = true
+        const val IS_CHECK_DATA = false
 
         /**
          * Настройки компьютера
