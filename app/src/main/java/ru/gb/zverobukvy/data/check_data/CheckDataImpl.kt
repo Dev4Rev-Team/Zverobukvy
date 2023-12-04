@@ -1,4 +1,4 @@
-package ru.gb.zverobukvy.domain.use_case.check_data
+package ru.gb.zverobukvy.data.check_data
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
