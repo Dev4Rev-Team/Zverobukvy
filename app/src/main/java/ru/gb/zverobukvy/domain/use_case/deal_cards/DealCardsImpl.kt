@@ -1,6 +1,6 @@
 package ru.gb.zverobukvy.domain.use_case.deal_cards
 
-import ru.gb.zverobukvy.configuration.Conf.Companion.MAX_NUMBER_OF_WORD
+import ru.gb.zverobukvy.configuration.Conf.Companion.NUMBER_OF_WORD
 import ru.gb.zverobukvy.domain.entity.card.CardsSet
 import ru.gb.zverobukvy.domain.entity.card.LetterCard
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
@@ -51,7 +51,7 @@ class DealCardsImpl(
                     })
             }
         }
-        return wordCards.shuffled().take(MAX_NUMBER_OF_WORD)
+        return wordCards.shuffled().take(NUMBER_OF_WORD)
     }
 
     private fun extractWordCard(

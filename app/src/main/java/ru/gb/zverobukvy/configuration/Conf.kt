@@ -11,8 +11,12 @@ class Conf {
         const val SIZE_BLUE = 16
         const val SIZE_VIOLET = 20
 
-        // максимальное кол-во слов животных для отгадывания в одном раунде
-        const val MAX_NUMBER_OF_WORD = 10
+        // кол-во слов животных для отгадывания в одном раунде
+        const val NUMBER_OF_WORD = 10
+        // максимальное кол-во букв в слове
+        const val MAX_NUMBER_OF_LETTERS_IN_WORD = 7
+        // проверить базу данных на корректность
+        const val IS_CHECK_DATA = true
 
         /**
          * Настройки компьютера

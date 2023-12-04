@@ -9,7 +9,8 @@ import dagger.Module
         NetworkStatusModule::class,
         SoundEffectModule::class,
         AssetImageCashModule::class,
-        ViewRatingProviderModule::class
+        ViewRatingProviderModule::class,
+        CheckDataModule::class
     ]
 )
 interface AppModule
