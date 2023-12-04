@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -104,7 +103,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/prepare_text_part2_text_view">
 
-                    <com.google.android.material.button.MaterialButton
+                    <ToggleButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
@@ -115,7 +114,7 @@
                         android:textOff="@string/space"
                         android:textOn="@string/choose" />
 
-                    <com.google.android.material.button.MaterialButton
+                    <ToggleButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
@@ -125,7 +124,7 @@
                         android:textOff="@string/space"
                         android:textOn="@string/choose" />
 
-                    <com.google.android.material.button.MaterialButton
+                    <ToggleButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"
@@ -135,7 +134,7 @@
                         android:textOff="@string/space"
                         android:textOn="@string/choose" />
 
-                    <com.google.android.material.button.MaterialButton
+                    <ToggleButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
                         android:layout_marginHorizontal="5dp"

@@ -23,7 +23,7 @@
 
         <item name="app_next_player_color">#94ff00</item>
         <item name="app_wrong_color">#FF0000</item>
-        <item name="app_computer_color">#444FCA</item>
+        <item name="app_computer_color">#4A4A4A</item>
     </style>
 
     <!--Default Theme-->
