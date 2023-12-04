@@ -16,7 +16,7 @@ import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: LoadindDataViewModel by lazy {
+    private val viewModel: LoadingDataViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             appComponent.loadingDataViewModel
         })[LoadingDataViewModelImpl::class.java]
