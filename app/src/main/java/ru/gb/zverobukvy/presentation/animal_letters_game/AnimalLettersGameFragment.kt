@@ -1,5 +1,7 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
@@ -85,7 +87,7 @@ class AnimalLettersGameFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        animator.createAnimators()
         initChangingStateEventVM()
         intiGameStateEventVM()
         initSystemEventVM()
@@ -157,6 +159,11 @@ class AnimalLettersGameFragment :
         super.onPause()
     }
 
+    override fun onDestroyView() {
+        animator.end()
+        super.onDestroyView()
+    }
+
     private fun initView() {
         binding.nextWord.root.setOnClickListener {
             isClick {
@@ -217,14 +224,7 @@ class AnimalLettersGameFragment :
 
     private fun changePlayerName(player: Player) {
         if (binding.playerNameTextView.text != player.name) {
-            createInSideAnimation(
-                binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
-                SHIFT_ANIMATOR_PLAYER_NEXT_DP
-            ) { _ ->
-                binding.playerNameCard.visibility = View.VISIBLE
-                binding.playerNameTextView.text = player.name
-                imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
-            }.start()
+            animator.startChangePlayer(player)
         }
     }
 
@@ -245,104 +245,37 @@ class AnimalLettersGameFragment :
     }
 
     private fun showScreenNextPlayer() {
-        binding.nextPlayer.root.let { button ->
-            createAlphaShowAnimation(
-                button,
-                START_DELAY_ANIMATION_SCREEN_DIMMING,
-                DURATION_ANIMATION_SCREEN_DIMMING
-            ).start()
-        }
-        if (computer.isWalking) {
-            hideScreenWalkComputer()
-        }
-        //todo
-//        binding.nextPlayer.nextPlayerTextView.text = screenDimmingText
-        binding.nextPlayer.nextPlayerTextView.text = ""
+        animator.showScreenNextPlayer.start()
         lastStateScreen = StateScreen.NextPlayer
     }
 
     private fun hideScreenNextPlayer() {
         if (lastStateScreen == StateScreen.NextPlayer) {
-            binding.nextPlayer.root.let { button ->
-                createAlphaShowAnimation(
-                    button,
-                    START_DELAY_ANIMATION_SCREEN_DIMMING,
-                    DURATION_ANIMATION_SCREEN_DIMMING,
-                    false
-                ).apply {
-                    doOnEnd { _ ->
-                        button.visibility = View.INVISIBLE
-                    }
-                }.start()
-            }
-            if (computer.isWalking) {
-                showScreenWalkComputer()
-            }
+            animator.hideScreenNextPlayer.start()
         } else {
             binding.nextPlayer.root.visibility = View.INVISIBLE
         }
     }
 
     private fun showScreenNextWord() {
-        binding.nextWord.root.let { button ->
-            createAlphaShowAnimation(
-                button,
-                START_DELAY_ANIMATION_SCREEN_DIMMING,
-                DURATION_ANIMATION_SCREEN_DIMMING
-            ).start()
-            if (computer.isWalking) {
-                hideScreenWalkComputer()
-            }
-            //todo
-//            binding.nextWord.nextWordMoveTextView.text = screenDimmingText
-            binding.nextWord.nextWordMoveTextView.text = ""
-        }
+        animator.showScreenNextWord.start()
         lastStateScreen = StateScreen.NextWord
     }
 
     private fun hideScreenNextWord() {
         if (lastStateScreen == StateScreen.NextWord) {
-            binding.nextWord.root.let { button ->
-                createAlphaShowAnimation(
-                    button,
-                    START_DELAY_ANIMATION_SCREEN_DIMMING,
-                    DURATION_ANIMATION_SCREEN_DIMMING,
-                    false
-                ).apply {
-                    doOnEnd {
-                        button.visibility = View.INVISIBLE
-                    }
-                }.start()
-            }
-            if (computer.isWalking) {
-                showScreenWalkComputer()
-            }
+            animator.hideScreenNextWord.start()
         } else {
             binding.nextWord.root.visibility = View.INVISIBLE
         }
     }
 
     private fun showScreenWalkComputer() {
-        binding.walkComputer.root.let { button ->
-            createAlphaShowAnimation(
-                button,
-                START_DELAY_ANIMATION_SCREEN_DIMMING,
-                DURATION_ANIMATION_SCREEN_DIMMING,
-            ).start()
-        }
+        animator.showScreenWalkComputer.start()
     }
 
     private fun hideScreenWalkComputer() {
-        binding.walkComputer.root.let { button ->
-            createAlphaShowAnimation(
-                button,
-                START_DELAY_ANIMATION_SCREEN_DIMMING,
-                DURATION_ANIMATION_SCREEN_DIMMING,
-                false
-            ).apply {
-                doOnEnd { button.visibility = View.INVISIBLE }
-            }.start()
-        }
+        animator.hideScreenWalkComputer.start()
     }
 
 
@@ -433,6 +366,9 @@ class AnimalLettersGameFragment :
             soundFlipLetter(SoundEnum.CARD_IS_UNSUCCESSFUL, it.invalidLetterCard)
             binding.table.openCard(it.invalidLetterCard)
             showScreenNextPlayer()
+            if (computer.isWalking) {
+                hideScreenWalkComputer()
+            }
         }
 
         fun changingStateCloseInvalidLetter(it: AnimalLettersGameState.ChangingState.CloseInvalidLetter) {
@@ -445,6 +381,9 @@ class AnimalLettersGameFragment :
             binding.table.openCard(it.correctLetterCard)
             if (it.hasNextWord) {
                 showScreenNextWord()
+            }
+            if (computer.isWalking) {
+                hideScreenWalkComputer()
             }
         }
 
@@ -459,6 +398,9 @@ class AnimalLettersGameFragment :
             when (lastStateScreen) {
                 StateScreen.NextPlayer -> hideScreenNextPlayer()
                 StateScreen.NextWord -> hideScreenNextWord()
+            }
+            if (computer.isWalking) {
+                showScreenWalkComputer()
             }
         }
 
@@ -546,6 +488,91 @@ class AnimalLettersGameFragment :
             delayAndRun(DELAY_SOUND_REPEAT) {
                 mapLettersSoundName[position]?.let { soundEffectPlayer.play(it) }
             }
+        }
+
+    }
+
+    private val animator = object {
+        lateinit var showScreenNextPlayer: ObjectAnimator
+        lateinit var showScreenNextWord: ObjectAnimator
+        lateinit var showScreenWalkComputer: ObjectAnimator
+        lateinit var hideScreenNextPlayer: ObjectAnimator
+        lateinit var hideScreenNextWord: ObjectAnimator
+        lateinit var hideScreenWalkComputer: ObjectAnimator
+        private lateinit var changePlayer: AnimatorSet
+        private lateinit var playerForChange: Player
+        fun createAnimators() {
+            showScreenNextPlayer = createAlphaShowAnimation(
+                binding.nextPlayer.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING
+            )
+            showScreenNextWord = createAlphaShowAnimation(
+                binding.nextWord.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING
+            )
+            showScreenWalkComputer = createAlphaShowAnimation(
+                binding.walkComputer.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING,
+            )
+            hideScreenNextPlayer = createAlphaShowAnimation(
+                binding.nextPlayer.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING,
+                false
+            ).apply {
+                doOnEnd { _ ->
+                    binding.nextPlayer.root.visibility = View.INVISIBLE
+                }
+            }
+            hideScreenNextWord = createAlphaShowAnimation(
+                binding.nextWord.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING,
+                false
+            ).apply {
+                doOnEnd {
+                    binding.nextWord.root.visibility = View.INVISIBLE
+                }
+            }
+            hideScreenWalkComputer =
+                createAlphaShowAnimation(
+                    binding.walkComputer.root,
+                    START_DELAY_ANIMATION_SCREEN_DIMMING,
+                    DURATION_ANIMATION_SCREEN_DIMMING,
+                    false
+                ).apply {
+                    doOnEnd { binding.walkComputer.root.visibility = View.INVISIBLE }
+                }
+            changePlayer = createInSideAnimation(
+                binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
+                SHIFT_ANIMATOR_PLAYER_NEXT_DP
+            ) { _ ->
+                binding.playerNameCard.visibility = View.VISIBLE
+                binding.playerNameTextView.text = playerForChange.name
+                imageAvatarLoader.loadImageAvatar(
+                    playerForChange.avatar,
+                    binding.playerAvatarImageView
+                )
+            }
+
+        }
+
+        fun startChangePlayer(player: Player) {
+            playerForChange = player
+            changePlayer.start()
+        }
+
+        fun end() {
+            showScreenNextPlayer.end()
+            showScreenNextWord.end()
+            showScreenWalkComputer.end()
+            hideScreenNextPlayer.end()
+            hideScreenNextWord.end()
+            hideScreenWalkComputer.end()
+            changePlayer.end()
         }
 
     }
