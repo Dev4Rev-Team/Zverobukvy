@@ -1,8 +1,9 @@
 package ru.gb.zverobukvy.configuration
 
+import ru.gb.zverobukvy.BuildConfig
+
 class Conf {
     companion object {
-
         /**
          * Игровое поле
          */
@@ -13,8 +14,10 @@ class Conf {
 
         // кол-во слов животных для отгадывания в одном раунде
         const val NUMBER_OF_WORD = 10
+
         // максимальное кол-во букв в слове
         const val MAX_NUMBER_OF_LETTERS_IN_WORD = 7
+
         // проверить базу данных на корректность
         const val IS_CHECK_DATA = false
 
@@ -83,6 +86,7 @@ class Conf {
 
         // движение карусели
         const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 75f
+
         // время исчезновения игрока в карусели
         const val DURATION_ANIMATOR_NEXT_PLAYER = 350L
 
@@ -107,14 +111,19 @@ class Conf {
          */
         // суммарное количество карточек оранжевого и более сложных уровней для получения ранга Эксперт
         const val EXPERT_RATING = 50
+
         // суммарное количество карточек зеленого и более сложных уровней для получения ранга Мастер
         const val MASTER_RATING = 75
+
         // суммарное количество карточек голубого и более сложных уровней для получения ранга Гений
         const val GENIUS_RATING = 100
+
         // суммарное количество карточек фиолетового уровня для получения ранга Герой
         const val HERO_RATING = 125
+
         // количество карточек для всех цветов для получения ранга Легенда
         const val LEGEND_RATING = 150
+
         // количество отгаданных карточек определенного цвета, для получения следующей декорации (бронза, серебро и т.д.)
         const val DECORATION_RATING = 100
 
@@ -128,8 +137,14 @@ class Conf {
         /**
          * DEBUG
          */
+        private const val DEBUG = BuildConfig.DEBUG_ON
+
         // проверить файлы картинок
-        const val DEBUG_IMAGE_FILES = false
+        const val DEBUG_CHECK_IMAGE_FILES = DEBUG
+
+        // отключить проверку файлоа звука слов
+        const val DEBUG_DISABLE_SOUND_FILE = DEBUG
+
 
 
     }

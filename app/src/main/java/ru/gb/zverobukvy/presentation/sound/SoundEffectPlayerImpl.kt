@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
 import javax.inject.Inject
 
@@ -47,7 +48,7 @@ class SoundEffectPlayerImpl @Inject constructor(
                     soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_LETTERS + it.soundName)
 
                 } catch (e: Exception) {
-                    throw IllegalStateException("no element LettersCards ${it.soundName}")
+                    throw IllegalStateException("sound no element LettersCards ${it.soundName}")
                 }
             }
             animalLettersCardsRepository.getWordCards().forEach {
@@ -55,14 +56,16 @@ class SoundEffectPlayerImpl @Inject constructor(
                     soundsMap[it.soundName] =
                         loadSound(ASSETS_PATH_SOUND_WORDS + "RU_" + it.soundName)
                 } catch (e: Exception) {
-                    // TODO включить, когда все слова будут озвучены throw IllegalStateException("no element WordCard ${it.soundName}")
+                    if(!Conf.DEBUG_DISABLE_SOUND_FILE){
+                        throw IllegalStateException("sound no element WordCard ${it.soundName}")
+                    }
                 }
             }
             SoundEnum.values().forEach {
                 try {
                     soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
                 } catch (e: Exception) {
-                    throw IllegalStateException("no element systemSound ${it.assetPath}")
+                    throw IllegalStateException("sound no element systemSound ${it.assetPath}")
                 }
             }
         }
