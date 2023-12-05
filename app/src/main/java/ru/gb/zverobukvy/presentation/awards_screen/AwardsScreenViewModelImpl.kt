@@ -35,7 +35,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
             if (listOfAwardedPlayers.isEmpty())
                 mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
             else {
-                delay(1000L)
+                delay(200L)
 
                 mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
                 secondAwardsLiveData.value =
