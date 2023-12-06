@@ -9,10 +9,13 @@ import ru.gb.zverobukvy.BuildConfig
 import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.domain.repository.LoadingDataRepository
 import ru.gb.zverobukvy.data.check_data.CheckData
+import ru.gb.zverobukvy.data.theme_provider.Theme
+import ru.gb.zverobukvy.data.theme_provider.ThemeProvider
 import javax.inject.Inject
 
 class LoadingDataViewModelImpl @Inject constructor(
     playersRepository: LoadingDataRepository,
+    private val themeProvider: ThemeProvider,
     checkData: CheckData
 ) :
     ViewModel(), LoadingDataViewModel {
@@ -29,4 +32,5 @@ class LoadingDataViewModelImpl @Inject constructor(
     }
 
     override fun getLiveDataLoadingData(): LiveData<Boolean> = loadingDataLiveData
+    override fun getTheme(): Theme = themeProvider.getTheme()
 }

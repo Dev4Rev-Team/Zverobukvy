@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        setTheme(viewModel.getTheme().idTheme)
         setContentView(R.layout.activity_main)
         loadingData()
         volumeControlStream = AudioManager.STREAM_MUSIC
@@ -95,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadingData() {
-        viewModel.getLiveDataLoadingData().observe(this){
+        viewModel.getLiveDataLoadingData().observe(this) {
             isHideSplashScreen = it
         }
     }
