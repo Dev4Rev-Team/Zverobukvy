@@ -143,7 +143,7 @@ class Conf {
         const val DEBUG_DISABLE_CHECK_SOUND_FILE = DEBUG
 
         // проверить базу данных на корректность
-        const val IS_CHECK_DATA = false
+        const val IS_CHECK_DATA = DEBUG
       
        /**
          * Новогодний период
