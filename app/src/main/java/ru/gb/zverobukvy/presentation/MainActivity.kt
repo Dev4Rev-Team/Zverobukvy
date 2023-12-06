@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
+import ru.gb.zverobukvy.utility.ChangeApplicationIcon
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 
@@ -98,5 +99,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.getLiveDataLoadingData().observe(this){
             isHideSplashScreen = it
         }
+    }
+
+    override fun onDestroy() {
+        ChangeApplicationIcon.setIcon(this, ChangeApplicationIcon.IconColour.NEW_YEAR)
+        super.onDestroy()
     }
 }
