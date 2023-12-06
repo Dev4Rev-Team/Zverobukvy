@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        ChangeApplicationIcon.setIcon(this, ChangeApplicationIcon.IconColour.NEW_YEAR)
+        ChangeApplicationIcon.setIcon(this, ChangeApplicationIcon.IconColour.FOX)
         super.onDestroy()
     }
 }
