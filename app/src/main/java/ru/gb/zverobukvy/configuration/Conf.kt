@@ -18,8 +18,7 @@ class Conf {
         // максимальное кол-во букв в слове
         const val MAX_NUMBER_OF_LETTERS_IN_WORD = 7
 
-        // проверить базу данных на корректность
-        const val IS_CHECK_DATA = false
+
 
         /**
          * Настройки компьютера
@@ -137,15 +136,17 @@ class Conf {
         /**
          * DEBUG
          */
-        private const val DEBUG = BuildConfig.DEBUG_ON
+        @Suppress("SimplifyBooleanWithConstants")
+        private const val DEBUG = BuildConfig.DEBUG_ON && true
 
         // проверить файлы картинок
         const val DEBUG_CHECK_IMAGE_FILES = DEBUG
 
         // отключить проверку файлоа звука слов
-        const val DEBUG_DISABLE_SOUND_FILE = DEBUG
+        const val DEBUG_DISABLE_CHECK_SOUND_FILE = DEBUG
 
-
+        // проверить базу данных на корректность
+        const val IS_CHECK_DATA = false
 
     }
 }
