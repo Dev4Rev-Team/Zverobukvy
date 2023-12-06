@@ -18,8 +18,6 @@ class Conf {
         // максимальное кол-во букв в слове
         const val MAX_NUMBER_OF_LETTERS_IN_WORD = 7
 
-
-
         /**
          * Настройки компьютера
          *
@@ -132,7 +130,6 @@ class Conf {
         // кол-во аватарок в одном ряду
         const val SPAN_COUNT_AVATARS_RECYCLER_VIEW = 4
 
-
         /**
          * DEBUG
          */
@@ -147,6 +144,13 @@ class Conf {
 
         // проверить базу данных на корректность
         const val IS_CHECK_DATA = false
-
+      
+       /**
+         * Новогодний период
+         */
+        const val START_NEY_YEAR_PERIOD_MONTH = 11
+        const val START_NEY_YEAR_PERIOD_DAY = 1
+        const val END_NEY_YEAR_PERIOD_MONTH = 1
+        const val END_NEY_YEAR_PERIOD_DAY = 1
     }
 }

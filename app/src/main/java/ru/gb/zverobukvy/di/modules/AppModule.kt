@@ -10,7 +10,8 @@ import dagger.Module
         SoundEffectModule::class,
         AssetImageCashModule::class,
         ViewRatingProviderModule::class,
-        CheckDataModule::class
+        CheckDataModule::class,
+        ThemeProviderModule::class
     ]
 )
 interface AppModule
