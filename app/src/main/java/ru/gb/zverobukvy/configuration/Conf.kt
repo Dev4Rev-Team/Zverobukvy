@@ -133,8 +133,10 @@ class Conf {
         /**
          * DEBUG
          */
+        //todo        private const val DEBUG = BuildConfig.DEBUG_ON && true
         @Suppress("SimplifyBooleanWithConstants")
-        private const val DEBUG = BuildConfig.DEBUG_ON && true
+        private const val DEBUG = true
+
 
         // проверить файлы картинок
         const val DEBUG_CHECK_IMAGE_FILES = DEBUG
@@ -143,7 +145,7 @@ class Conf {
         const val DEBUG_DISABLE_CHECK_SOUND_FILE = DEBUG
 
         // проверить базу данных на корректность
-        const val IS_CHECK_DATA = DEBUG
+        const val IS_CHECK_DATA = false
       
        /**
          * Новогодний период

@@ -28,7 +28,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        setTheme(viewModel.getTheme().idTheme)
+
+//todo
+//        setTheme(viewModel.getTheme().idTheme)
         setContentView(R.layout.activity_main)
         loadingData()
         volumeControlStream = AudioManager.STREAM_MUSIC
@@ -101,9 +103,9 @@ class MainActivity : AppCompatActivity() {
             isHideSplashScreen = it
         }
     }
-
-    override fun onDestroy() {
-        ChangeApplicationIcon.setIcon(this, ChangeApplicationIcon.IconColour.NEW_YEAR)
-        super.onDestroy()
-    }
+//todo
+//    override fun onDestroy() {
+//        ChangeApplicationIcon.setIcon(this, ChangeApplicationIcon.IconColour.NEW_YEAR)
+//        super.onDestroy()
+//    }
 }
