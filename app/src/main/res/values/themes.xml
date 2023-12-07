@@ -3,7 +3,7 @@
     <style name="Base.Theme.Zverobukvy" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="fontFamily">@font/junegull</item>
-        <item name="colorPrimary">@color/secondary_color</item>
+
         <item name="colorSecondary">@color/primary_color</item>
         <item name="android:textColor">@color/secondary_color</item>
         <item name="strokeColor">@color/transparent</item>
@@ -16,6 +16,11 @@
     </style>
 
     <style name="Theme.Zverobukvy" parent="Base.Theme.Zverobukvy" />
+
+    <style name="Fake.Theme" parent="Theme.Zverobukvy" >
+        <item name="colorPrimary">@color/color_green</item>
+        <item name="colorSecondary">@color/color_red</item>
+    </style>
 
     <style name="Button">
         <item name="android:layout_width">wrap_content</item>
@@ -73,7 +78,6 @@
         <item name="srcCompat">@drawable/diamond</item>
         <item name="tint">@color/border_rank_legend</item>
         <item name="android:layout_margin">@dimen/diamond_image_view_margin</item>
-
     </style>
 
     <style name="Avatar" parent="Widget.Material3.CardView.Filled">

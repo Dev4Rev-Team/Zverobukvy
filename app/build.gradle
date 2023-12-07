@@ -33,6 +33,10 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "DEBUG_ON", 'false'
+        }
+        debug{
+            buildConfigField "boolean", "DEBUG_ON", 'true'
         }
     }
     compileOptions {

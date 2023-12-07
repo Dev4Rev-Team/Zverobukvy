@@ -1,9 +1,12 @@
 package ru.gb.zverobukvy.presentation.animal_letters_game
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -18,10 +21,10 @@ import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.databinding.FragmentAnimalLettersGameBinding
+import ru.gb.zverobukvy.domain.entity.card.LetterCard
+import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
-import ru.gb.zverobukvy.domain.entity.card.TypeCards
-import ru.gb.zverobukvy.domain.entity.card.LetterCard
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.game_is_over_dialog.DataGameIsOverDialog
 import ru.gb.zverobukvy.presentation.animal_letters_game.game_is_over_dialog.GameIsOverDialogFragment
@@ -54,6 +57,11 @@ class AnimalLettersGameFragment :
 
     private var isEnableClick = true
 
+    private val computer = object {
+        var isWalking = false
+    }
+    var lastStateScreen = StateScreen.NextPlayer
+
     private fun initDagger() {
         requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
             gameStart!!.typesCards, gameStart!!.players
@@ -79,7 +87,7 @@ class AnimalLettersGameFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        animator.createAnimators()
         initChangingStateEventVM()
         intiGameStateEventVM()
         initSystemEventVM()
@@ -151,10 +159,14 @@ class AnimalLettersGameFragment :
         super.onPause()
     }
 
+    override fun onDestroyView() {
+        animator.end()
+        super.onDestroyView()
+    }
+
     private fun initView() {
         binding.nextWord.root.setOnClickListener {
             isClick {
-                it.visibility = View.INVISIBLE
                 event.onClickNextWord()
             }
         }
@@ -201,20 +213,21 @@ class AnimalLettersGameFragment :
     }
 
     private fun setPlayer(player: Player) {
-        if (binding.playerNameTextView.text != player.name) {
-            createInSideAnimation(
-                binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
-                SHIFT_ANIMATOR_PLAYER_NEXT_DP
-            ) { _ ->
-                binding.playerNameCard.visibility = View.VISIBLE
-                binding.playerNameTextView.text = player.name
-                imageAvatarLoader.loadImageAvatar(player.avatar, binding.playerAvatarImageView)
-            }.start()
-        }
+        changePlayerName(player)
         if (player !is Player.ComputerPlayer) {
             binding.table.setWorkClick(true)
+            computer.isWalking = false
+        } else {
+            computer.isWalking = true
         }
     }
+
+    private fun changePlayerName(player: Player) {
+        if (binding.playerNameTextView.text != player.name) {
+            animator.startChangePlayer(player)
+        }
+    }
+
 
     private fun setPictureOfWord(urlPicture: String) {
         val image = assertsImageCash.getImage(urlPicture)
@@ -231,25 +244,40 @@ class AnimalLettersGameFragment :
         delayAndRun(DELAY_SOUND_WORD) { soundEffectPlayer.play(wordCard.soundName) }
     }
 
-    private fun requestNextPlayer(screenDimmingText: String) {
-        binding.nextPlayer.root.let { button ->
-            createAlphaShowAnimation(
-                button,
-                START_DELAY_ANIMATION_SCREEN_DIMMING,
-                DURATION_ANIMATION_SCREEN_DIMMING
-            ).start()
-        }
-        binding.nextPlayer.nextPlayerTextView.text = screenDimmingText
+    private fun showScreenNextPlayer() {
+        animator.showScreenNextPlayer.start()
+        lastStateScreen = StateScreen.NextPlayer
     }
 
-    private fun requestNextWord(screenDimmingText: String) {
-        createAlphaShowAnimation(
-            binding.nextWord.root,
-            START_DELAY_ANIMATION_SCREEN_DIMMING,
-            DURATION_ANIMATION_SCREEN_DIMMING
-        ).start()
-        binding.nextWord.nextWordMoveTextView.text = screenDimmingText
+    private fun hideScreenNextPlayer() {
+        if (lastStateScreen == StateScreen.NextPlayer) {
+            animator.hideScreenNextPlayer.start()
+        } else {
+            binding.nextPlayer.root.visibility = View.INVISIBLE
+        }
     }
+
+    private fun showScreenNextWord() {
+        animator.showScreenNextWord.start()
+        lastStateScreen = StateScreen.NextWord
+    }
+
+    private fun hideScreenNextWord() {
+        if (lastStateScreen == StateScreen.NextWord) {
+            animator.hideScreenNextWord.start()
+        } else {
+            binding.nextWord.root.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun showScreenWalkComputer() {
+        animator.showScreenWalkComputer.start()
+    }
+
+    private fun hideScreenWalkComputer() {
+        animator.hideScreenWalkComputer.start()
+    }
+
 
     override fun onBackPressed(): Boolean {
         event.onBackPressed()
@@ -337,7 +365,10 @@ class AnimalLettersGameFragment :
         fun changingStateInvalidLetter(it: AnimalLettersGameState.ChangingState.InvalidLetter) {
             soundFlipLetter(SoundEnum.CARD_IS_UNSUCCESSFUL, it.invalidLetterCard)
             binding.table.openCard(it.invalidLetterCard)
-            requestNextPlayer(it.screenDimmingText)
+            showScreenNextPlayer()
+            if (computer.isWalking) {
+                hideScreenWalkComputer()
+            }
         }
 
         fun changingStateCloseInvalidLetter(it: AnimalLettersGameState.ChangingState.CloseInvalidLetter) {
@@ -349,7 +380,10 @@ class AnimalLettersGameFragment :
             setPositionLetterInWord(it.positionLetterInWord)
             binding.table.openCard(it.correctLetterCard)
             if (it.hasNextWord) {
-                requestNextWord(it.screenDimmingText)
+                showScreenNextWord()
+            }
+            if (computer.isWalking) {
+                hideScreenWalkComputer()
             }
         }
 
@@ -357,16 +391,17 @@ class AnimalLettersGameFragment :
             setPictureOfWord(it.wordCard.faceImageName)
             setWord(it.wordCard)
             binding.table.closeCardAll()
-            binding.nextWord.root.let {
-                if (it.visibility == View.VISIBLE) it.visibility = View.INVISIBLE
-            }
         }
 
         fun changingStateNextPlayer(it: AnimalLettersGameState.ChangingState.NextPlayer) {
-            binding.nextPlayer.root.let {
-                if (it.visibility == View.VISIBLE) it.visibility = View.INVISIBLE
-            }
             setPlayer(it.nextWalkingPlayer.player)
+            when (lastStateScreen) {
+                StateScreen.NextPlayer -> hideScreenNextPlayer()
+                StateScreen.NextWord -> hideScreenNextWord()
+            }
+            if (computer.isWalking) {
+                showScreenWalkComputer()
+            }
         }
 
         fun changingStateStartGameState(it: AnimalLettersGameState.EntireState.StartGameState) {
@@ -377,9 +412,9 @@ class AnimalLettersGameFragment :
             saveLettersSoundName(it.lettersCards)
             binding.root.visibility = View.VISIBLE
             if (it.nextPlayerBtnVisible) {
-                requestNextPlayer(it.screenDimmingText)
+                showScreenNextPlayer()
             } else if (it.nextWordBtnVisible) {
-                requestNextWord(it.screenDimmingText)
+                showScreenNextWord()
             } else {
                 binding.table.setWorkClick(true)
             }
@@ -457,6 +492,96 @@ class AnimalLettersGameFragment :
 
     }
 
+    private val animator = object {
+        lateinit var showScreenNextPlayer: ObjectAnimator
+        lateinit var showScreenNextWord: ObjectAnimator
+        lateinit var showScreenWalkComputer: ObjectAnimator
+        lateinit var hideScreenNextPlayer: ObjectAnimator
+        lateinit var hideScreenNextWord: ObjectAnimator
+        lateinit var hideScreenWalkComputer: ObjectAnimator
+        private lateinit var changePlayer: AnimatorSet
+        private lateinit var playerForChange: Player
+        fun createAnimators() {
+            showScreenNextPlayer = createAlphaShowAnimation(
+                binding.nextPlayer.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING
+            )
+            showScreenNextWord = createAlphaShowAnimation(
+                binding.nextWord.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING
+            )
+            showScreenWalkComputer = createAlphaShowAnimation(
+                binding.walkComputer.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING,
+            )
+            hideScreenNextPlayer = createAlphaShowAnimation(
+                binding.nextPlayer.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING,
+                false
+            ).apply {
+                doOnEnd { _ ->
+                    binding.nextPlayer.root.visibility = View.INVISIBLE
+                }
+            }
+            hideScreenNextWord = createAlphaShowAnimation(
+                binding.nextWord.root,
+                START_DELAY_ANIMATION_SCREEN_DIMMING,
+                DURATION_ANIMATION_SCREEN_DIMMING,
+                false
+            ).apply {
+                doOnEnd {
+                    binding.nextWord.root.visibility = View.INVISIBLE
+                }
+            }
+            hideScreenWalkComputer =
+                createAlphaShowAnimation(
+                    binding.walkComputer.root,
+                    START_DELAY_ANIMATION_SCREEN_DIMMING,
+                    DURATION_ANIMATION_SCREEN_DIMMING,
+                    false
+                ).apply {
+                    doOnEnd { binding.walkComputer.root.visibility = View.INVISIBLE }
+                }
+            changePlayer = createInSideAnimation(
+                binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
+                SHIFT_ANIMATOR_PLAYER_NEXT_DP
+            ) { _ ->
+                binding.playerNameCard.visibility = View.VISIBLE
+                binding.playerNameTextView.text = playerForChange.name
+                imageAvatarLoader.loadImageAvatar(
+                    playerForChange.avatar,
+                    binding.playerAvatarImageView
+                )
+            }
+
+        }
+
+        fun startChangePlayer(player: Player) {
+            playerForChange = player
+            changePlayer.start()
+        }
+
+        fun end() {
+            showScreenNextPlayer.end()
+            showScreenNextWord.end()
+            showScreenWalkComputer.end()
+            hideScreenNextPlayer.end()
+            hideScreenNextWord.end()
+            hideScreenWalkComputer.end()
+            changePlayer.end()
+        }
+
+    }
+
+    enum class StateScreen {
+        NextPlayer,
+        NextWord
+    }
+
     @Parcelize
     data class GameStart(val typesCards: List<TypeCards>, val players: List<PlayerInGame>) :
         Parcelable
@@ -469,7 +594,8 @@ class AnimalLettersGameFragment :
 
         private const val START_DELAY_ANIMATION_SCREEN_DIMMING =
             Conf.START_DELAY_ANIMATION_SCREEN_DIMMING
-        private const val DURATION_ANIMATION_SCREEN_DIMMING = Conf.DURATION_ANIMATION_SCREEN_DIMMING
+        private const val DURATION_ANIMATION_SCREEN_DIMMING =
+            Conf.DURATION_ANIMATION_SCREEN_DIMMING
 
         private const val DELAY_SOUND_WORD = Conf.DELAY_SOUND_WORD
         private const val DELAY_SOUND_EFFECT = Conf.DELAY_SOUND_EFFECT

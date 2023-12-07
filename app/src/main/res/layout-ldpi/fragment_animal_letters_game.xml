@@ -24,7 +24,7 @@
             android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
             android:scaleType="center"
-            android:src="@drawable/ic_arrow_left"
+            app:srcCompat="@drawable/ic_arrow_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,7 +37,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
 
             <com.google.android.material.circularreveal.CircularRevealLinearLayout
                 android:layout_width="match_parent"
@@ -195,5 +194,9 @@
     <include
         android:id="@+id/next_player"
         layout="@layout/fragment_animal_letters_game_dialog_next_player" />
+
+    <include
+        android:id="@+id/walk_computer"
+        layout="@layout/fragment_animal_letters_game_dialog_walk_computer" />
 
 </RelativeLayout>

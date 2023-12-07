@@ -25,6 +25,9 @@ import ru.gb.zverobukvy.domain.use_case.deal_cards.DealCardsImpl
 import ru.gb.zverobukvy.domain.use_case.level_and_rating.LevelAndRatingCalculatorImpl
 import ru.gb.zverobukvy.domain.use_case.computer.AnimalLettersComputer
 import ru.gb.zverobukvy.domain.use_case.computer.animal_letters_computer_simple_smart.AnimalLettersComputerSimpleSmart
+import ru.gb.zverobukvy.domain.use_case.deal_players.DealPlayersForGame
+import ru.gb.zverobukvy.domain.use_case.deal_players.DealPlayersForGameImpl
+import ru.gb.zverobukvy.domain.use_case.level_and_rating.LevelAndRatingCalculator
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
@@ -64,9 +67,8 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     private var players: List<PlayerInGame>
 ) : AnimalLettersGameInteractor {
     private lateinit var dealCards: DealCards
-    private val checkData = CheckData()
-    private val calculator =
-        LevelAndRatingCalculatorImpl(extractHumanPlayers(players.map { it.player }), typesCards)
+    private val dealPlayersForGame: DealPlayersForGame = DealPlayersForGameImpl()
+    private var calculator: LevelAndRatingCalculator
     private val gamingWords: Queue<WordCard> = LinkedList()
     private var positionCurrentLetterCard by Delegates.notNull<Int>()
     private var currentWalkingPlayer: PlayerInGame
@@ -78,17 +80,13 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     }
     private var computer: AnimalLettersComputer? = null
 
-    /**
-     * При инициализации проверяются на корректность список типов карточек и список игроков.
-     * Инициализируется currentWalkingPlayer
-     */
     init {
-        // проверяются на корректность, переданные в конструктор данные
-        checkData.apply {
-            checkTypesCards(typesCards)
-            players = getPlayersForGame(players).also {
+        // подготавливаем список игроков для начала игры
+        players = dealPlayersForGame.getPlayersForGame(players).also { playersInGame ->
+            dealPlayersForGame.extractHumanPlayers(playersInGame.map { it.player }).let {
+                calculator = LevelAndRatingCalculatorImpl(it, typesCards)
                 // сохраняем в репозитоий состояние игроков в начале игры
-                changeRatingRepository.setPlayersBeforeGame(extractHumanPlayers(it.map { playerInGame -> playerInGame.player }))
+                changeRatingRepository.setPlayersBeforeGame(it)
             }
         }
         // определяется игрок, начинающий игру
@@ -123,11 +121,6 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("selectionLetterCard")
         positionCurrentLetterCard = positionSelectedLetterCard
         gameStateFlow.value?.run {
-            // проверяется, что пришла корректная позиция выбранной-карточки
-            checkData.checkPositionSelectedLetterCard(
-                gameField.lettersField,
-                positionSelectedLetterCard
-            )
             // в данной ситуации gamingWordCard не может быть null
             gameField.gamingWordCard?.let { gamingWordCard ->
                 // запрашивается позиция выбранной буквы в отгадываемом слове
@@ -210,6 +203,13 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 nextWalkingPlayer = null,
                 isActive = false
             )
+        // в конце игры "отматываем" рейтинг игроков к исходному
+            changeRatingRepository.getPlayersBeforeGame().forEach {playerBeforeGame ->
+                players.find {playerBeforeGame.id == it.player.id }?.player?.apply {
+                    rating = playerBeforeGame.rating
+                    lettersGuessingLevel = playerBeforeGame.lettersGuessingLevel
+                }
+            }
     }
 
     override suspend fun getSelectedLetterCardByComputer() {
@@ -392,7 +392,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
             }
         }
         // сохраняем в репозиторий состояние игроков после завершения игры
-        changeRatingRepository.setPlayersAfterGame(extractHumanPlayers(players.map { it.player }))
+        changeRatingRepository.setPlayersAfterGame(dealPlayersForGame.extractHumanPlayers(players.map { it.player }))
         // gameStateFlow обновляет value, т.к. отличается gameField, players, walkingPlayer,
         //nextWalkingPlayer и isActive
         gameStateFlow.value = currentGameState.copy(
@@ -409,7 +409,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
             players = changePlayersAfterGuessedGamingWordCard(currentGameState.players).apply {
                 // сортировка игроков по кол-ву отгаданных слов (по убыванию)
                 sortBy {
-                    - it.scoreInCurrentGame
+                    -it.scoreInCurrentGame
                 }
             },
             walkingPlayer = null,
@@ -539,50 +539,17 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
 
     /**
      * Метод получает из репозитория список всех карточек-букв и формирует список карточек-букв
-     * стартового поля игры, исходя из заданного списка из заданного списка с наборами карточе.
-     * Дополнительно выполняется проверка на корректность полученных из репозитория данных и
-     * данных, сформированных для стартового поля игры.
+     * стартового поля игры, исходя из заданного списка с наборами карточе.
      * @return список карточек-букв стартового поля игры
      */
-    private suspend fun getStartedLettersField(): MutableList<LetterCard> {
-        checkData.apply {
-            animalLettersGameRepository.getLetterCards().also {
-                checkLetterCardsFromRepository(it)
-                return checkLettersField(
-                    dealCards.getKitLetterCards(it)
-                ).toMutableList()
-            }
-        }
-    }
+    private suspend fun getStartedLettersField(): MutableList<LetterCard> =
+        dealCards.getKitLetterCards(animalLettersGameRepository.getLetterCards()).toMutableList()
 
     /**
      * Метод получает из репозитория список всех карточек-слов и формирует очередь карточек-слов
      * для игры, исходя из заданного списка с наборами карточек.
-     * Дополнительно выполняется проверка на корректность полученных из репозитория данных и
-     * данных, сформированных для игры.
      * @return очередь карточек-слов для игры
      */
-    private suspend fun getGamingWords(): Queue<WordCard> {
-        checkData.apply {
-            animalLettersGameRepository.getWordCards().also {
-                checkWordCardsFromRepository(it)
-                return LinkedList(
-                    checkGamingWords(
-                        dealCards.getKitWordCards(it)
-                    )
-                )
-            }
-        }
-    }
-
-    /**
-     * Метод создает из списка Player список только HumanPlayer
-     */
-    private fun extractHumanPlayers(players: List<Player>): List<Player.HumanPlayer> =
-        mutableListOf<Player.HumanPlayer>().apply {
-            players.forEach {
-                if (it is Player.HumanPlayer)
-                    add(it)
-            }
-        }
+    private suspend fun getGamingWords(): Queue<WordCard> =
+        LinkedList(dealCards.getKitWordCards(animalLettersGameRepository.getWordCards()))
 }

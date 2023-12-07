@@ -11,12 +11,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
+import ru.gb.zverobukvy.utility.ChangeApplicationIcon
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: LoadindDataViewModel by lazy {
+    private val viewModel: LoadingDataViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             appComponent.loadingDataViewModel
         })[LoadingDataViewModelImpl::class.java]
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        setTheme(viewModel.getTheme().idTheme)
         setContentView(R.layout.activity_main)
         loadingData()
         volumeControlStream = AudioManager.STREAM_MUSIC
@@ -95,8 +97,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadingData() {
-        viewModel.getLiveDataLoadingData().observe(this){
+        viewModel.getLiveDataLoadingData().observe(this) {
             isHideSplashScreen = it
         }
+    }
+
+    override fun onDestroy() {
+        ChangeApplicationIcon.setIcon(this, ChangeApplicationIcon.IconColour.NEW_YEAR)
+        super.onDestroy()
     }
 }

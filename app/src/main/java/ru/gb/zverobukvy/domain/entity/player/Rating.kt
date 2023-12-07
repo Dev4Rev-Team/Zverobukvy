@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Rating(
+class Rating(
     @ColumnInfo(name = "orange_rating")
     var orangeRating: Int = 0,
     @ColumnInfo(name = "green_rating")
