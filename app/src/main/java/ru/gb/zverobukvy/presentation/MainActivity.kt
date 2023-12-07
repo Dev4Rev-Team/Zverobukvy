@@ -79,7 +79,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
     }
 
     private fun setHideSplashScreen() {
