@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class LettersGuessingLevel(
+class LettersGuessingLevel(
     @ColumnInfo(name = "orange_level")
     var orangeLevel: Float = DEFAULT_ORANGE_LEVEL,
     @ColumnInfo(name = "green_level")

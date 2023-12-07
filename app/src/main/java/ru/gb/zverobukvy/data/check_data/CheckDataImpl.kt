@@ -91,11 +91,22 @@ class CheckDataImpl @Inject constructor(private val repository: AnimalLettersGam
         }
     }
 
+    /**
+     * Метод проверяет количество букв (не больше максимально допустимого)
+     * @param wordCard карточка-слово
+     * @exception IllegalArgumentException
+     */
     private fun checkNumberLettersInWord(wordCard: WordCard) {
         if (wordCard.word.length > Conf.MAX_NUMBER_OF_LETTERS_IN_WORD)
             throw IllegalArgumentException("$WORD_CARD_IS_NOT_CORRECT ${wordCard.word}")
     }
 
+    /**
+     * Метод проверяет кард-сеты
+     * @param wordCards список карточек-слов
+     * @param cardsSets список кард-сетов
+     * @exception IllegalArgumentException
+     */
     private fun checkCardsSetFromRepository(cardsSets: List<CardsSet>, wordCards: List<WordCard>) {
         cardsSets.forEach {
             checkWordInCardsSet(it, wordCards)
@@ -104,6 +115,12 @@ class CheckDataImpl @Inject constructor(private val repository: AnimalLettersGam
         }
     }
 
+    /**
+     * Метод проверяет, что все слова в кард-сете есть в БД
+     * @param wordCards список карточек-слов
+     * @param cardsSet кард-сет
+     * @exception IllegalArgumentException
+     */
     private fun checkWordInCardsSet(cardsSet: CardsSet, wordCards: List<WordCard>) {
         cardsSet.words.forEach { word ->
             if (!wordCards.map { it.word }.contains(word))
@@ -116,6 +133,11 @@ class CheckDataImpl @Inject constructor(private val repository: AnimalLettersGam
         }
     }
 
+    /**
+     * Метод проверяет соответствие букв в словах кард-сета с набором букв кард-сета
+     * @param cardsSet кард-сет
+     * @exception IllegalArgumentException
+     */
     private fun checkMatchingLettersToWords(cardsSet: CardsSet) {
         cardsSet.words.forEach { word ->
             word.toCharArray().forEach { char ->
@@ -130,6 +152,11 @@ class CheckDataImpl @Inject constructor(private val repository: AnimalLettersGam
         }
     }
 
+    /**
+     * Метод проверяет, что кол-во слов в кард-сете не меньше допустимого кол-ва
+     * @param cardsSet кард-сет
+     * @exception IllegalArgumentException
+     */
     private fun checkNumberWordsInCardsSet(cardsSet: CardsSet) {
         if (cardsSet.words.toSet().size < Conf.NUMBER_OF_WORD)
             throw IllegalArgumentException(

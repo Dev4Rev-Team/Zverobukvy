@@ -203,6 +203,13 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 nextWalkingPlayer = null,
                 isActive = false
             )
+        // в конце игры "отматываем" рейтинг игроков к исходному
+            changeRatingRepository.getPlayersBeforeGame().forEach {playerBeforeGame ->
+                players.find {playerBeforeGame.id == it.player.id }?.player?.apply {
+                    rating = playerBeforeGame.rating
+                    lettersGuessingLevel = playerBeforeGame.lettersGuessingLevel
+                }
+            }
     }
 
     override suspend fun getSelectedLetterCardByComputer() {
