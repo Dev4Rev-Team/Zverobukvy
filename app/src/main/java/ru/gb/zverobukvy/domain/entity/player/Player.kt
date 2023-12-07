@@ -10,8 +10,8 @@ sealed class Player(
     open var name: String,
     open var id: Long = 0,
     open var avatar: Avatar,
-    open val rating: Rating = Rating(),// кол-во отгаданных слов по цветам
-    open val lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel() // доля угаданных букв по цветам
+    open var rating: Rating = Rating(),// кол-во отгаданных слов по цветам
+    open var lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel() // доля угаданных букв по цветам
 ) : Parcelable,
     DomainEntity {
 
@@ -20,8 +20,8 @@ sealed class Player(
         override var name: String,
         override var id: Long = 0,
         override var avatar: Avatar = Avatar.DEFAULT_AVATAR,
-        override val rating: Rating = Rating(),
-        override val lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel()
+        override var rating: Rating = Rating(),
+        override var lettersGuessingLevel: LettersGuessingLevel = LettersGuessingLevel()
     ) : Player(name, id, avatar, rating, lettersGuessingLevel)
 
     @Parcelize
