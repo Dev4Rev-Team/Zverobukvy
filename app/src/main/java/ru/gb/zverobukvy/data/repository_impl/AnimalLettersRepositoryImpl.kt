@@ -123,14 +123,6 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             localDataSource.updatePlayer(playersMapperData.mapToData(player))
         }
-        players?.run {
-           indexOf(find {
-                it.id == player.id
-            }).let { index ->
-                players?.removeAt(index)
-                players?.add(index,player)
-            }
-        }
     }
 
     override suspend fun loadingData() {
