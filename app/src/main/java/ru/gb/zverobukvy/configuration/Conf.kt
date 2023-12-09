@@ -133,10 +133,9 @@ class Conf {
         /**
          * DEBUG
          */
-        //todo        private const val DEBUG = BuildConfig.DEBUG_ON && true
-        @Suppress("SimplifyBooleanWithConstants")
-        private const val DEBUG = true
 
+        @Suppress("SimplifyBooleanWithConstants")
+        private const val DEBUG = BuildConfig.DEBUG_ON && true
 
         // проверить файлы картинок
         const val DEBUG_CHECK_IMAGE_FILES = DEBUG
