@@ -21,9 +21,9 @@
         <item name="app_text_color_button">@color/secondary_color</item>
         <item name="app_text_color_button_outline">@color/white</item>
 
-        <item name="app_next_player_color">#94ff00</item>
-        <item name="app_wrong_color">#FF0000</item>
-        <item name="app_computer_color">#4A4A4A</item>
+        <item name="app_next_player_color">@drawable/background_green_transparent</item>
+        <item name="app_wrong_color">@drawable/background_red_transparent</item>
+        <item name="app_computer_color">@drawable/background_black_transparent</item>
     </style>
 
     <!--Default Theme-->
@@ -59,9 +59,9 @@
         <item name="app_text_color_button">@color/white</item>
         <item name="app_text_color_button_outline">@color/secondary_color</item>
 
-        <item name="app_next_player_color">#FFFFFF</item>
-        <item name="app_wrong_color">#7000FF</item>
-        <item name="app_computer_color">#4A4A4A</item>
+        <item name="app_next_player_color">@drawable/background_white_transparent</item>
+        <item name="app_wrong_color">@drawable/background_blue_transparent</item>
+<!--        <item name="app_computer_color">#4A4A4A</item>-->
     </style>
 
 </resources>

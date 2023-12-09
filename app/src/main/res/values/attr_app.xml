@@ -13,9 +13,9 @@
     <attr name="app_text_color_button" format="color">@attr/secondary_color</attr>
     <attr name="app_text_color_button_outline" format="color">@attr/white</attr>
 
-    <attr name="app_next_player_color" format="color">#94ff00</attr>
-    <attr name="app_wrong_color" format="color">#FF0000</attr>
-    <attr name="app_computer_color" format="color">#444FCA</attr>
+    <attr name="app_next_player_color" format="color|reference">#94ff00</attr>
+    <attr name="app_wrong_color" format="color|reference">#FF0000</attr>
+    <attr name="app_computer_color" format="color|reference">#444FCA</attr>
 
     <!--Elements style-->
     <style name="Button">

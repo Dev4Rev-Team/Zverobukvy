@@ -4,7 +4,7 @@
     android:id="@+id/next_word"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_next_player"
+    android:background="?app_next_player_color"
     android:clickable="true"
     android:visibility="invisible"
     android:focusable="true">
