@@ -20,8 +20,9 @@
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.App.Starting.NewYear"
-            android:windowSoftInputMode="adjustPan">
+            android:theme="@style/Theme.App.Starting"
+            android:windowSoftInputMode="adjustPan"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -32,7 +33,9 @@
             android:icon="@mipmap/ic_launcher_fox"
             android:name=".BASE"
             android:enabled="true"
-            android:targetActivity=".presentation.MainActivity">
+            android:targetActivity=".presentation.MainActivity"
+            >
+            <meta-data android:name="THEME" android:value="@string/base_activity_name" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -57,6 +60,7 @@
             android:name=".NEW_YEAR"
             android:enabled="false"
             android:targetActivity=".presentation.MainActivity">
+            <meta-data android:name="THEME" android:value="@string/new_year_activity_name" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

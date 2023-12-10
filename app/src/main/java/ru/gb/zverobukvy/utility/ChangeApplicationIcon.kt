@@ -4,13 +4,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
 import ru.gb.zverobukvy.BuildConfig
+import ru.gb.zverobukvy.data.theme_provider.Theme
 
 object ChangeApplicationIcon {
-    enum class IconColour { BASE, FOX, NEW_YEAR }
-
-    fun setIcon(context: Context, targetColour: IconColour) {
-        for (value in IconColour.values()) {
-            val action = if (value == targetColour) {
+    fun setIcon(context: Context, targetTheme: Theme) {
+        for (value in Theme.values()) {
+            val action = if (value == targetTheme) {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             } else {
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED
