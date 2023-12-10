@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/add_player_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:strokeColor="@color/transparent"
-    app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
+    android:layout_marginHorizontal="@dimen/margin_default"
     android:layout_marginVertical="@dimen/margin_medium"
-    android:layout_marginHorizontal="@dimen/margin_default">
+    app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
+    app:strokeColor="@color/transparent">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/add_player_text_view"
@@ -17,7 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/margin_default"
-        android:textSize="@dimen/text_medium_small"
-        android:text="@string/main_menu_fragment_add_player_text" />
+        android:text="@string/main_menu_fragment_add_player_text"
+        android:textColor="?app_text_color_lvl2"
+        android:textSize="@dimen/text_medium_small" />
 
 </com.google.android.material.card.MaterialCardView>

@@ -1,14 +1,32 @@
 <resources>
     <!-- Base application theme.-->
     <style name="Base.Theme.Zverobukvy" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
+        <!-- Main Theme. -->
         <item name="fontFamily">@font/junegull</item>
-
+        <item name="colorPrimary">@color/secondary_color</item>
         <item name="colorSecondary">@color/primary_color</item>
         <item name="android:textColor">@color/secondary_color</item>
         <item name="strokeColor">@color/transparent</item>
+
+        <item name="app_background_color">@color/primary_color</item>
+        <item name="app_splashscreen_background">@color/color_blue</item>
+        <item name="app_end_game_background_color">@color/color_violet_pastel</item>
+
+        <item name="app_flag_color">@color/color_red</item>
+
+        <item name="app_text_color_lvl1">@color/secondary_color</item>
+        <item name="app_text_color_lvl2">@color/secondary_color</item>
+        <item name="app_text_color_lvl3">@color/white</item>
+
+        <item name="app_text_color_button">@color/secondary_color</item>
+        <item name="app_text_color_button_outline">@color/white</item>
+
+        <item name="app_next_player_color">@drawable/background_green_transparent</item>
+        <item name="app_wrong_color">@drawable/background_red_transparent</item>
+        <item name="app_computer_color">@drawable/background_black_transparent</item>
     </style>
 
+    <!--Default Theme-->
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_screen_background_color</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_fox</item>
@@ -17,82 +35,33 @@
 
     <style name="Theme.Zverobukvy" parent="Base.Theme.Zverobukvy" />
 
-    <style name="Button">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="backgroundTint">@color/button_primary</item>
-        <item name="android:textColor">@color/secondary_color</item>
-        <item name="cornerRadius">@dimen/main_menu_card_corner_radius</item>
+    <!--New Year Theme-->
+    <style name="Theme.App.Starting.NewYear" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/red_new_year</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_fox</item>
+        <item name="postSplashScreenTheme">@style/Theme.Zverobukvy.NewYear</item>
     </style>
 
-    <style name="Button.Dark" parent="Button">
-        <item name="backgroundTint">@color/button_primary.dark</item>
-        <item name="android:textColor">@color/button_primary</item>
-    </style>
+    <style name="Theme.Zverobukvy.NewYear" parent="Base.Theme.Zverobukvy" >
+        <item name="colorPrimary">@color/red_new_year</item>
 
-    <style name="Button.Tiny" parent="Button">
-        <item name="android:textSize">@dimen/text_tiny</item>
-    </style>
+        <item name="app_background_color">@drawable/app_background_new_year</item>
 
-    <style name="Button.Tiny.Dark" parent="Button.Tiny">
-        <item name="backgroundTint">@color/button_primary.dark</item>
-        <item name="android:textColor">@color/button_primary</item>
-    </style>
+        <item name="app_splashscreen_background">@color/color_blue</item>
+        <item name="app_end_game_background_color">@drawable/app_background_violet_new_year</item>
 
-    <style name="Button.Big" parent="Button">
-        <item name="android:textSize">@dimen/text_big</item>
-    </style>
+        <item name="app_flag_color">@color/color_green</item>
 
-    <style name="Button.Big.Dark" parent="Button.Big">
-        <item name="backgroundTint">@color/button_primary.dark</item>
-        <item name="android:textColor">@color/button_primary</item>
-    </style>
+        <item name="app_text_color_lvl1">@color/white</item>
+        <item name="app_text_color_lvl2">@color/secondary_color</item>
+        <item name="app_text_color_lvl3">@color/white</item>
 
-    <style name="Button.Medium">
-        <item name="android:textSize">@dimen/text_medium</item>
-    </style>
+        <item name="app_text_color_button">@color/white</item>
+        <item name="app_text_color_button_outline">@color/secondary_color</item>
 
-    <style name="Button.Medium.Dark">
-        <item name="backgroundTint">@color/button_primary.dark</item>
-        <item name="android:textColor">@color/button_primary</item>
-    </style>
-
-    <style name="RatingCardView" parent="Widget.Material3.CardView.Filled">
-        <item name="cardCornerRadius">@dimen/rating_card_view_card_corner_radius</item>
-        <item name="strokeWidth">@dimen/rating_card_view_stroke_width</item>
-        <item name="layout_constraintDimensionRatio">4:6</item>
-    </style>
-
-    <style name="RatingTextView" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_tiny</item>
-        <item name="android:layout_gravity">center</item>
-    </style>
-
-    <style name="DiamondImageView">
-        <item name="srcCompat">@drawable/diamond</item>
-        <item name="tint">@color/border_rank_legend</item>
-        <item name="android:layout_margin">@dimen/diamond_image_view_margin</item>
-    </style>
-
-    <style name="Avatar" parent="Widget.Material3.CardView.Filled">
-        <item name="android:layout_width">@dimen/avatar_size</item>
-        <item name="android:layout_height">@dimen/avatar_size</item>
-        <item name="backgroundTint">@color/avatar_background</item>
-        <item name="cardCornerRadius">@dimen/avatar_corner_radius</item>
-        <item name="strokeColor">@color/transparent</item>
-        <item name="cardElevation">@dimen/cardview_default_elevation</item>
-    </style>
-
-    <style name="Avatar.Status" parent="Widget.Material3.CardView.Filled">
-        <item name="android:layout_width">@dimen/avatar_status_size</item>
-        <item name="android:layout_height">@dimen/avatar_status_size</item>
-        <item name="backgroundTint">@color/color_green_pastel</item>
-        <item name="cardCornerRadius">@dimen/avatar_status_corner_radius</item>
-        <item name="strokeColor">@color/transparent</item>
-        <item name="android:layout_marginStart">-12dp</item>
-        <item name="android:layout_marginBottom">-12dp</item>
-        <item name="cardElevation">@dimen/cardview_default_elevation</item>
+        <item name="app_next_player_color">@drawable/background_white_transparent</item>
+        <item name="app_wrong_color">@drawable/background_blue_transparent</item>
+<!--        <item name="app_computer_color">#4A4A4A</item>-->
     </style>
 
 </resources>

@@ -5,10 +5,10 @@
     android:id="@+id/player_constraint_layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:strokeColor="@color/transparent"
+    android:layout_marginVertical="@dimen/main_menu_card_vertical_margin"
     android:elevation="@dimen/elevation_default"
     app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
-    android:layout_marginVertical="@dimen/main_menu_card_vertical_margin">
+    app:strokeColor="@color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -22,12 +22,13 @@
             android:layout_height="@dimen/auto_layout"
             android:layout_marginStart="@dimen/margin_medium"
             android:gravity="center"
-            tools:text="@string/username_default"
+            android:textColor="?app_text_color_lvl2"
             android:textSize="@dimen/text_medium_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/score_text_view"
             app:layout_constraintStart_toEndOf="@+id/avatar"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/username_default" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/avatar"
@@ -50,10 +51,11 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/score_text_view"
             android:layout_width="wrap_content"
-            android:gravity="center"
             android:layout_height="@dimen/auto_layout"
             android:layout_marginEnd="@dimen/margin_medium"
             android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:textColor="?app_text_color_lvl2"
             android:textSize="@dimen/text_medium_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

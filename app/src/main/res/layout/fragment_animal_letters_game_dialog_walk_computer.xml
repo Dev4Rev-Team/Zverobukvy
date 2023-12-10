@@ -4,7 +4,7 @@
     android:id="@+id/walk_computer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gray_transparent"
+    android:background="?app_computer_color"
     android:clickable="true"
     android:visibility="invisible"
     android:focusable="true">

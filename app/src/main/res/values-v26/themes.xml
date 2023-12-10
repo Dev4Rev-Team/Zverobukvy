@@ -5,4 +5,10 @@
         <item name="windowSplashScreenBackground">@color/splash_screen_background_color</item>
         <item name="postSplashScreenTheme">@style/Theme.Zverobukvy</item>
     </style>
+
+    <style name="Theme.App.Starting.NewYear" parent="Theme.SplashScreen">
+        <item name="android:windowSplashscreenContent">@drawable/splash_screen_new_year</item>
+        <item name="windowSplashScreenBackground">@color/red_new_year</item>
+        <item name="postSplashScreenTheme">@style/Theme.Zverobukvy.NewYear</item>
+    </style>
 </resources>
