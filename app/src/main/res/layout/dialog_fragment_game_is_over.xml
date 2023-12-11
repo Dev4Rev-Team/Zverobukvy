@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/margin_medium"
         app:size_avatar_one="60dp"
         app:size_avatar_two="52dp"
-        app:size_avatar_three="48dp"
+        app:size_avatar_three="52dp"
         app:main_horizontal_gap="16dp"
         app:padding_image="8dp"
         app:color_one="#EEE020"
@@ -37,7 +37,6 @@
         tools:layout_width="@dimen/avatar_size_huge">
 
     </ru.gb.zverobukvy.presentation.customview.CustomImageRatingView>
-
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
@@ -113,6 +112,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

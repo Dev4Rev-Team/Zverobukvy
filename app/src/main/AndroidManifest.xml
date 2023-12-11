@@ -44,18 +44,6 @@
         <activity-alias
             android:label="@string/app_name"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher_fox_icon"
-            android:name=".FOX"
-            android:enabled="false"
-            android:targetActivity=".presentation.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-        <activity-alias
-            android:label="@string/app_name"
-            android:exported="true"
             android:icon="@mipmap/ic_launcher_fox_new_year"
             android:name=".NEW_YEAR"
             android:enabled="false"
