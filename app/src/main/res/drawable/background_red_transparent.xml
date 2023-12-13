@@ -4,10 +4,9 @@
         <shape>
             <gradient
                 android:type="radial"
-                android:gradientRadius="100%p"
-                android:startColor="@color/transparent"
-                android:centerColor="@color/transparent"
-                android:endColor="#4DFF0000" />
+                android:gradientRadius="200%p"
+                android:startColor="#00FFFFFF"
+                android:endColor="#66FF0000" />
         </shape>
     </item>
 </selector>

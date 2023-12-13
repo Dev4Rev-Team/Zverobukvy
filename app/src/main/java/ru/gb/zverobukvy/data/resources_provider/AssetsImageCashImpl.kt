@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import java.io.IOException
@@ -23,28 +24,49 @@ class AssetsImageCashImpl @Inject constructor(
 
     init {
         job = myCoroutineScope.launch {
-            animalLettersCardsRepository.getLetterCards().forEach {
+            addToMapImageLetters(animalLettersCardsRepository)
+            checkImageWords(animalLettersCardsRepository)
+            addToMapImageSystem()
+        }
+    }
+
+    private suspend inline fun checkImageWords(animalLettersCardsRepository: AnimalLettersGameRepository) {
+        if (Conf.DEBUG_CHECK_IMAGE_FILES) {
+            animalLettersCardsRepository.getWordCards().forEach {
                 try {
-                    addToMap(
-                        context,
-                        it.faceImageName,
-                        ASSETS_PATH_IMAGE_LETTERS + it.faceImageName
-                    )
+                    getImageFromAssert(context, ASSETS_PATH_IMAGE_WORDS + it.faceImageName)
                 } catch (e: Exception) {
-                    throw IllegalStateException("no element image letter ${it.faceImageName}")
+                    throw IllegalStateException("no element image word ${it.faceImageName}")
                 }
-                try {
-                    addToMap(context, it.backImageName, ASSETS_PATH_IMAGE_SYSTEM + it.backImageName)
-                } catch (e: Exception) {
-                    throw IllegalStateException("no element image system ${it.backImageName}")
-                }
+            }
+        }
+    }
+
+    private suspend fun addToMapImageLetters(animalLettersCardsRepository: AnimalLettersGameRepository) {
+        animalLettersCardsRepository.getLetterCards().forEach {
+            try {
+                addToMap(
+                    context,
+                    it.faceImageName,
+                    ASSETS_PATH_IMAGE_LETTERS + it.faceImageName
+                )
+            } catch (e: Exception) {
+                throw IllegalStateException("no element image letter ${it.faceImageName}")
             }
 
             try {
-                addToMap(context, IMAGE_FACE_CARD, ASSETS_PATH_IMAGE_SYSTEM + IMAGE_FACE_CARD)
+                addToMap(context, it.backImageName, ASSETS_PATH_IMAGE_SYSTEM + it.backImageName)
             } catch (e: Exception) {
-                throw IllegalStateException("no element image system $IMAGE_FACE_CARD ")
+                throw IllegalStateException("no element image system ${it.backImageName}")
             }
+        }
+    }
+
+    private fun addToMapImageSystem() {
+        try {
+            addToMap(context, IMAGE_FACE_CARD, ASSETS_PATH_IMAGE_SYSTEM + IMAGE_FACE_CARD)
+        } catch (e: Exception) {
+            throw IllegalStateException("no element image system $IMAGE_FACE_CARD ")
         }
     }
 

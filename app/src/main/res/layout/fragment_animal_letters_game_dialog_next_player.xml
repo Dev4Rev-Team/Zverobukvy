@@ -4,9 +4,10 @@
     android:id="@+id/next_player"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_red_transparent"
+    android:background="?app_wrong_color"
     android:clickable="true"
-    android:visibility="invisible">
+    android:visibility="invisible"
+    android:focusable="true">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/sector_menu_guidline3"
@@ -41,7 +42,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/margin_default"
-        app:layout_constraintTop_toTopOf="@+id/word_guidline3" />
+        app:layout_constraintTop_toTopOf="@+id/word_guidline3"
+        android:visibility="gone"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/next_player_tap_to_screen_text_view"
@@ -55,6 +57,7 @@
         android:textSize="@dimen/text_medium_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

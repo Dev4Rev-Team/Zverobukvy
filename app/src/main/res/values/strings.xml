@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">ЗооБуквы</string>
+    <string name="base_activity_name">BASE</string>
+    <string name="new_year_activity_name">NEW_YEAR</string>
+    <string name="theme_key">THEME</string>
     <!--Строки в интерфейсе-->
     <string name="color_text">Цвет</string>
     <string name="points_text">Счет</string>
@@ -43,6 +46,7 @@
     <string name="next_player_move_text">Ход следующего игрока</string>
     <string name="press_to_continue_text">Нажми, чтобы продолжить</string>
     <string name="word_guessed_text">Слово отгадано</string>
+    <string name="walk_computer_text">Ходит компьютер</string>
 
     <!--Смена ходов-->
     <string name="game_view_model_text_invalid_letters_multiplayer">"Ходит "</string>

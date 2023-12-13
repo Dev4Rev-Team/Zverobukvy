@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_color"
+    android:background="?app_background_color"
     android:clickable="true"
     android:focusable="true"
     android:visibility="invisible"
@@ -22,9 +22,10 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@drawable/background_white"
+            android:tint="?app_text_color_lvl2"
             android:elevation="@dimen/elevation_default"
             android:scaleType="center"
-            android:src="@drawable/ic_arrow_left"
+            app:srcCompat="@drawable/ic_arrow_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,7 +38,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
 
             <com.google.android.material.circularreveal.CircularRevealLinearLayout
                 android:layout_width="match_parent"
@@ -75,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:textColor="?app_text_color_lvl2"
                     android:text="@string/username_default"
                     android:textSize="@dimen/text_medium_small" />
 
@@ -106,6 +107,7 @@
             android:layout_marginEnd="@dimen/margin_medium"
             android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
+            android:textColor="?app_text_color_lvl2"
             android:text="sound"
             android:textOff="🔈"
             android:textOn="🔊"
@@ -195,5 +197,9 @@
     <include
         android:id="@+id/next_player"
         layout="@layout/fragment_animal_letters_game_dialog_next_player" />
+
+    <include
+        android:id="@+id/walk_computer"
+        layout="@layout/fragment_animal_letters_game_dialog_walk_computer" />
 
 </RelativeLayout>

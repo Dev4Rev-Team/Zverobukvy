@@ -20,6 +20,7 @@ class App : Application(), AnimalLettersGameSubcomponentContainer {
             .builder()
             .contextModule(ContextModule(this))
             .build()
+
         super.onCreate()
         // устанавливаем DebugTree() для Timber
         if (BuildConfig.DEBUG) {
