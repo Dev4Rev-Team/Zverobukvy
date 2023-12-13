@@ -24,6 +24,10 @@ sealed interface AwardsScreenState {
         /** Состояние приходящее после отображения всех наград или их полного отсутствия
          */
         object CancelScreen : AwardsScreenState.Main
+
+        /** Состояние приходящее при инициализации ViewModel
+         */
+        object StartScreen : AwardsScreenState.Main
     }
 
 

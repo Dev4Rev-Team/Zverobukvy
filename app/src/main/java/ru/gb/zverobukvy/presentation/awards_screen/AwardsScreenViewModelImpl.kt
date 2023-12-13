@@ -22,8 +22,8 @@ class AwardsScreenViewModelImpl @Inject constructor(
 
     private var listOfAwardedPlayers: List<PlayerInVM> = listOf()
 
-    private var playerIndex: Int = INIT_INDEX
-    private var awardIndex: Int = INIT_INDEX
+    private var playerIndex: Int = PLAYER_INIT_INDEX
+    private var awardIndex: Int = AWARDS_INIT_INDEX
 
     init {
         viewModelScope.launch {
@@ -35,11 +35,10 @@ class AwardsScreenViewModelImpl @Inject constructor(
             if (listOfAwardedPlayers.isEmpty())
                 mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
             else {
-                delay(200L)
-
-                mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
+                mainAwardsLiveData.value = AwardsScreenState.Main.StartScreen
+                /*mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
                 secondAwardsLiveData.value =
-                    listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
+                    listOfAwardedPlayers[playerIndex].awardsList[awardIndex]*/
             }
         }
     }
@@ -130,17 +129,23 @@ class AwardsScreenViewModelImpl @Inject constructor(
     }
 
     override fun onNextClick() {
-
-        if (awardIndex < listOfAwardedPlayers[playerIndex].awardsList.size - 1) {
-            awardIndex++
-            secondAwardsLiveData.value = listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
-        } else if (playerIndex < listOfAwardedPlayers.size - 1) {
-            playerIndex++
-            awardIndex = 0
-            mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
-            secondAwardsLiveData.value = listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
-        } else {
-            mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
+        viewModelScope.launch {
+            if (awardIndex < listOfAwardedPlayers[playerIndex].awardsList.size - 1) {
+                awardIndex++
+                if (playerIndex == 0) mainAwardsLiveData.value =
+                    listOfAwardedPlayers[playerIndex].player
+                secondAwardsLiveData.value =
+                    listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
+            } else if (playerIndex < listOfAwardedPlayers.size - 1) {
+                playerIndex++
+                awardIndex = 0
+                mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
+                delay(300L)
+                secondAwardsLiveData.value =
+                    listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
+            } else {
+                mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
+            }
         }
     }
 
@@ -151,6 +156,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
 
     companion object {
 
-        const val INIT_INDEX = 0
+        const val PLAYER_INIT_INDEX = 0
+        const val AWARDS_INIT_INDEX = -1
     }
 }

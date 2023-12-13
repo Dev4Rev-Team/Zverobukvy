@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,12 @@ import androidx.core.animation.addListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentAwardsScreenBinding
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
+import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
+import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 class AwardsScreenFragment : Fragment() {
@@ -28,6 +32,12 @@ class AwardsScreenFragment : Fragment() {
         })[AwardsScreenViewModelImpl::class.java]
     }
 
+    private val soundEffectPlayer: SoundEffectPlayer by lazy {
+        requireContext().animalLettersGameSubcomponentContainer.getAnimalLettersGameSubcomponent().soundEffectPlayer
+    }
+
+    private var animatorsList: MutableList<Animator> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,12 +49,28 @@ class AwardsScreenFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onResume() {
+        super.onResume()
 
+        initView()
+        soundEffectPlayer.play(SoundEnum.WORD_IS_GUESSED)
+    }
+
+    private fun initView() {
         subscribeToViewModelEvents()
 
-        binding.root.setOnClickListener { viewModel.onNextClick() }
+        binding.root.setOnClickListener {
+            if (animatorsList.isEmpty()) {
+                viewModel.onNextClick()
+            } else {
+                animatorsList.forEach { animator ->
+                    if (animator is AnimatorSet) {
+                        animator.end()
+                    }
+                    animatorsList.remove(animator)
+                }
+            }
+        }
     }
 
     private fun subscribeToViewModelEvents() {
@@ -71,19 +97,20 @@ class AwardsScreenFragment : Fragment() {
         }
     }
 
+
     private fun animateViewRatingIncrease(state: AwardsScreenState.Second.ViewRatingIncreaseState) {
         binding.cardFieldCardView.setCardBackgroundColor(state.typeCards.getColorId())
         binding.cardMountCardView.setCardBackgroundColor(getColorId(state.oldViewRating.decoration.idColor))
         binding.cardsCounterTextView.text = state.oldViewRating.rating.toString()
 
-        /*AnimatorSet()
+        AnimatorSet()
             .playOneAfterAnother(
                 listOf(
                     ObjectAnimator.ofInt(
                         *(state.oldViewRating.rating.rangeTo(99).toList().toIntArray())
                     ).addUpdateViewListener {
                         binding.cardsCounterTextView.text = it.animatedValue.toString()
-                    }.setDuration(COUNTER_ANIM_DELAY),
+                    }.setDuration(DURATION_OF_INCREASING_COUNTER),
                     AnimatorSet()
                         .playAtOnce(animatorsOfHidingCardField())
                         .addEndListener {
@@ -91,7 +118,7 @@ class AwardsScreenFragment : Fragment() {
                             binding.cardMountTwoCardView.alpha = 0f
                             binding.cardMountTwoCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
                         }
-                        .setDuration(ANIM_DELAY),
+                        .setDuration(DURATION_OF_CARD_STROKE_DISAPPEARANCE),
                     AnimatorSet()
                         .playAtOnce(animatorsOfMountColorShift())
                         .addEndListener {
@@ -99,23 +126,22 @@ class AwardsScreenFragment : Fragment() {
                             binding.cardMountCardView.alpha = 1f
                             binding.cardMountTwoCardView.setCardBackgroundColor(getColorId(R.color.white))
                         }
-                        .setDuration(ANIM_DELAY),
+                        .setDuration(DURATION_OF_CARD_STROKE_SHIFT),
                     AnimatorSet()
                         .playAtOnce(animatorsOfAppearanceCardField())
-                        .setDuration(ANIM_DELAY),
+                        .setDuration(DURATION_OF_CARD_STROKE_APPEARANCE),
                     ObjectAnimator.ofInt(
                         *(0.rangeTo(state.newViewRating.rating).toList()
                             .toIntArray())
                     ).addUpdateViewListener {
                         binding.cardsCounterTextView.text =
                             it.animatedValue.toString()
-                    }.setDuration(COUNTER_ANIM_DELAY)
-                    )
+                    }.setDuration(DURATION_OF_INCREASING_COUNTER)
+                )
             )
-            .setDuration(10000L)
-            .start()*/
+            .start(animatorsList)
 
-        ObjectAnimator.ofInt(
+        /*ObjectAnimator.ofInt(
             *(state.oldViewRating.rating.rangeTo(99).toList().toIntArray())
         ).addUpdateViewListener {
             binding.cardsCounterTextView.text = it.animatedValue.toString()
@@ -142,14 +168,14 @@ class AwardsScreenFragment : Fragment() {
                                     ).addUpdateViewListener {
                                         binding.cardsCounterTextView.text =
                                             it.animatedValue.toString()
-                                    }.setDuration(COUNTER_ANIM_DELAY).start()
+                                    }.setDuration(COUNTER_ANIM_DELAY).start(animatorsList)
                                 }
-                                .setDuration(ANIM_DELAY).start()
+                                .setDuration(ANIM_DELAY).start(animatorsList)
                         }
-                        .setDuration(ANIM_DELAY).start()
+                        .setDuration(ANIM_DELAY).start(animatorsList)
                 }
-                .setDuration(ANIM_DELAY).start()
-        }.setDuration(COUNTER_ANIM_DELAY).start()
+                .setDuration(ANIM_DELAY).start(animatorsList)
+        }.setDuration(COUNTER_ANIM_DELAY).start(animatorsList)*/
 
     }
 
@@ -209,6 +235,22 @@ class AwardsScreenFragment : Fragment() {
         binding.rangTextView.setTextColor(state.oldRank.idRankTextColor)
 
         AnimatorSet()
+            .playOneAfterAnother(
+                listOf(
+                    AnimatorSet()
+                        .playAtOnce(animatorsOfDisappearanceRankInFlesh())
+                        .addEndListener {
+                            binding.rangTextView.text = state.newRank.name
+                            binding.rangTextView.setTextColor(state.newRank.idRankTextColor)
+                        }
+                        .setDuration(DURATION_OF_TEXT_DISAPPEARANCE),
+                    AnimatorSet()
+                        .playAtOnce(animatorsOfAppearanceRankFromFlesh())
+                        .setDuration(DURATION_OF_TEXT_APPEARANCE)
+                )
+            ).start(animatorsList)
+
+        /*AnimatorSet()
             .playAtOnce(animatorsOfDisappearanceRankInFlesh())
             .addEndListener {
                 binding.rangTextView.text = state.newRank.name
@@ -218,7 +260,7 @@ class AwardsScreenFragment : Fragment() {
                     .playAtOnce(animatorsOfAppearanceRankFromFlesh())
                     .setDuration(ANIM_DELAY).start()
             }
-            .setDuration(ANIM_DELAY).start()
+            .setDuration(ANIM_DELAY).start()*/
     }
 
     private fun animatorsOfDisappearanceRankInFlesh(): List<Animator> {
@@ -261,17 +303,58 @@ class AwardsScreenFragment : Fragment() {
                 is AwardsScreenState.Main.AwardedPlayerState -> {
                     changePlayerScreenState()
 
-                    binding.playerNameTextView.text = it.playerName
+                    animatePlayerChange(it)
                 }
 
                 is AwardsScreenState.Main.CancelScreen -> {
+                    requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
                     parentFragmentManager.popBackStack()
+                }
+
+                is AwardsScreenState.Main.StartScreen -> {
+                    startScreenState()
                 }
             }
         }
     }
 
+    private fun animatePlayerChange(state: AwardsScreenState.Main.AwardedPlayerState) {
+        val textSize = binding.playerNameTextView.textSize.toInt()
+        val reductionArray = 0.rangeTo(textSize).toList().toIntArray().reversedArray()
+        val increaseArray = 0.rangeTo(textSize).toList().toIntArray()
+
+        ObjectAnimator.ofInt(*reductionArray)
+            .addUpdateViewListener {
+                binding.playerNameTextView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    (it.animatedValue as Int).toFloat()
+                )
+            }
+            .addEndListener {
+                binding.playerNameTextView.text = state.playerName
+
+                ObjectAnimator.ofInt(*increaseArray)
+                    .addUpdateViewListener {
+                        binding.playerNameTextView.setTextSize(
+                            TypedValue.COMPLEX_UNIT_PX,
+                            (it.animatedValue as Int).toFloat()
+                        )
+                    }
+                    .setDuration(DURATION_OF_PLAYER_APPEARANCE)
+                    .start()
+            }
+            .setDuration(DURATION_OF_PLAYER_DISAPPEARANCE)
+            .start()
+    }
+
+    private fun startScreenState() {
+        binding.startScreen.visibility = View.VISIBLE
+        binding.mainScreen.visibility = View.INVISIBLE
+    }
+
     private fun changePlayerScreenState() {
+        binding.startScreen.visibility = View.INVISIBLE
+        binding.mainScreen.visibility = View.VISIBLE
         binding.viewRatingAwardLayout.visibility = View.INVISIBLE
         binding.rangAwardLayout.visibility = View.INVISIBLE
     }
@@ -301,8 +384,19 @@ class AwardsScreenFragment : Fragment() {
 
     companion object {
 
-        const val ANIM_DELAY = 3000L
-        const val COUNTER_ANIM_DELAY = 1000L
+        // PlayerChange
+        const val DURATION_OF_PLAYER_APPEARANCE = 300L
+        const val DURATION_OF_PLAYER_DISAPPEARANCE = 300L
+
+        // RankIncrease
+        const val DURATION_OF_TEXT_APPEARANCE = 3000L
+        const val DURATION_OF_TEXT_DISAPPEARANCE = 3000L
+
+        // ViewRatingIncrease
+        const val DURATION_OF_INCREASING_COUNTER = 1000L
+        const val DURATION_OF_CARD_STROKE_APPEARANCE = 2500L
+        const val DURATION_OF_CARD_STROKE_SHIFT = 700L
+        const val DURATION_OF_CARD_STROKE_DISAPPEARANCE = 2500L
 
         const val TAG = "AwardsScreenFragmentTag"
 
@@ -310,6 +404,19 @@ class AwardsScreenFragment : Fragment() {
     }
 }
 
+private fun AnimatorSet.playOneAfterAnother(list: List<Animator>): AnimatorSet {
+    this.playSequentially(list)
+
+    return this
+}
+
+
+private fun Animator.start(animations: MutableList<Animator>): Animator {
+    animations.add(this)
+    this.addEndListener { animations.remove(this) }
+    this.start()
+    return this
+}
 
 private fun ValueAnimator.addUpdateViewListener(function: (animation: ValueAnimator) -> Unit): ValueAnimator {
     this.addUpdateListener { function.invoke(it) }

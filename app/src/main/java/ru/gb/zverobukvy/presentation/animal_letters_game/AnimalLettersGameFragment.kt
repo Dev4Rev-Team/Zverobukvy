@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
@@ -22,6 +21,7 @@ import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.domain.entity.card.LetterCard
+import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
 import ru.gb.zverobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.game_is_over_dialog.DataGameIsOverDialog
 import ru.gb.zverobukvy.presentation.animal_letters_game.game_is_over_dialog.GameIsOverDialogFragment
@@ -55,7 +55,7 @@ class AnimalLettersGameFragment :
     private var isEnableClick = true
 
     private fun initDagger() {
-        requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
+        requireContext().animalLettersGameSubcomponentContainer.createAnimalLettersGameSubcomponent(
             gameStart!!.typesCards, gameStart!!.players
         ).also { fragmentComponent ->
             viewModel = ViewModelProvider(

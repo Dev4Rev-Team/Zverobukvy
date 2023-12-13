@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DCA0EA"
-    android:orientation="vertical">
+    android:background="#CCA47AEF"
+    tools:background="#DCA0EA">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/start_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="invisible"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/awards_screen_title" />
+
+    <LinearLayout
+        android:id="@+id/main_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/awarded_player_frameLayout"
@@ -117,7 +131,7 @@
             android:id="@+id/view_rating_award_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/title_view_rating_textView"
@@ -148,10 +162,10 @@
                     android:id="@+id/card_mount_two_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:alpha="0.5"
                     app:cardBackgroundColor="#FFFFFF"
                     app:cardCornerRadius="20dp"
-                    app:strokeWidth="0dp">
+                    app:strokeWidth="0dp"
+                    tools:alpha="0.5">
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -159,10 +173,10 @@
                     android:id="@+id/card_mount_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:alpha="0.5"
                     app:cardBackgroundColor="#FDD835"
                     app:cardCornerRadius="20dp"
-                    app:strokeWidth="0dp">
+                    app:strokeWidth="0dp"
+                    tools:alpha="0.5">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_field_field_cardView"
@@ -204,3 +218,5 @@
     </FrameLayout>
 
 </LinearLayout>
+
+    </FrameLayout>
