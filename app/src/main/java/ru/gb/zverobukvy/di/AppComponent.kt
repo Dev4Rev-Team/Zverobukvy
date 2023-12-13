@@ -4,7 +4,6 @@ import dagger.Component
 import ru.gb.zverobukvy.data.view_rating_provider.ViewRatingProviderFactory
 import ru.gb.zverobukvy.di.modules.AppModule
 import ru.gb.zverobukvy.di.modules.ContextModule
-import ru.gb.zverobukvy.presentation.awards_screen.AwardsScreenViewModelImpl
 import ru.gb.zverobukvy.presentation.LoadingDataViewModelImpl
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuViewModelImpl
 import javax.inject.Singleton
@@ -16,8 +15,6 @@ interface AppComponent {
     val settingsScreenViewModel: MainMenuViewModelImpl
 
     val loadingDataViewModel: LoadingDataViewModelImpl
-
-    val awardsScreenViewModel: AwardsScreenViewModelImpl
 
     fun getAnimalLettersGameSubcomponentFactory(): AnimalLettersGameSubcomponent.Factory
 

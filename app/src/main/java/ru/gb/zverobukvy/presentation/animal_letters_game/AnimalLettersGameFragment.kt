@@ -426,7 +426,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
-            if (it.isFastEndGame) {
+            if (false/*it.isFastEndGame*/) {
                 event.popBackStack()
             } else {
                 val players = DataGameIsOverDialog.map(it.players)

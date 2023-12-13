@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
-import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.FragmentAwardsScreenBinding
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
@@ -28,7 +27,8 @@ class AwardsScreenFragment : Fragment() {
 
     private val viewModel: AwardsScreenViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
-            requireContext().appComponent.awardsScreenViewModel
+            requireContext().animalLettersGameSubcomponentContainer
+                .getAnimalLettersGameSubcomponent().awardsScreenViewModel
         })[AwardsScreenViewModelImpl::class.java]
     }
 
@@ -85,12 +85,14 @@ class AwardsScreenFragment : Fragment() {
                 is AwardsScreenState.Second.RankIncreaseState -> {
                     rangAwardScreenState()
 
+                    soundEffectPlayer.play(SoundEnum.RANK_INCREASE)
                     animateRangIncrease(state)
                 }
 
                 is AwardsScreenState.Second.ViewRatingIncreaseState -> {
                     viewRatingAwardScreenState()
 
+                    soundEffectPlayer.play(SoundEnum.VIEW_RATING_INCREASE)
                     animateViewRatingIncrease(state)
                 }
             }
@@ -303,6 +305,7 @@ class AwardsScreenFragment : Fragment() {
                 is AwardsScreenState.Main.AwardedPlayerState -> {
                     changePlayerScreenState()
 
+                    soundEffectPlayer.play(SoundEnum.NEW_AWARDED_PLAYER)
                     animatePlayerChange(it)
                 }
 
@@ -312,6 +315,7 @@ class AwardsScreenFragment : Fragment() {
                 }
 
                 is AwardsScreenState.Main.StartScreen -> {
+                    soundEffectPlayer.play(SoundEnum.AWARD_SCREEN_INIT)
                     startScreenState()
                 }
             }
