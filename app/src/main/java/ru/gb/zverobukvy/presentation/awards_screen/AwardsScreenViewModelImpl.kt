@@ -20,6 +20,8 @@ class AwardsScreenViewModelImpl @Inject constructor(
     private val mainAwardsLiveData = MutableLiveData<AwardsScreenState.Main>()
     private val secondAwardsLiveData = MutableLiveData<AwardsScreenState.Second>()
 
+    private var isPossibleToClick: Boolean = false
+
     private var listOfAwardedPlayers: List<PlayerInVM> = listOf()
 
     private var playerIndex: Int = PLAYER_INIT_INDEX
@@ -36,9 +38,14 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
             else {
                 mainAwardsLiveData.value = AwardsScreenState.Main.StartScreen
-                /*mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
-                secondAwardsLiveData.value =
-                    listOfAwardedPlayers[playerIndex].awardsList[awardIndex]*/
+                isPossibleToClick = false
+
+                viewModelScope.launch {
+                    delay(1000L)
+                    onNextClickInVM()
+                    delay(200L)
+                    isPossibleToClick = true
+                }
             }
         }
     }
@@ -129,6 +136,12 @@ class AwardsScreenViewModelImpl @Inject constructor(
     }
 
     override fun onNextClick() {
+        if (isPossibleToClick) {
+            onNextClickInVM()
+        }
+    }
+
+    private fun onNextClickInVM() {
         viewModelScope.launch {
             if (awardIndex < listOfAwardedPlayers[playerIndex].awardsList.size - 1) {
                 awardIndex++

@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCA47AEF"
-    tools:background="#DCA0EA">
+    android:propertyName=""
+    tools:background="#A47AEF"
+    android:background="#DCA0EA">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/start_screen"
@@ -35,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="Игрок"
+                android:text="@string/award_screen_player_view_title"
                 android:textSize="40sp"
                 app:layout_constraintBottom_toTopOf="@+id/awarded_player_guideline"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Ранг"
+                android:text="@string/award_screen_rank_increase_title"
                 android:textSize="40sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -138,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Рейтинг"
+                android:text="@string/award_screen_view_rating_increase_title"
                 android:textSize="40sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
