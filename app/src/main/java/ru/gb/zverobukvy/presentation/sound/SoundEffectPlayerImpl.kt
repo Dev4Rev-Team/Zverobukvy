@@ -51,6 +51,15 @@ class SoundEffectPlayerImpl @Inject constructor(
                     throw IllegalStateException("sound no element LettersCards ${it.soundName}")
                 }
             }
+
+            SoundEnum.values().forEach {
+                try {
+                    soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
+                } catch (e: Exception) {
+                    throw IllegalStateException("sound no element systemSound ${it.assetPath}")
+                }
+            }
+
             animalLettersCardsRepository.getWordCards().forEach {
                 try {
                     soundsMap[it.soundName] =
@@ -61,13 +70,7 @@ class SoundEffectPlayerImpl @Inject constructor(
                     }
                 }
             }
-            SoundEnum.values().forEach {
-                try {
-                    soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
-                } catch (e: Exception) {
-                    throw IllegalStateException("sound no element systemSound ${it.assetPath}")
-                }
-            }
+
         }
     }
 
@@ -107,7 +110,11 @@ class SoundEffectPlayerImpl @Inject constructor(
 
     override fun play(key: String) {
         if (!enable) return
-        val idStream = soundsMap[key]
+        var idStream = soundsMap[key]
+        if(idStream == null){
+            soundsMap[key] = loadSound(ASSETS_PATH_SOUND_WORDS + key)
+            idStream = soundsMap[key]
+        }
         playSound(idStream)
     }
 
@@ -116,12 +123,6 @@ class SoundEffectPlayerImpl @Inject constructor(
     }
 
     private fun playSound(idStream: Int?) {
-        if (!job.isCompleted) {
-            runBlocking {
-                job.join()
-            }
-        }
-
         if (isLoad.contains(idStream)) {
             val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
             audioManager?.let {

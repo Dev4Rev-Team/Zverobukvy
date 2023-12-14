@@ -167,6 +167,7 @@ class AnimalLettersGameFragment :
     private fun initView() {
         binding.nextWord.root.setOnClickListener {
             isClick {
+                binding.nextWord.root.isClickable = false
                 event.onClickNextWord()
             }
         }
@@ -535,6 +536,7 @@ class AnimalLettersGameFragment :
             ).apply {
                 doOnEnd {
                     binding.nextWord.root.visibility = View.INVISIBLE
+                    binding.nextWord.root.isClickable = true
                 }
             }
             hideScreenWalkComputer =
