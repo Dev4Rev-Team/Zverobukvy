@@ -23,7 +23,7 @@
 
         <item name="app_next_player_color">@drawable/background_green_transparent</item>
         <item name="app_wrong_color">@drawable/background_red_transparent</item>
-        <item name="app_computer_color">@drawable/background_black_transparent</item>
+        <item name="app_computer_color">@color/transparent</item>
     </style>
 
     <!--Default Theme-->
@@ -61,7 +61,7 @@
 
         <item name="app_next_player_color">@drawable/background_white_transparent</item>
         <item name="app_wrong_color">@drawable/background_blue_transparent</item>
-<!--        <item name="app_computer_color">#4A4A4A</item>-->
+        <item name="app_computer_color">@color/transparent</item>
     </style>
 
 </resources>

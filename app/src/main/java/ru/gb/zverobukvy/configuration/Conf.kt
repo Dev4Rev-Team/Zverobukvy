@@ -139,11 +139,11 @@ class Conf {
         // проверить файлы картинок
         const val DEBUG_CHECK_IMAGE_FILES = DEBUG
 
-        // отключить проверку файлоа звука слов
+        // отключить проверку файлов звука слов
         const val DEBUG_DISABLE_CHECK_SOUND_FILE = DEBUG
 
         // проверить базу данных на корректность
-        const val IS_CHECK_DATA = DEBUG
+        const val IS_CHECK_DATA = false
       
        /**
          * Новогодний период
