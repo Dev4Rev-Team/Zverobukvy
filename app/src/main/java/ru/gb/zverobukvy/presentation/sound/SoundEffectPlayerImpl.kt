@@ -51,16 +51,7 @@ class SoundEffectPlayerImpl @Inject constructor(
                     throw IllegalStateException("sound no element LettersCards ${it.soundName}")
                 }
             }
-            animalLettersCardsRepository.getWordCards().forEach {
-                try {
-                    soundsMap[it.soundName] =
-                        loadSound(ASSETS_PATH_SOUND_WORDS + "RU_" + it.soundName)
-                } catch (e: Exception) {
-                    if(!Conf.DEBUG_DISABLE_CHECK_SOUND_FILE){
-                        throw IllegalStateException("sound no element WordCard ${it.soundName}")
-                    }
-                }
-            }
+
             SoundEnum.values().forEach {
                 try {
                     soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
@@ -68,6 +59,18 @@ class SoundEffectPlayerImpl @Inject constructor(
                     throw IllegalStateException("sound no element systemSound ${it.assetPath}")
                 }
             }
+
+            animalLettersCardsRepository.getWordCards().forEach {
+                try {
+                    soundsMap[it.soundName] =
+                        loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
+                } catch (e: Exception) {
+                    if(!Conf.DEBUG_DISABLE_CHECK_SOUND_FILE){
+                        throw IllegalStateException("sound no element WordCard ${it.soundName}")
+                    }
+                }
+            }
+
         }
     }
 
@@ -107,7 +110,11 @@ class SoundEffectPlayerImpl @Inject constructor(
 
     override fun play(key: String) {
         if (!enable) return
-        val idStream = soundsMap[key]
+        var idStream = soundsMap[key]
+        if(idStream == null){
+            soundsMap[key] = loadSound(ASSETS_PATH_SOUND_WORDS + key)
+            idStream = soundsMap[key]
+        }
         playSound(idStream)
     }
 
@@ -116,12 +123,6 @@ class SoundEffectPlayerImpl @Inject constructor(
     }
 
     private fun playSound(idStream: Int?) {
-        if (!job.isCompleted) {
-            runBlocking {
-                job.join()
-            }
-        }
-
         if (isLoad.contains(idStream)) {
             val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
             audioManager?.let {

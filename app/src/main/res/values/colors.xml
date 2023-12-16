@@ -52,4 +52,6 @@
 
     <color name="splash_screen_background_color">#2C7DF5</color>
     <color name="ic_launcher_fox_background">#6DD2FF</color>
+
+    <color name="red_new_year">#D10013</color>
 </resources>

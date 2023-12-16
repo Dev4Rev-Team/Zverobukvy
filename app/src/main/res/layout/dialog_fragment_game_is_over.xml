@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_violet_pastel"
+    android:background="?app_end_game_background_color"
     android:clickable="true"
     android:focusable="true">
 
@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/margin_medium"
         app:size_avatar_one="60dp"
         app:size_avatar_two="52dp"
-        app:size_avatar_three="48dp"
+        app:size_avatar_three="52dp"
         app:main_horizontal_gap="16dp"
         app:padding_image="8dp"
         app:color_one="#EEE020"
@@ -38,14 +38,13 @@
 
     </ru.gb.zverobukvy.presentation.customview.CustomImageRatingView>
 
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/game_end_text"
-        android:textColor="@color/white"
+        android:textColor="?app_text_color_lvl3"
         android:textSize="@dimen/text_medium"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -57,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/game_time_text"
-        android:textColor="@color/white"
+        android:textColor="?app_text_color_lvl3"
         android:textSize="@dimen/text_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +66,7 @@
         android:id="@+id/time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:textColor="?app_text_color_lvl3"
         android:textSize="@dimen/text_small"
         app:layout_constraintEnd_toEndOf="@+id/title_time_text_view"
         app:layout_constraintStart_toStartOf="@+id/title_time_text_view"
@@ -80,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/points_text"
-        android:textColor="@color/white"
+        android:textColor="?app_text_color_lvl3"
         android:textSize="@dimen/text_medium_small"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -105,15 +104,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ok_button"
-        style="@style/Button.Big"
+        style="@style/Button.Big.Dark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
         android:text="@string/ok"
-        android:textColor="@color/color_violet_pastel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

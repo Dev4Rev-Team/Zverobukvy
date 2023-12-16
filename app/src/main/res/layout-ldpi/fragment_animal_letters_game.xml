@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_color"
+    android:background="?app_background_color"
     android:clickable="true"
     android:focusable="true"
     android:visibility="invisible"
@@ -22,6 +22,7 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@drawable/background_white"
+            android:tint="?app_text_color_lvl2"
             android:elevation="@dimen/elevation_default"
             android:scaleType="center"
             app:srcCompat="@drawable/ic_arrow_left"
@@ -74,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:textColor="?app_text_color_lvl2"
                     android:text="@string/username_default"
                     android:textSize="@dimen/text_medium_small" />
 
@@ -105,6 +107,7 @@
             android:layout_marginEnd="@dimen/margin_medium"
             android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
+            android:textColor="?app_text_color_lvl2"
             android:text="sound"
             android:textOff="🔈"
             android:textOn="🔊"

@@ -11,8 +11,7 @@ class ThemeProviderImpl @Inject constructor() : ThemeProvider {
         return if (currentDate > START_NEY_YEAR_PERIOD || currentDate < END_NEY_YEAR_PERIOD)
             Theme.NEW_YEAR
         else
-            Theme.STANDARD
-
+            Theme.BASE
     }
 
     companion object {
