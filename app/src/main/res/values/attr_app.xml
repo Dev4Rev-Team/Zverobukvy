@@ -49,11 +49,11 @@
         <item name="android:textColor">?app_text_color_button_outline</item>
     </style>
 
-    <style name="Button.Medium">
+    <style name="Button.Medium" parent="Button">
         <item name="android:textSize">@dimen/text_medium</item>
     </style>
 
-    <style name="Button.Medium.Dark">
+    <style name="Button.Medium.Dark" parent="Button.Medium">
         <item name="backgroundTint">?app_text_color_button</item>
         <item name="android:textColor">?app_text_color_button_outline</item>
     </style>

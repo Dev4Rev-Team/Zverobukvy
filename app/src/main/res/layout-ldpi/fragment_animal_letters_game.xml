@@ -22,18 +22,19 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@drawable/background_white"
-            android:tint="?app_text_color_lvl2"
             android:elevation="@dimen/elevation_default"
             android:scaleType="center"
-            app:srcCompat="@drawable/ic_arrow_left"
+            android:tint="?app_text_color_lvl2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_left" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/player_name_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
+            android:background="@color/white"
             app:cardCornerRadius="@dimen/corner_radius_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,8 +76,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textColor="?app_text_color_lvl2"
                     android:text="@string/username_default"
+                    android:textColor="?app_text_color_lvl2"
                     android:textSize="@dimen/text_medium_small" />
 
             </com.google.android.material.circularreveal.CircularRevealLinearLayout>
@@ -107,8 +108,8 @@
             android:layout_marginEnd="@dimen/margin_medium"
             android:background="@drawable/background_white"
             android:elevation="@dimen/elevation_default"
-            android:textColor="?app_text_color_lvl2"
             android:text="sound"
+            android:textColor="?app_text_color_lvl2"
             android:textOff="🔈"
             android:textOn="🔊"
             app:layout_constraintEnd_toEndOf="parent"
