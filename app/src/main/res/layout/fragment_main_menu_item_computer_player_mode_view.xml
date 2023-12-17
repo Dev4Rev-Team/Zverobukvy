@@ -5,7 +5,7 @@
     android:id="@+id/player_constraint_layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:backgroundTint="@color/white"
     android:layout_marginVertical="4dp">
 
     <com.google.android.material.card.MaterialCardView
