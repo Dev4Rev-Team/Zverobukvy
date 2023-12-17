@@ -5,7 +5,6 @@
     android:id="@+id/player_constraint_layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/white"
     android:layout_marginVertical="@dimen/main_menu_card_vertical_margin">
 
     <com.google.android.material.card.MaterialCardView
@@ -15,6 +14,7 @@
         android:layout_marginStart="@dimen/margin_default"
         android:layout_marginTop="@dimen/margin_default"
         android:layout_marginEnd="@dimen/margin_default"
+        android:backgroundTint="@color/white"
         app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,11 +35,11 @@
                 android:layout_marginTop="@dimen/margin_default"
                 android:layout_marginEnd="44dp"
                 android:gravity="center"
-                android:textColor="?app_text_color_lvl2"
                 android:hint="@string/username_default"
                 android:inputType="text"
                 android:maxLength="10"
                 android:singleLine="true"
+                android:textColor="?app_text_color_lvl2"
                 android:textSize="@dimen/text_medium_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/avatar"
@@ -100,6 +100,7 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         app:cardCornerRadius="14dp"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@color/transparent"

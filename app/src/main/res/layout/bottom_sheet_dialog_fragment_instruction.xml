@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/white"
     android:elevation="@dimen/elevation_default"
     app:cardCornerRadius="24dp"
-    android:background="@color/white"
     app:strokeColor="@color/transparent">
 
     <com.google.android.material.circularreveal.CircularRevealLinearLayout
@@ -14,14 +14,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/header_image_view"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_minus" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/header_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="4"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_minus" />
+
+            <Button
+                android:id="@+id/header_button_close"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"
+                android:text="закрыть"
+                android:textColor="@color/color_red" />
+        </RelativeLayout>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
@@ -289,8 +306,8 @@
                     android:id="@+id/about_app_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginBottom="@dimen/margin_big"
+                    android:gravity="center"
                     android:text="@string/about_app"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
