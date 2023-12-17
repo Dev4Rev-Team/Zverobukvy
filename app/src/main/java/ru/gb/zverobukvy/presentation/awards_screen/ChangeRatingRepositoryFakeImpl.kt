@@ -22,6 +22,16 @@ class ChangeRatingRepositoryFakeImpl @Inject constructor(): ChangeRatingReposito
                     12,
                     12,
                 )
+            ),
+            Player.HumanPlayer(
+                "Павел",
+                19,
+                rating = Rating(
+                    96,
+                    98,
+                    12,
+                    12,
+                )
             )
         )
     }
@@ -44,8 +54,18 @@ class ChangeRatingRepositoryFakeImpl @Inject constructor(): ChangeRatingReposito
                 rating = Rating(
                     140,
                     240,
-                    340,
+                    12,
+                    12,
+                )
+            ),
+            Player.HumanPlayer(
+                "Павел",
+                19,
+                rating = Rating(
+                    102,
                     98,
+                    12,
+                    12,
                 )
             )
         )

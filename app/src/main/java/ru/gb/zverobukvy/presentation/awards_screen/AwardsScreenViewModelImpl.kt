@@ -1,5 +1,6 @@
 package ru.gb.zverobukvy.presentation.awards_screen
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,8 +44,6 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 viewModelScope.launch {
                     delay(1000L)
                     onNextClickInVM()
-                    delay(200L)
-                    isPossibleToClick = true
                 }
             }
         }
@@ -137,6 +136,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
 
     override fun onNextClick() {
         if (isPossibleToClick) {
+            isPossibleToClick = false
             onNextClickInVM()
         }
     }
@@ -145,20 +145,25 @@ class AwardsScreenViewModelImpl @Inject constructor(
         viewModelScope.launch {
             if (awardIndex < listOfAwardedPlayers[playerIndex].awardsList.size - 1) {
                 awardIndex++
-                if (playerIndex == 0) mainAwardsLiveData.value =
-                    listOfAwardedPlayers[playerIndex].player
+                if (playerIndex == 0) {
+                    mainAwardsLiveData.value =
+                        listOfAwardedPlayers[playerIndex].player
+                    delay(1900L)
+                }
                 secondAwardsLiveData.value =
                     listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
             } else if (playerIndex < listOfAwardedPlayers.size - 1) {
                 playerIndex++
                 awardIndex = 0
                 mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
-                delay(300L)
+                delay(1900L)
                 secondAwardsLiveData.value =
                     listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
             } else {
                 mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
             }
+            delay(300L)
+            isPossibleToClick = true
         }
     }
 

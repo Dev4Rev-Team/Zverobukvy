@@ -27,7 +27,7 @@
     <FrameLayout
         android:id="@+id/player_change_background_screen"
         android:background="@drawable/award_screen_player_gradient_background"
-        tools:visibility="invisible"
+        tools:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -35,7 +35,7 @@
         android:id="@+id/awarded_player_screen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/main_guideline"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -91,7 +91,7 @@
             android:id="@+id/rang_award_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:visibility="invisible">
 
 
             <TextView
