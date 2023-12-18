@@ -178,7 +178,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_end="20dp" />
 
-        <ToggleButton
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/sound_toggle_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -188,9 +188,7 @@
             android:checked="true"
             android:textColor="?app_text_color_lvl2"
             android:elevation="@dimen/elevation_default"
-            android:text="sound"
-            android:textOff="🔈"
-            android:textOn="🔊"
+            tools:src="@drawable/ic_sound_on"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_level" />
 

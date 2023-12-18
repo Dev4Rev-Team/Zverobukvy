@@ -2,9 +2,12 @@ package ru.gb.zverobukvy.presentation
 
 import android.content.pm.PackageManager
 import android.media.AudioManager
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +16,6 @@ import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.theme_provider.Theme
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
-import ru.gb.zverobukvy.utility.ChangeApplicationIcon
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
@@ -76,12 +78,29 @@ class MainActivity : AppCompatActivity() {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
                     BottomSheetBehavior.STATE_EXPANDED
                 }
+
                 BottomSheetBehavior.STATE_EXPANDED -> {
                     BottomSheetBehavior.STATE_HIDDEN
                 }
                 else -> bottomSheetBehavior.state
             }
         }
+
+        InstructionBottomSheetDialogFragment.setOnListenerClickClose(this) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        onBackPressedDispatcher.addCallback( this,object :OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if(bottomSheetView.visibility == View.VISIBLE){
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }else{
+                    finish()
+                }
+            }
+
+        })
+
     }
 
     private fun setHideSplashScreen() {
@@ -106,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getCurrentIconTheme(): Theme {
         var themeName: String? = null
-        try{
+        try {
             val activityInfo = intent.component?.let {
                 packageManager.getActivityInfo(
                     it,
@@ -114,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             themeName = activityInfo?.metaData?.getString(getString(R.string.theme_key))
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Timber.d(e.message)
         }
         return when (themeName) {
@@ -124,9 +143,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        if (actualTheme != getCurrentIconTheme())
-            ChangeApplicationIcon.setIcon(this, actualTheme)
-        super.onDestroy()
-    }
 }

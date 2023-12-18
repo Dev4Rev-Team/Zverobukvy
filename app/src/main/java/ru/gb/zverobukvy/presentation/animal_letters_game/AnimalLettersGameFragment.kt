@@ -97,7 +97,8 @@ class AnimalLettersGameFragment :
     private fun initSystemEventVM() {
         viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
             soundEffectPlayer.setEnable(it)
-            binding.soundToggleButton.isChecked = it
+            val icSoundToggle = if (it) R.drawable.ic_sound_on else R.drawable.ic_sound_off
+            binding.soundToggleButton.setImageResource(icSoundToggle)
         }
     }
 
