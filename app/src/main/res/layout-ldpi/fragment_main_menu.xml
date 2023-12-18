@@ -23,9 +23,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginStart="-8dp"
-        android:tint="?app_flag_color"
         android:layout_marginTop="@dimen/margin_small"
         android:rotation="-90"
+        android:tint="?app_flag_color"
         app:layout_constraintStart_toEndOf="@+id/app_name_text_view"
         app:layout_constraintTop_toTopOf="@+id/app_name_text_view"
         app:srcCompat="@drawable/ic_bookmark" />
@@ -161,7 +161,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/players_recycler_view"
         app:layout_constraintStart_toStartOf="@id/players_recycler_view"
-        app:layout_constraintTop_toTopOf="@id/sector_recycle_view_guideline">
+        app:layout_constraintTop_toTopOf="@id/sector_recycle_view_guideline"
+        app:strokeColor="@color/transparent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/avatars_recycler_view"

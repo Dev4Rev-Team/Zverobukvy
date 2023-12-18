@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/main_menu_card_vertical_margin"
+    android:backgroundTint="@color/white"
     android:elevation="@dimen/elevation_default"
     app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
     app:strokeColor="@color/transparent">

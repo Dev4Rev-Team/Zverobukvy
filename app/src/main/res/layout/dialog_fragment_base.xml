@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:backgroundTint="@color/secondary_color"
-    app:strokeColor="@color/transparent"
-    app:cardCornerRadius="@dimen/main_menu_card_corner_radius">
+    app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
+    app:strokeColor="@color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

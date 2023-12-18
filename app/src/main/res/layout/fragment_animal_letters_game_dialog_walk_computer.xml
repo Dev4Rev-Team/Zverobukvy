@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="?app_computer_color"
     android:clickable="true"
-    android:visibility="invisible"
-    android:focusable="true">
+    android:focusable="true"
+    android:visibility="invisible">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/sector_menu_guidline3"
@@ -31,19 +31,19 @@
         app:layout_constraintGuide_percent="0.34" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/next_player_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_default"
         android:gravity="center"
-        android:id="@+id/next_player_text_view"
         android:text="@string/walk_computer_text"
         android:textColor="#80000000"
         android:textSize="@dimen/text_medium"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="@dimen/margin_default"
-        app:layout_constraintTop_toTopOf="@+id/word_guidline3"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@+id/word_guidline3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
