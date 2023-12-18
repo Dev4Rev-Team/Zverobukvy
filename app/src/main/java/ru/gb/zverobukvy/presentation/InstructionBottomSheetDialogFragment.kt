@@ -20,11 +20,19 @@ class InstructionBottomSheetDialogFragment :
                 bundleOf()
             )
         }
+        binding.headerButtonClose.setOnClickListener {
+            parentFragmentManager.setFragmentResult(
+                TAG_INSTRUCTION_BOTTOM_SHEET_DIALOG_FRAGMENT_CLICK_CLOSE,
+                bundleOf()
+            )
+        }
     }
 
     companion object {
         const val TAG_INSTRUCTION_BOTTOM_SHEET_DIALOG_FRAGMENT_CLICK_HEADER =
             "InstructionBottomSheetDialogFragmentClickHeader"
+        const val TAG_INSTRUCTION_BOTTOM_SHEET_DIALOG_FRAGMENT_CLICK_CLOSE =
+            "InstructionBottomSheetDialogFragmentClickClose"
 
         @JvmStatic
         fun instance(): InstructionBottomSheetDialogFragment =
@@ -33,6 +41,15 @@ class InstructionBottomSheetDialogFragment :
         fun setOnListenerClickHeader(activity: AppCompatActivity, f: (() -> Unit)?) {
             activity.supportFragmentManager.setFragmentResultListener(
                 TAG_INSTRUCTION_BOTTOM_SHEET_DIALOG_FRAGMENT_CLICK_HEADER,
+                activity
+            ) { _, _ ->
+                f?.invoke()
+            }
+        }
+
+        fun setOnListenerClickClose(activity: AppCompatActivity, f: (() -> Unit)?) {
+            activity.supportFragmentManager.setFragmentResultListener(
+                TAG_INSTRUCTION_BOTTOM_SHEET_DIALOG_FRAGMENT_CLICK_CLOSE,
                 activity
             ) { _, _ ->
                 f?.invoke()

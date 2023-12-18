@@ -75,11 +75,17 @@ class MainActivity : AppCompatActivity() {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
                     BottomSheetBehavior.STATE_EXPANDED
                 }
+
                 BottomSheetBehavior.STATE_EXPANDED -> {
                     BottomSheetBehavior.STATE_HIDDEN
                 }
+
                 else -> bottomSheetBehavior.state
             }
+        }
+
+        InstructionBottomSheetDialogFragment.setOnListenerClickClose(this) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
 
@@ -105,7 +111,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getCurrentIconTheme(): Theme {
         var themeName: String? = null
-        try{
+        try {
             val activityInfo = intent.component?.let {
                 packageManager.getActivityInfo(
                     it,
@@ -113,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             themeName = activityInfo?.metaData?.getString(getString(R.string.theme_key))
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Timber.d(e.message)
         }
         return when (themeName) {
