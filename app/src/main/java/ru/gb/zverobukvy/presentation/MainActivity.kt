@@ -2,9 +2,12 @@ package ru.gb.zverobukvy.presentation
 
 import android.content.pm.PackageManager
 import android.media.AudioManager
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
@@ -79,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                 BottomSheetBehavior.STATE_EXPANDED -> {
                     BottomSheetBehavior.STATE_HIDDEN
                 }
-
                 else -> bottomSheetBehavior.state
             }
         }
@@ -87,6 +89,18 @@ class MainActivity : AppCompatActivity() {
         InstructionBottomSheetDialogFragment.setOnListenerClickClose(this) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
+
+        onBackPressedDispatcher.addCallback( this,object :OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if(bottomSheetView.visibility == View.VISIBLE){
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }else{
+                    finish()
+                }
+            }
+
+        })
+
     }
 
     private fun setHideSplashScreen() {
