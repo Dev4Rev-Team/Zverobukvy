@@ -160,7 +160,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/players_recycler_view"
         app:layout_constraintStart_toStartOf="@id/players_recycler_view"
-        app:layout_constraintTop_toTopOf="@id/sector_recycle_view_guideline">
+        app:layout_constraintTop_toTopOf="@id/sector_recycle_view_guideline"
+        app:strokeColor="@color/transparent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/avatars_recycler_view"
