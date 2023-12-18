@@ -13,7 +13,6 @@ import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.theme_provider.Theme
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
-import ru.gb.zverobukvy.utility.ChangeApplicationIcon
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
@@ -124,9 +123,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        if (actualTheme != getCurrentIconTheme())
-            ChangeApplicationIcon.setIcon(this, actualTheme)
-        super.onDestroy()
-    }
 }
