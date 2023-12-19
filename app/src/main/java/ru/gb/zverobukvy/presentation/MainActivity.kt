@@ -2,12 +2,10 @@ package ru.gb.zverobukvy.presentation
 
 import android.content.pm.PackageManager
 import android.media.AudioManager
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +19,7 @@ import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
-
+    lateinit var backPressedCallback: OnBackPressedCallback
     private val viewModel: LoadingDataViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             appComponent.loadingDataViewModel
@@ -57,20 +55,23 @@ class MainActivity : AppCompatActivity() {
                 .commitAllowingStateLoss()
     }
 
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private fun initBottomSheet() {
         val bottomSheetView = findViewById<View>(R.id.containerBottomSheet)
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
+        bottomSheetView.visibility = View.VISIBLE
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
 
         MainMenuFragment.setOnListenerShowInstruction(this) {
-            bottomSheetView.visibility = View.VISIBLE
             val bottomFragment =
                 InstructionBottomSheetDialogFragment.instance()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.containerBottomSheet, bottomFragment)
                 .commitAllowingStateLoss()
-            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            }
+
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            backPressedCallback.isEnabled = true
         }
 
         InstructionBottomSheetDialogFragment.setOnListenerClickHeader(this) {
@@ -82,24 +83,31 @@ class MainActivity : AppCompatActivity() {
                 BottomSheetBehavior.STATE_EXPANDED -> {
                     BottomSheetBehavior.STATE_HIDDEN
                 }
+
                 else -> bottomSheetBehavior.state
+            }
+            if(bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN){
+                backPressedCallback.isEnabled = false
             }
         }
 
         InstructionBottomSheetDialogFragment.setOnListenerClickClose(this) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            backPressedCallback.isEnabled = false
         }
 
-        onBackPressedDispatcher.addCallback( this,object :OnBackPressedCallback(true){
+        backPressedCallback = object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
-                if(bottomSheetView.visibility == View.VISIBLE){
+                if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                }else{
-                    finish()
+                    isEnabled = false
                 }
             }
+        }
 
-        })
+        onBackPressedDispatcher.addCallback( this, backPressedCallback)
+
+
 
     }
 
@@ -142,5 +150,7 @@ class MainActivity : AppCompatActivity() {
             else -> Theme.BASE
         }
     }
+
+
 
 }
