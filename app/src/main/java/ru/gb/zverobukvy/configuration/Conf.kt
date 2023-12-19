@@ -103,6 +103,9 @@ class Conf {
         // Слишком маленкое значение приводит к багам !!
         const val AUTO_NEXT_PLAYER_DELAY = 1500L
 
+        // задержка перед отправкой следующего слова
+        const val AUTO_NEXT_WORD_DELAY = 1700L
+
         /**
          * Настройки рейтинга
          */

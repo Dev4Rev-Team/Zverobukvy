@@ -467,7 +467,7 @@ class AnimalLettersGameFragment :
         }
 
         fun onClickNextWord() {
-            viewModel.onClickNextWord()
+            //viewModel.onClickNextWord()
         }
 
         fun popBackStack() {

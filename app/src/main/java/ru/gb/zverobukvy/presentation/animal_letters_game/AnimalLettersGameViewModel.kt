@@ -47,7 +47,7 @@ interface AnimalLettersGameViewModel {
      */
     fun onClickLetterCard(positionSelectedLetterCard: Int)
 
-    /**
+    /*/**
     Метод вызывается при нажатии пользователем кнопки перехода хода к следующему игроку, в этом методе
     viewModel (без обращения к интерактору) присваивает сhangingGameStateLiveData изменение
     состояния игры, соответствующее переходу хода к следующему игроку
@@ -59,7 +59,7 @@ interface AnimalLettersGameViewModel {
 
      * @see [ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState.NextGuessWord]
      */
-    fun onClickNextWord()
+    fun onClickNextWord()*/
 
     /**
     Метод вызывается при нажатии пользователем кнопки Back, в этом методе viewModel (без обращения

@@ -97,6 +97,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 updateViewModels(state)
 
                 initAutoNextPlayerClick(state)
+                if (state is ChangingState.GuessedWord) {
+                    delay(AUTO_NEXT_WORD_DELAY)
+                    onClickNextWord()
+                }
 
                 calculateDelayBetweenStates(index, viewState)
             }
@@ -456,7 +460,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
     }
 
-    override fun onClickNextWalkingPlayer() {
+    private fun onClickNextWalkingPlayer() {
         isWaitingNextPlayer = false
 
         if (!isClickNextWalkingPlayer) {
@@ -465,7 +469,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         }
     }
 
-    override fun onClickNextWord() {
+    private fun onClickNextWord() {
         animalLettersGameInteractor.getNextWordCard()
     }
 
@@ -510,6 +514,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         const val COMPUTER_DELAY = Conf.COMPUTER_DELAY
         const val REPEAT_COMPUTER_DELAY = Conf.REPEAT_COMPUTER_DELAY
         const val AUTO_NEXT_PLAYER_DELAY = Conf.AUTO_NEXT_PLAYER_DELAY
+        const val AUTO_NEXT_WORD_DELAY = Conf.AUTO_NEXT_WORD_DELAY
 
         const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"
