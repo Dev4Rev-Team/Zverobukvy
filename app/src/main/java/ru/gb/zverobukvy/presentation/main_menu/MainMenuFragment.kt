@@ -180,6 +180,10 @@ class MainMenuFragment :
             )
             adapter = avatarsAdapter
         }
+        binding.closeAvatarRecyclerViewLayout.setOnClickListener {
+            // закрываем список аватарок через метод клика на свободную область экрана
+            viewModel.onClickScreen()
+        }
     }
 
     private fun initShowInstructionImageView() {
@@ -375,13 +379,13 @@ class MainMenuFragment :
         when (avatarsScreenState) {
             MainMenuState.AvatarsScreenState.HideAvatarsState -> {
                 Timber.d("HideAvatarsState")
-                binding.avatarsRecyclerViewLayout.visibility = View.GONE
+                binding.avatarsRecyclerViewGroup.visibility = View.GONE
                 avatarsAdapter.resetAvatars()
             }
 
             is MainMenuState.AvatarsScreenState.ShowAvatarsState -> {
                 Timber.d("ShowAvatarsState")
-                binding.avatarsRecyclerViewLayout.visibility = View.VISIBLE
+                binding.avatarsRecyclerViewGroup.visibility = View.VISIBLE
                 avatarsAdapter.setAvatars(avatarsScreenState.avatars)
                 binding.avatarsRecyclerView.scrollToPosition(avatarsScreenState.scrollPosition)
             }
