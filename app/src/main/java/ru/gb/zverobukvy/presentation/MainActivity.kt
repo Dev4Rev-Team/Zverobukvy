@@ -2,12 +2,10 @@ package ru.gb.zverobukvy.presentation
 
 import android.content.pm.PackageManager
 import android.media.AudioManager
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
@@ -102,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    isEnabled = false
                 }
             }
         }
