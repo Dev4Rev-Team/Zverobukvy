@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
+import ru.gb.zverobukvy.appComponent
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
+import ru.gb.zverobukvy.databinding.AwardScreenRankIncreaseBinding
 import ru.gb.zverobukvy.databinding.FragmentAwardsScreenBinding
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
@@ -45,6 +50,8 @@ class AwardsScreenFragment : Fragment() {
     private val soundEffectPlayer: SoundEffectPlayer by lazy {
         requireContext().animalLettersGameSubcomponentContainer.getAnimalLettersGameSubcomponent().soundEffectPlayer
     }
+
+    private val imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
 
     private var animatorsList: MutableList<Animator> = mutableListOf()
 
@@ -113,8 +120,8 @@ class AwardsScreenFragment : Fragment() {
 
 
     private fun animateViewRatingIncrease(state: AwardsScreenState.Second.ViewRatingIncreaseState) {
-        binding.cardFieldCardView.setCardBackgroundColor(state.typeCards.getColorId())
-        binding.cardMountCardView.setCardBackgroundColor(getColorId(state.oldViewRating.decoration.idColor))
+        binding.cardFieldUpperCardView.setCardBackgroundColor(state.typeCards.getColorId())
+        binding.cardFieldUpperCardView .setCardBackgroundColor(getColorId(state.oldViewRating.decoration.idColor))
         binding.cardsCounterTextView.text = state.oldViewRating.rating.toString()
 
         AnimatorSet()
@@ -130,28 +137,33 @@ class AwardsScreenFragment : Fragment() {
                         *(state.oldViewRating.rating.rangeTo(99).toList().toIntArray())
                     ).addUpdateViewListener {
                         binding.cardsCounterTextView.text = it.animatedValue.toString()
-                    }.setDuration(DURATION_OF_INCREASING_COUNTER),
-                    AnimatorSet()
+                    }
+                        .addEndListener {
+                            binding.cardMountLowerCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
+                        }
+                        .setDuration(DURATION_OF_INCREASING_COUNTER),
+                    /*AnimatorSet()
                         .playAtOnce(animatorsOfHidingCardField())
                         .addEndListener {
-                            binding.cardsCounterTextView.text = 0.toString()
-                            binding.cardMountTwoCardView.alpha = 0f
-                            binding.cardMountTwoCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
+                            binding.cardsCounterTextView.text = 1.toString()
+                            binding.cardMountLowerCardView.alpha = 0f
+                            binding.cardMountLowerCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
                         }
-                        .setDuration(DURATION_OF_CARD_STROKE_DISAPPEARANCE),
+                        .setDuration(DURATION_OF_CARD_STROKE_DISAPPEARANCE),*/
                     AnimatorSet()
                         .playAtOnce(animatorsOfMountColorShift())
                         .addEndListener {
-                            binding.cardMountCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
-                            binding.cardMountCardView.alpha = 1f
-                            binding.cardMountTwoCardView.setCardBackgroundColor(getColorId(R.color.white))
+                            //binding.cardMountUpperCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
+                            binding.cardsCounterTextView.text = 1.toString()
+                            //binding.cardMountUpperCardView.alpha = 1f
+                            //binding.cardMountLowerCardView.setCardBackgroundColor(getColorId(R.color.white))
                         }
                         .setDuration(DURATION_OF_CARD_STROKE_SHIFT),
-                    AnimatorSet()
+                    /*AnimatorSet()
                         .playAtOnce(animatorsOfAppearanceCardField())
-                        .setDuration(DURATION_OF_CARD_STROKE_APPEARANCE),
+                        .setDuration(DURATION_OF_CARD_STROKE_APPEARANCE),*/
                     ObjectAnimator.ofInt(
-                        *(0.rangeTo(state.newViewRating.rating).toList()
+                        *(1.rangeTo(state.newViewRating.rating).toList()
                             .toIntArray())
                     ).addUpdateViewListener {
                         binding.cardsCounterTextView.text =
@@ -165,13 +177,21 @@ class AwardsScreenFragment : Fragment() {
     private fun animatorsOfMountColorShift(): List<Animator> {
         return listOf(
             ObjectAnimator.ofFloat(
-                binding.cardMountCardView,
+                binding.cardMountUpperCardView,
+                View.Y,
+                0f,
+                700f
+            )
+        )
+        return listOf(
+            ObjectAnimator.ofFloat(
+                binding.cardMountUpperCardView,
                 View.ALPHA,
                 1f,
                 0f
             ),
             ObjectAnimator.ofFloat(
-                binding.cardMountTwoCardView,
+                binding.cardMountLowerCardView,
                 View.ALPHA,
                 0f,
                 1f
@@ -182,13 +202,13 @@ class AwardsScreenFragment : Fragment() {
     private fun animatorsOfHidingCardField(): List<Animator> {
         return listOf(
             ObjectAnimator.ofFloat(
-                binding.cardFieldCardView,
+                binding.cardFieldUpperCardView,
                 View.ALPHA,
                 1f,
                 0f
             ),
             ObjectAnimator.ofFloat(
-                binding.cardFieldFieldCardView,
+                binding.cardFieldLowerCardView,
                 View.ALPHA,
                 1f,
                 0f
@@ -199,13 +219,13 @@ class AwardsScreenFragment : Fragment() {
     private fun animatorsOfAppearanceCardField(): List<Animator> {
         return listOf(
             ObjectAnimator.ofFloat(
-                binding.cardFieldCardView,
+                binding.cardFieldUpperCardView,
                 View.ALPHA,
                 0f,
                 1f
             ),
             ObjectAnimator.ofFloat(
-                binding.cardFieldFieldCardView,
+                binding.cardFieldLowerCardView,
                 View.ALPHA,
                 0f,
                 1f
@@ -214,8 +234,9 @@ class AwardsScreenFragment : Fragment() {
     }
 
     private fun animateRangIncrease(state: AwardsScreenState.Second.RankIncreaseState) {
-        binding.rangTextView.text = state.oldRank.name
-        binding.rangTextView.setTextColor(state.oldRank.idRankTextColor)
+        binding.rankTextView.text = state.oldRank.name
+        binding.rankTextView.setTextColor(state.oldRank.idRankTextColor)
+        binding.avatar.strokeColor = state.oldRank.idBorderRankColor
 
         AnimatorSet()
             .playOneAfterAnother(
@@ -229,8 +250,9 @@ class AwardsScreenFragment : Fragment() {
                     AnimatorSet()
                         .playAtOnce(animatorsOfDisappearanceRankInFlesh())
                         .addEndListener {
-                            binding.rangTextView.text = state.newRank.name
-                            binding.rangTextView.setTextColor(state.newRank.idRankTextColor)
+                            binding.rankTextView.text = state.newRank.name
+                            binding.rankTextView.setTextColor(state.newRank.idRankTextColor)
+                            binding.avatar.strokeColor = state.newRank.idBorderRankColor
                         }
                         .setDuration(DURATION_OF_TEXT_DISAPPEARANCE),
                     AnimatorSet()
@@ -243,7 +265,7 @@ class AwardsScreenFragment : Fragment() {
     private fun animatorsOfDisappearanceRankInFlesh(): List<Animator> {
         return listOf(
             ObjectAnimator.ofFloat(
-                binding.rangTextView,
+                binding.rankTextView,
                 View.ALPHA,
                 1f,
                 0f
@@ -260,7 +282,7 @@ class AwardsScreenFragment : Fragment() {
     private fun animatorsOfAppearanceRankFromFlesh(): List<Animator> {
         return listOf(
             ObjectAnimator.ofFloat(
-                binding.rangTextView,
+                binding.rankTextView,
                 View.ALPHA,
                 0f,
                 1f
@@ -302,12 +324,14 @@ class AwardsScreenFragment : Fragment() {
         val reductionArray = 0.rangeTo(textSize).toList().toIntArray().reversedArray()
         val increaseArray = 0.rangeTo(textSize).toList().toIntArray()
 
+        imageAvatarLoader.loadImageAvatar(state.playerAvatar, binding.playerAvatarImageView)
+
         isFirstPlayerAward = true
 
         val constraintSetStart = ConstraintSet()
         constraintSetStart.clone(requireContext(), R.layout.fragment_award_screen_awarded_player)
         val transitionStart = TransitionSet().addTransition(ChangeBounds()).addTransition(Fade())
-        /*transitionStart.interpolator = AnticipateOvershootInterpolator(1.0f)*/
+        transitionStart.interpolator = AnticipateOvershootInterpolator(1.0f)
         transitionStart.duration = 0
         TransitionManager.beginDelayedTransition(binding.rootContainer, transitionStart)
         constraintSetStart.applyTo(binding.rootContainer)
@@ -428,7 +452,7 @@ class AwardsScreenFragment : Fragment() {
         // ViewRatingIncrease
         const val DURATION_OF_INCREASING_COUNTER = 1000L
         const val DURATION_OF_CARD_STROKE_APPEARANCE = 2500L
-        const val DURATION_OF_CARD_STROKE_SHIFT = 700L
+        const val DURATION_OF_CARD_STROKE_SHIFT = 2000L
         const val DURATION_OF_CARD_STROKE_DISAPPEARANCE = 2500L
 
         const val TAG = "AwardsScreenFragmentTag"

@@ -106,7 +106,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/rang_textView"
+                android:id="@+id/rank_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -176,7 +176,7 @@
                 app:strokeWidth="0dp">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_mount_two_cardView"
+                    android:id="@+id/card_mount_lower_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:cardBackgroundColor="#FFFFFF"
@@ -187,7 +187,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_mount_cardView"
+                    android:id="@+id/card_mount_upper_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:cardBackgroundColor="#FDD835"
@@ -196,7 +196,7 @@
                     tools:alpha="0.5">
 
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/card_field_field_cardView"
+                        android:id="@+id/card_field_lower_cardView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="8dp"
@@ -206,7 +206,7 @@
                         tools:visibility="invisible">
 
                         <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/card_field_cardView"
+                            android:id="@+id/card_field_upper_cardView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             app:cardBackgroundColor="#43A047"

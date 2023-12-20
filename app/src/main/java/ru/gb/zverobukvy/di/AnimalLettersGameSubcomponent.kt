@@ -2,6 +2,7 @@ package ru.gb.zverobukvy.di
 
 import dagger.BindsInstance
 import dagger.Subcomponent
+import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.di.modules.AnimalLettersGameModule
 import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
