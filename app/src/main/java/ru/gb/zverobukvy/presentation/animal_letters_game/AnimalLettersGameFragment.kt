@@ -98,7 +98,7 @@ class AnimalLettersGameFragment :
         viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
             soundEffectPlayer.setEnable(it)
             val icSoundToggle = if (it) R.drawable.ic_sound_on else R.drawable.ic_sound_off
-            binding.soundToggleButton.setImageResource(icSoundToggle)
+            binding.soundButtonImageView.setImageResource(icSoundToggle)
         }
     }
 
@@ -199,7 +199,7 @@ class AnimalLettersGameFragment :
             }
         }
 
-        binding.soundToggleButton.setOnClickListener {
+        binding.soundButtonLayout.setOnClickListener {
             isClick {
                 viewModel.onSoundClick()
             }
@@ -525,7 +525,7 @@ class AnimalLettersGameFragment :
                 DURATION_ANIMATION_SCREEN_DIMMING,
                 false
             ).apply {
-                doOnEnd { _ ->
+                doOnEnd {
                     binding.nextPlayer.root.visibility = View.INVISIBLE
                 }
             }
@@ -552,7 +552,7 @@ class AnimalLettersGameFragment :
             changePlayer = createInSideAnimation(
                 binding.playerNameCard, DURATION_ANIMATOR_NEXT_PLAYER,
                 SHIFT_ANIMATOR_PLAYER_NEXT_DP
-            ) { _ ->
+            ) {
                 binding.playerNameCard.visibility = View.VISIBLE
                 binding.playerNameTextView.text = playerForChange.name
                 imageAvatarLoader.loadImageAvatar(
