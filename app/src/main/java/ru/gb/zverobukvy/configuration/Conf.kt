@@ -4,6 +4,7 @@ import ru.gb.zverobukvy.BuildConfig
 
 class Conf {
     companion object {
+
         /**
          * Игровое поле
          */
@@ -54,8 +55,9 @@ class Conf {
         // Степень влияния результатов раунда игры на уровень отгадывания букв игрока
         const val LEVEL_RATIO = 0.2F
 
+
         /**
-         * Настройка игры
+         * Настройка экрана игры
          */
         // задержка начала затемнения экрана(переход хода)
         const val START_DELAY_ANIMATION_SCREEN_DIMMING = 500L
@@ -88,7 +90,7 @@ class Conf {
         const val DURATION_ANIMATOR_NEXT_PLAYER = 350L
 
         /**
-         * Задержки во viewModel
+         * Задержки во viewModel экрана игры
          */
         // Стандартная задержка между отправляемыми состояниями
         const val STATE_DELAY = 2000L
@@ -127,11 +129,28 @@ class Conf {
         // количество отгаданных карточек определенного цвета, для получения следующей декорации (бронза, серебро и т.д.)
         const val DECORATION_RATING = 100
 
+
+        /**
+         * Настройка экрана меню
+         */
+        //время появление иконки помогающий найти кнопки справки
+        const val DURATION_ANIMATOR_SHOW_HELPER = 300L
+        //время уменьшения иконки помогающий найти кнопки справки
+        const val DURATION_ANIMATOR_SCALE_HELPER = 2100L
+
         /**
          * Настройки списка аватарок
          */
         // кол-во аватарок в одном ряду
         const val SPAN_COUNT_AVATARS_RECYCLER_VIEW = 4
+
+       /**
+         * Новогодний период
+         */
+        const val START_NEY_YEAR_PERIOD_MONTH = 11
+        const val START_NEY_YEAR_PERIOD_DAY = 1
+        const val END_NEY_YEAR_PERIOD_MONTH = 1
+        const val END_NEY_YEAR_PERIOD_DAY = 1
 
         /**
          * DEBUG
@@ -147,13 +166,5 @@ class Conf {
 
         // проверить базу данных на корректность
         const val IS_CHECK_DATA = false
-      
-       /**
-         * Новогодний период
-         */
-        const val START_NEY_YEAR_PERIOD_MONTH = 11
-        const val START_NEY_YEAR_PERIOD_DAY = 1
-        const val END_NEY_YEAR_PERIOD_MONTH = 1
-        const val END_NEY_YEAR_PERIOD_DAY = 1
     }
 }

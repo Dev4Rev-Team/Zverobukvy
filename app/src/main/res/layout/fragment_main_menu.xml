@@ -202,4 +202,17 @@
         android:visibility="gone"
         app:constraint_referenced_ids="close_avatar_recycler_view_layout, avatars_recycler_view_layout" />
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/help_show_instruction_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotation="30"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/show_instruction_image_view"
+        app:layout_constraintEnd_toEndOf="@+id/show_instruction_image_view"
+        app:layout_constraintStart_toStartOf="@+id/show_instruction_image_view"
+        app:layout_constraintTop_toTopOf="@+id/show_instruction_image_view"
+        app:srcCompat="@drawable/avatar_bee" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
