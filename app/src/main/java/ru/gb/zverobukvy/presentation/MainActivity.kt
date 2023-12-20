@@ -1,6 +1,5 @@
 package ru.gb.zverobukvy.presentation
 
-import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.View
@@ -134,27 +133,4 @@ class MainActivity : AppCompatActivity() {
             isHideSplashScreen = it
         }
     }
-
-    private fun getCurrentIconTheme(): Theme {
-        var themeName: String? = null
-        try {
-            val activityInfo = intent.component?.let {
-                packageManager.getActivityInfo(
-                    it,
-                    PackageManager.GET_META_DATA
-                )
-            }
-            themeName = activityInfo?.metaData?.getString(getString(R.string.theme_key))
-        } catch (e: Exception) {
-            Timber.d(e.message)
-        }
-        return when (themeName) {
-            getString(R.string.base_activity_name) -> Theme.BASE
-            getString(R.string.new_year_activity_name) -> Theme.NEW_YEAR
-            else -> Theme.BASE
-        }
-    }
-
-
-
 }
