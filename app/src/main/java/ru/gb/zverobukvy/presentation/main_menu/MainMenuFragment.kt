@@ -1,8 +1,10 @@
 package ru.gb.zverobukvy.presentation.main_menu
 
+import android.animation.AnimatorSet
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
@@ -14,12 +16,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
+import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.configuration.Conf.Companion.SPAN_COUNT_AVATARS_RECYCLER_VIEW
 import ru.gb.zverobukvy.databinding.FragmentMainMenuBinding
 import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
+import ru.gb.zverobukvy.presentation.customview.createAlphaShowAnimation
+import ru.gb.zverobukvy.presentation.customview.createScaleAnimation
 import ru.gb.zverobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
 import ru.gb.zverobukvy.presentation.main_menu.list_avatars.AvatarsAdapter
 import ru.gb.zverobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
@@ -29,6 +34,7 @@ import ru.gb.zverobukvy.presentation.main_menu.list_players.click_listener_owner
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
+
 
 class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
@@ -90,6 +96,7 @@ class MainMenuFragment :
     override fun onPause() {
         Timber.d("onPause")
         viewModel.onViewPause()
+        animator.end()
         super.onPause()
     }
 
@@ -101,6 +108,7 @@ class MainMenuFragment :
             viewModel.onBackPressed()
         return false
     }
+
 
     private fun initView() {
         initPlayersRecycleView()
@@ -190,6 +198,12 @@ class MainMenuFragment :
         binding.showInstructionImageView.setOnClickListener {
             hideError()
             viewModel.onQueryShowInstruction()
+        }
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS,
+            viewLifecycleOwner
+        ) { _, _ ->
+            animator.startShowHelp()
         }
     }
 
@@ -400,11 +414,45 @@ class MainMenuFragment :
         }
     }
 
+    private val animator = object {
+        private var showHelper: AnimatorSet? = null
+
+        fun createShowHelper(): AnimatorSet {
+            val animatorSet = AnimatorSet()
+            val alphaShowAnimation =
+                createAlphaShowAnimation(
+                    binding.helpShowInstructionImageView,
+                    0L,
+                    DURATION_ANIMATOR_SHOW_HELPER
+                )
+            val scaleAnimation =
+                createScaleAnimation(binding.helpShowInstructionImageView, 1f, 0f).apply {
+                    duration = DURATION_ANIMATOR_SCALE_HELPER
+                }
+            animatorSet.interpolator = DecelerateInterpolator()
+            animatorSet.playSequentially(alphaShowAnimation, scaleAnimation)
+            return animatorSet
+        }
+
+        fun startShowHelp() {
+            showHelper = createShowHelper()
+            showHelper?.start()
+        }
+
+        fun end() {
+            showHelper?.end()
+        }
+    }
+
     companion object {
         const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
         const val TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS = "MainMenuFragmentShowInstructions"
+        const val TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS = "MainMenuFragmentCloseInstructions"
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"
+
+        private const val DURATION_ANIMATOR_SHOW_HELPER = Conf.DURATION_ANIMATOR_SHOW_HELPER
+        private const val DURATION_ANIMATOR_SCALE_HELPER = Conf.DURATION_ANIMATOR_SCALE_HELPER
 
         @JvmStatic
         fun newInstance() = MainMenuFragment()
@@ -416,6 +464,13 @@ class MainMenuFragment :
             ) { _, _ ->
                 f?.invoke()
             }
+        }
+
+        fun setCloseInstruction(activity: AppCompatActivity) {
+            activity.supportFragmentManager.setFragmentResult(
+                TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS,
+                bundleOf()
+            )
         }
     }
 }
