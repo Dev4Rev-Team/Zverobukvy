@@ -1,6 +1,5 @@
 package ru.gb.zverobukvy.presentation
 
-import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.View
@@ -15,11 +14,11 @@ import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.theme_provider.Theme
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
-import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var backPressedCallback: OnBackPressedCallback
+    private lateinit var backPressedCallback: OnBackPressedCallback
+
     private val viewModel: LoadingDataViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
             appComponent.loadingDataViewModel
@@ -56,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+
     private fun initBottomSheet() {
         val bottomSheetView = findViewById<View>(R.id.containerBottomSheet)
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
@@ -106,9 +106,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         onBackPressedDispatcher.addCallback( this, backPressedCallback)
-
-
-
     }
 
     private fun setHideSplashScreen() {
@@ -130,27 +127,4 @@ class MainActivity : AppCompatActivity() {
             isHideSplashScreen = it
         }
     }
-
-    private fun getCurrentIconTheme(): Theme {
-        var themeName: String? = null
-        try {
-            val activityInfo = intent.component?.let {
-                packageManager.getActivityInfo(
-                    it,
-                    PackageManager.GET_META_DATA
-                )
-            }
-            themeName = activityInfo?.metaData?.getString(getString(R.string.theme_key))
-        } catch (e: Exception) {
-            Timber.d(e.message)
-        }
-        return when (themeName) {
-            getString(R.string.base_activity_name) -> Theme.BASE
-            getString(R.string.new_year_activity_name) -> Theme.NEW_YEAR
-            else -> Theme.BASE
-        }
-    }
-
-
-
 }
