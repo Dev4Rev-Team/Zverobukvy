@@ -5,16 +5,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.gb.zverobukvy.App
+import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverBinding
+import ru.gb.zverobukvy.domain.repository.ChangeRatingRepository
+import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModelImpl
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
+import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
+import javax.inject.Inject
 
 
 class GameIsOverDialogFragment :
     ViewBindingFragment<DialogFragmentGameIsOverBinding>(
         DialogFragmentGameIsOverBinding::inflate
     ) {
+
+    @Inject
+    lateinit var changeRatingRepository: ChangeRatingRepository
+    val viewModel: GameIsOverDialogViewModel by lazy {
+        requireContext().appComponent.inject(this)
+        ViewModelProvider(
+            this,
+            viewModelProviderFactoryOf { GameIsOverDialogViewModelImpl(changeRatingRepository) })[GameIsOverDialogViewModelImpl::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

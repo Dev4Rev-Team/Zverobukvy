@@ -6,8 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverItemBinding
+import ru.gb.zverobukvy.domain.entity.player.Player
 
-class PlayersRVAdapter(private val players: List<PlayerUI>) :
+class PlayersRVAdapter(
+    private val players: List<PlayerUI>,
+    private val playerBefore: List<Player.HumanPlayer>,
+    private val playerAfter: List<Player.HumanPlayer>
+) :
     RecyclerView.Adapter<PlayersRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
