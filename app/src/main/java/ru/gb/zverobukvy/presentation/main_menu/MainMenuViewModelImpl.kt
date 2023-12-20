@@ -360,7 +360,12 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onClickScreen() {
         Timber.d("onClickScreen")
-        closeEditablePlayer(true)
+        if(isClickAvatar){
+            isClickAvatar = false
+            liveDataAvatarsScreenState.value = MainMenuState.AvatarsScreenState.HideAvatarsState
+        }else{
+            closeEditablePlayer(true)
+        }
     }
 
     override fun onBackPressed() {
