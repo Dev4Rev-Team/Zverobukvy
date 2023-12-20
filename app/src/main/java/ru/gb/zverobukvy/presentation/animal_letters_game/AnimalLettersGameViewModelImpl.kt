@@ -18,6 +18,7 @@ import ru.gb.zverobukvy.domain.use_case.interactor.AnimalLettersGameInteractor
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
 import ru.gb.zverobukvy.utility.ui.SingleEventLiveData
+import timber.log.Timber
 import java.util.LinkedList
 import javax.inject.Inject
 
@@ -387,6 +388,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     override fun onActiveGame() {
+        Timber.d("onActiveGame")
         mGameState?.let { state ->
             val guessesWord = state.gameField.gamingWordCard
 
@@ -421,19 +423,23 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private fun isMultiplayerGame(state: GameState) = state.players.size > 1
 
     override fun getEntireGameStateLiveData(): LiveData<EntireState> {
+        Timber.d("getEntireGameStateLiveData")
         return entireLiveData
     }
 
     override fun getChangingGameStateLiveData(): SingleEventLiveData<ChangingState> {
+        Timber.d("getChangingGameStateLiveData")
         return changingLiveData
     }
 
     override fun getSoundStatusLiveData(): LiveData<Boolean> {
+        Timber.d("getSoundStatusLiveData")
         return soundStatusLiveData
     }
 
     override fun onSoundClick() {
         // TODO ??? viewModelScope.launch {  }
+        Timber.d("onSoundClick")
         soundStatusRepository.getSoundStatus().also { soundStatus ->
             soundStatusRepository.saveSoundStatus(!soundStatus)
             soundStatusLiveData.value = !soundStatus
@@ -441,6 +447,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
+        Timber.d("onClickLetterCard")
         isClickNextWalkingPlayer = false
 
         val isComputerPlayer: Boolean = mGameState?.walkingPlayer?.player is Player.ComputerPlayer
@@ -455,6 +462,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     private fun onComputerClickLetterCard(positionSelectedLetterCard: Int) {
+        Timber.d("onComputerClickLetterCard by VM")
         isClickNextWalkingPlayer = false
 
         isCardClick = true
@@ -465,6 +473,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     private fun onClickNextWalkingPlayer() {
+        Timber.d("onClickNextWalkingPlayer by VM")
         isWaitingNextPlayer = false
 
         if (!isClickNextWalkingPlayer) {
@@ -474,10 +483,12 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     }
 
     private fun onClickNextWord() {
+        Timber.d("onClickNextWord by VM")
         animalLettersGameInteractor.getNextWordCard()
     }
 
     override fun onBackPressed() {
+        Timber.d("onBackPressed")
         gameStopwatch.stop()
 
         if (isNonCardClickStateGame()) {
@@ -490,23 +501,28 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private fun isNonCardClickStateGame() = mLastClickCardPosition == INIT_CARD_CLICK_POSITION
 
     override fun onLoadGame() {
+        Timber.d("onLoadGame")
         gameStopwatch.start()
     }
 
     override fun onEndGameByUser() {
+        Timber.d("onEndGameByUser")
         isEndGameByUser = true
         animalLettersGameInteractor.endGameByUser()
     }
 
     override fun onResume() {
+        Timber.d("onResume")
         gameStopwatch.start()
     }
 
     override fun onPause() {
+        Timber.d("onPause")
         gameStopwatch.stop()
     }
 
     override fun onCleared() {
+        Timber.d("onCleared")
         super.onCleared()
         viewModelScope.cancel(COROUTINE_SCOPE_CANCEL)
     }
