@@ -8,28 +8,31 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.zverobukvy.App
+import ru.gb.zverobukvy.R
+import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverBinding
 import ru.gb.zverobukvy.domain.repository.ChangeRatingRepository
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModelImpl
+import ru.gb.zverobukvy.presentation.awards_screen.AwardsScreenFragment
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 import javax.inject.Inject
 
 
-class GameIsOverDialogFragment :
-    ViewBindingFragment<DialogFragmentGameIsOverBinding>(
-        DialogFragmentGameIsOverBinding::inflate
-    ) {
+class GameIsOverDialogFragment : ViewBindingFragment<DialogFragmentGameIsOverBinding>(
+    DialogFragmentGameIsOverBinding::inflate
+) {
 
-    @Inject
-    lateinit var changeRatingRepository: ChangeRatingRepository
+
     val viewModel: GameIsOverDialogViewModel by lazy {
-        requireContext().appComponent.inject(this)
-        ViewModelProvider(
-            this,
-            viewModelProviderFactoryOf { GameIsOverDialogViewModelImpl(changeRatingRepository) })[GameIsOverDialogViewModelImpl::class.java]
+        ViewModelProvider(this,
+            viewModelProviderFactoryOf {
+                requireContext().animalLettersGameSubcomponentContainer
+                    .getAnimalLettersGameSubcomponent()
+                    .gameIsOverDialogViewModel
+            })[GameIsOverDialogViewModelImpl::class.java]
     }
 
     override fun onCreateView(
@@ -47,16 +50,18 @@ class GameIsOverDialogFragment :
         binding.playersRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             data?.let {
-                adapter = PlayersRVAdapter(it.list)
+                adapter = PlayersRVAdapter(
+                    it.list,
+                    viewModel.getPlayersBeforeGame(),
+                    viewModel.getPlayersAfterGame()
+                )
             }
         }
 
         binding.okButton.setOnClickListener {
             //parentFragmentManager.popBackStack()
             requireActivity().supportFragmentManager.beginTransaction().replace(
-                R.id.container,
-                AwardsScreenFragment.newInstance(),
-                AwardsScreenFragment.TAG
+                R.id.container, AwardsScreenFragment.newInstance(), AwardsScreenFragment.TAG
             ).commit()
         }
 
