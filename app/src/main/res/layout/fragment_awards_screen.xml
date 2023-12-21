@@ -66,7 +66,7 @@
             android:id="@+id/rang_award_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/rank_textView"
@@ -82,6 +82,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/avatar"
                 style="@style/Avatar"
+                app:cardCornerRadius="200dp"
+                tools:background="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/avatar_background"
@@ -90,14 +92,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
-                app:strokeWidth="@dimen/avatar_stroke">
+                app:strokeWidth="8dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/player_avatar_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/margin_avatar_image"
-                    android:scaleType="fitCenter"
+                    android:layout_margin="40dp"
+                    android:scaleType="centerInside"
                     app:srcCompat="@drawable/avatar_drake" />
             </com.google.android.material.card.MaterialCardView>
 
@@ -166,7 +168,6 @@
                     android:id="@+id/card_mount_lower_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:cardElevation="1dp"
                     tools:cardBackgroundColor="#2247B1"
                     app:cardCornerRadius="20dp"
                     app:strokeWidth="0dp"
@@ -179,7 +180,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:cardBackgroundColor="#FDD835"
-                    app:cardElevation="2dp"
                     app:cardCornerRadius="20dp"
                     app:strokeWidth="0dp"
                     tools:alpha="1">
@@ -190,7 +190,6 @@
                     android:id="@+id/card_field_lower_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:cardElevation="3dp"
                     android:layout_margin="8dp"
                     app:cardBackgroundColor="#FFFFFF"
                     app:cardCornerRadius="12dp"
@@ -201,7 +200,6 @@
                         android:id="@+id/card_field_upper_cardView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:cardElevation="4dp"
                         app:cardBackgroundColor="#43A047"
                         app:cardCornerRadius="12dp"
                         app:strokeWidth="0dp">

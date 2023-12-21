@@ -2,6 +2,7 @@ package ru.gb.zverobukvy.di.modules
 
 import dagger.Binds
 import dagger.Module
+import ru.gb.zverobukvy.data.repository_impl.ChangeRatingRepositoryImpl
 import ru.gb.zverobukvy.di.AnimalLettersGameScope
 import ru.gb.zverobukvy.domain.repository.ChangeRatingRepository
 import ru.gb.zverobukvy.domain.use_case.interactor.AnimalLettersGameInteractor

@@ -5,7 +5,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,10 +24,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
-import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
-import ru.gb.zverobukvy.databinding.AwardScreenRankIncreaseBinding
+import ru.gb.zverobukvy.data.view_rating_provider.Rank
 import ru.gb.zverobukvy.databinding.FragmentAwardsScreenBinding
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
@@ -105,7 +103,7 @@ class AwardsScreenFragment : Fragment() {
                     rangAwardScreenState()
 
                     soundEffectPlayer.play(SoundEnum.RANK_INCREASE)
-                    animateRangIncrease(state)
+                    animateRankIncrease(state)
                 }
 
                 is AwardsScreenState.Second.ViewRatingIncreaseState -> {
@@ -121,7 +119,7 @@ class AwardsScreenFragment : Fragment() {
 
     private fun animateViewRatingIncrease(state: AwardsScreenState.Second.ViewRatingIncreaseState) {
         binding.cardFieldUpperCardView.setCardBackgroundColor(state.typeCards.getColorId())
-        binding.cardFieldUpperCardView .setCardBackgroundColor(getColorId(state.oldViewRating.decoration.idColor))
+        binding.cardMountUpperCardView .setCardBackgroundColor(getColorId(state.oldViewRating.decoration.idColor))
         binding.cardsCounterTextView.text = state.oldViewRating.rating.toString()
 
         AnimatorSet()
@@ -140,6 +138,7 @@ class AwardsScreenFragment : Fragment() {
                     }
                         .addEndListener {
                             binding.cardMountLowerCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
+                            binding.cardsCounterTextView.text = 1.toString()
                         }
                         .setDuration(DURATION_OF_INCREASING_COUNTER),
                     /*AnimatorSet()
@@ -153,11 +152,11 @@ class AwardsScreenFragment : Fragment() {
                     AnimatorSet()
                         .playAtOnce(animatorsOfMountColorShift())
                         .addEndListener {
-                            //binding.cardMountUpperCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
-                            binding.cardsCounterTextView.text = 1.toString()
-                            //binding.cardMountUpperCardView.alpha = 1f
-                            //binding.cardMountLowerCardView.setCardBackgroundColor(getColorId(R.color.white))
+                            binding.cardMountUpperCardView.setCardBackgroundColor(getColorId(state.newViewRating.decoration.idColor))
+                            binding.cardMountUpperCardView.alpha = 1f
+                            binding.cardMountLowerCardView.setCardBackgroundColor(getColorId(R.color.white))
                         }
+                        .apply { startDelay = 300L }
                         .setDuration(DURATION_OF_CARD_STROKE_SHIFT),
                     /*AnimatorSet()
                         .playAtOnce(animatorsOfAppearanceCardField())
@@ -197,6 +196,14 @@ class AwardsScreenFragment : Fragment() {
                 1f
             )
         )
+        return listOf(
+            ObjectAnimator.ofFloat(
+                binding.cardMountUpperCardView,
+                View.ALPHA,
+                1f,
+                0f
+            )
+        )
     }
 
     private fun animatorsOfHidingCardField(): List<Animator> {
@@ -233,10 +240,11 @@ class AwardsScreenFragment : Fragment() {
         )
     }
 
-    private fun animateRangIncrease(state: AwardsScreenState.Second.RankIncreaseState) {
-        binding.rankTextView.text = state.oldRank.name
+    private fun animateRankIncrease(state: AwardsScreenState.Second.RankIncreaseState) {
+        if (state.oldRank != Rank.DEFAULT)
+            binding.rankTextView.text = state.oldRank.name
         binding.rankTextView.setTextColor(state.oldRank.idRankTextColor)
-        binding.avatar.strokeColor = state.oldRank.idBorderRankColor
+        binding.avatar.strokeColor = getColorId(state.oldRank.idBorderRankColor)
 
         AnimatorSet()
             .playOneAfterAnother(
@@ -252,7 +260,7 @@ class AwardsScreenFragment : Fragment() {
                         .addEndListener {
                             binding.rankTextView.text = state.newRank.name
                             binding.rankTextView.setTextColor(state.newRank.idRankTextColor)
-                            binding.avatar.strokeColor = state.newRank.idBorderRankColor
+                            binding.avatar.strokeColor = getColorId(state.newRank.idBorderRankColor)
                         }
                         .setDuration(DURATION_OF_TEXT_DISAPPEARANCE),
                     AnimatorSet()
