@@ -9,15 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import ru.gb.zverobukvy.R
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.data.theme_provider.Theme
 import ru.gb.zverobukvy.presentation.main_menu.MainMenuFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var backPressedCallback: OnBackPressedCallback
 
     private val viewModel: LoadingDataViewModel by lazy {
         ViewModelProvider(this, viewModelProviderFactoryOf {
@@ -54,13 +55,24 @@ class MainActivity : AppCompatActivity() {
                 .commitAllowingStateLoss()
     }
 
+    var backPressedCallback: OnBackPressedCallback? = null
     lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
-
     private fun initBottomSheet() {
         val bottomSheetView = findViewById<View>(R.id.containerBottomSheet)
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
         bottomSheetView.visibility = View.VISIBLE
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        bottomSheetBehavior.addBottomSheetCallback(object :BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if(newState == BottomSheetBehavior.STATE_HIDDEN){
+                    backPressedCallback?.isEnabled = false
+                    MainMenuFragment.setCloseInstruction(this@MainActivity)
+                }
+            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
 
 
         MainMenuFragment.setOnListenerShowInstruction(this) {
@@ -70,8 +82,16 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.containerBottomSheet, bottomFragment)
                 .commitAllowingStateLoss()
 
+            backPressedCallback?.remove()
+            backPressedCallback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    }
+                }
+            }
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            backPressedCallback.isEnabled = true
+            backPressedCallback?.let{onBackPressedDispatcher.addCallback( this, it)}
         }
 
         InstructionBottomSheetDialogFragment.setOnListenerClickHeader(this) {
@@ -86,26 +106,12 @@ class MainActivity : AppCompatActivity() {
 
                 else -> bottomSheetBehavior.state
             }
-            if(bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN){
-                backPressedCallback.isEnabled = false
-            }
         }
 
         InstructionBottomSheetDialogFragment.setOnListenerClickClose(this) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            backPressedCallback.isEnabled = false
         }
 
-        backPressedCallback = object : OnBackPressedCallback(false) {
-            override fun handleOnBackPressed() {
-                if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                    isEnabled = false
-                }
-            }
-        }
-
-        onBackPressedDispatcher.addCallback( this, backPressedCallback)
     }
 
     private fun setHideSplashScreen() {

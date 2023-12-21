@@ -97,16 +97,20 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 updateViewModels(state)
 
                 initAutoNextPlayerClick(state)
-                if (state is ChangingState.GuessedWord) {
-                    delay(AUTO_NEXT_WORD_DELAY)
-                    onClickNextWord()
-                }
+                initAutoNextWordClick(state)
 
                 calculateDelayBetweenStates(index, viewState)
             }
         }
 
         updateMGameState(newState)
+    }
+
+    private suspend fun initAutoNextWordClick(state: AnimalLettersGameState) {
+        if (state is ChangingState.GuessedWord && state.hasNextWord) {
+            delay(AUTO_NEXT_WORD_DELAY)
+            onClickNextWord()
+        }
     }
 
     private fun initAutoNextPlayerClick(state: AnimalLettersGameState) {
