@@ -428,7 +428,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
-            if (it.isFastEndGame) {
+            if (it.isFastEndGame && !Conf.DEBUG_IS_FAST_END_DISABLE) {
                 event.popBackStack()
                 requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
             } else {
