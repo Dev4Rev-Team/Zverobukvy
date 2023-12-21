@@ -52,7 +52,12 @@ class GameIsOverDialogFragment :
         }
 
         binding.okButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            //parentFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.beginTransaction().replace(
+                R.id.container,
+                AwardsScreenFragment.newInstance(),
+                AwardsScreenFragment.TAG
+            ).commit()
         }
 
         data?.time.also { binding.timeTextView.text = it }

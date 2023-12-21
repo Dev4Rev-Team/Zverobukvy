@@ -6,6 +6,7 @@ import ru.gb.zverobukvy.di.modules.AnimalLettersGameModule
 import ru.gb.zverobukvy.domain.entity.player.PlayerInGame
 import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModelImpl
+import ru.gb.zverobukvy.presentation.awards_screen.AwardsScreenViewModelImpl
 import ru.gb.zverobukvy.presentation.customview.AssetsImageCash
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 
@@ -14,6 +15,8 @@ import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 interface AnimalLettersGameSubcomponent {
 
     val viewModel: AnimalLettersGameViewModelImpl
+
+    val awardsScreenViewModel: AwardsScreenViewModelImpl
 
     val assetsImageCash: AssetsImageCash
 

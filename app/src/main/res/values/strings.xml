@@ -60,6 +60,10 @@
     <string name="hero">Герой</string>
     <string name="legend">Легенда</string>
 
+    <string name="award_screen_player_view_title">Игрок</string>
+    <string name="award_screen_rank_increase_title">Ранг</string>
+    <string name="award_screen_view_rating_increase_title">Рейтинг</string>
+
     <string name="about_app">Разработка:\nDev4Rev-Team\n2023</string>
 
 </resources>

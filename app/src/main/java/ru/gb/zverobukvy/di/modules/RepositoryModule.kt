@@ -27,4 +27,6 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun bindsSoundStatusRepository(repository: AnimalLettersRepositoryImpl): SoundStatusRepository
+
+
 }
