@@ -166,5 +166,8 @@ class Conf {
 
         // проверить базу данных на корректность
         const val IS_CHECK_DATA = false
+
+        // показывать фрагмент результатов всегда
+        const val DEBUG_IS_FAST_END_DISABLE: Boolean = DEBUG
     }
 }

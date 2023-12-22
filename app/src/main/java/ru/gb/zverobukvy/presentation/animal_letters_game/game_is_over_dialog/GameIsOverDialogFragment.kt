@@ -5,17 +5,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverBinding
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
+import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
 
 
-class GameIsOverDialogFragment :
-    ViewBindingFragment<DialogFragmentGameIsOverBinding>(
-        DialogFragmentGameIsOverBinding::inflate
-    ) {
+class GameIsOverDialogFragment : ViewBindingFragment<DialogFragmentGameIsOverBinding>(
+    DialogFragmentGameIsOverBinding::inflate
+) {
+
+
+    val viewModel: GameIsOverDialogViewModel by lazy {
+        ViewModelProvider(this,
+            viewModelProviderFactoryOf {
+                requireContext().animalLettersGameSubcomponentContainer
+                    .getAnimalLettersGameSubcomponent()
+                    .gameIsOverDialogViewModel
+            })[GameIsOverDialogViewModelImpl::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,13 +43,18 @@ class GameIsOverDialogFragment :
         binding.playersRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             data?.let {
-                adapter = PlayersRVAdapter(it.list)
+                adapter = PlayersRVAdapter(
+                    it.list,
+                    viewModel.getPlayersBeforeGame(),
+                    viewModel.getPlayersAfterGame()
+                )
             }
         }
 
         binding.okButton.setOnClickListener {
             parentFragmentManager.popBackStack()
-            requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
+            //todo requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
+            parentFragmentManager.popBackStack()
         }
 
         data?.time.also { binding.timeTextView.text = it }
