@@ -90,6 +90,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      * @param newState Обновленное состояние игры из Interactor
      */
     private suspend fun collectGameState(newState: GameState?) {
+        Timber.d("collectGameState")
         mGameState.also { oldState ->
 
             val viewState = convert(oldState, newState)
