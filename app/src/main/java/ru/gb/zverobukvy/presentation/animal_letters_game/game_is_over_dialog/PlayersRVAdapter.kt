@@ -12,7 +12,6 @@ import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverItemBinding
 import ru.gb.zverobukvy.domain.entity.player.Player
 import ru.gb.zverobukvy.domain.entity.player.Rating
-import kotlin.random.Random
 
 class PlayersRVAdapter(
     private val players: List<PlayerUI>,
@@ -60,12 +59,12 @@ class PlayersRVAdapter(
             var findAfter = playerAfter.find { it.name == name }
 
 
-            if(findAfter == null && Conf.DEBUG_IS_FAST_END_DISABLE){
+            if (findAfter == null && Conf.DEBUG_IS_FAST_END_DISABLE) {
                 findAfter = findBefore?.copy(rating = Rating())?.apply {
-                    rating.orangeRating += (0..9).random()
-                    rating.greenRating += (0..9).random()
-                    rating.blueRating += (0..9).random()
-                    rating.violetRating += (0..9).random()
+                    rating.orangeRating = (0..9).random() + findBefore.rating.orangeRating
+                    rating.greenRating = (0..9).random() + findBefore.rating.greenRating
+                    rating.blueRating = (0..9).random() + findBefore.rating.blueRating
+                    rating.violetRating = (0..9).random() + findBefore.rating.violetRating
                 }
             }
 
