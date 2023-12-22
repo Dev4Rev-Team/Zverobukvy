@@ -8,11 +8,9 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
-import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverBinding
 import ru.gb.zverobukvy.domain.repository.ChangeRatingRepository
-import ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameViewModelImpl
 import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
@@ -54,7 +52,7 @@ class GameIsOverDialogFragment :
 
         binding.okButton.setOnClickListener {
             parentFragmentManager.popBackStack()
-            requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
+            //todo requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
         }
 
         data?.time.also { binding.timeTextView.text = it }
