@@ -90,9 +90,14 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      * @param newState Обновленное состояние игры из Interactor
      */
     private suspend fun collectGameState(newState: GameState?) {
+        Timber.d("collectGameState")
         mGameState.also { oldState ->
 
             val viewState = convert(oldState, newState)
+
+            viewState.forEach {
+                Timber.i(it.javaClass.simpleName)
+            }
 
             viewState.forEachIndexed { index, state ->
                 updateViewModels(state)
@@ -291,6 +296,8 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
         if (isCardClick) {
 
+            isCardClick = false
+
             // Получем последнюю нажатую карточку
             val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
 
@@ -360,7 +367,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
         if (currentGameState.walkingPlayer!!.player is Player.ComputerPlayer)
             viewModelScope.launch {
-                isCardClick = true
+                //isCardClick = true
 
                 delay(delay)
                 animalLettersGameInteractor.getSelectedLetterCardByComputer()

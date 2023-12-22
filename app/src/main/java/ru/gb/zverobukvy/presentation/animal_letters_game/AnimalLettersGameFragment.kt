@@ -41,6 +41,7 @@ import ru.gb.zverobukvy.utility.parcelable
 import ru.gb.zverobukvy.utility.ui.ViewBindingFragment
 import ru.gb.zverobukvy.utility.ui.enableClickAnimation
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
+import timber.log.Timber
 import kotlin.math.ceil
 
 class AnimalLettersGameFragment :
@@ -106,26 +107,32 @@ class AnimalLettersGameFragment :
         viewModel.getChangingGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.ChangingState.CorrectLetter -> {
+                    Timber.d("ChangingState.CorrectLetter")
                     game.changingStateCorrectLetter(it)
                 }
 
                 is AnimalLettersGameState.ChangingState.InvalidLetter -> {
+                    Timber.d("ChangingState.InvalidLetter")
                     game.changingStateInvalidLetter(it)
                 }
 
                 is AnimalLettersGameState.ChangingState.CloseInvalidLetter -> {
+                    Timber.d("ChangingState.CloseInvalidLetter")
                     game.changingStateCloseInvalidLetter(it)
                 }
 
                 is AnimalLettersGameState.ChangingState.GuessedWord -> {
+                    Timber.d("ChangingState.GuessedWord")
                     game.changingStateGuessedWord(it)
                 }
 
                 is AnimalLettersGameState.ChangingState.NextGuessWord -> {
+                    Timber.d("ChangingState.NextGuessWord")
                     game.changingStateNextGuessWord(it)
                 }
 
                 is AnimalLettersGameState.ChangingState.NextPlayer -> {
+                    Timber.d("ChangingState.NextPlayer")
                     game.changingStateNextPlayer(it)
                 }
             }
@@ -136,14 +143,17 @@ class AnimalLettersGameFragment :
         viewModel.getEntireGameStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AnimalLettersGameState.EntireState.StartGameState -> {
+                    Timber.d("EntireState.StartGameState")
                     game.changingStateStartGameState(it)
                 }
 
                 is AnimalLettersGameState.EntireState.IsEndGameState -> {
+                    Timber.d("EntireState.IsEndGameState")
                     game.changingStateIsEndGameState()
                 }
 
                 is AnimalLettersGameState.EntireState.EndGameState -> {
+                    Timber.d("EntireState.EndGameState")
                     game.changingStateEndGameState(it)
                 }
             }
