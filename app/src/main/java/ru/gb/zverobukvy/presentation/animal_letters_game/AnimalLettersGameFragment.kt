@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import ru.gb.zverobukvy.R
-import ru.gb.zverobukvy.appComponent
+import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
 import ru.gb.zverobukvy.configuration.Conf
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.gb.zverobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
@@ -63,7 +63,7 @@ class AnimalLettersGameFragment :
     var lastStateScreen = StateScreen.NextPlayer
 
     private fun initDagger() {
-        requireContext().appComponent.getAnimalLettersGameSubcomponentFactory().create(
+        requireContext().animalLettersGameSubcomponentContainer.createAnimalLettersGameSubcomponent(
             gameStart!!.typesCards, gameStart!!.players
         ).also { fragmentComponent ->
             viewModel = ViewModelProvider(
@@ -430,6 +430,7 @@ class AnimalLettersGameFragment :
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
             if (it.isFastEndGame) {
                 event.popBackStack()
+                requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
             } else {
                 val players = DataGameIsOverDialog.map(it.players)
                 val data = DataGameIsOverDialog(players, it.gameTime)
@@ -446,7 +447,7 @@ class AnimalLettersGameFragment :
     }
 
     private fun soundFlipLetter(
-        effectSoundEnum: SoundEnum, correctLetterCard: LetterCard
+        effectSoundEnum: SoundEnum, correctLetterCard: LetterCard,
     ) {
         soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
         delayAndRun(DELAY_SOUND_EFFECT) { soundEffectPlayer.play(effectSoundEnum) }

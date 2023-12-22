@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.gb.zverobukvy.animalLettersGameSubcomponentContainer
 import ru.gb.zverobukvy.App
 import ru.gb.zverobukvy.appComponent
 import ru.gb.zverobukvy.databinding.DialogFragmentGameIsOverBinding
@@ -53,6 +54,7 @@ class GameIsOverDialogFragment :
 
         binding.okButton.setOnClickListener {
             parentFragmentManager.popBackStack()
+            requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
         }
 
         data?.time.also { binding.timeTextView.text = it }

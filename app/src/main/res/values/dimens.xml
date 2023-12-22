@@ -41,6 +41,7 @@
     <dimen name="rating_card_view_stroke_width">2dp</dimen>
     <dimen name="rating_card_view_flow_horizontal_gap">4dp</dimen>
     <dimen name="diamond_image_view_margin">2dp</dimen>
+    <dimen name="rating_card_view_height">36dp</dimen>
 
     <!--Avatar settings-->
     <dimen name="avatar_corner_radius">20dp</dimen>
