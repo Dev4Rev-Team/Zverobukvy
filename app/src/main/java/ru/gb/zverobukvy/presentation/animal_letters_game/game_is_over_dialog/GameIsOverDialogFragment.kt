@@ -54,7 +54,7 @@ class GameIsOverDialogFragment : ViewBindingFragment<DialogFragmentGameIsOverBin
         binding.okButton.setOnClickListener {
             parentFragmentManager.popBackStack()
             //todo requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
-            parentFragmentManager.popBackStack()
+            //parentFragmentManager.popBackStack()
         }
 
         data?.time.also { binding.timeTextView.text = it }
