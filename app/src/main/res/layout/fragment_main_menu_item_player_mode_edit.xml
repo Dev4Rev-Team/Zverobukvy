@@ -99,8 +99,8 @@
         android:id="@+id/delete_button"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        app:cardCornerRadius="14dp"
         android:backgroundTint="@color/white"
+        app:cardCornerRadius="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@color/transparent"
@@ -112,6 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
             android:scaleType="centerCrop"
+            android:tint="@color/secondary_color"
             app:srcCompat="@drawable/baseline_delete_24" />
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,7 +21,7 @@
     <!--Margin settings-->
     <dimen name="margin_default">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
-    <dimen name="margin_players_recycler_view">32dp</dimen>
+    <dimen name="margin_players_recycler_view">16dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_avatar_image">8dp</dimen>
     <dimen name="margin_huge_player_cards">60dp</dimen>
