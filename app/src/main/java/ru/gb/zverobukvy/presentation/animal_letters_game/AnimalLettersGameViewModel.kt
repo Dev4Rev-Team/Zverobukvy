@@ -47,7 +47,7 @@ interface AnimalLettersGameViewModel {
      */
     fun onClickLetterCard(positionSelectedLetterCard: Int)
 
-    /*/**
+    /*/** МЕТОДЫ ПЕРЕВЕДЕНЫ В ПРИВАТНЫЕ
     Метод вызывается при нажатии пользователем кнопки перехода хода к следующему игроку, в этом методе
     viewModel (без обращения к интерактору) присваивает сhangingGameStateLiveData изменение
     состояния игры, соответствующее переходу хода к следующему игроку
