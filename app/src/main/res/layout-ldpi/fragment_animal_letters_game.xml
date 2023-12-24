@@ -83,7 +83,7 @@
             </com.google.android.material.circularreveal.CircularRevealLinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <ru.gb.zverobukvy.presentation.customview.CustomLevelView
+        <ru.dev4rev.zoobukvy.presentation.customview.CustomLevelView
             android:id="@+id/card_level"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -133,7 +133,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="60dp" />
 
-        <ru.gb.zverobukvy.presentation.customview.CustomCard
+        <ru.dev4rev.zoobukvy.presentation.customview.CustomCard
             android:id="@+id/word_custom_card"
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
@@ -154,7 +154,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.35" />
 
-        <ru.gb.zverobukvy.presentation.customview.CustomWordView
+        <ru.dev4rev.zoobukvy.presentation.customview.CustomWordView
             android:id="@+id/word_view"
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
@@ -178,7 +178,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.46" />
 
-        <ru.gb.zverobukvy.presentation.customview.CustomCardTable
+        <ru.dev4rev.zoobukvy.presentation.customview.CustomCardTable
             android:id="@+id/table"
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"

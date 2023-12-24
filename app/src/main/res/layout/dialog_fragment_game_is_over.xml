@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true">
 
-    <ru.gb.zverobukvy.presentation.customview.CustomImageRatingView
+    <ru.dev4rev.zoobukvy.presentation.customview.CustomImageRatingView
         android:id="@+id/winner_avatar_custom_image_rating_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         tools:layout_height="@dimen/avatar_size_huge"
         tools:layout_width="@dimen/avatar_size_huge">
 
-    </ru.gb.zverobukvy.presentation.customview.CustomImageRatingView>
+    </ru.dev4rev.zoobukvy.presentation.customview.CustomImageRatingView>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
