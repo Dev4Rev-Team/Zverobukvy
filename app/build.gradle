@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'ru.dev4rev.zoobukvy'
+    namespace 'ru.dev4rev.kids.zoobukvy'
     compileSdk 34
 
     defaultConfig {
-        applicationId "ru.dev4rev.zoobukvy"
+        applicationId "ru.dev4rev.kids.zoobukvy"
         minSdk 23
         targetSdk 34
         versionCode 1

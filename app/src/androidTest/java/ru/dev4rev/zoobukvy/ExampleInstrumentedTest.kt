@@ -1,4 +1,4 @@
-package ru.dev4rev.zoobukvy
+package ru.dev4rev.kids.zoobukvy
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

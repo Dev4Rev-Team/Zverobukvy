@@ -1,4 +1,4 @@
-package ru.dev4rev.zoobukvy
+package ru.dev4rev.kids.zoobukvy
 
 import org.junit.Test
 
