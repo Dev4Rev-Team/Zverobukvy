@@ -62,9 +62,9 @@ class PlayersRVAdapter(
             if (findAfter == null && Conf.DEBUG_IS_FAST_END_DISABLE) {
                 findAfter = findBefore?.copy(rating = Rating())?.apply {
                     rating.orangeRating = (0..9).random() + findBefore.rating.orangeRating
-                    rating.greenRating = (0..9).random() + findBefore.rating.greenRating
-                    rating.blueRating = (0..9).random() + findBefore.rating.blueRating
-                    rating.violetRating = (0..9).random() + findBefore.rating.violetRating
+                    rating.greenRating = (0..7).random() + findBefore.rating.greenRating
+                    rating.blueRating = (0..5).random() + findBefore.rating.blueRating
+                    rating.violetRating = (0..3).random() + findBefore.rating.violetRating
                 }
             }
 
@@ -92,7 +92,7 @@ class PlayersRVAdapter(
                 ratingCardView.visibility = View.VISIBLE
                 ratingTextView.text = "+$rating"
             } else {
-                ratingCardView.visibility = View.INVISIBLE
+                ratingCardView.visibility = View.GONE
             }
         }
     }
