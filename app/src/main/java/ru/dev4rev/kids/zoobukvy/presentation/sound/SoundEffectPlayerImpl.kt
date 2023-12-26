@@ -29,6 +29,7 @@ class SoundEffectPlayerImpl @Inject constructor(
     private val job: Job
 
     private var enable = true
+    private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
 
     init {
         soundPool = createSoundPool()
@@ -127,7 +128,6 @@ class SoundEffectPlayerImpl @Inject constructor(
 
     private fun playSound(idStream: Int?) {
         if (isLoad.contains(idStream)) {
-            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
             audioManager?.let {
                 val curVolume = it.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
                 val maxVolume = it.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
