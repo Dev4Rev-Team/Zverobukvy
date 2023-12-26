@@ -64,7 +64,7 @@ class SoundEffectPlayerImpl @Inject constructor(
                     soundsMap[it.soundName] =
                         loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
                 } catch (e: Exception) {
-                    if(!Conf.DEBUG_DISABLE_CHECK_SOUND_FILE){
+                    if (!Conf.DEBUG_DISABLE_CHECK_SOUND_FILE) {
                         throw IllegalStateException("sound no element WordCard ${it.soundName}")
                     }
                 }
@@ -103,18 +103,22 @@ class SoundEffectPlayerImpl @Inject constructor(
     }
 
     override fun play(soundEnum: SoundEnum) {
-        val idStream = soundsMapSystem[soundEnum]
-        playSound(idStream)
+        myCoroutineScope.launch {
+            val idStream = soundsMapSystem[soundEnum]
+            playSound(idStream)
+        }
     }
 
     override fun play(key: String) {
         if (!enable) return
-        var idStream = soundsMap[key]
-        if(idStream == null){
-            soundsMap[key] = loadSound(ASSETS_PATH_SOUND_WORDS + key)
-            idStream = soundsMap[key]
+        myCoroutineScope.launch {
+            var idStream = soundsMap[key]
+            if (idStream == null) {
+                soundsMap[key] = loadSound(ASSETS_PATH_SOUND_WORDS + key)
+                idStream = soundsMap[key]
+            }
+            playSound(idStream)
         }
-        playSound(idStream)
     }
 
     override fun setEnable(enable: Boolean) {
