@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
 import javax.inject.Inject
@@ -38,7 +39,9 @@ class SoundEffectPlayerImpl @Inject constructor(
             if (status == 0) {
                 isLoad.add(sampleId)
                 if (queueSound.contains(sampleId)) {
-                    playSound(sampleId)
+                    myCoroutineScope.launch {
+                        playSound(sampleId)
+                    }
                     queueSound.remove(sampleId)
                 }
             }
@@ -47,6 +50,7 @@ class SoundEffectPlayerImpl @Inject constructor(
         job = myCoroutineScope.launch {
             animalLettersCardsRepository.getLetterCards().forEach {
                 try {
+                    yield()
                     soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_LETTERS + it.soundName)
 
                 } catch (e: Exception) {
@@ -56,6 +60,7 @@ class SoundEffectPlayerImpl @Inject constructor(
 
             SoundEnum.values().forEach {
                 try {
+                    yield()
                     soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
                 } catch (e: Exception) {
                     throw IllegalStateException("sound no element systemSound ${it.assetPath}")
@@ -64,6 +69,7 @@ class SoundEffectPlayerImpl @Inject constructor(
 
             animalLettersCardsRepository.getWordCards().forEach {
                 try {
+                    yield()
                     soundsMap[it.soundName] =
                         loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
                 } catch (e: Exception) {
