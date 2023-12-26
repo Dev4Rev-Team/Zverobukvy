@@ -57,6 +57,11 @@
         <item name="android:textColor">?app_text_color_button_outline</item>
     </style>
 
+    <style name="Button.Big.Light" parent="Button.Big">
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/secondary_color</item>
+    </style>
+
     <style name="Button.Medium" parent="Button">
         <item name="android:textSize">@dimen/text_medium</item>
     </style>
