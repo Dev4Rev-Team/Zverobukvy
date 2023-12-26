@@ -119,11 +119,13 @@ class CustomCard @JvmOverloads constructor(
 
     private fun setOpenDisplay(isOpen: Boolean) {
         if (isOpen) {
-            frontSideImageView.alpha = 1f
-            backSideImageView.alpha = 0f
+            frontBackgroundImageView.visibility = VISIBLE
+            frontSideImageView.visibility = VISIBLE
+            backSideImageView.visibility = INVISIBLE
         } else {
-            frontSideImageView.alpha = 0f
-            backSideImageView.alpha = 1f
+            frontBackgroundImageView.visibility = INVISIBLE
+            frontSideImageView.visibility = INVISIBLE
+            backSideImageView.visibility = VISIBLE
         }
     }
 

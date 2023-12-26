@@ -62,7 +62,7 @@ class SoundEffectPlayerImpl @Inject constructor(
             animalLettersCardsRepository.getWordCards().forEach {
                 try {
                     soundsMap[it.soundName] =
-                        loadSound(ASSETS_PATH_SOUND_WORDS + "RU_" + it.soundName)
+                        loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
                 } catch (e: Exception) {
                     if(!Conf.DEBUG_DISABLE_CHECK_SOUND_FILE){
                         throw IllegalStateException("sound no element WordCard ${it.soundName}")
