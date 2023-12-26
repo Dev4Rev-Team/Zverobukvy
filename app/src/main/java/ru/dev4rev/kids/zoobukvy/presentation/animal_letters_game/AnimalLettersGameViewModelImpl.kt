@@ -267,7 +267,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                         newWordCard
                     )
                 )
-                initComputerStroke(newState)
+                initComputerStroke(newState, COMPUTER_DELAY_AFTER_CHANGE_WORD)
             } else {
                 throw IllegalStateException(ERROR_NEXT_GUESSED_WORD_NOT_FOUND)
             }
@@ -539,6 +539,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
         const val STATE_DELAY = Conf.STATE_DELAY
         const val COMPUTER_DELAY = Conf.COMPUTER_DELAY
+        const val COMPUTER_DELAY_AFTER_CHANGE_WORD = Conf.COMPUTER_DELAY_AFTER_CHANGE_WORD
         const val REPEAT_COMPUTER_DELAY = Conf.REPEAT_COMPUTER_DELAY
         const val AUTO_NEXT_PLAYER_DELAY = Conf.AUTO_NEXT_PLAYER_DELAY
         const val AUTO_NEXT_WORD_DELAY = Conf.AUTO_NEXT_WORD_DELAY

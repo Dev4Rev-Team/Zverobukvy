@@ -69,7 +69,7 @@ class Conf {
         const val DELAY_SOUND_WORD = 500L
 
         // задержка озвучивания эффекта(правильная буква/ неправильная буква/ правильное слово) после нажатия на карту
-        const val DELAY_SOUND_EFFECT = 700L
+         const val DELAY_SOUND_EFFECT = 700L
 
         // задержка озвучивания буквы после нажатия на карту
         const val DELAY_SOUND_LETTER = 500L
@@ -96,7 +96,10 @@ class Conf {
         const val STATE_DELAY = 2000L
 
         // Задержка перед ходом компьютера после смены игрока
-        const val COMPUTER_DELAY = 700L
+        const val COMPUTER_DELAY = 800L
+
+        // Задержка перед ходом компьютера после смены игрок, но перед компьютером
+        const val COMPUTER_DELAY_AFTER_CHANGE_WORD = 2200L
 
         // Задержка перед повторным ходом компьютера
         const val REPEAT_COMPUTER_DELAY = 1500L
@@ -106,7 +109,7 @@ class Conf {
         const val AUTO_NEXT_PLAYER_DELAY = 1500L
 
         // задержка перед отправкой следующего слова
-        const val AUTO_NEXT_WORD_DELAY = 1700L
+        const val AUTO_NEXT_WORD_DELAY = 2700L
 
         /**
          * Настройки рейтинга
