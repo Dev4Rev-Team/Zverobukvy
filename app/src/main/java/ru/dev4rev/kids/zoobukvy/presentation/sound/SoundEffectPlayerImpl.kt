@@ -35,10 +35,12 @@ class SoundEffectPlayerImpl @Inject constructor(
         soundPool = createSoundPool()
 
         soundPool.setOnLoadCompleteListener { _, sampleId, status ->
-            if (status == 0) isLoad.add(sampleId)
-            if (queueSound.contains(sampleId)) {
-                playSound(sampleId)
-                queueSound.remove(sampleId)
+            if (status == 0) {
+                isLoad.add(sampleId)
+                if (queueSound.contains(sampleId)) {
+                    playSound(sampleId)
+                    queueSound.remove(sampleId)
+                }
             }
         }
 
