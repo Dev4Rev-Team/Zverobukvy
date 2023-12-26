@@ -104,7 +104,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ok_button"
-        style="@style/Button.Big.Dark"
+        style="@style/Button.Big.Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
