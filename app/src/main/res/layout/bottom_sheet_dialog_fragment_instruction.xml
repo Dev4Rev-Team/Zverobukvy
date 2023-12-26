@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@color/white"
@@ -36,7 +35,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:text="закрыть"
+                android:text="@string/close_rules"
                 android:textColor="@color/color_red" />
         </RelativeLayout>
 
@@ -84,8 +83,9 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/show_instruction_image_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/auto_layout"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginStart="-6dp"
                     android:rotation="-90"
                     android:tint="?app_flag_color"
                     app:layout_constraintStart_toEndOf="@+id/location_rules_text_view"
@@ -93,6 +93,15 @@
                     app:layout_constraintTop_toTopOf="@+id/location_rules_text_view"
                     app:layout_constraintBottom_toBottomOf="@id/location_rules_text_view"
                     app:srcCompat="@drawable/ic_bookmark" />
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="@dimen/auto_layout"
+                    app:layout_constraintTop_toTopOf="@+id/show_instruction_image_view"
+                    app:layout_constraintBottom_toBottomOf="@id/show_instruction_image_view"
+                    app:layout_constraintStart_toStartOf="@id/show_instruction_image_view"
+                    android:background="@color/white"
+                    />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/prepare_text_view"

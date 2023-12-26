@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="game_rules_name">🚩 Правила 🚩</string>
+    <string name="close_rules">закрыть</string>
+    <string name="location_rules">Правила можно открыть, нажав на значок в названии игры</string>
     <string name="game_rules_prepare">Подготовка</string>
     <string name="game_rules_prepare_text1">Придумай имена и выбери аватарки для игроков.</string>
     <string name="game_rules_prepare_text2">Выбери один или несколько наборов карточек. Начни с простого уровня – оранжевый.</string>
