@@ -18,7 +18,7 @@ import ru.dev4rev.kids.zoobukvy.domain.repository.animal_letter_game.AnimalLette
 import javax.inject.Inject
 
 class SoundEffectPlayerImpl @Inject constructor(
-    val context: Context,
+    private val context: Context,
     private val animalLettersCardsRepository: AnimalLettersGameRepository
 ) : SoundEffectPlayer {
     private val soundPool: SoundPool
