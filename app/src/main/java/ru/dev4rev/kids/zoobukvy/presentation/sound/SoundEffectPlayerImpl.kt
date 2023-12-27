@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class SoundEffectPlayerImpl @Inject constructor(
     val context: Context,
-    animalLettersCardsRepository: AnimalLettersGameRepository
+    private val animalLettersCardsRepository: AnimalLettersGameRepository
 ) : SoundEffectPlayer {
     private val soundPool: SoundPool
     private val soundsMap = mutableMapOf<String, Int>()
@@ -54,7 +54,7 @@ class SoundEffectPlayerImpl @Inject constructor(
         job = myCoroutineScope.launch {
             SoundEnum.values().forEach {
                 try {
-                    loadSoundMap(it.assetPath, ASSETS_PATH_SOUND_SYSTEM+ it.assetPath)
+                    loadSoundMap(it.assetPath, ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
                 } catch (e: Exception) {
                     throw IllegalStateException("sound no element systemSound ${it.assetPath}")
                 }
@@ -125,7 +125,8 @@ class SoundEffectPlayerImpl @Inject constructor(
         myCoroutineScope.launch {
             var idStream = soundsMap[soundEnum.assetPath]
             if (idStream == null) {
-                soundsMap[soundEnum.assetPath] = loadSound(ASSETS_PATH_SOUND_SYSTEM + soundEnum.assetPath)
+                soundsMap[soundEnum.assetPath] =
+                    loadSound(ASSETS_PATH_SOUND_SYSTEM + soundEnum.assetPath)
                 idStream = soundsMap[soundEnum.assetPath]
             }
             playSound(idStream)
@@ -137,7 +138,13 @@ class SoundEffectPlayerImpl @Inject constructor(
         myCoroutineScope.launch {
             var idStream = soundsMap[key]
             if (idStream == null) {
-                soundsMap[key] = loadSound(ASSETS_PATH_SOUND_WORDS + key)
+                val path = if (animalLettersCardsRepository.getLetterCards()
+                        .find { it.soundName == key } != null) {
+                    ASSETS_PATH_SOUND_LETTERS + key
+                } else {
+                    ASSETS_PATH_SOUND_WORDS + key
+                }
+                soundsMap[key] = loadSound(path)
                 idStream = soundsMap[key]
             }
             playSound(idStream)
