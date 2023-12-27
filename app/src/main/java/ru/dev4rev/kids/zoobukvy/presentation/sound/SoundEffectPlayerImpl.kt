@@ -10,6 +10,7 @@ import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import ru.dev4rev.kids.zoobukvy.configuration.Conf
@@ -25,6 +26,7 @@ class SoundEffectPlayerImpl @Inject constructor(
     private val soundsMapSystem = mutableMapOf<SoundEnum, Int>()
     private val isLoad = mutableSetOf<Int>()
     private val queueSound = mutableSetOf<Int>()
+    private val channelIsLoad = Channel<Int>()
 
     private val myCoroutineScope = CoroutineScope(Dispatchers.Default)
     private val job: Job
@@ -38,6 +40,9 @@ class SoundEffectPlayerImpl @Inject constructor(
         soundPool.setOnLoadCompleteListener { _, sampleId, status ->
             if (status == 0) {
                 isLoad.add(sampleId)
+                myCoroutineScope.launch {
+                    channelIsLoad.send(sampleId)
+                }
                 if (queueSound.contains(sampleId)) {
                     myCoroutineScope.launch {
                         playSound(sampleId)
@@ -50,9 +55,10 @@ class SoundEffectPlayerImpl @Inject constructor(
         job = myCoroutineScope.launch {
             animalLettersCardsRepository.getLetterCards().forEach {
                 try {
-                    yield()
                     soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_LETTERS + it.soundName)
-
+                    while (channelIsLoad.receive() != soundsMap[it.soundName]) {
+                        yield()
+                    }
                 } catch (e: Exception) {
                     throw IllegalStateException("sound no element LettersCards ${it.soundName}")
                 }
@@ -60,8 +66,10 @@ class SoundEffectPlayerImpl @Inject constructor(
 
             SoundEnum.values().forEach {
                 try {
-                    yield()
                     soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
+                    while (channelIsLoad.receive() != soundsMapSystem[it]) {
+                        yield()
+                    }
                 } catch (e: Exception) {
                     throw IllegalStateException("sound no element systemSound ${it.assetPath}")
                 }
@@ -69,9 +77,10 @@ class SoundEffectPlayerImpl @Inject constructor(
 
             animalLettersCardsRepository.getWordCards().forEach {
                 try {
-                    yield()
-                    soundsMap[it.soundName] =
-                        loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
+                    soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
+                    while (channelIsLoad.receive() != soundsMap[it.soundName]) {
+                        yield()
+                    }
                 } catch (e: Exception) {
                     if (!Conf.DEBUG_DISABLE_CHECK_SOUND_FILE) {
                         throw IllegalStateException("sound no element WordCard ${it.soundName}")
@@ -79,6 +88,7 @@ class SoundEffectPlayerImpl @Inject constructor(
                 }
             }
 
+            myCoroutineScope.launch { channelIsLoad.cancel() }
         }
     }
 
