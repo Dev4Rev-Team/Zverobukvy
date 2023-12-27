@@ -23,7 +23,6 @@ class SoundEffectPlayerImpl @Inject constructor(
 ) : SoundEffectPlayer {
     private val soundPool: SoundPool
     private val soundsMap = mutableMapOf<String, Int>()
-    private val soundsMapSystem = mutableMapOf<SoundEnum, Int>()
     private val isLoad = mutableSetOf<Int>()
     private val queueSound = mutableSetOf<Int>()
     private val channelIsLoad = Channel<Int>()
@@ -53,34 +52,26 @@ class SoundEffectPlayerImpl @Inject constructor(
         }
 
         job = myCoroutineScope.launch {
-            animalLettersCardsRepository.getLetterCards().forEach {
-                try {
-                    soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_LETTERS + it.soundName)
-                    while (channelIsLoad.receive() != soundsMap[it.soundName]) {
-                        yield()
-                    }
-                } catch (e: Exception) {
-                    throw IllegalStateException("sound no element LettersCards ${it.soundName}")
-                }
-            }
-
             SoundEnum.values().forEach {
                 try {
-                    soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
-                    while (channelIsLoad.receive() != soundsMapSystem[it]) {
-                        yield()
-                    }
+                    loadSoundMap(it.assetPath, ASSETS_PATH_SOUND_SYSTEM+ it.assetPath)
                 } catch (e: Exception) {
                     throw IllegalStateException("sound no element systemSound ${it.assetPath}")
                 }
             }
 
+            animalLettersCardsRepository.getLetterCards().forEach {
+                try {
+                    loadSoundMap(it.soundName, ASSETS_PATH_SOUND_LETTERS + it.soundName)
+                } catch (e: Exception) {
+                    throw IllegalStateException("sound no element LettersCards ${it.soundName}")
+                }
+            }
+
+
             animalLettersCardsRepository.getWordCards().forEach {
                 try {
-                    soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
-                    while (channelIsLoad.receive() != soundsMap[it.soundName]) {
-                        yield()
-                    }
+                    loadSoundMap(it.soundName, ASSETS_PATH_SOUND_WORDS + it.soundName)
                 } catch (e: Exception) {
                     if (!Conf.DEBUG_DISABLE_CHECK_SOUND_FILE) {
                         throw IllegalStateException("sound no element WordCard ${it.soundName}")
@@ -89,6 +80,15 @@ class SoundEffectPlayerImpl @Inject constructor(
             }
 
             myCoroutineScope.launch { channelIsLoad.cancel() }
+        }
+    }
+
+    private suspend fun loadSoundMap(soundName: String, pathFile: String) {
+        if (!soundsMap.contains(soundName)) {
+            soundsMap[soundName] = loadSound(pathFile)
+            while (channelIsLoad.receive() != soundsMap[soundName]) {
+                yield()
+            }
         }
     }
 
@@ -123,7 +123,11 @@ class SoundEffectPlayerImpl @Inject constructor(
 
     override fun play(soundEnum: SoundEnum) {
         myCoroutineScope.launch {
-            val idStream = soundsMapSystem[soundEnum]
+            var idStream = soundsMap[soundEnum.assetPath]
+            if (idStream == null) {
+                soundsMap[soundEnum.assetPath] = loadSound(ASSETS_PATH_SOUND_WORDS + soundEnum.assetPath)
+                idStream = soundsMap[soundEnum.assetPath]
+            }
             playSound(idStream)
         }
     }
