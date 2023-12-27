@@ -125,7 +125,7 @@ class SoundEffectPlayerImpl @Inject constructor(
         myCoroutineScope.launch {
             var idStream = soundsMap[soundEnum.assetPath]
             if (idStream == null) {
-                soundsMap[soundEnum.assetPath] = loadSound(ASSETS_PATH_SOUND_WORDS + soundEnum.assetPath)
+                soundsMap[soundEnum.assetPath] = loadSound(ASSETS_PATH_SOUND_SYSTEM + soundEnum.assetPath)
                 idStream = soundsMap[soundEnum.assetPath]
             }
             playSound(idStream)
