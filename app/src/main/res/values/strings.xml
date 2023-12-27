@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">ЗооБуквы</string>
-    <string name="base_activity_name">BASE</string>
-    <string name="new_year_activity_name">NEW_YEAR</string>
-    <string name="theme_key">THEME</string>
     <!--Строки в интерфейсе-->
     <string name="color_text">Цвет</string>
     <string name="points_text">Счет</string>
@@ -62,5 +59,8 @@
     <string name="genius">Гений</string>
     <string name="hero">Герой</string>
     <string name="legend">Легенда</string>
+
+    <string name="about_app">Разработка:\nDev4Rev-Team\n2023</string>
+
 
 </resources>

@@ -21,6 +21,9 @@
         <item name="app_text_color_button">@color/secondary_color</item>
         <item name="app_text_color_button_outline">@color/white</item>
 
+        <item name="app_text_color_button_play">@color/secondary_color</item>
+        <item name="app_text_color_button_play_outline">@color/white</item>
+
         <item name="app_next_player_color">@drawable/background_green_transparent</item>
         <item name="app_wrong_color">@drawable/background_red_transparent</item>
         <item name="app_computer_color">@color/transparent</item>
@@ -56,8 +59,8 @@
         <item name="app_text_color_lvl2">@color/secondary_color</item>
         <item name="app_text_color_lvl3">@color/white</item>
 
-        <item name="app_text_color_button">@color/white</item>
-        <item name="app_text_color_button_outline">@color/secondary_color</item>
+        <item name="app_text_color_button_play">@color/white</item>
+        <item name="app_text_color_button_play_outline">@color/secondary_color</item>
 
         <item name="app_next_player_color">@drawable/background_white_transparent</item>
         <item name="app_wrong_color">@drawable/background_blue_transparent</item>

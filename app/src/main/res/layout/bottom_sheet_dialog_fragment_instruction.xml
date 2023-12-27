@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/white"
     android:elevation="@dimen/elevation_default"
     app:cardCornerRadius="24dp"
     app:strokeColor="@color/transparent">
@@ -12,14 +13,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/header_image_view"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_minus" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/header_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="4"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_minus" />
+
+            <Button
+                android:id="@+id/header_button_close"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"
+                android:text="@string/close_rules"
+                android:textColor="@color/color_red" />
+        </RelativeLayout>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
@@ -49,6 +67,43 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/location_rules_text_view"
+                    android:layout_width="@dimen/auto_layout"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/location_rules"
+                    app:layout_constraintEnd_toStartOf="@id/show_instruction_image_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rules_text_view"
+                    app:layout_constraintHorizontal_chainStyle="packed"/>
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/show_instruction_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginStart="-6dp"
+                    android:rotation="-90"
+                    android:tint="?app_flag_color"
+                    app:layout_constraintStart_toEndOf="@+id/location_rules_text_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/location_rules_text_view"
+                    app:layout_constraintBottom_toBottomOf="@id/location_rules_text_view"
+                    app:srcCompat="@drawable/ic_bookmark" />
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="@dimen/auto_layout"
+                    app:layout_constraintTop_toTopOf="@+id/show_instruction_image_view"
+                    app:layout_constraintBottom_toBottomOf="@id/show_instruction_image_view"
+                    app:layout_constraintStart_toStartOf="@id/show_instruction_image_view"
+                    android:background="@color/white"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/prepare_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -58,7 +113,7 @@
                     android:textSize="@dimen/text_medium_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rules_text_view" />
+                    app:layout_constraintTop_toBottomOf="@+id/location_rules_text_view" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/prepare_text_part1_text_view"
@@ -73,8 +128,8 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/prepare_image_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
                     android:layout_marginTop="@dimen/margin_default"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -278,10 +333,22 @@
                     android:gravity="center_horizontal"
                     android:text="@string/game_rules_end_game_say_goodbye"
                     android:textSize="@dimen/text_medium"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/about_app_text_view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/end_game_image_view" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/about_app_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_big"
+                    android:gravity="center"
+                    android:text="@string/about_app"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/say_goodbye_text_view" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

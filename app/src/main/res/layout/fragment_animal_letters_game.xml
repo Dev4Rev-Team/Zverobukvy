@@ -22,18 +22,19 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@drawable/background_white"
-            android:tint="?app_text_color_lvl2"
             android:elevation="@dimen/elevation_default"
             android:scaleType="center"
-            app:srcCompat="@drawable/ic_arrow_left"
+            android:tint="?app_text_color_lvl2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_left" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/player_name_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
+            android:backgroundTint="@color/white"
             android:visibility="invisible"
             app:cardCornerRadius="@dimen/corner_radius_medium"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,14 +81,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textColor="?app_text_color_lvl2"
                     android:text="@string/username_default"
+                    android:textColor="?app_text_color_lvl2"
                     android:textSize="@dimen/text_medium_small" />
 
             </com.google.android.material.circularreveal.CircularRevealLinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <ru.gb.zverobukvy.presentation.customview.CustomLevelView
+        <ru.dev4rev.kids.zoobukvy.presentation.customview.CustomLevelView
             android:id="@+id/card_level"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -102,7 +103,7 @@
             app:colorViolet="@color/color_card_violet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:radiusCards="@dimen/corner_radius_default"/>
+            app:radiusCards="@dimen/corner_radius_default" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/sector_menu_guidline"
@@ -111,7 +112,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="60dp" />
 
-        <ru.gb.zverobukvy.presentation.customview.CustomCard
+        <ru.dev4rev.kids.zoobukvy.presentation.customview.CustomCard
             android:id="@+id/word_custom_card"
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
@@ -131,7 +132,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.27" />
 
-        <ru.gb.zverobukvy.presentation.customview.CustomWordView
+        <ru.dev4rev.kids.zoobukvy.presentation.customview.CustomWordView
             android:id="@+id/word_view"
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
@@ -155,7 +156,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.37" />
 
-        <ru.gb.zverobukvy.presentation.customview.CustomCardTable
+        <ru.dev4rev.kids.zoobukvy.presentation.customview.CustomCardTable
             android:id="@+id/table"
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
@@ -177,22 +178,31 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_end="20dp" />
 
-        <ToggleButton
-            android:id="@+id/sound_toggle_button"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/sound_button_layout"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
-            android:background="@drawable/background_white"
-            android:checked="true"
-            android:textColor="?app_text_color_lvl2"
+            android:clickable="true"
             android:elevation="@dimen/elevation_default"
-            android:text="sound"
-            android:textOff="🔈"
-            android:textOn="🔊"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/corner_radius_default"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_level" />
+            app:layout_constraintTop_toBottomOf="@+id/card_level"
+            app:strokeWidth="0dp">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/sound_button_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_default"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_sound_on" />
+        </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include

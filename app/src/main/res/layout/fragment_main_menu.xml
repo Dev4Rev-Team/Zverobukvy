@@ -139,7 +139,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/play_button"
-        style="@style/Button.Big.Dark"
+        style="@style/Button.Play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_menu_fragment_play_game_text_button"
@@ -155,19 +155,64 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="gone"
         app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/players_recycler_view"
         app:layout_constraintStart_toStartOf="@id/players_recycler_view"
-        app:layout_constraintTop_toTopOf="@id/sector_recycle_view_guideline">
+        app:layout_constraintTop_toTopOf="@id/sector_recycle_view_guideline"
+        app:strokeColor="@color/transparent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/avatars_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/secondary_color" />
+            android:background="@color/secondary_color"
+            android:padding="10dp"/>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/close_avatar_recycler_view_layout"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="-20dp"
+        android:layout_marginBottom="-20dp"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="14dp"
+        app:layout_constraintBottom_toTopOf="@id/avatars_recycler_view_layout"
+        app:layout_constraintStart_toEndOf="@id/avatars_recycler_view_layout"
+        app:strokeColor="@color/transparent"
+        tools:backgroundTint="@color/white">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/close_button_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_avatar_image"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_close" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/avatars_recycler_view_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="close_avatar_recycler_view_layout, avatars_recycler_view_layout" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/help_show_instruction_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotation="30"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/show_instruction_image_view"
+        app:layout_constraintEnd_toEndOf="@+id/show_instruction_image_view"
+        app:layout_constraintStart_toStartOf="@+id/show_instruction_image_view"
+        app:layout_constraintTop_toTopOf="@+id/show_instruction_image_view"
+        app:srcCompat="@drawable/avatar_bee" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
