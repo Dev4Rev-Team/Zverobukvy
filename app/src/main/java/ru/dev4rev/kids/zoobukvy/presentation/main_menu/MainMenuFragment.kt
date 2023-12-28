@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import ru.dev4rev.kids.zoobukvy.R
@@ -19,8 +18,8 @@ import ru.dev4rev.kids.zoobukvy.appComponent
 import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.configuration.Conf.Companion.SPAN_COUNT_AVATARS_RECYCLER_VIEW
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentMainMenuBinding
-import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
+import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createAlphaShowAnimation
@@ -32,6 +31,7 @@ import ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.click_listen
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.click_listener_owner.EditPlayerClickListenerOwner
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.click_listener_owner.PlayerClickListenerOwner
 import ru.dev4rev.kids.zoobukvy.utility.ui.ViewBindingFragment
+import ru.dev4rev.kids.zoobukvy.utility.ui.WrapContentLinearLayoutManager
 import ru.dev4rev.kids.zoobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
@@ -109,7 +109,6 @@ class MainMenuFragment :
         return false
     }
 
-
     private fun initView() {
         initPlayersRecycleView()
         initAvatarsRecycleView()
@@ -173,7 +172,7 @@ class MainMenuFragment :
 
     private fun initPlayersRecycleView() {
         binding.playersRecyclerView.run {
-            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager = WrapContentLinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = playersAdapter
         }
     }
