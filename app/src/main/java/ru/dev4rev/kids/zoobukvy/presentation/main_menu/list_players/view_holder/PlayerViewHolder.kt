@@ -5,8 +5,8 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import ru.dev4rev.kids.zoobukvy.R
+import ru.dev4rev.kids.zoobukvy.appComponent
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
-import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.Decoration
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.Rank
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.ViewRating
@@ -39,7 +39,7 @@ class PlayerViewHolder(
 ) :
     BasePlayerViewHolder(viewBinding) {
 
-    private val imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+    private val imageAvatarLoader: ImageAvatarLoader = itemView.context.appComponent.imageAvatarLoader
 
     private lateinit var viewRatingProvider: ViewRatingProvider
 
