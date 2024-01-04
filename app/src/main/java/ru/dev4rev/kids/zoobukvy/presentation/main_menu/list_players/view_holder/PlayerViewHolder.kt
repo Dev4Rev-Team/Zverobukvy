@@ -11,26 +11,9 @@ import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.Decoration
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.Rank
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.ViewRating
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.ViewRatingProvider
-import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.ViewRatingProviderImpl
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.PlayerInSettings
 import timber.log.Timber
-
-/*@AssistedFactory
-interface PlayerViewHolderFactory {
-    fun create(
-        @Assisted viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
-        @Assisted("itemPlayerClickListener") itemPlayerClickListener: (Int) -> Unit,
-        @Assisted("editMenuClickListener") editMenuClickListener: (Int) -> Unit,
-    ): PlayerViewHolder
-}
-
-class PlayerViewHolder @AssistedInject constructor(
-    @Assisted private val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
-    @Assisted("itemPlayerClickListener") private val itemPlayerClickListener: (Int) -> Unit,
-    @Assisted("editMenuClickListener") private val editMenuClickListener: (Int) -> Unit,
-    private val viewRatingProviderFactory: ViewRatingProviderFactory,
-)*/
 
 class PlayerViewHolder(
     private val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
@@ -45,7 +28,7 @@ class PlayerViewHolder(
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
-            viewRatingProvider = ViewRatingProviderImpl(it.player.rating)
+            viewRatingProvider = itemView.context.appComponent.getViewRatingProviderFactory().create(it.player.rating)
             initViewRank()
             initViewRating()
             viewBinding.run {
