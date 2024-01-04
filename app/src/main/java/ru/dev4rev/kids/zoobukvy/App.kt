@@ -10,7 +10,7 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import timber.log.Timber
 
-class App : Application(), ru.dev4rev.kids.zoobukvy.AnimalLettersGameSubcomponentContainer {
+class App : Application(), AnimalLettersGameSubcomponentContainer {
     lateinit var appComponent: AppComponent
 
     private var subcomponent: AnimalLettersGameSubcomponent? = null
@@ -51,11 +51,11 @@ class App : Application(), ru.dev4rev.kids.zoobukvy.AnimalLettersGameSubcomponen
 }
 
 val Context.appComponent: AppComponent
-    get() = if (this is ru.dev4rev.kids.zoobukvy.App) appComponent
+    get() = if (this is App) appComponent
     else this.applicationContext.appComponent
 
-val Context.animalLettersGameSubcomponentContainer: ru.dev4rev.kids.zoobukvy.AnimalLettersGameSubcomponentContainer
-    get() = if (this is ru.dev4rev.kids.zoobukvy.App) this
+val Context.animalLettersGameSubcomponentContainer: AnimalLettersGameSubcomponentContainer
+    get() = if (this is App) this
     else this.applicationContext.animalLettersGameSubcomponentContainer
 
 interface AnimalLettersGameSubcomponentContainer {

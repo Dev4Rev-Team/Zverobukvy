@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
+import ru.dev4rev.kids.zoobukvy.appComponent
 import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
-import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.dev4rev.kids.zoobukvy.databinding.DialogFragmentGameIsOverItemBinding
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Rating
@@ -41,7 +41,8 @@ class PlayersRVAdapter(
     class ViewHolder(private val binding: DialogFragmentGameIsOverItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+        private var imageAvatarLoader: ImageAvatarLoader =
+            itemView.context.appComponent.imageAvatarLoader
 
         fun setPlayer(
             playerUI: PlayerUI,
