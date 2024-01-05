@@ -11,7 +11,7 @@ interface SharedPreferencesForGame {
 
     fun isFirstLaunch(): Boolean
 
-    fun readSoundStatus(): Boolean
+    fun readSoundStatus(): String?
 
-    fun saveSoundStatus(isSoundOn: Boolean)
+    fun saveSoundStatus(soundStatus: String)
 }
