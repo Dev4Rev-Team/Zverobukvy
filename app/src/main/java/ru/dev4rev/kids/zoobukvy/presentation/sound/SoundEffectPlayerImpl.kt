@@ -34,7 +34,6 @@ class SoundEffectPlayerImpl @Inject constructor(
 
     private var enable = true
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
-
     init {
         soundPool = createSoundPool()
 
@@ -76,20 +75,20 @@ class SoundEffectPlayerImpl @Inject constructor(
                 }
             }
 
-            animalLettersCardsRepository.getWordCards().forEach {
-                try {
-                    soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
-                    while (channelIsLoad.receive() != soundsMap[it.soundName]) {
-                        yield()
-                    }
-                } catch (e: Exception) {
-                    if (!Conf.DEBUG_DISABLE_CHECK_SOUND_FILE) {
+            if (!Conf.DEBUG_CHECK_SOUND_FILE) {
+                animalLettersCardsRepository.getWordCards().forEach {
+                    try {
+                        soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
+                        while (channelIsLoad.receive() != soundsMap[it.soundName]) {
+                            yield()
+                        }
+                    } catch (e: Exception) {
                         throw IllegalStateException("sound no element WordCard ${it.soundName}")
                     }
                 }
             }
 
-            myCoroutineScope.launch { channelIsLoad.cancel() }
+            channelIsLoad.cancel()
         }
     }
 
