@@ -14,4 +14,8 @@ interface SharedPreferencesForGame {
     fun readSoundStatus(): String?
 
     fun saveSoundStatus(soundStatus: String)
+
+    fun readVoiceActingStatus(): String?
+
+    fun saveVoiceActingStatus(voiceActingStatus: String)
 }
