@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioAttributes.FLAG_AUDIBILITY_ENFORCED
 import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
@@ -93,10 +94,7 @@ class SoundEffectPlayerImpl @Inject constructor(
     }
 
     private fun loadSound(assetPath: String): Int {
-        val descriptor = context.assets.openFd(assetPath)
-        val idStream = soundPool.load(descriptor, DEFAULT_PRIORITY_LOAD)
-        descriptor.close()
-        return idStream
+        return soundPool.load(context.assets.openFd(assetPath), DEFAULT_PRIORITY_LOAD)
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -111,8 +109,10 @@ class SoundEffectPlayerImpl @Inject constructor(
     @SuppressLint("ObsoleteSdkInt")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun createNewSoundPool(): SoundPool {
-        val attributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
+        val attributes = AudioAttributes.Builder()
+            .setFlags(FLAG_AUDIBILITY_ENFORCED)
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build()
         return SoundPool.Builder().setMaxStreams(MAX_STREAM).setAudioAttributes(attributes).build()
     }
 
@@ -169,7 +169,7 @@ class SoundEffectPlayerImpl @Inject constructor(
     }
 
     companion object {
-        const val MAX_STREAM = 3
+        const val MAX_STREAM = 2
         const val DEFAULT_PRIORITY_LOAD = 1
         const val ASSETS_PATH_SOUND_SYSTEM = "sounds/system/"
         const val ASSETS_PATH_SOUND_WORDS = "sounds/words/"
