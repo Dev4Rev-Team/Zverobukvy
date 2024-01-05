@@ -109,9 +109,9 @@ class SoundEffectPlayerImpl @Inject constructor(
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun createNewSoundPool(): SoundPool {
         val attributes = AudioAttributes.Builder()
-            .setFlags(FLAG_AUDIBILITY_ENFORCED)
             .setUsage(AudioAttributes.USAGE_GAME)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+            .build()
         return SoundPool.Builder().setMaxStreams(MAX_STREAM).setAudioAttributes(attributes).build()
     }
 
