@@ -19,6 +19,15 @@ sealed interface AwardsScreenState {
         data class AwardedPlayerState(
             val playerName: String,
             val playerAvatar: Avatar,
+            val rank: Rank,
+            var orangeViewRating: ViewRating,
+            val changeOrangeViewRating: Int,
+            var greenViewRating: ViewRating,
+            val changeGreenViewRating: Int,
+            var blueViewRating: ViewRating,
+            val changeBlueViewRating: Int,
+            var violetViewRating: ViewRating,
+            val changeVioletViewRating: Int,
         ) : AwardsScreenState.Main
 
         /** Состояние приходящее после отображения всех наград или их полного отсутствия

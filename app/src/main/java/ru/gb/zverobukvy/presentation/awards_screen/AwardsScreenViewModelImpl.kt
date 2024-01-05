@@ -1,6 +1,5 @@
 package ru.gb.zverobukvy.presentation.awards_screen
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,8 +34,8 @@ class AwardsScreenViewModelImpl @Inject constructor(
 
             listOfAwardedPlayers = convert(playerBeforeGame, playerAfterGame).orEmpty()
 
-            if (listOfAwardedPlayers.isEmpty())
-                mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
+            if (listOfAwardedPlayers.isEmpty()) mainAwardsLiveData.value =
+                AwardsScreenState.Main.CancelScreen
             else {
                 mainAwardsLiveData.value = AwardsScreenState.Main.StartScreen
                 isPossibleToClick = false
@@ -60,15 +59,6 @@ class AwardsScreenViewModelImpl @Inject constructor(
             val oldRatingProvider = viewRatingProviderFactory.create(playerStates.second.rating)
 
             val awardsList = mutableListOf<AwardsScreenState.Second>()
-
-            if (newRatingProvider.getRank() != oldRatingProvider.getRank()) {
-                (awardsList).add(
-                    AwardsScreenState.Second.RankIncreaseState(
-                        oldRatingProvider.getRank(),
-                        newRatingProvider.getRank()
-                    )
-                )
-            }
 
             if (newRatingProvider.getOrangeRating().decoration != oldRatingProvider.getOrangeRating().decoration) {
                 (awardsList).add(
@@ -110,13 +100,35 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 )
             }
 
+            if (newRatingProvider.getRank() != oldRatingProvider.getRank()) {
+                (awardsList).add(
+                    AwardsScreenState.Second.RankIncreaseState(
+                        oldRatingProvider.getRank(), newRatingProvider.getRank()
+                    )
+                )
+            }
+
+            val changeOrangeViewRating: Int =
+                newRatingProvider.getOrangeRating().rating - oldRatingProvider.getOrangeRating().rating
+            val changeGreenViewRating: Int =
+                newRatingProvider.getGreenRating().rating - oldRatingProvider.getGreenRating().rating
+            val changeBlueViewRating: Int =
+                newRatingProvider.getBlueRating().rating - oldRatingProvider.getBlueRating().rating
+            val changeVioletViewRating: Int =
+                newRatingProvider.getVioletRating().rating - oldRatingProvider.getVioletRating().rating
+
+
             if (awardsList.isNotEmpty()) {
                 PlayerInVM(
                     AwardsScreenState.Main.AwardedPlayerState(
                         playerStates.first.name,
-                        playerStates.first.avatar
-                    ),
-                    awardsList
+                        playerStates.first.avatar,
+                        oldRatingProvider.getRank(),
+                        oldRatingProvider.getOrangeRating(), changeOrangeViewRating,
+                        oldRatingProvider.getGreenRating(), changeGreenViewRating,
+                        oldRatingProvider.getBlueRating(), changeBlueViewRating,
+                        oldRatingProvider.getVioletRating(), changeVioletViewRating
+                    ), awardsList
                 )
             } else {
                 null
@@ -141,13 +153,13 @@ class AwardsScreenViewModelImpl @Inject constructor(
         }
     }
 
+    // TODO Apply awards into PlayerInVM
     private fun onNextClickInVM() {
         viewModelScope.launch {
             if (awardIndex < listOfAwardedPlayers[playerIndex].awardsList.size - 1) {
                 awardIndex++
                 if (playerIndex == 0) {
-                    mainAwardsLiveData.value =
-                        listOfAwardedPlayers[playerIndex].player
+                    mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
                     delay(1900L)
                 }
                 secondAwardsLiveData.value =
