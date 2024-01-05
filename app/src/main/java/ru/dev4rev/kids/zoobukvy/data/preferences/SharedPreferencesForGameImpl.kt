@@ -63,11 +63,24 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
             .apply()
     }
 
+    override fun readVoiceActingStatus(): String? {
+        Timber.d("readVoiceActingStatus")
+        return sharedPreferencesForGame.getString(KEY_VOICE_ACTING, null)
+    }
+
+    override fun saveVoiceActingStatus(voiceActingStatus: String) {
+        Timber.d("saveVoiceActingStatus")
+        sharedPreferencesForGame.edit()
+            .putString(KEY_VOICE_ACTING, voiceActingStatus)
+            .apply()
+    }
+
     companion object {
         private const val KEY_TYPES_CARDS = "KeyTypesCards"
         private const val KEY_NAMES_PLAYERS = "KeyNamesPlayers"
         private const val KEY_FIRST_LAUNCH = "KeyFirstLaunch"
         private const val KEY_SOUND = "KeySound"
+        private const val KEY_VOICE_ACTING = "KeyVoiceActing"
         private const val NAME_SHARED_PREFERENCES = "animal_letters_pref"
     }
 }
