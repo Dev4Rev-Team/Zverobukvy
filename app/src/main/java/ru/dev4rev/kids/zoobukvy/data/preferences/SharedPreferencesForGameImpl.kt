@@ -51,15 +51,15 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
         return isFirstLaunch
     }
 
-    override fun readSoundStatus(): Boolean {
+    override fun readSoundStatus(): String? {
         Timber.d("readSoundStatus")
-        return sharedPreferencesForGame.getBoolean(KEY_SOUND, true)
+        return sharedPreferencesForGame.getString(KEY_SOUND, null)
     }
 
-    override fun saveSoundStatus(isSoundOn: Boolean) {
+    override fun saveSoundStatus(soundStatus: String) {
         Timber.d("saveSoundStatus")
         sharedPreferencesForGame.edit()
-            .putBoolean(KEY_SOUND, isSoundOn)
+            .putString(KEY_SOUND, soundStatus)
             .apply()
     }
 

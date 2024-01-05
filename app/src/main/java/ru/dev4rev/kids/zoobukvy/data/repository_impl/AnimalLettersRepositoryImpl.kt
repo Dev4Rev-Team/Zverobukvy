@@ -24,7 +24,6 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.card.WordCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Avatar
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
 import ru.dev4rev.kids.zoobukvy.domain.repository.LoadingDataRepository
-import ru.dev4rev.kids.zoobukvy.domain.repository.SoundStatusRepository
 import ru.dev4rev.kids.zoobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
 import ru.dev4rev.kids.zoobukvy.domain.repository.main_menu.MainMenuRepository
 import javax.inject.Inject
@@ -36,7 +35,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val sharedPreferencesForGame: SharedPreferencesForGame,
     private val networkStatus: NetworkStatusImpl
-) : AnimalLettersGameRepository, MainMenuRepository, SoundStatusRepository, LoadingDataRepository {
+) : AnimalLettersGameRepository, MainMenuRepository, LoadingDataRepository {
     private val letterCardMapperToDomain = LetterCardMapperToDomain()
 
     private val wordCardMapperToDomain = WordCardMapperToDomain()
@@ -186,10 +185,4 @@ class AnimalLettersRepositoryImpl @Inject constructor(
             }
         }
     }
-
-    override fun getSoundStatus(): Boolean =
-        sharedPreferencesForGame.readSoundStatus()
-
-    override fun saveSoundStatus(isSoundOn: Boolean) =
-        sharedPreferencesForGame.saveSoundStatus(isSoundOn)
 }

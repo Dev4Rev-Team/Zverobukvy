@@ -13,6 +13,7 @@ import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
+import ru.dev4rev.kids.zoobukvy.domain.entity.sound.SoundStatus
 import ru.dev4rev.kids.zoobukvy.domain.repository.SoundStatusRepository
 import ru.dev4rev.kids.zoobukvy.domain.use_case.interactor.AnimalLettersGameInteractor
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
@@ -439,18 +440,23 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         return changingLiveData
     }
 
-    override fun getSoundStatusLiveData(): LiveData<Boolean> {
+    override fun getSoundStatusLiveData(): LiveData<SoundStatus> {
         Timber.d("getSoundStatusLiveData")
         return soundStatusLiveData
     }
 
     override fun onSoundClick() {
-        // TODO ??? viewModelScope.launch {  }
         Timber.d("onSoundClick")
-        soundStatusRepository.getSoundStatus().also { soundStatus ->
-            soundStatusRepository.saveSoundStatus(!soundStatus)
-            soundStatusLiveData.value = !soundStatus
+        when (soundStatusRepository.getSoundStatus()) {
+            SoundStatus.ON -> changeSoundStatus(SoundStatus.ON_OFF)
+            SoundStatus.ON_OFF -> changeSoundStatus(SoundStatus.OFF)
+            SoundStatus.OFF -> changeSoundStatus(SoundStatus.ON)
         }
+    }
+
+    private fun changeSoundStatus(soundStatus: SoundStatus) {
+        soundStatusLiveData.value = soundStatus
+        soundStatusRepository.saveSoundStatus(soundStatus)
     }
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
