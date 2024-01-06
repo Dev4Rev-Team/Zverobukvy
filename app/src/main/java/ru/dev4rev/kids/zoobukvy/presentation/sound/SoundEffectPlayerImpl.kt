@@ -133,6 +133,7 @@ class SoundEffectPlayerImpl @Inject constructor(
     }
 
     override fun play(soundEnum: SoundEnum) {
+        if (!enable) return
         myCoroutineScope.launch {
             var idStream = soundsMap[soundEnum.assetPath]
             if (idStream == null) {
