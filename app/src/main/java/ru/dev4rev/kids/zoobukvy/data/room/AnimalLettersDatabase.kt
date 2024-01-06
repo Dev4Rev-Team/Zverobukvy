@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import ru.dev4rev.kids.zoobukvy.data.room.dao.player.AvatarsDao
 import ru.dev4rev.kids.zoobukvy.data.room.dao.card.CardsSetDao
 import ru.dev4rev.kids.zoobukvy.data.room.dao.card.LetterCardsDao
@@ -23,7 +25,7 @@ import ru.dev4rev.kids.zoobukvy.data.room.entity.card.WordCardInDatabase
         WordCardInDatabase::class,
         CardsSetInDatabase::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class AnimalLettersDatabase : RoomDatabase() {
@@ -44,6 +46,12 @@ abstract class AnimalLettersDatabase : RoomDatabase() {
 
         private const val DATABASE_HAS_NOT_CREATED = "Database has not created"
 
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE letters ADD COLUMN sound_letter TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
         fun getPlayersDatabase(): AnimalLettersDatabase =
             instance ?: throw RuntimeException(DATABASE_HAS_NOT_CREATED)
 
@@ -55,6 +63,7 @@ abstract class AnimalLettersDatabase : RoomDatabase() {
                     NAME_PLAYERS_DATABASE
                 )
                     .createFromAsset("database/animal_letters_db.db")
+                    .addMigrations(MIGRATION_1_2)
                     .build()
             }
         }
