@@ -9,6 +9,8 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AnticipateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
@@ -151,7 +153,6 @@ class AwardsScreenFragment : Fragment() {
 
     private fun animateViewRatingIncrease(state: AwardsScreenState.Second.ViewRatingIncreaseState) {
 
-        val constraintSetStart = ConstraintSet()
         val target = when (state.typeCards) {
             TypeCards.ORANGE -> R.layout.orange_view_rating_layout
             TypeCards.GREEN -> R.layout.green_view_rating_layout
@@ -159,14 +160,35 @@ class AwardsScreenFragment : Fragment() {
             TypeCards.VIOLET -> R.layout.violet_view_rating_layout
         }
 
-        constraintSetStart.clone(requireContext(), target)
-        val transitionStart = TransitionSet().addTransition(ChangeBounds()).addTransition(ChangeTransform())
-        transitionStart.startDelay = 2000L
-        transitionStart.duration = 1200L
-        TransitionManager.beginDelayedTransition(viewRatingBinding.viewRatingLayout, transitionStart)
+        viewRatingBinding.textView.text = "122"
+
+        val constraintSetStart = ConstraintSet()
+        constraintSetStart.clone(requireContext(), R.layout.default_view_rating_layout)
+        val transitionStart = TransitionSet().addTransition(ChangeBounds()).addTransition(Fade())
+        transitionStart.duration = 0
+        TransitionManager.beginDelayedTransition(binding.viewRatingLayoutContainer, transitionStart)
         constraintSetStart.applyTo(viewRatingBinding.viewRatingLayout)
 
-       /* val sceneLayout = when (state.typeCards) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            withContext(Dispatchers.Default) {
+                delay(1000L)
+            }
+            withContext(Dispatchers.Main) {
+                val constraintSetEnd = ConstraintSet()
+                constraintSetEnd.clone(requireContext(), R.layout.orange_view_rating_layout)
+                val transitionEnd =
+                    TransitionSet().addTransition(ChangeBounds()).addTransition(Fade())
+                transitionEnd.interpolator = AnticipateInterpolator(1.0f)
+                transitionEnd.duration = 1200
+                TransitionManager.beginDelayedTransition(
+                    binding.viewRatingLayoutContainer,
+                    transitionEnd
+                )
+                constraintSetEnd.applyTo(viewRatingBinding.viewRatingLayout)
+            }
+        }
+
+        /*val sceneLayout = when (state.typeCards) {
             TypeCards.ORANGE -> R.layout.orange_view_rating_layout
             TypeCards.GREEN -> R.layout.green_view_rating_layout
             TypeCards.BLUE -> R.layout.blue_view_rating_layout
@@ -183,7 +205,6 @@ class AwardsScreenFragment : Fragment() {
             setStartDelay(1000L)
             setDuration(1200L)
             addTransition(ChangeBounds())
-            addTransition(ChangeClipBounds())
             addTransition(ChangeTransform())
             setOrdering(TransitionSet.ORDERING_TOGETHER)
         })
@@ -201,7 +222,6 @@ class AwardsScreenFragment : Fragment() {
                 TransitionManager.go(scene2, TransitionSet().apply {
                     setDuration(1200L)
                     addTransition(ChangeBounds())
-                    addTransition(ChangeClipBounds())
                     addTransition(ChangeTransform())
                     setOrdering(TransitionSet.ORDERING_TOGETHER)
                 })
