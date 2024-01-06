@@ -13,5 +13,9 @@ interface SharedPreferencesForGame {
 
     fun readSoundStatus(): Boolean
 
-    fun saveSoundStatus(isSoundOn: Boolean)
+    fun saveSoundStatus(soundStatus: Boolean)
+
+    fun readVoiceActingStatus(): String?
+
+    fun saveVoiceActingStatus(voiceActingStatus: String)
 }

@@ -17,9 +17,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import ru.dev4rev.kids.zoobukvy.R
 import ru.dev4rev.kids.zoobukvy.animalLettersGameSubcomponentContainer
+import ru.dev4rev.kids.zoobukvy.appComponent
 import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
-import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
@@ -49,8 +49,8 @@ class AnimalLettersGameFragment :
     private var gameStart: GameStart? = null
     private lateinit var assertsImageCash: AssetsImageCash
     private lateinit var soundEffectPlayer: SoundEffectPlayer
+    private lateinit var imageAvatarLoader: ImageAvatarLoader
     private lateinit var viewModel: AnimalLettersGameViewModel
-    private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
     private val game = GameProcessingState()
     private val event = GameEvent()
     private var wordCardSoundName: String? = null
@@ -64,6 +64,7 @@ class AnimalLettersGameFragment :
     var lastStateScreen = StateScreen.NextPlayer
 
     private fun initDagger() {
+        imageAvatarLoader = requireContext().appComponent.imageAvatarLoader
         requireContext().animalLettersGameSubcomponentContainer.createAnimalLettersGameSubcomponent(
             gameStart!!.typesCards, gameStart!!.players
         ).also { fragmentComponent ->

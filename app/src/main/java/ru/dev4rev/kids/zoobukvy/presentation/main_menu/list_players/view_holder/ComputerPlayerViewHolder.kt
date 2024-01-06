@@ -1,8 +1,8 @@
 package ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.view_holder
 
 import ru.dev4rev.kids.zoobukvy.R
+import ru.dev4rev.kids.zoobukvy.appComponent
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
-import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentMainMenuItemComputerPlayerModeViewBinding
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.PlayerInSettings
 
@@ -12,7 +12,7 @@ class ComputerPlayerViewHolder(
 ) :
     BasePlayerViewHolder(viewBinding) {
 
-    private val imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+    private val imageAvatarLoader: ImageAvatarLoader = itemView.context.appComponent.imageAvatarLoader
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {

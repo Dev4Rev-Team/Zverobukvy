@@ -17,7 +17,9 @@ data class LetterCardInDatabase(
     @field:PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     @field:ColumnInfo(name = "sound")
-    val soundName: String
+    val soundName: String,
+    @field:ColumnInfo(name = "sound_letter")
+    val letterName: String
 ) : DataEntity
 
 

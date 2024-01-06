@@ -1,6 +1,7 @@
 package ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game
 
 import androidx.lifecycle.LiveData
+import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 
 /**
 Во viewModel необходимо хранить текущее полное состояние игры (var currentGameState: GameState?).
@@ -36,9 +37,19 @@ interface AnimalLettersGameViewModel {
     fun getSoundStatusLiveData(): LiveData<Boolean>
 
     /**
+     * Метод для подписки view на состояние озвучки букв (буквы или звуки или отключено)
+     */
+    fun getVoiceActingStatusLiveData(): LiveData<VoiceActingStatus>
+
+    /**
      * Метод вызывается при нажатии на элемент отключения/включения звука
      */
     fun onSoundClick()
+
+    /**
+     * Метод вызывается при нажатии на элемент переключения озвучки букв
+     */
+    fun onVoiceActingClick()
 
     /**
     Метод вызывается при выборе буквенной карточки, в этом методе viewModel вызывает

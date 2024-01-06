@@ -13,6 +13,7 @@ import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
+import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 import ru.dev4rev.kids.zoobukvy.domain.repository.SoundStatusRepository
 import ru.dev4rev.kids.zoobukvy.domain.use_case.interactor.AnimalLettersGameInteractor
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
@@ -75,6 +76,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      */
     private val soundStatusLiveData =
         MutableLiveData(soundStatusRepository.getSoundStatus())
+
+    /** LiveData для отправки состояний озвучки букв (звуки или буквы)
+     */
+    private val voiceActingStatusLiveData =
+        MutableLiveData(soundStatusRepository.getVoiceActingStatus())
 
     /** Инициализация viewModel :
      */
@@ -444,13 +450,31 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         return soundStatusLiveData
     }
 
+    override fun getVoiceActingStatusLiveData(): LiveData<VoiceActingStatus> {
+        Timber.d("getVoiceActingStatusLiveData")
+        return voiceActingStatusLiveData
+    }
+
     override fun onSoundClick() {
-        // TODO ??? viewModelScope.launch {  }
         Timber.d("onSoundClick")
-        soundStatusRepository.getSoundStatus().also { soundStatus ->
-            soundStatusRepository.saveSoundStatus(!soundStatus)
-            soundStatusLiveData.value = !soundStatus
+        soundStatusRepository.getSoundStatus().let {
+            soundStatusRepository.saveSoundStatus(!it)
+            soundStatusLiveData.value = !it
         }
+    }
+
+    override fun onVoiceActingClick() {
+        Timber.d("onVoiceActingClick")
+        when (soundStatusRepository.getVoiceActingStatus()){
+            VoiceActingStatus.SOUND -> changeVoiceActingStatus(VoiceActingStatus.LETTER)
+            VoiceActingStatus.LETTER -> changeVoiceActingStatus(VoiceActingStatus.OFF)
+            VoiceActingStatus.OFF -> changeVoiceActingStatus(VoiceActingStatus.SOUND)
+        }
+    }
+
+    private fun changeVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
+        voiceActingStatusLiveData.value = voiceActingStatus
+        soundStatusRepository.saveVoiceActingStatus(voiceActingStatus)
     }
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {

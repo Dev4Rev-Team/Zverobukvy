@@ -56,10 +56,22 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
         return sharedPreferencesForGame.getBoolean(KEY_SOUND, true)
     }
 
-    override fun saveSoundStatus(isSoundOn: Boolean) {
+    override fun saveSoundStatus(soundStatus: Boolean) {
         Timber.d("saveSoundStatus")
         sharedPreferencesForGame.edit()
-            .putBoolean(KEY_SOUND, isSoundOn)
+            .putBoolean(KEY_SOUND, soundStatus)
+            .apply()
+    }
+
+    override fun readVoiceActingStatus(): String? {
+        Timber.d("readVoiceActingStatus")
+        return sharedPreferencesForGame.getString(KEY_VOICE_ACTING, null)
+    }
+
+    override fun saveVoiceActingStatus(voiceActingStatus: String) {
+        Timber.d("saveVoiceActingStatus")
+        sharedPreferencesForGame.edit()
+            .putString(KEY_VOICE_ACTING, voiceActingStatus)
             .apply()
     }
 
@@ -68,6 +80,7 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
         private const val KEY_NAMES_PLAYERS = "KeyNamesPlayers"
         private const val KEY_FIRST_LAUNCH = "KeyFirstLaunch"
         private const val KEY_SOUND = "KeySound"
+        private const val KEY_VOICE_ACTING = "KeyVoiceActing"
         private const val NAME_SHARED_PREFERENCES = "animal_letters_pref"
     }
 }

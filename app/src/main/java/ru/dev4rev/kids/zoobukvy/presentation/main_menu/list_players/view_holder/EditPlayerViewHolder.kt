@@ -3,10 +3,10 @@ package ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.view_holder
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
+import ru.dev4rev.kids.zoobukvy.appComponent
+import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentMainMenuItemPlayerModeEditBinding
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.PlayerInSettings
-import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
-import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 
 class EditPlayerViewHolder(
     private val viewBinding: FragmentMainMenuItemPlayerModeEditBinding,
@@ -18,7 +18,7 @@ class EditPlayerViewHolder(
 ) :
     BasePlayerViewHolder(viewBinding) {
 
-    private val imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+    private val imageAvatarLoader: ImageAvatarLoader = itemView.context.appComponent.imageAvatarLoader
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {

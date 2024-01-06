@@ -161,5 +161,6 @@ class CustomCardTable @JvmOverloads constructor(
         val faceImageName: String
         val backImageName: String
         val soundName: String
+        val letterName: String
     }
 }
