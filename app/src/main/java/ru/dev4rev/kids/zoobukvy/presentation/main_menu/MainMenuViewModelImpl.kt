@@ -21,12 +21,9 @@ import ru.dev4rev.kids.zoobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
 import javax.inject.Inject
 
-@Suppress("UNUSED_PARAMETER")
 class MainMenuViewModelImpl @Inject constructor(
     private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
-    assetsImageCash: AssetsImageCash,
-    soundEffectPlayer: SoundEffectPlayer
 ) :
     MainMenuViewModel, ViewModel() {
     private val typesCardsSelectedForGame: MutableList<TypeCards> = mutableListOf()
