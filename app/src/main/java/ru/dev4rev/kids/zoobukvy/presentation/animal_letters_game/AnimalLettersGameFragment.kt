@@ -98,10 +98,9 @@ class AnimalLettersGameFragment :
 
     private fun initSystemEventVM() {
         viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
-        // TODO переделать на трехпозиционную кнопку
-//            soundEffectPlayer.setEnable(it)
-//            val icSoundToggle = if (it) R.drawable.ic_sound_on else R.drawable.ic_sound_off
-//            binding.soundButtonImageView.setImageResource(icSoundToggle)
+            soundEffectPlayer.setEnable(it)
+            val icSoundToggle = if (it) R.drawable.ic_sound_on else R.drawable.ic_sound_off
+            binding.soundButtonImageView.setImageResource(icSoundToggle)
         }
     }
 

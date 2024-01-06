@@ -1,7 +1,6 @@
 package ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game
 
 import androidx.lifecycle.LiveData
-import ru.dev4rev.kids.zoobukvy.domain.entity.sound.SoundStatus
 import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 
 /**
@@ -33,12 +32,12 @@ interface AnimalLettersGameViewModel {
     fun getChangingGameStateLiveData(): LiveData<AnimalLettersGameState.ChangingState>
 
     /**
-     * Метод для подписки view на состояния звука (on/on_off/off)
+     * Метод для подписки view на состояния звука (on/off)
      */
-    fun getSoundStatusLiveData(): LiveData<SoundStatus>
+    fun getSoundStatusLiveData(): LiveData<Boolean>
 
     /**
-     * Метод для подписки view на состояние озвучки букв (буквы или звуки)
+     * Метод для подписки view на состояние озвучки букв (буквы или звуки или отключено)
      */
     fun getVoiceActingStatusLiveData(): LiveData<VoiceActingStatus>
 

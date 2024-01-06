@@ -1,12 +1,11 @@
 package ru.dev4rev.kids.zoobukvy.domain.repository
 
-import ru.dev4rev.kids.zoobukvy.domain.entity.sound.SoundStatus
 import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 
 interface SoundStatusRepository {
-    fun getSoundStatus(): SoundStatus
+    fun getSoundStatus(): Boolean
 
-    fun saveSoundStatus(soundStatus: SoundStatus)
+    fun saveSoundStatus(soundStatus: Boolean)
 
     fun getVoiceActingStatus(): VoiceActingStatus
 
