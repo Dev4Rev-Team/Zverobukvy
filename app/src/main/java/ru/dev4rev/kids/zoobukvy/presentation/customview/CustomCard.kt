@@ -46,7 +46,6 @@ class CustomCard @JvmOverloads constructor(
         initAttributes(context, attrs, defStyle)
         initContentView(context)
         initAnimator()
-        Timber.tag("TAGERROR").d("start() $position")
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -169,7 +169,7 @@ class Conf {
         const val DEBUG_CHECK_IMAGE_FILES = DEBUG
 
         // отключить проверку файлов звука слов
-        const val DEBUG_CHECK_SOUND_FILE = DEBUG
+        const val DEBUG_CHECK_SOUND_FILE = false
 
         // проверить базу данных на корректность
         const val IS_CHECK_DATA = false

@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.media.AudioAttributes
-import android.media.AudioAttributes.FLAG_AUDIBILITY_ENFORCED
 import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
@@ -19,69 +17,66 @@ import ru.dev4rev.kids.zoobukvy.domain.repository.animal_letter_game.AnimalLette
 import javax.inject.Inject
 
 class SoundEffectPlayerImpl @Inject constructor(
-    val context: Context,
-    animalLettersCardsRepository: AnimalLettersGameRepository
+    private val context: Context,
+    private val animalLettersCardsRepository: AnimalLettersGameRepository
 ) : SoundEffectPlayer {
-    private val soundPool: SoundPool
+    private val soundPool: SoundPool = createSoundPool()
+
     private val soundsMap = mutableMapOf<String, Int>()
-    private val soundsMapSystem = mutableMapOf<SoundEnum, Int>()
     private val isLoad = mutableSetOf<Int>()
     private val queueSound = mutableSetOf<Int>()
     private val channelIsLoad = Channel<Int>()
 
     private val myCoroutineScope = CoroutineScope(Dispatchers.Default)
-    private val job: Job
 
     private var enable = true
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
-    init {
-        soundPool = createSoundPool()
 
+    init {
+        initSoundPool()
+        loadSoundInBackground()
+    }
+
+    private fun initSoundPool() {
         soundPool.setOnLoadCompleteListener { _, sampleId, status ->
             if (status == 0) {
                 isLoad.add(sampleId)
-                myCoroutineScope.launch {
-                    channelIsLoad.send(sampleId)
-                }
                 if (queueSound.contains(sampleId)) {
-                    myCoroutineScope.launch {
-                        playSound(sampleId)
-                    }
+                    playSound(sampleId)
                     queueSound.remove(sampleId)
                 }
             }
-        }
-
-        job = myCoroutineScope.launch {
-            animalLettersCardsRepository.getLetterCards().forEach {
-                try {
-                    soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_LETTERS + it.soundName)
-                    while (channelIsLoad.receive() != soundsMap[it.soundName]) {
-                        yield()
-                    }
-                } catch (e: Exception) {
-                    throw IllegalStateException("sound no element LettersCards ${it.soundName}")
-                }
+            myCoroutineScope.launch {
+                channelIsLoad.send(sampleId)
             }
+        }
+    }
+
+    private fun loadSoundInBackground() {
+        myCoroutineScope.launch {
 
             SoundEnum.values().forEach {
                 try {
-                    soundsMapSystem[it] = loadSound(ASSETS_PATH_SOUND_SYSTEM + it.assetPath)
-                    while (channelIsLoad.receive() != soundsMapSystem[it]) {
-                        yield()
-                    }
+                    loadSoundMap(it.assetPath, ASSETS_PATH_SOUND_SYSTEM)
+                    waiteLoad(it.assetPath)
                 } catch (e: Exception) {
                     throw IllegalStateException("sound no element systemSound ${it.assetPath}")
                 }
             }
 
-            if (!Conf.DEBUG_CHECK_SOUND_FILE) {
+            if (Conf.DEBUG_CHECK_SOUND_FILE) {
+                animalLettersCardsRepository.getLetterCards().forEach {
+                    try {
+                        loadSoundMap(it.soundName, ASSETS_PATH_SOUND_LETTERS)
+                        waiteLoad(it.soundName)
+                    } catch (e: Exception) {
+                        throw IllegalStateException("sound no element LettersCards ${it.soundName}")
+                    }
+                }
                 animalLettersCardsRepository.getWordCards().forEach {
                     try {
-                        soundsMap[it.soundName] = loadSound(ASSETS_PATH_SOUND_WORDS + it.soundName)
-                        while (channelIsLoad.receive() != soundsMap[it.soundName]) {
-                            yield()
-                        }
+                        loadSoundMap(it.soundName, ASSETS_PATH_SOUND_WORDS)
+                        waiteLoad(it.soundName)
                     } catch (e: Exception) {
                         throw IllegalStateException("sound no element WordCard ${it.soundName}")
                     }
@@ -92,8 +87,25 @@ class SoundEffectPlayerImpl @Inject constructor(
         }
     }
 
+    private fun loadSoundMap(soundName: String, pathDir: String) {
+        if (soundName !in soundsMap) {
+            soundsMap[soundName] = loadSound(pathDir + soundName)
+        }
+    }
+
+    private suspend fun waiteLoad(soundName: String) {
+        if (soundsMap[soundName] !in isLoad) {
+            while (channelIsLoad.receive() != soundsMap[soundName]) {
+                yield()
+            }
+        }
+    }
+
     private fun loadSound(assetPath: String): Int {
-        return soundPool.load(context.assets.openFd(assetPath), DEFAULT_PRIORITY_LOAD)
+        val descriptor = context.assets.openFd(assetPath)
+        val idStream = soundPool.load(descriptor, DEFAULT_PRIORITY_LOAD)
+        descriptor.close()
+        return idStream
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -122,7 +134,11 @@ class SoundEffectPlayerImpl @Inject constructor(
 
     override fun play(soundEnum: SoundEnum) {
         myCoroutineScope.launch {
-            val idStream = soundsMapSystem[soundEnum]
+            var idStream = soundsMap[soundEnum.assetPath]
+            if (idStream == null) {
+                loadSoundMap(soundEnum.assetPath, ASSETS_PATH_SOUND_SYSTEM)
+                idStream = soundsMap[soundEnum.assetPath]
+            }
             playSound(idStream)
         }
     }
@@ -132,7 +148,14 @@ class SoundEffectPlayerImpl @Inject constructor(
         myCoroutineScope.launch {
             var idStream = soundsMap[key]
             if (idStream == null) {
-                soundsMap[key] = loadSound(ASSETS_PATH_SOUND_WORDS + key)
+                val path = if (animalLettersCardsRepository.getLetterCards()
+                        .find { it.soundName == key } != null
+                ) {
+                    ASSETS_PATH_SOUND_LETTERS + key
+                } else {
+                    ASSETS_PATH_SOUND_WORDS + key
+                }
+                soundsMap[key] = loadSound(path)
                 idStream = soundsMap[key]
             }
             playSound(idStream)
@@ -168,7 +191,7 @@ class SoundEffectPlayerImpl @Inject constructor(
     }
 
     companion object {
-        const val MAX_STREAM = 2
+        const val MAX_STREAM = 3
         const val DEFAULT_PRIORITY_LOAD = 1
         const val ASSETS_PATH_SOUND_SYSTEM = "sounds/system/"
         const val ASSETS_PATH_SOUND_WORDS = "sounds/words/"
