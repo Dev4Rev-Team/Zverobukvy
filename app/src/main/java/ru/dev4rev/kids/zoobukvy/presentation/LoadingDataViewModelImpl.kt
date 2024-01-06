@@ -10,12 +10,16 @@ import ru.dev4rev.kids.zoobukvy.data.check_data.CheckData
 import ru.dev4rev.kids.zoobukvy.data.theme_provider.Theme
 import ru.dev4rev.kids.zoobukvy.data.theme_provider.ThemeProvider
 import ru.dev4rev.kids.zoobukvy.domain.repository.LoadingDataRepository
+import ru.dev4rev.kids.zoobukvy.presentation.customview.AssetsImageCash
+import ru.dev4rev.kids.zoobukvy.presentation.sound.SoundEffectPlayer
 import javax.inject.Inject
-
+@Suppress("UNUSED_PARAMETER")
 class LoadingDataViewModelImpl @Inject constructor(
     playersRepository: LoadingDataRepository,
     private val themeProvider: ThemeProvider,
-    checkData: CheckData
+    checkData: CheckData,
+    assetsImageCash: AssetsImageCash,
+    soundEffectPlayer: SoundEffectPlayer
 ) :
     ViewModel(), LoadingDataViewModel {
     private val loadingDataLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
