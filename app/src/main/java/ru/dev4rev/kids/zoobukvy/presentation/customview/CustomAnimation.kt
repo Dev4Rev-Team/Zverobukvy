@@ -11,22 +11,22 @@ import ru.dev4rev.kids.zoobukvy.utility.ui.dipToPixels
 
 private const val OPEN_BEGIN = 0f
 private const val CLOSE_BEGIN = 90f
-private const val CLOSE_END = 270f
-private const val OPEN_END = 360f
+private const val CLOSE_END = -90f
+private const val OPEN_END = 0f
 private const val INVISIBLE = 0f
 private const val VISIBLE = 1f
 
 
-fun createFlipAnimation(view: View, changeFace: (() -> Unit)? = null): AnimatorSet {
+fun createFlipAnimation(view: View, duration: Long): AnimatorSet {
     val animatorSet = AnimatorSet()
-
     val rotationClosing =
         ObjectAnimator.ofFloat(view, View.ROTATION_Y, OPEN_BEGIN, CLOSE_BEGIN).apply {
-            doOnEnd {
-                changeFace?.invoke()
-            }
+            this@apply.duration = duration / 2
         }
-    val rotationOpening = ObjectAnimator.ofFloat(view, View.ROTATION_Y, CLOSE_END, OPEN_END)
+    val rotationOpening =
+        ObjectAnimator.ofFloat(view, View.ROTATION_Y, CLOSE_END, OPEN_END).apply {
+            this@apply.duration = duration / 2
+        }
     animatorSet.playSequentially(rotationClosing, rotationOpening)
     return animatorSet
 }
@@ -54,7 +54,9 @@ fun createAlphaShowAnimation(
         it.startDelay = startDelay
         it.duration = duration
         it.doOnStart {
-            view.visibility = View.VISIBLE
+            if (view.visibility != View.VISIBLE) {
+                view.visibility = View.VISIBLE
+            }
         }
     }
 }

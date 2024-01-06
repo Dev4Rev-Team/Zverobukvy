@@ -89,6 +89,10 @@ class Conf {
         // время исчезновения игрока в карусели
         const val DURATION_ANIMATOR_NEXT_PLAYER = 350L
 
+        // Время переворота карты
+        const val DURATION_FLIP = 450L
+
+
         /**
          * Задержки во viewModel экрана игры
          */
@@ -165,7 +169,7 @@ class Conf {
         const val DEBUG_CHECK_IMAGE_FILES = DEBUG
 
         // отключить проверку файлов звука слов
-        const val DEBUG_DISABLE_CHECK_SOUND_FILE = DEBUG
+        const val DEBUG_CHECK_SOUND_FILE = DEBUG
 
         // проверить базу данных на корректность
         const val IS_CHECK_DATA = false
