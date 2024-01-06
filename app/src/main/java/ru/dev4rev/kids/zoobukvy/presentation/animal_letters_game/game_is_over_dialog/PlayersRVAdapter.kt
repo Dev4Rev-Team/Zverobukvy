@@ -6,12 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
-import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.dev4rev.kids.zoobukvy.databinding.DialogFragmentGameIsOverItemBinding
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
-import ru.dev4rev.kids.zoobukvy.domain.entity.player.Rating
+import timber.log.Timber
 
 class PlayersRVAdapter(
     private val players: List<PlayerUI>,
@@ -52,21 +51,13 @@ class PlayersRVAdapter(
             binding.playerTextView.text = playerUI.player.name
             imageAvatarLoader.loadImageAvatar(playerUI.player.avatar, binding.playAvatarImageView)
             binding.scoreTextView.text = playerUI.scoreInCurrentGame.toString()
+
             if (playerUI.player is Player.ComputerPlayer) {
                 return
             }
+
             val findBefore = playerBefore.find { it.name == name }
-            var findAfter = playerAfter.find { it.name == name }
-
-
-            if (findAfter == null && Conf.DEBUG_IS_FAST_END_DISABLE) {
-                findAfter = findBefore?.copy(rating = Rating())?.apply {
-                    rating.orangeRating = (0..9).random() + findBefore.rating.orangeRating
-                    rating.greenRating = (0..7).random() + findBefore.rating.greenRating
-                    rating.blueRating = (0..5).random() + findBefore.rating.blueRating
-                    rating.violetRating = (0..3).random() + findBefore.rating.violetRating
-                }
-            }
+            val findAfter = playerAfter.find { it.name == name }
 
             if (findBefore != null && findAfter != null) {
                 val orange = findAfter.rating.orangeRating - findBefore.rating.orangeRating
@@ -79,10 +70,8 @@ class PlayersRVAdapter(
                 showCard(blue, binding.blueRatingCardView, binding.blueRatingTextView)
                 showCard(violet, binding.violetRatingCardView, binding.violetRatingTextView)
             } else {
-                throw IllegalArgumentException("don't find list after/before")
+                Timber.tag(this.javaClass.simpleName).d("don't find list after/before")
             }
-
-
         }
 
         private fun showCard(
@@ -90,7 +79,7 @@ class PlayersRVAdapter(
         ) {
             if (rating > 0) {
                 ratingCardView.visibility = View.VISIBLE
-                ratingTextView.text = "+$rating"
+                ratingTextView.text = "+$rating" //todo
             } else {
                 ratingCardView.visibility = View.GONE
             }
