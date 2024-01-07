@@ -31,7 +31,7 @@
     <string name="main_menu_fragment_no_internet_connection">Нет подключения к Интернету</string>
     <string name="main_menu_fragment_delete_player">Удалить игрока?</string>
     <string name="main_menu_fragment_new_player">Игрок %d</string>
-    <string name="main_menu_fragment_no_server_connection">Сервер временно не работает</string>
+    <string name="main_menu_fragment_no_server_connection">Загрузка аватарок временно недоступна</string>
     <string name="game_view_model_max_players">Превышено максимальное количество игроков</string>
 
     <!--Экран с результатами-->
