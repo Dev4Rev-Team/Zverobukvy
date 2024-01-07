@@ -300,6 +300,7 @@ class AnimalLettersGameFragment :
         binding.table.apply {
             setListItem(startGameState.lettersCards, assertsImageCash) {
                 CustomCard(requireContext()).apply {
+                    elevation = 0f
                     enableClickAnimation()
                     setImageOpenBackground(assertsImageCash.getImage(IMAGE_CARD_FOREGROUND))
                     setOnClickCorrectCard { pos -> event.onClickCorrectLetter(pos) }
