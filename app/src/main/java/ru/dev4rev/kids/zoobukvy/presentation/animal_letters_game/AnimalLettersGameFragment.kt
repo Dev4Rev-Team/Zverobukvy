@@ -23,6 +23,7 @@ import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
+import ru.dev4rev.kids.zoobukvy.domain.entity.card.WordCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
@@ -239,7 +240,7 @@ class AnimalLettersGameFragment :
             }
         }
 
-        binding.cardLevel.setCards(gameStart!!.typesCards)
+        binding.cardLevelView.setCards(gameStart!!.typesCards)
 
         isEnableClick = true
     }
@@ -472,6 +473,7 @@ class AnimalLettersGameFragment :
             setPictureOfWord(it.wordCard.faceImageName)
             setWord(it.wordCard)
             binding.table.closeCardAll()
+            setNumberInGameCards(it.wordCard)
         }
 
         fun changingStateNextPlayer(it: AnimalLettersGameState.ChangingState.NextPlayer) {
@@ -499,6 +501,7 @@ class AnimalLettersGameFragment :
             } else {
                 binding.table.setWorkClick(true)
             }
+            setNumberInGameCards(it.wordCard)
         }
 
         fun changingStateIsEndGameState() {
@@ -523,6 +526,15 @@ class AnimalLettersGameFragment :
             }
         }
 
+    }
+
+    private fun setNumberInGameCards(wordCard: WordCard) {
+        binding.numberInGameCardsTextView.text =
+            getString(
+                R.string.number_in_game_cards,
+                wordCard.numberInGame.individualNumber,
+                wordCard.numberInGame.totalNumber
+            )
     }
 
     private fun soundFlipLetter(
