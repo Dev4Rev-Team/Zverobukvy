@@ -151,7 +151,9 @@
             tools:text="1/10"
             app:layout_constraintRight_toRightOf="@+id/word_custom_card"
             app:layout_constraintBottom_toBottomOf="@+id/word_custom_card"
-            android:textColor="@color/color_orange_pastel"
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowRadius="10"
             android:textSize="@dimen/text_medium_small" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -252,11 +254,9 @@
                 android:id="@+id/letters_sound_button_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/margin_default"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginEnd="@dimen/margin_medium"
+
                 android:scaleType="centerCrop"
-                tools:src="@drawable/ic_sound_on" />
+                tools:src="@drawable/ic_sound_letter_on" />
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
