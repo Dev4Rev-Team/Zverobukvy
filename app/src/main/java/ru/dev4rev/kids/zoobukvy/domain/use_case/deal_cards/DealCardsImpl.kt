@@ -3,6 +3,7 @@ package ru.dev4rev.kids.zoobukvy.domain.use_case.deal_cards
 import ru.dev4rev.kids.zoobukvy.configuration.Conf.Companion.NUMBER_OF_WORD
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.CardsSet
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
+import ru.dev4rev.kids.zoobukvy.domain.entity.card.NumberInGame
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.WordCard
 
@@ -51,7 +52,11 @@ class DealCardsImpl(
                     })
             }
         }
-        return wordCards.shuffled().take(NUMBER_OF_WORD)
+        return wordCards.shuffled().take(NUMBER_OF_WORD).apply {
+            forEachIndexed { index, wordCard ->
+                wordCard.numberInGame = NumberInGame(index+1, size)
+            }
+        }
     }
 
     private fun extractWordCard(
