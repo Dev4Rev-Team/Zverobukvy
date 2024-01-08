@@ -8,5 +8,6 @@ data class WordCard(
     val typesCards: MutableSet<TypeCards> = mutableSetOf(),
     override val positionsGuessedLetters: MutableList<Int> = mutableListOf(),
     val faceImageName: String,
-    override val soundName: String
+    override val soundName: String,
+    override var numberInGame: NumberInGame = NumberInGame(0, 0)
 ) : Card, CustomWordView.WordCardUI, DomainEntity
