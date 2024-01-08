@@ -1,6 +1,7 @@
 package ru.dev4rev.kids.zoobukvy.data.data_source
 
 import ru.dev4rev.kids.zoobukvy.data.room.AnimalLettersDatabase
+import ru.dev4rev.kids.zoobukvy.data.room.CardsDatabase
 import ru.dev4rev.kids.zoobukvy.data.room.entity.card.CardsSetInDatabase
 import ru.dev4rev.kids.zoobukvy.data.room.entity.card.LetterCardInDatabase
 import ru.dev4rev.kids.zoobukvy.data.room.entity.card.WordCardInDatabase
@@ -10,7 +11,8 @@ import ru.dev4rev.kids.zoobukvy.data.room.entity.player.PlayerWithAvatar
 import javax.inject.Inject
 
 class LocalDataSourceImpl @Inject constructor(
-    private val animalLettersDatabase: AnimalLettersDatabase,
+    animalLettersDatabase: AnimalLettersDatabase,
+    private val cardsDatabase: CardsDatabase
 ) : LocalDataSource {
     private val playersDao = animalLettersDatabase.playersDao()
 
@@ -30,10 +32,10 @@ class LocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getLetterCards(): List<LetterCardInDatabase> =
-        animalLettersDatabase.letterCardsDao().getLetterCards()
+        cardsDatabase.letterCardsDao().getLetterCards()
 
     override suspend fun getWordCards(): List<WordCardInDatabase> =
-        animalLettersDatabase.wordCardsDao().getWordCards()
+        cardsDatabase.wordCardsDao().getWordCards()
 
     override suspend fun getAvatars(): List<AvatarInDatabase> =
         avatarsDao.getAvatars()
@@ -42,5 +44,5 @@ class LocalDataSourceImpl @Inject constructor(
        avatarsDao.insertAvatar(avatar)
 
     override suspend fun getCardsSetByColor(color: String): List<CardsSetInDatabase> =
-        animalLettersDatabase.cardsSetDao().getCardsSetByColor(color)
+        cardsDatabase.cardsSetDao().getCardsSetByColor(color)
 }

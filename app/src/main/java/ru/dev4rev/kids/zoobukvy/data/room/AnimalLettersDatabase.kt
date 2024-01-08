@@ -4,26 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import ru.dev4rev.kids.zoobukvy.data.room.AnimalLettersDatabaseMigration.Companion.MIGRATION_1_2
 import ru.dev4rev.kids.zoobukvy.data.room.dao.player.AvatarsDao
-import ru.dev4rev.kids.zoobukvy.data.room.dao.card.CardsSetDao
-import ru.dev4rev.kids.zoobukvy.data.room.dao.card.LetterCardsDao
 import ru.dev4rev.kids.zoobukvy.data.room.dao.player.PlayersDao
-import ru.dev4rev.kids.zoobukvy.data.room.dao.card.WordCardsDao
 import ru.dev4rev.kids.zoobukvy.data.room.entity.player.AvatarInDatabase
-import ru.dev4rev.kids.zoobukvy.data.room.entity.card.CardsSetInDatabase
-import ru.dev4rev.kids.zoobukvy.data.room.entity.card.LetterCardInDatabase
 import ru.dev4rev.kids.zoobukvy.data.room.entity.player.PlayerInDatabase
-import ru.dev4rev.kids.zoobukvy.data.room.entity.card.WordCardInDatabase
 
 @Database(
     entities = [
         PlayerInDatabase::class,
         AvatarInDatabase::class,
-        LetterCardInDatabase::class,
-        WordCardInDatabase::class,
-        CardsSetInDatabase::class
     ],
     version = 2,
     exportSchema = true
@@ -31,26 +21,14 @@ import ru.dev4rev.kids.zoobukvy.data.room.entity.card.WordCardInDatabase
 abstract class AnimalLettersDatabase : RoomDatabase() {
     abstract fun playersDao(): PlayersDao
 
-    abstract fun letterCardsDao(): LetterCardsDao
-
-    abstract fun wordCardsDao(): WordCardsDao
-
     abstract fun avatarsDao(): AvatarsDao
-
-    abstract fun cardsSetDao(): CardsSetDao
 
     companion object {
         private var instance: AnimalLettersDatabase? = null
 
         private const val NAME_PLAYERS_DATABASE = "animal_letters_db"
 
-        private const val DATABASE_HAS_NOT_CREATED = "Database has not created"
-
-        private val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE letters ADD COLUMN sound_letter TEXT NOT NULL DEFAULT ''")
-            }
-        }
+        private const val DATABASE_HAS_NOT_CREATED = "Players database has not created"
 
         fun getPlayersDatabase(): AnimalLettersDatabase =
             instance ?: throw RuntimeException(DATABASE_HAS_NOT_CREATED)
