@@ -233,9 +233,7 @@ class MainMenuViewModelImpl @Inject constructor(
                 CoroutineExceptionHandler { _, throwable ->
                     liveDataScreenState.value =
                         MainMenuState.ScreenState.ErrorState(
-                            resourcesProvider.getString(
-                                StringEnum.MAIN_MENU_FRAGMENT_NO_SERVER_CONNECTION
-                            ) + ":" + throwable
+                            resourcesProvider.getString(StringEnum.MAIN_MENU_FRAGMENT_NO_SERVER_CONNECTION)
                         )
                 }
             viewModelScope.launch(exceptionHandler) {
