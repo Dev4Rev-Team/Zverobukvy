@@ -64,15 +64,28 @@ class SoundEffectPlayerImpl @Inject constructor(
                 }
             }
 
-            if (Conf.DEBUG_CHECK_SOUND_FILE) {
+            if (Conf.DEBUG_IS_CHECK_SOUND_FILE) {
                 animalLettersCardsRepository.getLetterCards().forEach {
                     try {
                         loadSoundMap(it.soundName, ASSETS_PATH_SOUND_LETTERS)
                         waiteLoad(it.soundName)
                     } catch (e: Exception) {
-                        throw IllegalStateException("sound no element LettersCards ${it.soundName}")
+                        throw IllegalStateException(
+                            "sound no element LettersCards.soundName " +
+                                    it.soundName
+                        )
+                    }
+                    try {
+                        loadSoundMap(it.letterName, ASSETS_PATH_SOUND_LETTERS)
+                        waiteLoad(it.letterName)
+                    } catch (e: Exception) {
+                        throw IllegalStateException(
+                            "sound no element LettersCards.letterName " +
+                                    it.letterName
+                        )
                     }
                 }
+
                 animalLettersCardsRepository.getWordCards().forEach {
                     try {
                         loadSoundMap(it.soundName, ASSETS_PATH_SOUND_WORDS)
@@ -150,7 +163,7 @@ class SoundEffectPlayerImpl @Inject constructor(
             var idStream = soundsMap[key]
             if (idStream == null) {
                 val path = if (animalLettersCardsRepository.getLetterCards()
-                        .find { it.soundName == key || it.letterName == key} != null
+                        .find { it.soundName == key || it.letterName == key } != null
                 ) {
                     ASSETS_PATH_SOUND_LETTERS + key
                 } else {

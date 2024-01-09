@@ -31,7 +31,7 @@ class AssetsImageCashImpl @Inject constructor(
     }
 
     private suspend inline fun checkImageWords(animalLettersCardsRepository: AnimalLettersGameRepository) {
-        if (Conf.DEBUG_CHECK_IMAGE_FILES) {
+        if (Conf.DEBUG_IS_CHECK_IMAGE_FILES) {
             animalLettersCardsRepository.getWordCards().forEach {
                 try {
                     getImageFromAssert(context, ASSETS_PATH_IMAGE_WORDS + it.faceImageName)
