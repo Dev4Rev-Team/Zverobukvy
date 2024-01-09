@@ -150,7 +150,7 @@ class SoundEffectPlayerImpl @Inject constructor(
             var idStream = soundsMap[key]
             if (idStream == null) {
                 val path = if (animalLettersCardsRepository.getLetterCards()
-                        .find { it.soundName == key } != null
+                        .find { it.soundName == key || it.letterName == key} != null
                 ) {
                     ASSETS_PATH_SOUND_LETTERS + key
                 } else {
