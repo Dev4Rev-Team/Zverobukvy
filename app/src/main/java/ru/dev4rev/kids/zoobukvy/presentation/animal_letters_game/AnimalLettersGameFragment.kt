@@ -441,7 +441,7 @@ class AnimalLettersGameFragment :
             setPositionLetterInWord(it.positionLetterInWord)
             binding.table.openCard(it.correctLetterCard)
             binding.table.setCorrectlyCard(it.correctLetterCard)
-            delayAndRun(DELAY_ENABLE_CLICK_LETTERS_CARD) { binding.table.setWorkClick(true) }
+            delayAndRun(DELAY_NEXT_CLICK) { binding.table.setWorkClick(true) }
         }
 
         fun changingStateInvalidLetter(it: AnimalLettersGameState.ChangingState.InvalidLetter) {
@@ -686,7 +686,7 @@ class AnimalLettersGameFragment :
         const val GAME_START = "GAME_START"
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
 
-        const val DELAY_NEXT_CLICK = 300L
+        const val DELAY_NEXT_CLICK = Conf.DELAY_NEXT_CLICK
 
         private const val START_DELAY_ANIMATION_SCREEN_DIMMING =
             Conf.START_DELAY_ANIMATION_SCREEN_DIMMING
@@ -697,13 +697,11 @@ class AnimalLettersGameFragment :
         private const val DELAY_SOUND_EFFECT = Conf.DELAY_SOUND_EFFECT
         private const val DELAY_SOUND_LETTER = Conf.DELAY_SOUND_LETTER
         private const val DELAY_SOUND_REPEAT = Conf.DELAY_SOUND_REPEAT
-        private const val DELAY_ENABLE_CLICK_LETTERS_CARD = Conf.DELAY_ENABLE_CLICK_LETTERS_CARD
 
         private const val IMAGE_CARD_FOREGROUND = Conf.IMAGE_CARD_FOREGROUND
 
         private const val DURATION_ANIMATOR_NEXT_PLAYER = Conf.DURATION_ANIMATOR_NEXT_PLAYER
         private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = Conf.SHIFT_ANIMATOR_PLAYER_NEXT_DP
-
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {

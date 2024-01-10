@@ -5,6 +5,8 @@ import ru.dev4rev.kids.zoobukvy.BuildConfig
 class Conf {
     companion object {
 
+
+
         /**
          * Игровое поле
          */
@@ -77,9 +79,6 @@ class Conf {
         // задержка озвучивания буквы после нажатия на открытую карту
         const val DELAY_SOUND_REPEAT = 0L
 
-        // задержка разрешения нажимать на следующую карту
-        const val DELAY_ENABLE_CLICK_LETTERS_CARD = 100L
-
         // фон открытой карты с буквой
         const val IMAGE_CARD_FOREGROUND = "FACE.webp"
 
@@ -89,8 +88,11 @@ class Conf {
         // время исчезновения игрока в карусели
         const val DURATION_ANIMATOR_NEXT_PLAYER = 350L
 
-        // Время переворота карты
+        // время переворота карты
         const val DURATION_FLIP = 450L
+
+        // время игнорирования следующего клика
+        const val DELAY_NEXT_CLICK = 100L
 
 
         /**
@@ -164,7 +166,7 @@ class Conf {
          * DEBUG
          */
         @Suppress("SimplifyBooleanWithConstants")
-        private const val DEBUG = BuildConfig.DEBUG_ON && true
+        const val DEBUG = BuildConfig.DEBUG_ON && true
 
         // проверить файлы картинок
         const val DEBUG_IS_CHECK_IMAGE_FILES = false
