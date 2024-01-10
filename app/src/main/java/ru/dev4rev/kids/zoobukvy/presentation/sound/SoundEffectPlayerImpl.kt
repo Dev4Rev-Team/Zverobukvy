@@ -7,6 +7,7 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -24,6 +25,7 @@ class SoundEffectPlayerImpl @Inject constructor(
 
     private val soundsMap = mutableMapOf<String, Int>()
     private val isLoad = mutableSetOf<Int>()
+    private val isPathSoundLetters = mutableSetOf<String>()
     private val queueSound = mutableSetOf<Int>()
     private val channelIsLoad = Channel<Int>()
 
@@ -35,6 +37,17 @@ class SoundEffectPlayerImpl @Inject constructor(
     init {
         initSoundPool()
         loadSoundInBackground()
+        loadPathSoundLetters()
+    }
+
+    private fun loadPathSoundLetters() {
+        myCoroutineScope.launch {
+            animalLettersCardsRepository.getLetterCards()
+                .forEach {
+                    isPathSoundLetters.add(it.soundName)
+                    isPathSoundLetters.add(it.letterName)
+                }
+        }
     }
 
     private fun initSoundPool() {
@@ -159,12 +172,12 @@ class SoundEffectPlayerImpl @Inject constructor(
 
     override fun play(key: String) {
         if (!enable) return
-        myCoroutineScope.launch {
+        myCoroutineScope.launch(CoroutineExceptionHandler { _, throwable ->
+            if (Conf.DEBUG) { throw IllegalStateException("sound play $throwable") }
+        }) {
             var idStream = soundsMap[key]
             if (idStream == null) {
-                val path = if (animalLettersCardsRepository.getLetterCards()
-                        .find { it.soundName == key || it.letterName == key } != null
-                ) {
+                val path = if (key in isPathSoundLetters) {
                     ASSETS_PATH_SOUND_LETTERS + key
                 } else {
                     ASSETS_PATH_SOUND_WORDS + key
