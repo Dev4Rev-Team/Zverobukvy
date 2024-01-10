@@ -86,7 +86,6 @@ class AnimalLettersGameFragment :
         }
         gameStart ?: throw IllegalArgumentException("not arg gameStart")
         initDagger()
-        game.startNewGame()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -177,6 +176,11 @@ class AnimalLettersGameFragment :
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        game.startNewGame()
     }
 
     override fun onResume() {
