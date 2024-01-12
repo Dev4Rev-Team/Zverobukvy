@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import ru.dev4rev.kids.zoobukvy.R
+import ru.dev4rev.kids.zoobukvy.domain.use_case.color_letters.ColorLetterEnum
 import ru.dev4rev.kids.zoobukvy.utility.ui.dipToPixels
 import kotlin.math.max
 import kotlin.properties.Delegates
@@ -162,5 +163,6 @@ class CustomCardTable @JvmOverloads constructor(
         val backImageName: String
         val soundName: String
         val letterName: String
+        var colorLetterEnum: ColorLetterEnum
     }
 }
