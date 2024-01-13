@@ -1,7 +1,7 @@
 package ru.dev4rev.kids.zoobukvy.domain.entity.card
 
+import ru.dev4rev.kids.zoobukvy.data.room.entity.card.LettersColor
 import ru.dev4rev.kids.zoobukvy.domain.entity.DomainEntity
-import ru.dev4rev.kids.zoobukvy.domain.use_case.color_letters.ColorLetterEnum
 import ru.dev4rev.kids.zoobukvy.presentation.customview.CustomCardTable
 
 data class LetterCard(
@@ -9,7 +9,9 @@ data class LetterCard(
     override var isVisible: Boolean = false,
     override val faceImageName: String,
     override val backImageName: String,
-    override val soundName: String,
+    override var soundName: String,
     override val letterName: String,
-    override var colorLetterEnum: ColorLetterEnum = ColorLetterEnum.BLACK
+    val baseSoundName: String,
+    val softSoundName: String?,
+    override val color: LettersColor = LettersColor.Black
 ) : Card, CustomCardTable.LetterCardUI, DomainEntity
