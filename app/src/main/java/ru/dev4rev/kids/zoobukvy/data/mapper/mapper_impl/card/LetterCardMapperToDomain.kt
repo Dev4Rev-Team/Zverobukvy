@@ -12,7 +12,8 @@ class LetterCardMapperToDomain : EntityMapperToDomain<LetterCard, LetterCardInDa
                 faceImageName = it.faceImageName,
                 backImageName = it.backImageName,
                 soundName = it.soundName,
-                letterName = it.letterName
+                letterName = it.letterName,
+                softSoundName = it.softSoundName
             )
         }
 }

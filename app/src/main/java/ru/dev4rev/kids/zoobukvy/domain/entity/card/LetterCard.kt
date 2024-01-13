@@ -9,5 +9,6 @@ data class LetterCard(
     override val faceImageName: String,
     override val backImageName: String,
     override val soundName: String,
-    override val letterName: String
-) : Card, CustomCardTable.LetterCardUI, DomainEntity
+    override val letterName: String,
+    override val softSoundName: String?
+    ) : Card, CustomCardTable.LetterCardUI, DomainEntity
