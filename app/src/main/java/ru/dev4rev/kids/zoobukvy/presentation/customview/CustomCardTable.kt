@@ -162,5 +162,6 @@ class CustomCardTable @JvmOverloads constructor(
         val backImageName: String
         val soundName: String
         val letterName: String
+        val softSoundName: String?
     }
 }

@@ -19,7 +19,9 @@ data class LetterCardInDatabase(
     @field:ColumnInfo(name = "sound")
     val soundName: String,
     @field:ColumnInfo(name = "sound_letter")
-    val letterName: String
+    val letterName: String,
+    @field:ColumnInfo(name = "soft_sound")
+    val softSoundName: String?
 ) : DataEntity
 
 
