@@ -13,5 +13,5 @@ data class LetterCard(
     override val letterName: String,
     val baseSoundName: String,
     val softSoundName: String?,
-    override val color: LettersColor = LettersColor.Black
+    override var color: LettersColor = LettersColor.Black
 ) : Card, CustomCardTable.LetterCardUI, DomainEntity
