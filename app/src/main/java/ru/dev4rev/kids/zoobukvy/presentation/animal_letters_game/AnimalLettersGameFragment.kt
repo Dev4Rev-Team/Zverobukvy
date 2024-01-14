@@ -388,22 +388,28 @@ class AnimalLettersGameFragment :
     private class Sound(val soundEffectPlayer: SoundEffectPlayer) {
 
         private var voiceActingStatus: VoiceActingStatus = VoiceActingStatus.OFF
-        private var letterCardList = listOf<CustomCardTable.LetterCardUI>()
+        private val letterCardList = mutableListOf<CustomCardTable.LetterCardUI>()
 
         fun setVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
             this.voiceActingStatus = voiceActingStatus
         }
 
         fun initLettersCards(lettersCards: List<CustomCardTable.LetterCardUI>) {
-            letterCardList = lettersCards
+            letterCardList.clear()
+            letterCardList.addAll(lettersCards)
         }
 
         fun playLetter(pos: Int) {
             val letterCard = letterCardList[pos]
-            playLetter(letterCard)
+            playLetter(letterCard,false)
         }
 
-        fun playLetter(letterCard: CustomCardTable.LetterCardUI) {
+        fun playLetter(letterCard: CustomCardTable.LetterCardUI, isNew: Boolean = true) {
+            if(isNew){
+                val pos = letterCardList.indexOfFirst { it.letter == letterCard.letter }
+                letterCardList[pos] = letterCard
+            }
+
             when (voiceActingStatus) {
                 VoiceActingStatus.SOUND -> soundEffectPlayer.play(letterCard.soundName)
                 VoiceActingStatus.LETTER -> soundEffectPlayer.play(letterCard.letterName)
