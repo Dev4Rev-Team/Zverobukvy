@@ -20,6 +20,8 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.WordCard
 import ru.dev4rev.kids.zoobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
 import ru.dev4rev.kids.zoobukvy.domain.repository.ChangeRatingRepository
+import ru.dev4rev.kids.zoobukvy.domain.use_case.calculate_color_letters.CalculateColorLetters
+import ru.dev4rev.kids.zoobukvy.domain.use_case.calculate_color_letters.CalculateColorLettersImpl
 import ru.dev4rev.kids.zoobukvy.domain.use_case.deal_cards.DealCards
 import ru.dev4rev.kids.zoobukvy.domain.use_case.deal_cards.DealCardsImpl
 import ru.dev4rev.kids.zoobukvy.domain.use_case.level_and_rating.LevelAndRatingCalculatorImpl
@@ -68,7 +70,8 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
 ) : AnimalLettersGameInteractor {
     private lateinit var dealCards: DealCards
     private val dealPlayersForGame: DealPlayersForGame = DealPlayersForGameImpl()
-    private var calculator: LevelAndRatingCalculator
+    private var levelAndRatingCalculator: LevelAndRatingCalculator
+    private val colorLettersCalculator: CalculateColorLetters = CalculateColorLettersImpl()
     private val gamingWords: Queue<WordCard> = LinkedList()
     private var positionCurrentLetterCard by Delegates.notNull<Int>()
     private var currentWalkingPlayer: PlayerInGame
@@ -84,7 +87,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // подготавливаем список игроков для начала игры
         players = dealPlayersForGame.getPlayersForGame(players).also { playersInGame ->
             dealPlayersForGame.extractHumanPlayers(playersInGame.map { it.player }).let {
-                calculator = LevelAndRatingCalculatorImpl(it, typesCards)
+                levelAndRatingCalculator = LevelAndRatingCalculatorImpl(it, typesCards)
                 // сохраняем в репозитоий состояние игроков в начале игры
                 changeRatingRepository.setPlayersBeforeGame(it)
             }
@@ -109,7 +112,12 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 getStartedLettersField(), // формируется список карточек-букв
                 // в данной ситуации очередь карточек-слов не может быть пустой
                 gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
-            ),
+            ).apply {
+                // определяем цвет букв и озвучку звуков (твердые/мягкие) и обновляем lettersField
+                gamingWordCard?.let {
+                    colorLettersCalculator.calculate(it.word, lettersField)
+                }
+            },
             players = players,
             walkingPlayer = currentWalkingPlayer,
             nextWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer),
@@ -156,7 +164,13 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                     },
                     // в данной ситуации очередь карточек-слов не может быть пустой
                     gamingWordCard = gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
-                ).also { computer?.setCurrentGameField(it, positionCurrentLetterCard) },
+                ).also {
+                    computer?.setCurrentGameField(it, positionCurrentLetterCard)
+                    // определяем цвет букв и озвучку звуков (твердые/мягкие) и обновляем lettersField
+                    it.gamingWordCard?.let { wordCard ->
+                        colorLettersCalculator.calculate(wordCard.word, it.lettersField)
+                    }
+                },
                 walkingPlayer = newWalkingPlayer.also {
                     currentWalkingPlayer = it
                 },
@@ -204,12 +218,12 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 isActive = false
             )
         // в конце игры "отматываем" рейтинг игроков к исходному
-            changeRatingRepository.getPlayersBeforeGame().forEach {playerBeforeGame ->
-                players.find {playerBeforeGame.id == it.player.id }?.player?.apply {
-                    rating = playerBeforeGame.rating
-                    lettersGuessingLevel = playerBeforeGame.lettersGuessingLevel
-                }
+        changeRatingRepository.getPlayersBeforeGame().forEach { playerBeforeGame ->
+            players.find { playerBeforeGame.id == it.player.id }?.player?.apply {
+                rating = playerBeforeGame.rating
+                lettersGuessingLevel = playerBeforeGame.lettersGuessingLevel
             }
+        }
     }
 
     override suspend fun getSelectedLetterCardByComputer() {
@@ -260,7 +274,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // обновляем уровень текущего игрока
         currentGameState.walkingPlayer?.player?.let {
             if (it is Player.HumanPlayer)
-                calculator.updateLettersGuessingLevel(it, true)
+                levelAndRatingCalculator.updateLettersGuessingLevel(it, true)
         }
         // в данной ситуации gamingWordCard не может быть null
         currentGameState.gameField.gamingWordCard?.let {
@@ -295,7 +309,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // обновляем уровень текущего игрока
         currentGameState.walkingPlayer?.player?.let {
             if (it is Player.HumanPlayer)
-                calculator.updateLettersGuessingLevel(it, false)
+                levelAndRatingCalculator.updateLettersGuessingLevel(it, false)
         }
         // gameStateFlow обновляет value, т.к. отличается gameField (lettersField)
         gameStateFlow.value = currentGameState.copy(
@@ -326,7 +340,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         currentGameState.walkingPlayer?.player?.let {
             currentGameState.gameField.gamingWordCard?.let { wordCard ->
                 if (it is Player.HumanPlayer)
-                    calculator.updateRating(it, wordCard)
+                    levelAndRatingCalculator.updateRating(it, wordCard)
             }
         }
         // нет больше карточек-слов для игры
@@ -387,7 +401,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("guessedLastGamingWordCard")
         // в конце игры сохраняем в БД актуальный рейтинг игроков
         CoroutineScope(Dispatchers.IO).launch {
-            calculator.getUpdatedPlayers().forEach {
+            levelAndRatingCalculator.getUpdatedPlayers().forEach {
                 animalLettersGameRepository.updatePlayer(it)
             }
         }
