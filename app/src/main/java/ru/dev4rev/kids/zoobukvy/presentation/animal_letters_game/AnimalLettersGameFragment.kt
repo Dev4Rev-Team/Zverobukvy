@@ -405,8 +405,8 @@ class AnimalLettersGameFragment :
 
         fun playLetter(letterCard: CustomCardTable.LetterCardUI) {
             when (voiceActingStatus) {
-                VoiceActingStatus.SOUND -> soundEffectPlayer.play(letterCard.letterName)
-                VoiceActingStatus.LETTER -> soundEffectPlayer.play(letterCard.soundName)
+                VoiceActingStatus.SOUND -> soundEffectPlayer.play(letterCard.soundName)
+                VoiceActingStatus.LETTER -> soundEffectPlayer.play(letterCard.letterName)
                 VoiceActingStatus.OFF -> return
             }
         }
