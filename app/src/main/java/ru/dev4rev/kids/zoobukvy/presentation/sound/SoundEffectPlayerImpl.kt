@@ -46,6 +46,8 @@ class SoundEffectPlayerImpl @Inject constructor(
                 .forEach {
                     isPathSoundLetters.add(it.soundName)
                     isPathSoundLetters.add(it.letterName)
+                    isPathSoundLetters.add(it.baseSoundName)
+                    it.softSoundName?.let { it1 -> isPathSoundLetters.add(it1) }
                 }
         }
     }

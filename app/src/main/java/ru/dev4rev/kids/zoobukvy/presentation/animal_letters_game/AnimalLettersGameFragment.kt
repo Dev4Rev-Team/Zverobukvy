@@ -107,6 +107,7 @@ class AnimalLettersGameFragment :
             sound.setEnable(it)
             val icSoundToggle = if (it) R.drawable.ic_sound_on else R.drawable.ic_sound_off
             binding.soundButtonImageView.setImageResource(icSoundToggle)
+            binding.lettersSoundButtonLayout.alpha = if (it) VISIBLE_ALPHA else DIMNESS_ALPHA
         }
 
         viewModel.getVoiceActingStatusLiveData().observe(viewLifecycleOwner) {
@@ -401,11 +402,11 @@ class AnimalLettersGameFragment :
 
         fun playLetter(pos: Int) {
             val letterCard = letterCardList[pos]
-            playLetter(letterCard,false)
+            playLetter(letterCard, false)
         }
 
         fun playLetter(letterCard: CustomCardTable.LetterCardUI, isNew: Boolean = true) {
-            if(isNew){
+            if (isNew) {
                 val pos = letterCardList.indexOfFirst { it.letter == letterCard.letter }
                 letterCardList[pos] = letterCard
             }
@@ -703,6 +704,8 @@ class AnimalLettersGameFragment :
         private const val DURATION_ANIMATOR_NEXT_PLAYER = Conf.DURATION_ANIMATOR_NEXT_PLAYER
         private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = Conf.SHIFT_ANIMATOR_PLAYER_NEXT_DP
 
+        private const val VISIBLE_ALPHA = 1f
+        private const val DIMNESS_ALPHA = 0.75f
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {
             arguments = Bundle().apply {
