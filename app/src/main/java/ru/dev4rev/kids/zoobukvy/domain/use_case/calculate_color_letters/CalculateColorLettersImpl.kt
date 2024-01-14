@@ -2,12 +2,28 @@ package ru.dev4rev.kids.zoobukvy.domain.use_case.calculate_color_letters
 
 import ru.dev4rev.kids.zoobukvy.data.room.entity.card.LettersColor
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
+import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 
 class CalculateColorLettersImpl : CalculateColorLetters {
 
-    override fun calculate(word: String, letterCards: List<LetterCard>) {
-        setColor(word, letterCards)
-        setSound(letterCards)
+    override fun calculate(
+        word: String,
+        letterCards: List<LetterCard>,
+        voiceActingStatus: VoiceActingStatus
+    ) {
+        if (voiceActingStatus == VoiceActingStatus.SOUND) {
+            setColor(word, letterCards)
+            setSound(letterCards)
+        } else {
+            setDefault(letterCards)
+        }
+    }
+
+    private fun setDefault(letterCards: List<LetterCard>) {
+        letterCards.forEach {
+            it.color = LettersColor.Black
+            it.soundName = it.letterName
+        }
     }
 
     private fun setSound(letterCards: List<LetterCard>) {
