@@ -1,11 +1,10 @@
 package ru.dev4rev.kids.zoobukvy.configuration
 
+import android.graphics.Color
 import ru.dev4rev.kids.zoobukvy.BuildConfig
 
 class Conf {
     companion object {
-
-
 
         /**
          * Игровое поле
@@ -93,6 +92,12 @@ class Conf {
 
         // время игнорирования следующего клика
         const val DELAY_NEXT_CLICK = 100L
+
+        // цвет карт для режима звук
+        val CARD_COLOR_RED = Color.rgb(0xEF, 0x1A, 0x1A)
+        val CARD_COLOR_GREEN = Color.rgb(0x1A, 0xEF, 0x1A)
+        val CARD_COLOR_BLUE = Color.rgb(0x1A, 0x1A, 0xEF)
+        val CARD_COLOR_BLACK = Color.rgb(0x1A, 0x1A, 0x1A)
 
 
         /**
