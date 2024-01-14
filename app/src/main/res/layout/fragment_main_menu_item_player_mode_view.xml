@@ -23,10 +23,11 @@
         app:strokeColor="@color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+            android:id="@+id/player_card_constraint_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_default">
+            android:background="@drawable/background_user_card"
+            android:padding="@dimen/margin_default">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/rank_text_view"
@@ -73,7 +74,6 @@
                     android:scaleType="centerCrop"
                     app:srcCompat="@drawable/ic_done" />
             </com.google.android.material.card.MaterialCardView>
-
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/edit_image_button"
                 android:layout_width="wrap_content"
