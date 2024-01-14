@@ -9,7 +9,6 @@ import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
 import ru.dev4rev.kids.zoobukvy.R
 import ru.dev4rev.kids.zoobukvy.configuration.Conf
-import timber.log.Timber
 
 
 /**
@@ -154,6 +153,10 @@ class CustomCard @JvmOverloads constructor(
             }
             click(position)
         }
+    }
+
+    fun setColorCard(color: Int) {
+        frontSideImageView.setColorFilter(color)
     }
 
     fun setOpenCard(isOpen: Boolean) {

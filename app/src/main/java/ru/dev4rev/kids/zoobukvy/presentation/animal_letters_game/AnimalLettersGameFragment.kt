@@ -388,35 +388,25 @@ class AnimalLettersGameFragment :
     private class Sound(val soundEffectPlayer: SoundEffectPlayer) {
 
         private var voiceActingStatus: VoiceActingStatus = VoiceActingStatus.OFF
-        private var mapLetterName = mutableMapOf<Int, String>()
-        private var mapSoundName = mutableMapOf<Int, String>()
-        private var mapPosition = mutableMapOf<Char, Int>()
+        private var letterCardList = listOf<CustomCardTable.LetterCardUI>()
 
         fun setVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
             this.voiceActingStatus = voiceActingStatus
         }
 
         fun initLettersCards(lettersCards: List<CustomCardTable.LetterCardUI>) {
-            mapLetterName.clear()
-            mapSoundName.clear()
-            mapPosition.clear()
-
-            lettersCards.forEachIndexed { index, value ->
-                mapLetterName[index] = value.letterName
-                mapSoundName[index] = value.soundName
-                mapPosition[value.letter] = index
-            }
-        }
-
-        fun playLetter(letter: Char) {
-            val pos = mapPosition[letter] ?: return
-            playLetter(pos)
+            letterCardList = lettersCards
         }
 
         fun playLetter(pos: Int) {
+            val letterCard = letterCardList[pos]
+            playLetter(letterCard)
+        }
+
+        fun playLetter(letterCard: CustomCardTable.LetterCardUI) {
             when (voiceActingStatus) {
-                VoiceActingStatus.SOUND -> mapSoundName[pos]?.let { soundEffectPlayer.play(it) }
-                VoiceActingStatus.LETTER -> mapLetterName[pos]?.let { soundEffectPlayer.play(it) }
+                VoiceActingStatus.SOUND -> soundEffectPlayer.play(letterCard.soundName)
+                VoiceActingStatus.LETTER -> soundEffectPlayer.play(letterCard.letterName)
                 VoiceActingStatus.OFF -> return
             }
         }
@@ -546,7 +536,7 @@ class AnimalLettersGameFragment :
     ) {
         sound.playEffect(SoundEnum.CARD_IS_FLIP)
         delayAndRun(DELAY_SOUND_EFFECT) { sound.playEffect(effectSoundEnum) }
-        delayAndRun(DELAY_SOUND_LETTER) { sound.playLetter(correctLetterCard.letter) }
+        delayAndRun(DELAY_SOUND_LETTER) { sound.playLetter(correctLetterCard) }
     }
 
 
