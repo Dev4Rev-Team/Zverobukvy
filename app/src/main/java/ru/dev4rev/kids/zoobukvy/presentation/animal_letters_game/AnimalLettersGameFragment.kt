@@ -157,7 +157,7 @@ class AnimalLettersGameFragment :
 
                 is AnimalLettersGameState.ChangingState.UpdateOpenLettersCards -> {
                     Timber.d("ChangingState.UpdateOpenLettersCards")
-                    //TODO()
+                    game.changingStateUpdateOpenLettersCards(it)
                 }
             }
         }
@@ -400,6 +400,10 @@ class AnimalLettersGameFragment :
             this.voiceActingStatus = voiceActingStatus
         }
 
+        fun updateLettersCards(pos: Int, letterCard: CustomCardTable.LetterCardUI) {
+            letterCardList[pos] = letterCard
+        }
+
         fun initLettersCards(lettersCards: List<CustomCardTable.LetterCardUI>) {
             letterCardList.clear()
             letterCardList.addAll(lettersCards)
@@ -529,6 +533,13 @@ class AnimalLettersGameFragment :
                 ).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commitAllowingStateLoss()
                 sound.playEffect(SoundEnum.GAME_OVER)
+            }
+        }
+
+        fun changingStateUpdateOpenLettersCards(it: AnimalLettersGameState.ChangingState.UpdateOpenLettersCards) {
+            it.updatedLettersCards.forEach {
+                binding.table.setColorCard(it.second)
+                sound.updateLettersCards(it.first, it.second)
             }
         }
 
@@ -711,6 +722,7 @@ class AnimalLettersGameFragment :
 
         private const val VISIBLE_ALPHA = 1f
         private const val DIMNESS_ALPHA = 0.75f
+
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {
             arguments = Bundle().apply {

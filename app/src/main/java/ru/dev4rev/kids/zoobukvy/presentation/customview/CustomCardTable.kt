@@ -122,17 +122,19 @@ class CustomCardTable @JvmOverloads constructor(
         }
     }
 
-    fun openCard(letterCard: LetterCardUI) {
+    fun setColorCard(letterCard: LetterCardUI) {
         val color = when (letterCard.color) {
             LettersColor.Red -> COLOR_RED
             LettersColor.Blue -> COLOR_BLUE
             LettersColor.Green -> COLOR_GREEN
             LettersColor.Black -> COLOR_BLACK
         }
-        listOfCardsOnTable[getPositionCard(letterCard)].apply {
-            setColorCard(color)
-            setOpenCard(true)
-        }
+        listOfCardsOnTable[getPositionCard(letterCard)].setColorCard(color)
+    }
+
+    fun openCard(letterCard: LetterCardUI) {
+        setColorCard(letterCard)
+        listOfCardsOnTable[getPositionCard(letterCard)].setOpenCard(true)
     }
 
     fun setCorrectlyCard(letterCard: LetterCardUI) {

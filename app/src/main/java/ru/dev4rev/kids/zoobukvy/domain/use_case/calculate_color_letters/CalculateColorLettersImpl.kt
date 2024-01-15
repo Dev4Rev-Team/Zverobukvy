@@ -11,22 +11,22 @@ class CalculateColorLettersImpl : CalculateColorLetters {
         letterCards: List<LetterCard>,
         voiceActingStatus: VoiceActingStatus
     ) {
-        if (voiceActingStatus == VoiceActingStatus.SOUND) {
-            setColor(word, letterCards)
-            setSound(letterCards)
-        } else {
-            setDefault(letterCards)
+        when(voiceActingStatus){
+            VoiceActingStatus.SOUND -> {
+                setColorForRegimeSound(word, letterCards)
+                setSoundForRegimeSound(letterCards)
+            }
+            VoiceActingStatus.LETTER -> {
+                setColorForRegimeLetter(letterCards)
+                setSoundForLetter(letterCards)
+            }
+            VoiceActingStatus.OFF -> {
+                setColorForRegimeNoSound(letterCards)
+            }
         }
     }
 
-    private fun setDefault(letterCards: List<LetterCard>) {
-        letterCards.forEach {
-            it.color = LettersColor.Black
-            it.soundName = it.letterName
-        }
-    }
-
-    private fun setSound(letterCards: List<LetterCard>) {
+    private fun setSoundForRegimeSound(letterCards: List<LetterCard>) {
         letterCards.forEach { letterCard ->
             when (letterCard.color) {
                 LettersColor.Green -> letterCard.apply {
@@ -40,8 +40,14 @@ class CalculateColorLettersImpl : CalculateColorLetters {
         }
     }
 
-    private fun setColor(word: String, letterCards: List<LetterCard>) {
-        val colorMap = calculateColor(word)
+    private fun setSoundForLetter(letterCards: List<LetterCard>) {
+        letterCards.forEach { letterCard ->
+            letterCard.apply { soundName = letterName }
+        }
+    }
+
+    private fun setColorForRegimeSound(word: String, letterCards: List<LetterCard>) {
+        val colorMap = calculateColorMap(word)
         letterCards.forEach { letterCard ->
             val c = letterCard.letter
             letterCard.color = when (c) {
@@ -55,7 +61,23 @@ class CalculateColorLettersImpl : CalculateColorLetters {
         }
     }
 
-    fun calculateColor(word: String): Map<Char, LettersColor> {
+    private fun setColorForRegimeLetter(letterCards: List<LetterCard>) {
+        letterCards.forEach { letterCard ->
+            val c = letterCard.letter
+            letterCard.color = when (c) {
+                in isVowel -> LettersColor.Red
+                in isNoSound -> LettersColor.Black
+                else -> LettersColor.Blue
+            }
+        }
+    }
+
+    private fun setColorForRegimeNoSound(letterCards: List<LetterCard>) {
+        letterCards.forEach { letterCard ->
+            letterCard.color = LettersColor.Black
+        }
+    }
+    fun calculateColorMap(word: String): Map<Char, LettersColor> {
         val map = mutableMapOf<Char, LettersColor>()
         word.lowercase().forEachIndexed { index, c ->
             val indexNextChar = index + 1

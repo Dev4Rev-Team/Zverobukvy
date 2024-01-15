@@ -26,7 +26,7 @@ class CalculateColorLettersImplTest {
             ('о' to LettersColor.Red),
             ('т' to LettersColor.Blue),
         )
-        assertEquals(resultExpected, calculateColorLetters.calculateColor(word))
+        assertEquals(resultExpected, calculateColorLetters.calculateColorMap(word))
 
          word = "объявление"
          resultExpected = mapOf(
@@ -41,7 +41,7 @@ class CalculateColorLettersImplTest {
             ('и' to LettersColor.Red),
             ('е' to LettersColor.Red),
         )
-        assertEquals(resultExpected, calculateColorLetters.calculateColor(word))
+        assertEquals(resultExpected, calculateColorLetters.calculateColorMap(word))
 
          word = "фонетический"
          resultExpected = mapOf(
@@ -58,7 +58,7 @@ class CalculateColorLettersImplTest {
             ('и' to LettersColor.Red),
             ('й' to LettersColor.Green),
         )
-        assertEquals(resultExpected, calculateColorLetters.calculateColor(word))
+        assertEquals(resultExpected, calculateColorLetters.calculateColorMap(word))
 
     }
 
