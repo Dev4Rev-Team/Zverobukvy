@@ -95,7 +95,7 @@ class Conf {
 
         // цвет карт для режима звук
         val CARD_COLOR_RED = Color.rgb(0xEF, 0x1A, 0x1A)
-        val CARD_COLOR_GREEN = Color.rgb(0x1A, 0xEF, 0x1A)
+        val CARD_COLOR_GREEN = Color.rgb(0x1A, 0xBF, 0x1A)
         val CARD_COLOR_BLUE = Color.rgb(0x1A, 0x1A, 0xEF)
         val CARD_COLOR_BLACK = Color.rgb(0x1A, 0x1A, 0x1A)
 
