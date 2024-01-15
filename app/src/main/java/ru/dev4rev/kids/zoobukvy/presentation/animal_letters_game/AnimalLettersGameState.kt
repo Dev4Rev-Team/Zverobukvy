@@ -115,8 +115,6 @@ sealed interface AnimalLettersGameState {
          * слово и игрока. При нажатии на кнопку приходит состояние [NextGuessWord]
          *  * Если [hasNextWord] == false, следом приходит состояние [EntireState.EndGameState]
          *
-         * @see ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameViewModel.onClickNextWord
-         *
          * @param correctLetterCard Карточка, которую нужно перевернуть
          * @param positionLetterInWord Отгаданная буква, которую нужно подсветить
          * @param players список игроков (в том числе обновленный счет)
@@ -143,5 +141,13 @@ sealed interface AnimalLettersGameState {
         data class NextGuessWord(
             val wordCard: WordCard,
         ) : ChangingState
+
+        /** Состояние обновления открытых карточек-букв при смене режима их озвучки
+         * Подразумевает изменение цвета карточек-букв (содержиит список изменяемых карточек: позиция
+         * карточки + сама карточка-буква с измененными данными по цвету)
+         */
+        data class UpdateOpenLettersCards(
+            val updatedLettersCards: List <Pair<Int, LetterCard>>
+        ): ChangingState
     }
 }

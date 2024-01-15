@@ -7,7 +7,7 @@ interface CalculateColorLetters {
     fun calculate(
         word: String,
         letterCards: List<LetterCard>,
-        voiceActingStatus: VoiceActingStatus = VoiceActingStatus.SOUND
+        voiceActingStatus: VoiceActingStatus
     )
 }
 

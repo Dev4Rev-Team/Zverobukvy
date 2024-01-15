@@ -3,6 +3,7 @@ package ru.dev4rev.kids.zoobukvy.domain.use_case.interactor
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
+import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 
 /**
  Интерактор хранит и передает во viewModel (через StateFlow) полное состояние игры в виде объекта
@@ -23,9 +24,10 @@ interface AnimalLettersGameInteractor {
     /**
     Метод вызывается один раз при создании view, в этом методе интерактор, после обращения в БД,
     испускает начальное состояние игры (все данные для полной отрисовки экрана игры)
+     * @param voiceActingStatus режим озвучки букв/звуков
      * @exception IllegalArgumentException, если из репозитория пришли не корректные данные
      */
-    suspend fun startGame()
+    suspend fun startGame(voiceActingStatus: VoiceActingStatus)
 
     /**
     Метод вызывается при выборе буквенной карточки, в этом методе интерактор испускает
@@ -65,4 +67,9 @@ interface AnimalLettersGameInteractor {
      * Метод для подписки ViewModel на ход компьютера (карточку, выбранную компьютером).
      */
     fun subscribeToComputer(): SharedFlow<Int>
+
+    /**
+     * Метод вызывается при смене режима озвучки букв/звуков
+     */
+    fun updateVoiceActingStatus(voiceActingStatus: VoiceActingStatus)
 }
