@@ -11,25 +11,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.launch
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.CardsSet
-import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameField
-import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
-import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
-import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.WordCard
-import ru.dev4rev.kids.zoobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
+import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameField
+import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
+import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameStateName
+import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
+import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
+import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 import ru.dev4rev.kids.zoobukvy.domain.repository.ChangeRatingRepository
+import ru.dev4rev.kids.zoobukvy.domain.repository.animal_letter_game.AnimalLettersGameRepository
 import ru.dev4rev.kids.zoobukvy.domain.use_case.calculate_color_letters.CalculateColorLetters
 import ru.dev4rev.kids.zoobukvy.domain.use_case.calculate_color_letters.CalculateColorLettersImpl
-import ru.dev4rev.kids.zoobukvy.domain.use_case.deal_cards.DealCards
-import ru.dev4rev.kids.zoobukvy.domain.use_case.deal_cards.DealCardsImpl
-import ru.dev4rev.kids.zoobukvy.domain.use_case.level_and_rating.LevelAndRatingCalculatorImpl
 import ru.dev4rev.kids.zoobukvy.domain.use_case.computer.AnimalLettersComputer
 import ru.dev4rev.kids.zoobukvy.domain.use_case.computer.animal_letters_computer_simple_smart.AnimalLettersComputerSimpleSmart
+import ru.dev4rev.kids.zoobukvy.domain.use_case.deal_cards.DealCards
+import ru.dev4rev.kids.zoobukvy.domain.use_case.deal_cards.DealCardsImpl
 import ru.dev4rev.kids.zoobukvy.domain.use_case.deal_players.DealPlayersForGame
 import ru.dev4rev.kids.zoobukvy.domain.use_case.deal_players.DealPlayersForGameImpl
 import ru.dev4rev.kids.zoobukvy.domain.use_case.level_and_rating.LevelAndRatingCalculator
+import ru.dev4rev.kids.zoobukvy.domain.use_case.level_and_rating.LevelAndRatingCalculatorImpl
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
@@ -101,13 +103,14 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         return gameStateFlow.asStateFlow()
     }
 
-    override suspend fun startGame() {
+    override suspend fun startGame(voiceActingStatus: VoiceActingStatus) {
         Timber.d("startGame")
         // получаем все наборы карточек по выбранным цветам (typesCards)  и создаем dealCards
         dealCards = DealCardsImpl(getSelectedColorsCardsSets(typesCards))
         gamingWords.addAll(getGamingWords()) // формируется очередь карточек-слов
         // начальное состояние игры
         gameStateFlow.value = GameState(
+            name = GameStateName.START_GAME,
             gameField = GameField(
                 getStartedLettersField(), // формируется список карточек-букв
                 // в данной ситуации очередь карточек-слов не может быть пустой
@@ -115,13 +118,14 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
             ).apply {
                 // определяем цвет букв и озвучку звуков (твердые/мягкие) и обновляем lettersField
                 gamingWordCard?.let {
-                    colorLettersCalculator.calculate(it.word, lettersField)
+                    colorLettersCalculator.calculate(it.word, lettersField, voiceActingStatus)
                 }
             },
             players = players,
             walkingPlayer = currentWalkingPlayer,
             nextWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer),
-            isActive = true
+            isActive = true,
+            voiceActingStatus = voiceActingStatus
         )
     }
 
@@ -157,6 +161,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
             // gameStateFlow обновляет value, т.к. отличается gameField, walkingPlayer и nextWalkingPlayer
             val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
             gameStateFlow.value = currentGameState.copy(
+                name = GameStateName.NEXT_WORD_CARD,
                 gameField = GameField(
                     lettersField = mutableListOf<LetterCard>().apply {
                         addAll(currentGameState.gameField.lettersField)
@@ -168,7 +173,11 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                     computer?.setCurrentGameField(it, positionCurrentLetterCard)
                     // определяем цвет букв и озвучку звуков (твердые/мягкие) и обновляем lettersField
                     it.gamingWordCard?.let { wordCard ->
-                        colorLettersCalculator.calculate(wordCard.word, it.lettersField)
+                        colorLettersCalculator.calculate(
+                            wordCard.word,
+                            it.lettersField,
+                            currentGameState.voiceActingStatus
+                        )
                     }
                 },
                 walkingPlayer = newWalkingPlayer.also {
@@ -186,6 +195,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         gameStateFlow.value?.let { currentGameState ->
             val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
             gameStateFlow.value = currentGameState.copy(
+               name = GameStateName.NEXT_WALKING_PLAYER,
                 gameField = GameField(
                     lettersField = flipLetterCard(
                         currentGameState.gameField.lettersField,
@@ -204,10 +214,13 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     override fun endGameByUser() {
         Timber.d("endGameByUser")
         // gameStateFlow обновляет value, т.к. отличается isActive
-        gameStateFlow.value = gameStateFlow.value?.copy(isActive = false)
+        gameStateFlow.value = gameStateFlow.value?.copy(
+            name = GameStateName.END_GAME_BY_USER,
+            isActive = false)
                 // если gameState == null, значит завершение игры инициировано пользователем, во время
                 //загрузки данных из репозитория
             ?: GameState(
+                name = GameStateName.END_GAME_BY_USER,
                 gameField = GameField(
                     listOf(),
                     null
@@ -215,7 +228,8 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                 players = players,
                 walkingPlayer = null,
                 nextWalkingPlayer = null,
-                isActive = false
+                isActive = false,
+                voiceActingStatus = VoiceActingStatus.SOUND
             )
         // в конце игры "отматываем" рейтинг игроков к исходному
         changeRatingRepository.getPlayersBeforeGame().forEach { playerBeforeGame ->
@@ -244,6 +258,26 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
             )
         }
         return computerSharedFlow
+    }
+
+    override fun updateVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
+        gameStateFlow.value?.let { currentGameState ->
+            gameStateFlow.value = currentGameState.copy(
+                name = GameStateName.UPDATE_OPEN_LETTER_CARD,
+                gameField = GameField(
+                    lettersField =
+                    currentGameState.gameField.lettersField.also { lettersField ->
+                        currentGameState.gameField.gamingWordCard?.word?.let {
+                            colorLettersCalculator.calculate(
+                                it, lettersField, voiceActingStatus
+                            )
+                        }
+                    },
+                    gamingWordCard = currentGameState.gameField.gamingWordCard
+                ),
+                voiceActingStatus = voiceActingStatus
+            )
+        }
     }
 
     /**
@@ -313,6 +347,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         }
         // gameStateFlow обновляет value, т.к. отличается gameField (lettersField)
         gameStateFlow.value = currentGameState.copy(
+            name = GameStateName.WRONG_LETTER_CARD,
             gameField = GameField(
                 lettersField = flipLetterCard(
                     currentGameState.gameField.lettersField,
@@ -374,6 +409,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("selectionNotLastCorrectLetterCardInGamingWordCard")
         // gameStateFlow обновляет value, т.к. отличается gameField
         gameStateFlow.value = currentGameState.copy(
+            name = GameStateName.NOT_LAST_CORRECT_LETTER_CARD,
             gameField = GameField(
                 lettersField = flipLetterCard(
                     currentGameState.gameField.lettersField,
@@ -410,6 +446,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // gameStateFlow обновляет value, т.к. отличается gameField, players, walkingPlayer,
         //nextWalkingPlayer и isActive
         gameStateFlow.value = currentGameState.copy(
+            name = GameStateName.END_GAME,
             gameField = GameField(
                 lettersField = flipLetterCard(
                     currentGameState.gameField.lettersField,
@@ -446,6 +483,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         Timber.d("guessedNotLastGamingWordCard")
         // gameStateFlow обновляет value, т.к. отличается gameField, player
         gameStateFlow.value = currentGameState.copy(
+            name = GameStateName.GUESSED_NOT_LAST_WORD_CARD,
             gameField = GameField(
                 lettersField = flipLetterCard(
                     currentGameState.gameField.lettersField,

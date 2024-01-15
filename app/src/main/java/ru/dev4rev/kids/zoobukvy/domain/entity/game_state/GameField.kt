@@ -5,5 +5,5 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.card.WordCard
 
 data class GameField(
     val lettersField: List<LetterCard>,
-    var gamingWordCard: WordCard?
+    val gamingWordCard: WordCard?
 )

@@ -20,8 +20,7 @@ interface AnimalLettersGameViewModel {
 
     /**
     Метод для подписки view на полное состояние игры.
-    Непосредственно при подписке view получает Loading (при первом создании) или текущее полное состояние игры
-    (при пересоздании).
+    При подписке view получает текущее полное состояние игры.
      */
     fun getEntireGameStateLiveData(): LiveData<AnimalLettersGameState.EntireState>
 
@@ -57,20 +56,6 @@ interface AnimalLettersGameViewModel {
     сhangingGameStateLiveData изменения состояния игры (реакция на выбор буквенной карточки)
      */
     fun onClickLetterCard(positionSelectedLetterCard: Int)
-
-    /*/** МЕТОДЫ ПЕРЕВЕДЕНЫ В ПРИВАТНЫЕ
-    Метод вызывается при нажатии пользователем кнопки перехода хода к следующему игроку, в этом методе
-    viewModel (без обращения к интерактору) присваивает сhangingGameStateLiveData изменение
-    состояния игры, соответствующее переходу хода к следующему игроку
-     */
-    fun onClickNextWalkingPlayer()
-
-    /**
-    Метод вызывается при нажатии кнопки перехода к следующему слову
-
-     * @see [ru.gb.zverobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState.NextGuessWord]
-     */
-    fun onClickNextWord()*/
 
     /**
     Метод вызывается при нажатии пользователем кнопки Back, в этом методе viewModel (без обращения

@@ -154,6 +154,11 @@ class AnimalLettersGameFragment :
                     Timber.d("ChangingState.NextPlayer")
                     game.changingStateNextPlayer(it)
                 }
+
+                is AnimalLettersGameState.ChangingState.UpdateOpenLettersCards -> {
+                    Timber.d("ChangingState.UpdateOpenLettersCards")
+                    //TODO()
+                }
             }
         }
     }
