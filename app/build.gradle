@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
 }
 
+
 android {
     namespace 'ru.dev4rev.kids.zoobukvy'
     compileSdk 34
@@ -24,6 +25,7 @@ android {
             }
         }
     }
+
     buildFeatures {
         viewBinding true
         buildConfig = true
@@ -38,6 +40,18 @@ android {
             buildConfigField "boolean", "DEBUG_ON", 'true'
         }
     }
+
+    flavorDimensions  = ["store"]
+
+    productFlavors {
+        google {
+            dimension "store"
+        }
+        rustore {
+            dimension "store"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
