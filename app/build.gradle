@@ -5,6 +5,10 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     namespace 'ru.dev4rev.kids.zoobukvy'
     compileSdk 34
@@ -23,6 +27,16 @@ android {
             }
         }
     }
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
     buildFeatures {
         viewBinding true
         buildConfig = true
@@ -33,7 +47,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "DEBUG_ON", 'false'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
         debug{
             buildConfigField "boolean", "DEBUG_ON", 'true'
