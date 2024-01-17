@@ -34,7 +34,7 @@ class PlayerViewHolder(
             viewBinding.run {
                 playerNameTextView.text = it.player.name
                 if (it.isSelectedForGame) {
-                    playerCardConstraintView.setBackground(itemView.context.getDrawable(R.drawable.background_player_card_view_ny))
+                    playerCardConstraintView.setBackground(itemView.context.getDrawable(R.drawable.background_user_card))
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_green_pastel))
                 } else {
                     playerCardConstraintView.setBackground(itemView.context.getDrawable(R.color.transparent))
