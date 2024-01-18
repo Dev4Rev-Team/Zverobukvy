@@ -1,5 +1,6 @@
 package ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.view_holder
 
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import ru.dev4rev.kids.zoobukvy.R
 import ru.dev4rev.kids.zoobukvy.appComponent
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
@@ -19,10 +20,10 @@ class ComputerPlayerViewHolder(
             viewBinding.run {
                 playerNameTextView.text = playerInSetting.player.name
                 if (it.isSelectedForGame) {
-                    playerCardConstraintView.setBackground(itemView.context.getDrawable(R.drawable.background_user_card))
+                    playerCardConstraintView.background = getDrawable(itemView.context, R.drawable.background_user_card)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_green_pastel))
                 } else {
-                    playerCardConstraintView.setBackground(itemView.context.getDrawable(R.color.transparent))
+                    playerCardConstraintView.background = getDrawable(itemView.context, R.color.transparent)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_red_pastel))
                 }
                 playerCardView.setOnClickListener {
