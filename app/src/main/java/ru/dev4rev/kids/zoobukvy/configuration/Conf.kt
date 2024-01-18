@@ -1,5 +1,6 @@
 package ru.dev4rev.kids.zoobukvy.configuration
 
+import android.graphics.Color
 import ru.dev4rev.kids.zoobukvy.BuildConfig
 
 class Conf {
@@ -69,16 +70,13 @@ class Conf {
         const val DELAY_SOUND_WORD = 500L
 
         // задержка озвучивания эффекта(правильная буква/ неправильная буква/ правильное слово) после нажатия на карту
-         const val DELAY_SOUND_EFFECT = 700L
+        const val DELAY_SOUND_EFFECT = 700L
 
         // задержка озвучивания буквы после нажатия на карту
         const val DELAY_SOUND_LETTER = 500L
 
         // задержка озвучивания буквы после нажатия на открытую карту
         const val DELAY_SOUND_REPEAT = 0L
-
-        // задержка разрешения нажимать на следующую карту
-        const val DELAY_ENABLE_CLICK_LETTERS_CARD = 100L
 
         // фон открытой карты с буквой
         const val IMAGE_CARD_FOREGROUND = "FACE.webp"
@@ -88,6 +86,19 @@ class Conf {
 
         // время исчезновения игрока в карусели
         const val DURATION_ANIMATOR_NEXT_PLAYER = 350L
+
+        // время переворота карты
+        const val DURATION_FLIP = 450L
+
+        // время игнорирования следующего клика
+        const val DELAY_NEXT_CLICK = 100L
+
+        // цвет карт для режима звук
+        val CARD_COLOR_RED = Color.rgb(0xEF, 0x1A, 0x1A)
+        val CARD_COLOR_GREEN = Color.rgb(0x1A, 0xBF, 0x1A)
+        val CARD_COLOR_BLUE = Color.rgb(0x1A, 0x1A, 0xEF)
+        val CARD_COLOR_BLACK = Color.rgb(0x1A, 0x1A, 0x1A)
+
 
         /**
          * Задержки во viewModel экрана игры
@@ -138,6 +149,7 @@ class Conf {
          */
         //время появление иконки помогающий найти кнопки справки
         const val DURATION_ANIMATOR_SHOW_HELPER = 300L
+
         //время уменьшения иконки помогающий найти кнопки справки
         const val DURATION_ANIMATOR_SCALE_HELPER = 2100L
 
@@ -147,7 +159,7 @@ class Conf {
         // кол-во аватарок в одном ряду
         const val SPAN_COUNT_AVATARS_RECYCLER_VIEW = 4
 
-       /**
+        /**
          * Новогодний период
          */
         const val START_NEY_YEAR_PERIOD_MONTH = 11
@@ -160,18 +172,18 @@ class Conf {
          */
 
         @Suppress("SimplifyBooleanWithConstants")
-        private const val DEBUG = BuildConfig.DEBUG_ON && true
+        const val DEBUG = BuildConfig.DEBUG_ON && true
 
         // проверить файлы картинок
-        const val DEBUG_CHECK_IMAGE_FILES = DEBUG
+        const val DEBUG_IS_CHECK_IMAGE_FILES = false
 
-        // отключить проверку файлов звука слов
-        const val DEBUG_DISABLE_CHECK_SOUND_FILE = DEBUG
+        // провероверить файлы звука
+        const val DEBUG_IS_CHECK_SOUND_FILE = false
 
         // проверить базу данных на корректность
         const val IS_CHECK_DATA = false
 
         // показывать фрагмент результатов всегда
-        const val DEBUG_IS_FAST_END_DISABLE: Boolean = DEBUG
+        const val DEBUG_IS_SHOW_GAME_IS_OVER_DIALOG_ANYTIME = DEBUG
     }
 }

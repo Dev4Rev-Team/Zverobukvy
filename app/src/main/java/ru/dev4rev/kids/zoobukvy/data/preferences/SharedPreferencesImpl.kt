@@ -4,16 +4,18 @@ import android.content.Context
 import android.content.SharedPreferences
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
-    SharedPreferencesForGame {
-    private val sharedPreferencesForGame: SharedPreferences = context.getSharedPreferences(
+@Singleton
+class SharedPreferencesImpl @Inject constructor(context: Context) :
+    SharedPreferencesForGame, SharedPreferencesForUserFeedback {
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE
     )
 
     override fun readTypesCardsSelectedForGame(): List<TypeCardsInSharedPreferences> {
         Timber.d("readTypesCardsSelectedForGame")
-        return (sharedPreferencesForGame.getStringSet(KEY_TYPES_CARDS, null)
+        return (sharedPreferences.getStringSet(KEY_TYPES_CARDS, null)
             ?: setOf()).toList().map {
             TypeCardsInSharedPreferences(it)
         }
@@ -21,7 +23,7 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
 
     override fun saveTypesCardsSelectedForGame(typesCardsSelectedForGame: List<TypeCardsInSharedPreferences>) {
         Timber.d("saveTypesCardsSelectedForGame")
-        sharedPreferencesForGame.edit()
+        sharedPreferences.edit()
             .putStringSet(KEY_TYPES_CARDS, typesCardsSelectedForGame.map {
                 it.nameTypeCard
             }.toSet())
@@ -30,22 +32,22 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
 
     override fun readNamesPlayersSelectedForGame(): List<String> {
         Timber.d("readNamesPlayersSelectedForGame")
-        return (sharedPreferencesForGame.getStringSet(KEY_NAMES_PLAYERS, null)
+        return (sharedPreferences.getStringSet(KEY_NAMES_PLAYERS, null)
             ?: setOf()).toList()
     }
 
     override fun saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame: List<String>) {
         Timber.d("saveNamesPlayersSelectedForGame")
-        sharedPreferencesForGame.edit()
+        sharedPreferences.edit()
             .putStringSet(KEY_NAMES_PLAYERS, namesPlayersSelectedForGame.toSet())
             .apply()
     }
 
     override fun isFirstLaunch(): Boolean {
         Timber.d("isFirstLaunch")
-        val isFirstLaunch = sharedPreferencesForGame.getBoolean(KEY_FIRST_LAUNCH, true)
+        val isFirstLaunch = sharedPreferences.getBoolean(KEY_FIRST_LAUNCH, true)
         if (isFirstLaunch)
-            sharedPreferencesForGame.edit()
+            sharedPreferences.edit()
                 .putBoolean(KEY_FIRST_LAUNCH, false)
                 .apply()
         return isFirstLaunch
@@ -53,13 +55,37 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
 
     override fun readSoundStatus(): Boolean {
         Timber.d("readSoundStatus")
-        return sharedPreferencesForGame.getBoolean(KEY_SOUND, true)
+        return sharedPreferences.getBoolean(KEY_SOUND, true)
     }
 
-    override fun saveSoundStatus(isSoundOn: Boolean) {
+    override fun saveSoundStatus(soundStatus: Boolean) {
         Timber.d("saveSoundStatus")
-        sharedPreferencesForGame.edit()
-            .putBoolean(KEY_SOUND, isSoundOn)
+        sharedPreferences.edit()
+            .putBoolean(KEY_SOUND, soundStatus)
+            .apply()
+    }
+
+    override fun readVoiceActingStatus(): String? {
+        Timber.d("readVoiceActingStatus")
+        return sharedPreferences.getString(KEY_VOICE_ACTING, null)
+    }
+
+    override fun saveVoiceActingStatus(voiceActingStatus: String) {
+        Timber.d("saveVoiceActingStatus")
+        sharedPreferences.edit()
+            .putString(KEY_VOICE_ACTING, voiceActingStatus)
+            .apply()
+    }
+
+    override fun isFeedback(): Boolean {
+        Timber.d("isFeedback")
+        return sharedPreferences.getBoolean(KEY_FEEDBACK, false)
+    }
+
+    override fun fixFeedback() {
+        Timber.d("fixFeedback")
+        sharedPreferences.edit()
+            .putBoolean(KEY_FEEDBACK, true)
             .apply()
     }
 
@@ -68,6 +94,8 @@ class SharedPreferencesForGameImpl @Inject constructor(context: Context) :
         private const val KEY_NAMES_PLAYERS = "KeyNamesPlayers"
         private const val KEY_FIRST_LAUNCH = "KeyFirstLaunch"
         private const val KEY_SOUND = "KeySound"
+        private const val KEY_VOICE_ACTING = "KeyVoiceActing"
+        private const val KEY_FEEDBACK = "KeyFeedback"
         private const val NAME_SHARED_PREFERENCES = "animal_letters_pref"
     }
 }

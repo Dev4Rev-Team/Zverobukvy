@@ -17,14 +17,16 @@ import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import ru.dev4rev.kids.zoobukvy.R
 import ru.dev4rev.kids.zoobukvy.animalLettersGameSubcomponentContainer
+import ru.dev4rev.kids.zoobukvy.appComponent
 import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
-import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentAnimalLettersGameBinding
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
+import ru.dev4rev.kids.zoobukvy.domain.entity.card.WordCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
+import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.dialog.IsEndGameDialogFragment
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.game_is_over_dialog.DataGameIsOverDialog
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.game_is_over_dialog.GameIsOverDialogFragment
@@ -49,12 +51,12 @@ class AnimalLettersGameFragment :
     private var gameStart: GameStart? = null
     private lateinit var assertsImageCash: AssetsImageCash
     private lateinit var soundEffectPlayer: SoundEffectPlayer
+    private lateinit var imageAvatarLoader: ImageAvatarLoader
     private lateinit var viewModel: AnimalLettersGameViewModel
-    private var imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
     private val game = GameProcessingState()
     private val event = GameEvent()
+    private lateinit var sound: Sound
     private var wordCardSoundName: String? = null
-    private var mapLettersSoundName = mutableMapOf<Int, String>()
 
     private var isEnableClick = true
 
@@ -64,6 +66,7 @@ class AnimalLettersGameFragment :
     var lastStateScreen = StateScreen.NextPlayer
 
     private fun initDagger() {
+        imageAvatarLoader = requireContext().appComponent.imageAvatarLoader
         requireContext().animalLettersGameSubcomponentContainer.createAnimalLettersGameSubcomponent(
             gameStart!!.typesCards, gameStart!!.players
         ).also { fragmentComponent ->
@@ -83,23 +86,39 @@ class AnimalLettersGameFragment :
         }
         gameStart ?: throw IllegalArgumentException("not arg gameStart")
         initDagger()
-        game.startNewGame()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         animator.createAnimators()
+        initSound()
         initChangingStateEventVM()
         intiGameStateEventVM()
         initSystemEventVM()
         initView()
     }
 
+    private fun initSound() {
+        sound = Sound(soundEffectPlayer)
+    }
+
     private fun initSystemEventVM() {
         viewModel.getSoundStatusLiveData().observe(viewLifecycleOwner) {
-            soundEffectPlayer.setEnable(it)
+            sound.setEnable(it)
             val icSoundToggle = if (it) R.drawable.ic_sound_on else R.drawable.ic_sound_off
             binding.soundButtonImageView.setImageResource(icSoundToggle)
+            binding.lettersSoundButtonLayout.alpha = if (it) VISIBLE_ALPHA else DIMNESS_ALPHA
+        }
+
+        viewModel.getVoiceActingStatusLiveData().observe(viewLifecycleOwner) {
+            val icSoundLetterToggle = when (it) {
+                VoiceActingStatus.SOUND -> R.drawable.ic_sound_letter_sound
+                VoiceActingStatus.LETTER -> R.drawable.ic_sound_letter_on
+                VoiceActingStatus.OFF -> R.drawable.ic_sound_letter_off
+                else -> R.drawable.ic_sound_letter_off
+            }
+            binding.lettersSoundButtonImageView.setImageResource(icSoundLetterToggle)
+            sound.setVoiceActingStatus(it)
         }
     }
 
@@ -135,6 +154,11 @@ class AnimalLettersGameFragment :
                     Timber.d("ChangingState.NextPlayer")
                     game.changingStateNextPlayer(it)
                 }
+
+                is AnimalLettersGameState.ChangingState.UpdateLettersCards -> {
+                    Timber.d("ChangingState.UpdateLettersCards")
+                    game.changingStateUpdateLettersCards(it)
+                }
             }
         }
     }
@@ -158,6 +182,11 @@ class AnimalLettersGameFragment :
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        game.startNewGame()
     }
 
     override fun onResume() {
@@ -215,7 +244,13 @@ class AnimalLettersGameFragment :
             }
         }
 
-        binding.cardLevel.setCards(gameStart!!.typesCards)
+        binding.lettersSoundButtonLayout.setOnClickListener {
+            isClick {
+                viewModel.onVoiceActingClick()
+            }
+        }
+
+        binding.cardLevelView.setCards(gameStart!!.typesCards)
 
         isEnableClick = true
     }
@@ -253,7 +288,7 @@ class AnimalLettersGameFragment :
         binding.wordView.setWord(wordCard) {
             CustomLetterView(requireContext())
         }
-        delayAndRun(DELAY_SOUND_WORD) { soundEffectPlayer.play(wordCard.soundName) }
+        delayAndRun(DELAY_SOUND_WORD) { wordCardSoundName?.let { sound.playWord(it) } }
     }
 
     private fun showScreenNextPlayer() {
@@ -302,6 +337,7 @@ class AnimalLettersGameFragment :
                 CustomCard(requireContext()).apply {
                     elevation = 0f
                     enableClickAnimation()
+                    elevation = 0f
                     setImageOpenBackground(assertsImageCash.getImage(IMAGE_CARD_FOREGROUND))
                     setOnClickCorrectCard { pos -> event.onClickCorrectLetter(pos) }
                 }
@@ -347,19 +383,63 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private fun saveLettersSoundName(lettersCards: List<CustomCardTable.LetterCardUI>) {
-        mapLettersSoundName.clear()
-        lettersCards.forEachIndexed { index, value ->
-            mapLettersSoundName[index] = value.soundName
-        }
-    }
-
     private fun isClick(block: () -> Unit) {
         if (isEnableClick) {
             isEnableClick = false
             delayAndRun(DELAY_NEXT_CLICK) { isEnableClick = true }
             block.invoke()
         }
+    }
+
+
+    private class Sound(val soundEffectPlayer: SoundEffectPlayer) {
+
+        private var voiceActingStatus: VoiceActingStatus = VoiceActingStatus.OFF
+        private val letterCardList = mutableListOf<CustomCardTable.LetterCardUI>()
+
+        fun setVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
+            this.voiceActingStatus = voiceActingStatus
+        }
+
+        fun updateLettersCards(pos: Int, letterCard: CustomCardTable.LetterCardUI) {
+            letterCardList[pos] = letterCard
+        }
+
+        fun initLettersCards(lettersCards: List<CustomCardTable.LetterCardUI>) {
+            letterCardList.clear()
+            letterCardList.addAll(lettersCards)
+        }
+
+        fun playLetter(pos: Int) {
+            val letterCard = letterCardList[pos]
+            playLetter(letterCard, false)
+        }
+
+        fun playLetter(letterCard: CustomCardTable.LetterCardUI, isNew: Boolean = true) {
+            if (isNew) {
+                val pos = letterCardList.indexOfFirst { it.letter == letterCard.letter }
+                letterCardList[pos] = letterCard
+            }
+
+            when (voiceActingStatus) {
+                VoiceActingStatus.SOUND -> soundEffectPlayer.play(letterCard.soundName)
+                VoiceActingStatus.LETTER -> soundEffectPlayer.play(letterCard.letterName)
+                VoiceActingStatus.OFF -> return
+            }
+        }
+
+        fun setEnable(it: Boolean) {
+            soundEffectPlayer.setEnable(it)
+        }
+
+        fun playWord(wordCardSoundName: String) {
+            soundEffectPlayer.play(wordCardSoundName)
+        }
+
+        fun playEffect(soundEnum: SoundEnum) {
+            soundEffectPlayer.play(soundEnum)
+        }
+
     }
 
     private inner class GameProcessingState {
@@ -372,7 +452,7 @@ class AnimalLettersGameFragment :
             setPositionLetterInWord(it.positionLetterInWord)
             binding.table.openCard(it.correctLetterCard)
             binding.table.setCorrectlyCard(it.correctLetterCard)
-            delayAndRun(DELAY_ENABLE_CLICK_LETTERS_CARD) { binding.table.setWorkClick(true) }
+            delayAndRun(DELAY_NEXT_CLICK) { binding.table.setWorkClick(true) }
         }
 
         fun changingStateInvalidLetter(it: AnimalLettersGameState.ChangingState.InvalidLetter) {
@@ -404,6 +484,7 @@ class AnimalLettersGameFragment :
             setPictureOfWord(it.wordCard.faceImageName)
             setWord(it.wordCard)
             binding.table.closeCardAll()
+            setNumberInGameCards(it.wordCard)
         }
 
         fun changingStateNextPlayer(it: AnimalLettersGameState.ChangingState.NextPlayer) {
@@ -422,7 +503,7 @@ class AnimalLettersGameFragment :
             initPictureWord(it.wordCard.faceImageName)
             setWord(it.wordCard)
             initTable(it)
-            saveLettersSoundName(it.lettersCards)
+            sound.initLettersCards(it.lettersCards)
             binding.root.visibility = View.VISIBLE
             if (it.nextPlayerBtnVisible) {
                 showScreenNextPlayer()
@@ -431,6 +512,7 @@ class AnimalLettersGameFragment :
             } else {
                 binding.table.setWorkClick(true)
             }
+            setNumberInGameCards(it.wordCard)
         }
 
         fun changingStateIsEndGameState() {
@@ -439,7 +521,7 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
-            if (it.isFastEndGame && !Conf.DEBUG_IS_FAST_END_DISABLE) {
+            if (it.isFastEndGame && !Conf.DEBUG_IS_SHOW_GAME_IS_OVER_DIALOG_ANYTIME) {
                 event.popBackStack()
                 requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
             } else {
@@ -451,19 +533,36 @@ class AnimalLettersGameFragment :
                     GameIsOverDialogFragment.TAG
                 ).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commitAllowingStateLoss()
-                soundEffectPlayer.play(SoundEnum.GAME_OVER)
+                sound.playEffect(SoundEnum.GAME_OVER)
             }
         }
 
+        fun changingStateUpdateLettersCards(it: AnimalLettersGameState.ChangingState.UpdateLettersCards) {
+            //TODO Изменен UpdateOpenLettersCards
+            it.updatedLettersCards.forEachIndexed { index, letterCard ->
+                binding.table.setColorCard(letterCard)
+                sound.updateLettersCards(index, letterCard)
+            }
+        }
+    }
+
+    private fun setNumberInGameCards(wordCard: WordCard) {
+        binding.numberInGameCardsTextView.text =
+            getString(
+                R.string.number_in_game_cards,
+                wordCard.numberInGame.individualNumber,
+                wordCard.numberInGame.totalNumber
+            )
     }
 
     private fun soundFlipLetter(
         effectSoundEnum: SoundEnum, correctLetterCard: LetterCard,
     ) {
-        soundEffectPlayer.play(SoundEnum.CARD_IS_FLIP)
-        delayAndRun(DELAY_SOUND_EFFECT) { soundEffectPlayer.play(effectSoundEnum) }
-        delayAndRun(DELAY_SOUND_LETTER) { soundEffectPlayer.play(correctLetterCard.soundName) }
+        sound.playEffect(SoundEnum.CARD_IS_FLIP)
+        delayAndRun(DELAY_SOUND_EFFECT) { sound.playEffect(effectSoundEnum) }
+        delayAndRun(DELAY_SOUND_LETTER) { sound.playLetter(correctLetterCard) }
     }
+
 
     private inner class GameEvent {
         fun onEndGameByUser() {
@@ -495,12 +594,12 @@ class AnimalLettersGameFragment :
         }
 
         fun onClickWordView() {
-            delayAndRun(DELAY_SOUND_REPEAT) { wordCardSoundName?.let { soundEffectPlayer.play(it) } }
+            delayAndRun(DELAY_SOUND_REPEAT) { wordCardSoundName?.let { sound.playWord(it) } }
         }
 
         fun onClickCorrectLetter(position: Int) {
             delayAndRun(DELAY_SOUND_REPEAT) {
-                mapLettersSoundName[position]?.let { soundEffectPlayer.play(it) }
+                sound.playLetter(position)
             }
         }
 
@@ -605,7 +704,7 @@ class AnimalLettersGameFragment :
         const val GAME_START = "GAME_START"
         const val TAG_ANIMAL_LETTERS_FRAGMENT = "GameAnimalLettersFragment"
 
-        const val DELAY_NEXT_CLICK = 300L
+        const val DELAY_NEXT_CLICK = Conf.DELAY_NEXT_CLICK
 
         private const val START_DELAY_ANIMATION_SCREEN_DIMMING =
             Conf.START_DELAY_ANIMATION_SCREEN_DIMMING
@@ -616,13 +715,14 @@ class AnimalLettersGameFragment :
         private const val DELAY_SOUND_EFFECT = Conf.DELAY_SOUND_EFFECT
         private const val DELAY_SOUND_LETTER = Conf.DELAY_SOUND_LETTER
         private const val DELAY_SOUND_REPEAT = Conf.DELAY_SOUND_REPEAT
-        private const val DELAY_ENABLE_CLICK_LETTERS_CARD = Conf.DELAY_ENABLE_CLICK_LETTERS_CARD
 
         private const val IMAGE_CARD_FOREGROUND = Conf.IMAGE_CARD_FOREGROUND
 
         private const val DURATION_ANIMATOR_NEXT_PLAYER = Conf.DURATION_ANIMATOR_NEXT_PLAYER
         private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = Conf.SHIFT_ANIMATOR_PLAYER_NEXT_DP
 
+        private const val VISIBLE_ALPHA = 1f
+        private const val DIMNESS_ALPHA = 0.75f
 
         @JvmStatic
         fun newInstance(gameStart: GameStart) = AnimalLettersGameFragment().apply {

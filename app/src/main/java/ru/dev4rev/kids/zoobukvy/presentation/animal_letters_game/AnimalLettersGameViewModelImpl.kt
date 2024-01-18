@@ -12,7 +12,9 @@ import ru.dev4rev.kids.zoobukvy.data.resources_provider.ResourcesProvider
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
+import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameStateName
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
+import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 import ru.dev4rev.kids.zoobukvy.domain.repository.SoundStatusRepository
 import ru.dev4rev.kids.zoobukvy.domain.use_case.interactor.AnimalLettersGameInteractor
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
@@ -76,11 +78,16 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private val soundStatusLiveData =
         MutableLiveData(soundStatusRepository.getSoundStatus())
 
+    /** LiveData для отправки состояний озвучки букв (звуки или буквы)
+     */
+    private val voiceActingStatusLiveData =
+        MutableLiveData(soundStatusRepository.getVoiceActingStatus())
+
     /** Инициализация viewModel :
      */
     init {
         viewModelScope.launch {
-            animalLettersGameInteractor.startGame()
+            voiceActingStatusLiveData.value?.let { animalLettersGameInteractor.startGame(it) }
             animalLettersGameInteractor.subscribeToGameState().collect(::collectGameState)
         }
     }
@@ -90,7 +97,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      * @param newState Обновленное состояние игры из Interactor
      */
     private suspend fun collectGameState(newState: GameState?) {
-        Timber.d("collectGameState")
+        Timber.d("collectGameState ${newState?.name?.name}")
         mGameState.also { oldState ->
 
             val viewState = convert(oldState, newState)
@@ -189,6 +196,13 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
          */
         if (newState == null) {
             throw IllegalStateException(ERROR_NULL_ARRIVED_GAME_STATE)
+        }
+
+        //TODO проверить этот блок!!!
+        if (newState.name == GameStateName.UPDATE_LETTER_CARD) {
+            return listOf(
+                ChangingState.UpdateLettersCards(newState.gameField.lettersField)
+            )
         }
 
         /** Проверка на Null oldState :
@@ -444,13 +458,32 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         return soundStatusLiveData
     }
 
+    override fun getVoiceActingStatusLiveData(): LiveData<VoiceActingStatus> {
+        Timber.d("getVoiceActingStatusLiveData")
+        return voiceActingStatusLiveData
+    }
+
     override fun onSoundClick() {
-        // TODO ??? viewModelScope.launch {  }
         Timber.d("onSoundClick")
-        soundStatusRepository.getSoundStatus().also { soundStatus ->
-            soundStatusRepository.saveSoundStatus(!soundStatus)
-            soundStatusLiveData.value = !soundStatus
+        soundStatusRepository.getSoundStatus().let {
+            soundStatusRepository.saveSoundStatus(!it)
+            soundStatusLiveData.value = !it
         }
+    }
+
+    override fun onVoiceActingClick() {
+        Timber.d("onVoiceActingClick")
+        when (soundStatusRepository.getVoiceActingStatus()) {
+            VoiceActingStatus.SOUND -> changeVoiceActingStatus(VoiceActingStatus.LETTER)
+            VoiceActingStatus.LETTER -> changeVoiceActingStatus(VoiceActingStatus.OFF)
+            VoiceActingStatus.OFF -> changeVoiceActingStatus(VoiceActingStatus.SOUND)
+        }
+    }
+
+    private fun changeVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
+        voiceActingStatusLiveData.value = voiceActingStatus
+        soundStatusRepository.saveVoiceActingStatus(voiceActingStatus)
+        animalLettersGameInteractor.updateVoiceActingStatus(voiceActingStatus)
     }
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {

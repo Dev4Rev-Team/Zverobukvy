@@ -5,8 +5,9 @@ import coil.decode.SvgDecoder
 import coil.load
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Avatar
 import java.nio.ByteBuffer
+import javax.inject.Inject
 
-object ImageAvatarLoaderImpl: ImageAvatarLoader {
+class ImageAvatarLoaderImpl @Inject constructor(): ImageAvatarLoader {
     override fun loadImageAvatar(avatar: Avatar, container: ImageView) {
         if (avatar.isStandard)
             loadDrawable(avatar.imageName, container)

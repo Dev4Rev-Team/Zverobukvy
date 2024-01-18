@@ -7,8 +7,8 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
-import androidx.core.animation.doOnStart
 import ru.dev4rev.kids.zoobukvy.R
+import ru.dev4rev.kids.zoobukvy.configuration.Conf
 
 
 /**
@@ -27,13 +27,14 @@ class CustomCard @JvmOverloads constructor(
 
     private var srcClose: Int = SRC_CLOSE
     private var srcOpen: Int = SRC_OPEN
-    private var durationAnimation: Int = DURATION_ANIMATION
+    private var durationAnimation: Long = DURATION_ANIMATION
 
     private lateinit var frontSideImageView: CustomImageView
     private lateinit var backSideImageView: CustomImageView
     private lateinit var frontBackgroundImageView: CustomImageView
 
-    private var animationFlipSet: AnimatorSet? = null
+    private var animationFlipOpenSet: AnimatorSet? = null
+    private var animationFlipCloseSet: AnimatorSet? = null
 
     private var clickCorrectCard: ((pos: Int) -> Unit)? = null
     fun setOnClickCorrectCard(block: (pos: Int) -> Unit) {
@@ -44,7 +45,6 @@ class CustomCard @JvmOverloads constructor(
         initAttributes(context, attrs, defStyle)
         initContentView(context)
         initAnimator()
-
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -59,8 +59,8 @@ class CustomCard @JvmOverloads constructor(
         srcOpen = typedArray.getResourceId(R.styleable.CustomCard_srcOpen, SRC_OPEN)
         isOpen = typedArray.getBoolean(R.styleable.CustomCard_isOpen, IS_OPEN)
         durationAnimation = typedArray.getInteger(
-            R.styleable.CustomCard_durationAnimation, DURATION_ANIMATION
-        )
+            R.styleable.CustomCard_durationAnimation, DURATION_ANIMATION.toInt()
+        ).toLong()
         typedArray.recycle()
     }
 
@@ -90,41 +90,49 @@ class CustomCard @JvmOverloads constructor(
         scaleType = ImageView.ScaleType.CENTER_CROP
     }
 
-
     private fun initAnimator() {
-        animationFlipSet = AnimatorSet()
 
-        val scaleUp = createScaleAnimation(this, NORMAL, SCALE).apply {
-            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_UP).toLong()
+        animationFlipOpenSet = AnimatorSet().apply {
         }
-        val rotation = createFlipAnimation(this) {
-            setOpenDisplay(isOpen)
-        }.apply {
-            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_FLIP).toLong()
-        }
-        val scaleNormal = createScaleAnimation(this, SCALE, NORMAL).apply {
-            duration = (durationAnimation * PERCENTAGE_OF_ANIMATION_TIME_DOWN).toLong()
+        animationFlipCloseSet = AnimatorSet().apply {
         }
 
-        animationFlipSet?.playSequentially(scaleUp, rotation, scaleNormal)
-        animationFlipSet?.doOnStart { bringToFront() }
+        val animationFlip = createFlipAnimation(this, durationAnimation)
 
+        val alphaBackSideVisible =
+            createAlphaShowAnimation(backSideImageView, durationAnimation / 2, 0L, true)
+        val alphaBackSideInvisible =
+            createAlphaShowAnimation(backSideImageView, durationAnimation / 2, 0L, false)
+
+        animationFlipOpenSet?.apply {
+            playTogether(
+                animationFlip,
+                alphaBackSideInvisible
+            )
+        }
+        animationFlipCloseSet?.apply {
+            playTogether(
+                animationFlip,
+                alphaBackSideVisible
+            )
+        }
         cameraDistance = 7500 * context.resources.displayMetrics.density
-
     }
 
+
     private fun startAnimationFlip() {
-        animationFlipSet?.start()
+        bringToFront()
+        if (isOpen) {
+            animationFlipOpenSet?.start()
+        } else {
+            animationFlipCloseSet?.start()
+        }
     }
 
     private fun setOpenDisplay(isOpen: Boolean) {
         if (isOpen) {
-            frontBackgroundImageView.visibility = VISIBLE
-            frontSideImageView.visibility = VISIBLE
             backSideImageView.visibility = INVISIBLE
         } else {
-            frontBackgroundImageView.visibility = INVISIBLE
-            frontSideImageView.visibility = INVISIBLE
             backSideImageView.visibility = VISIBLE
         }
     }
@@ -145,6 +153,10 @@ class CustomCard @JvmOverloads constructor(
             }
             click(position)
         }
+    }
+
+    fun setColorCard(color: Int) {
+        frontSideImageView.setColorFilter(color)
     }
 
     fun setOpenCard(isOpen: Boolean) {
@@ -170,16 +182,17 @@ class CustomCard @JvmOverloads constructor(
         backSideImageView.setImageDrawable(backSide)
     }
 
+    override fun onDetachedFromWindow() {
+        animationFlipOpenSet?.end()
+        animationFlipCloseSet?.end()
+        super.onDetachedFromWindow()
+    }
+
     companion object {
         private val SRC_CLOSE = R.drawable.ic_launcher_background
         private val SRC_OPEN = R.drawable.ic_launcher_background
         private const val IS_OPEN = false
-        private const val DURATION_ANIMATION = 250
-        private const val SCALE = 1.08f
-        private const val NORMAL = 1f
-        private const val PERCENTAGE_OF_ANIMATION_TIME_UP = 0.1f
-        private const val PERCENTAGE_OF_ANIMATION_TIME_FLIP = 0.8f
-        private const val PERCENTAGE_OF_ANIMATION_TIME_DOWN = 0.1f
+        private const val DURATION_ANIMATION = Conf.DURATION_FLIP
     }
 
 }

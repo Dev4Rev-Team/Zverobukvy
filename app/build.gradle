@@ -5,9 +5,6 @@ plugins {
     id 'kotlin-kapt'
 }
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     namespace 'ru.dev4rev.kids.zoobukvy'
@@ -17,23 +14,15 @@ android {
         applicationId "ru.dev4rev.kids.zoobukvy"
         minSdk 23
         targetSdk 34
-        versionCode 2
-        versionName "1.01"
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
             }
-        }
-    }
-
-    signingConfigs {
-        release {
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
         }
     }
 
@@ -43,16 +32,26 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "DEBUG_ON", 'false'
-            signingConfig signingConfigs.release
         }
         debug{
             buildConfigField "boolean", "DEBUG_ON", 'true'
         }
     }
+
+    flavorDimensions  = ["store"]
+
+    productFlavors {
+        google {
+            dimension "store"
+        }
+        rustore {
+            dimension "store"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -93,4 +92,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    googleImplementation 'com.google.android.play:review:2.0.1'
+    googleImplementation 'com.google.android.play:review-ktx:2.0.1'
+    implementation 'ru.rustore.sdk:review:1.0.1'
 }

@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import ru.dev4rev.kids.zoobukvy.R
+import ru.dev4rev.kids.zoobukvy.configuration.Conf
+import ru.dev4rev.kids.zoobukvy.data.room.entity.card.LettersColor
 import ru.dev4rev.kids.zoobukvy.utility.ui.dipToPixels
 import kotlin.math.max
 import kotlin.properties.Delegates
@@ -120,7 +122,18 @@ class CustomCardTable @JvmOverloads constructor(
         }
     }
 
+    fun setColorCard(letterCard: LetterCardUI) {
+        val color = when (letterCard.color) {
+            LettersColor.Red -> COLOR_RED
+            LettersColor.Blue -> COLOR_BLUE
+            LettersColor.Green -> COLOR_GREEN
+            LettersColor.Black -> COLOR_BLACK
+        }
+        listOfCardsOnTable[getPositionCard(letterCard)].setColorCard(color)
+    }
+
     fun openCard(letterCard: LetterCardUI) {
+        setColorCard(letterCard)
         listOfCardsOnTable[getPositionCard(letterCard)].setOpenCard(true)
     }
 
@@ -153,6 +166,10 @@ class CustomCardTable @JvmOverloads constructor(
         private const val HORIZONTAL_GAP = 24
         private const val VERTICAL_GAP = 24
         private const val RADIUS_CARD = 8
+        private val COLOR_RED = Conf.CARD_COLOR_RED
+        private val COLOR_GREEN = Conf.CARD_COLOR_GREEN
+        private val COLOR_BLUE = Conf.CARD_COLOR_BLUE
+        private val COLOR_BLACK = Conf.CARD_COLOR_BLACK
     }
 
     interface LetterCardUI {
@@ -161,5 +178,7 @@ class CustomCardTable @JvmOverloads constructor(
         val faceImageName: String
         val backImageName: String
         val soundName: String
+        val letterName: String
+        val color: LettersColor
     }
 }

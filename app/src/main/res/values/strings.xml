@@ -60,7 +60,8 @@
     <string name="hero">Герой</string>
     <string name="legend">Легенда</string>
 
-    <string name="about_app">Разработка:\nDev4Rev-Team\n2023</string>
+    <string name="about_app">Разработка:\nDev4Rev-Team\n2023 - 2024</string>
+    <string name="number_in_game_cards">%1$d/%2$d</string>
 
 
 </resources>

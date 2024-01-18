@@ -21,12 +21,9 @@ import ru.dev4rev.kids.zoobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
 import javax.inject.Inject
 
-@Suppress("UNUSED_PARAMETER")
 class MainMenuViewModelImpl @Inject constructor(
     private val mainMenuRepository: MainMenuRepository,
     private val resourcesProvider: ResourcesProvider,
-    assetsImageCash: AssetsImageCash,
-    soundEffectPlayer: SoundEffectPlayer
 ) :
     MainMenuViewModel, ViewModel() {
     private val typesCardsSelectedForGame: MutableList<TypeCards> = mutableListOf()
@@ -159,6 +156,7 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     override fun onChangedSelectingPlayer(positionPlayer: Int) {
+        if (!checkEditablePlayer()) return
         closeEditablePlayer(true)
         players[positionPlayer]?.apply {
             isSelectedForGame = !isSelectedForGame
@@ -193,6 +191,7 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     override fun onQueryChangedPlayer(positionPlayer: Int) {
+        if (!checkEditablePlayer()) return
         closeEditablePlayer(true)
         openEditablePlayer(positionPlayer)
     }
@@ -261,6 +260,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
 
     override fun onChangedPlayer() {
+        if (!checkEditablePlayer()) return
         closeEditablePlayer(true)
     }
 
@@ -286,6 +286,7 @@ class MainMenuViewModelImpl @Inject constructor(
         }
         maxIdPlayer += 1
 
+        if (!checkEditablePlayer()) return
         closeEditablePlayer(true)
 
         viewModelScope.launch {
@@ -319,6 +320,7 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
+        if (!checkEditablePlayer()) return
         closeEditablePlayer(true)
         if (typesCardsSelectedForGame.contains(typeCards)) {
             typesCardsSelectedForGame.remove(typeCards)
@@ -329,7 +331,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onStartGame() {
         Timber.d("onStartGame")
-
+        if (!checkEditablePlayer()) return
         closeEditablePlayer(true)
         val playersForGame = findPlayersForGame()
 
@@ -358,10 +360,11 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onClickScreen() {
         Timber.d("onClickScreen")
-        if(isClickAvatar){
+        if (isClickAvatar) {
             isClickAvatar = false
             liveDataAvatarsScreenState.value = MainMenuState.AvatarsScreenState.HideAvatarsState
-        }else{
+        } else {
+            if (!checkEditablePlayer()) return
             closeEditablePlayer(true)
         }
     }
@@ -369,6 +372,7 @@ class MainMenuViewModelImpl @Inject constructor(
     override fun onBackPressed() {
         Timber.d("onBackPressed")
         if (lastEditablePlayer != null) {
+            if (!checkEditablePlayer()) return
             closeEditablePlayer(true)
         } else {
             liveDataScreenState.value = MainMenuState.ScreenState.CloseAppState
@@ -377,6 +381,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
     override fun onQueryShowInstruction() {
         Timber.d("onQueryInstruction")
+        if (!checkEditablePlayer()) return
         closeEditablePlayer(true)
         liveDataShowInstructionScreenState.value = MainMenuState.ShowInstructionsScreenState
     }
@@ -406,6 +411,7 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     private fun openEditablePlayer(positionPlayer: Int) {
+        if (!checkEditablePlayer()) return
         closeEditablePlayer(true)
 
         lastEditablePlayer = players[positionPlayer]?.apply {
@@ -422,26 +428,31 @@ class MainMenuViewModelImpl @Inject constructor(
             )
     }
 
-    private fun closeEditablePlayer(isSave: Boolean) {
+    private fun checkEditablePlayer(): Boolean {
         lastEditablePlayer?.let {
-            var isValidate = true
-            it.inEditingState = false
-            it.player.name = it.player.name.trim()
             if (it.player.name.isEmpty()) {
-                isValidate = false
                 sendError(StringEnum.MAIN_MENU_FRAGMENT_THE_NAME_FIELD_IS_EMPTY)
+                return false
             } else {
                 players.forEach { item ->
                     if (item != it && item?.player?.name.equals(it.player.name)) {
-                        isValidate = false
                         sendError(
                             StringEnum.MAIN_MENU_FRAGMENT_A_PLAYER_WITH_THE_SAME_NAME_ALREADY_EXISTS,
                             it.player.name
                         )
+                        return false
                     }
                 }
             }
-            if (isSave && isValidate) {
+        }
+        return true
+    }
+
+    private fun closeEditablePlayer(isSave: Boolean) {
+        lastEditablePlayer?.let {
+            it.inEditingState = false
+            it.player.name = it.player.name.trim()
+            if (isSave) {
                 viewModelScope.launch {
                     players[players.indexOf(it)]?.let { item ->
                         val avatar = item.player.avatar
@@ -472,6 +483,7 @@ class MainMenuViewModelImpl @Inject constructor(
 
         lastEditablePlayer = null
     }
+
 
     companion object {
         private val ADD_PLAYER_BUTTON = null

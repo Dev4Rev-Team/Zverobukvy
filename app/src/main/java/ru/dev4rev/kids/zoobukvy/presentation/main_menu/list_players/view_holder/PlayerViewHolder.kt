@@ -1,36 +1,20 @@
 package ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.view_holder
 
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.appcompat.widget.AppCompatImageView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import ru.dev4rev.kids.zoobukvy.R
+import ru.dev4rev.kids.zoobukvy.appComponent
 import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoader
-import ru.dev4rev.kids.zoobukvy.data.image_avatar_loader.ImageAvatarLoaderImpl
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.Decoration
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.Rank
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.ViewRating
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.ViewRatingProvider
-import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.ViewRatingProviderImpl
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentMainMenuItemPlayerModeViewBinding
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.PlayerInSettings
 import timber.log.Timber
-
-/*@AssistedFactory
-interface PlayerViewHolderFactory {
-    fun create(
-        @Assisted viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
-        @Assisted("itemPlayerClickListener") itemPlayerClickListener: (Int) -> Unit,
-        @Assisted("editMenuClickListener") editMenuClickListener: (Int) -> Unit,
-    ): PlayerViewHolder
-}
-
-class PlayerViewHolder @AssistedInject constructor(
-    @Assisted private val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
-    @Assisted("itemPlayerClickListener") private val itemPlayerClickListener: (Int) -> Unit,
-    @Assisted("editMenuClickListener") private val editMenuClickListener: (Int) -> Unit,
-    private val viewRatingProviderFactory: ViewRatingProviderFactory,
-)*/
 
 class PlayerViewHolder(
     private val viewBinding: FragmentMainMenuItemPlayerModeViewBinding,
@@ -39,20 +23,22 @@ class PlayerViewHolder(
 ) :
     BasePlayerViewHolder(viewBinding) {
 
-    private val imageAvatarLoader: ImageAvatarLoader = ImageAvatarLoaderImpl
+    private val imageAvatarLoader: ImageAvatarLoader = itemView.context.appComponent.imageAvatarLoader
 
     private lateinit var viewRatingProvider: ViewRatingProvider
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
-            viewRatingProvider = ViewRatingProviderImpl(it.player.rating)
+            viewRatingProvider = itemView.context.appComponent.getViewRatingProviderFactory().create(it.player.rating)
             initViewRank()
             initViewRating()
             viewBinding.run {
                 playerNameTextView.text = it.player.name
                 if (it.isSelectedForGame) {
+                    playerCardConstraintView.background = getDrawable(itemView.context, R.drawable.background_user_card)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_green_pastel))
                 } else {
+                    playerCardConstraintView.background = getDrawable(itemView.context, R.color.transparent)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_red_pastel))
                 }
                 playerCardView.setOnClickListener {

@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import ru.dev4rev.kids.zoobukvy.R
+import ru.dev4rev.kids.zoobukvy.domain.entity.card.NumberInGame
 import ru.dev4rev.kids.zoobukvy.utility.ui.dipToPixels
 import kotlin.properties.Delegates
 
@@ -121,5 +122,6 @@ class CustomWordView @JvmOverloads constructor(
         val word: String
         val positionsGuessedLetters: MutableList<Int>
         val soundName: String
+        val numberInGame: NumberInGame
     }
 }

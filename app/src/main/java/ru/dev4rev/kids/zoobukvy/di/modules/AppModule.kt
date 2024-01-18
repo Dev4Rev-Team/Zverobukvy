@@ -11,7 +11,8 @@ import dagger.Module
         AssetImageCashModule::class,
         ViewRatingProviderModule::class,
         CheckDataModule::class,
-        ThemeProviderModule::class
+        ThemeProviderModule::class,
+        ImageAvatarLoaderModule::class
     ]
 )
 interface AppModule
