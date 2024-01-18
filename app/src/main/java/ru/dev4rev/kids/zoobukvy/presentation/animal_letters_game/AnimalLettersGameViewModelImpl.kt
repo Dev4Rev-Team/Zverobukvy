@@ -11,7 +11,6 @@ import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.ResourcesProvider
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
-import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameStateName
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
@@ -199,18 +198,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             throw IllegalStateException(ERROR_NULL_ARRIVED_GAME_STATE)
         }
 
-        //TODO проверить этот блок!!! Подумать, как не отправлять состояние ChangingState.UpdateOpenLettersCards,
-        // если список открытых карточек пуст
-        if (newState.name == GameStateName.UPDATE_OPEN_LETTER_CARD) {
-            val updatedLettersCards = mutableListOf<Pair<Int, LetterCard>>()
-            newState.gameField.lettersField.forEachIndexed { index, letterCard ->
-                if (letterCard.isVisible)
-                    updatedLettersCards.add(index to letterCard)
-            }
+        //TODO проверить этот блок!!!
+        if (newState.name == GameStateName.UPDATE_LETTER_CARD) {
             return listOf(
-                ChangingState.UpdateOpenLettersCards(
-                    updatedLettersCards
-                )
+                ChangingState.UpdateLettersCards(newState.gameField.lettersField)
             )
         }
 

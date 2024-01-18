@@ -263,7 +263,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     override fun updateVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
         gameStateFlow.value?.let { currentGameState ->
             gameStateFlow.value = currentGameState.copy(
-                name = GameStateName.UPDATE_OPEN_LETTER_CARD,
+                name = GameStateName.UPDATE_LETTER_CARD,
                 gameField = GameField(
                     lettersField =
                     currentGameState.gameField.lettersField.also { lettersField ->
