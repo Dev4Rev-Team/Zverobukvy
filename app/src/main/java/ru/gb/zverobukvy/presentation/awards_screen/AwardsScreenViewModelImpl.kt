@@ -160,7 +160,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 awardIndex++
                 if (playerIndex == 0) {
                     mainAwardsLiveData.value = listOfAwardedPlayers[playerIndex].player
-                    delay(1900L)
+                    delay(2500L)
                 }
                 secondAwardsLiveData.value =
                     listOfAwardedPlayers[playerIndex].awardsList[awardIndex]

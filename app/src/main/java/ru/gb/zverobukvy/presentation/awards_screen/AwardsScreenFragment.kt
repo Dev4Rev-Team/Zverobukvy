@@ -2,29 +2,31 @@ package ru.gb.zverobukvy.presentation.awards_screen
 
 import android.animation.Animator
 import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
-import android.widget.Toast
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.addListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.ChangeBounds
-import androidx.transition.ChangeClipBounds
 import androidx.transition.ChangeTransform
 import androidx.transition.Fade
-import androidx.transition.Scene
+import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
+import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -40,6 +42,8 @@ import ru.gb.zverobukvy.domain.entity.card.TypeCards
 import ru.gb.zverobukvy.presentation.sound.SoundEffectPlayer
 import ru.gb.zverobukvy.presentation.sound.SoundEnum
 import ru.gb.zverobukvy.utility.ui.viewModelProviderFactoryOf
+import timber.log.Timber
+
 
 class AwardsScreenFragment : Fragment() {
 
@@ -160,33 +164,30 @@ class AwardsScreenFragment : Fragment() {
             TypeCards.VIOLET -> R.layout.violet_view_rating_layout
         }
 
-        viewRatingBinding.textView.text = "122"
+        val targetCardView = when (state.typeCards) {
+            TypeCards.ORANGE -> viewRatingBinding.orangeViewRatingCard
+            TypeCards.GREEN -> viewRatingBinding.greenViewRatingCard
+            TypeCards.BLUE -> viewRatingBinding.blueViewRatingCard
+            TypeCards.VIOLET -> viewRatingBinding.violetViewRatingCard
+        }
 
-        val constraintSetStart = ConstraintSet()
+        val targetTextView = when (state.typeCards) {
+            TypeCards.ORANGE -> viewRatingBinding.orangeViewRattingTextView
+            TypeCards.GREEN -> viewRatingBinding.greenViewRattingTextView
+            TypeCards.BLUE -> viewRatingBinding.blueViewRattingTextView
+            TypeCards.VIOLET -> viewRatingBinding.violetViewRattingTextView
+        }
+
+        /*val constraintSetStart = ConstraintSet()
         constraintSetStart.clone(requireContext(), R.layout.default_view_rating_layout)
-        val transitionStart = TransitionSet().addTransition(ChangeBounds()).addTransition(Fade())
+        val transitionStart = TransitionSet().apply {
+            addTransition(ChangeBounds())
+        }
         transitionStart.duration = 0
         TransitionManager.beginDelayedTransition(binding.viewRatingLayoutContainer, transitionStart)
-        constraintSetStart.applyTo(viewRatingBinding.viewRatingLayout)
+        constraintSetStart.applyTo(viewRatingBinding.viewRatingLayout)*/
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            withContext(Dispatchers.Default) {
-                delay(1000L)
-            }
-            withContext(Dispatchers.Main) {
-                val constraintSetEnd = ConstraintSet()
-                constraintSetEnd.clone(requireContext(), R.layout.orange_view_rating_layout)
-                val transitionEnd =
-                    TransitionSet().addTransition(ChangeBounds()).addTransition(Fade())
-                transitionEnd.interpolator = AnticipateInterpolator(1.0f)
-                transitionEnd.duration = 1200
-                TransitionManager.beginDelayedTransition(
-                    binding.viewRatingLayoutContainer,
-                    transitionEnd
-                )
-                constraintSetEnd.applyTo(viewRatingBinding.viewRatingLayout)
-            }
-        }
+        animateTransitionToRatingIncrease(state, target, targetTextView, targetCardView)
 
         /*val sceneLayout = when (state.typeCards) {
             TypeCards.ORANGE -> R.layout.orange_view_rating_layout
@@ -227,6 +228,122 @@ class AwardsScreenFragment : Fragment() {
                 })
             }
         }*/
+    }
+
+    private fun animateTransitionToRatingIncrease(
+        state: AwardsScreenState.Second.ViewRatingIncreaseState,
+        target: Int,
+        targetTextView: AppCompatTextView,
+        targetCardView: MaterialCardView,
+    ) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            withContext(Dispatchers.Default) {
+                delay(1000L)
+            }
+            withContext(Dispatchers.Main) {
+                val constraintSetRatingIncrease = ConstraintSet()
+                constraintSetRatingIncrease.clone(requireContext(), target)
+                val transitionRatingIncrease =
+                    TransitionSet()
+                        .addTransition(ChangeBounds())
+                        .addTransition(ChangeTransform())
+                transitionRatingIncrease.interpolator = AnticipateInterpolator(1.0f)
+                transitionRatingIncrease.duration = 2000
+                transitionRatingIncrease.addTransitionListener(
+                    onStart = {
+                        val reductionArray = (16..24).toList().toIntArray()
+
+                        ObjectAnimator.ofInt(*reductionArray)
+                            .addUpdateViewListener {
+                                targetTextView.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_SP,
+                                    (it.animatedValue as Int).toFloat()
+                                )
+                            }.apply { startDelay = 500L }.setDuration(1500L).start()
+
+                        val metrics = requireActivity().resources.displayMetrics
+
+                        val strokeWidthArray = (2..5).toList().toIntArray()
+                        ObjectAnimator.ofInt(*strokeWidthArray)
+                            .addUpdateViewListener {
+                                val value = TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP,
+                                    (it.animatedValue as Int).toFloat(),
+                                    metrics
+                                )
+                                targetCardView.strokeWidth = value.toInt()
+                            }.apply { startDelay = 1000L }.setDuration(1000L).start()
+                    },
+                    onEnd = {
+                        animateChangeStrokeColor(targetCardView, state.newViewRating.decoration.idColor)
+                       /* targetCardView.strokeColor =
+                            getColorId(state.newViewRating.decoration.idColor)*/
+                        animateTransitionToRatingDefault(targetTextView, targetCardView)
+                    }
+                )
+                TransitionManager.beginDelayedTransition(
+                    binding.viewRatingLayoutContainer,
+                    transitionRatingIncrease
+                )
+                constraintSetRatingIncrease.applyTo(viewRatingBinding.viewRatingLayout)
+            }
+        }
+    }
+
+    private fun animateTransitionToRatingDefault(
+        targetTextView: AppCompatTextView,
+        targetCardView: MaterialCardView,
+    ) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            withContext(Dispatchers.Default) {
+                delay(2500L)
+            }
+            withContext(Dispatchers.Main) {
+                val constraintSetRatingDefault = ConstraintSet()
+                constraintSetRatingDefault.clone(
+                    requireContext(),
+                    R.layout.default_view_rating_layout
+                )
+                val transitionRatingDefault =
+                    TransitionSet()
+                        .addTransition(ChangeBounds())
+                        .addTransition(ChangeTransform())
+                transitionRatingDefault.interpolator = AnticipateInterpolator(1.0f)
+                transitionRatingDefault.duration = 2000
+                transitionRatingDefault.addTransitionListener(
+                    onStart = {
+                        val reductionArray = (24 downTo 16).toList().toIntArray()
+
+                        ObjectAnimator.ofInt(*reductionArray)
+                            .addUpdateViewListener {
+                                targetTextView.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_SP,
+                                    (it.animatedValue as Int).toFloat()
+                                )
+                            }.apply { startDelay = 500L }.setDuration(1500L).start()
+
+                        val metrics = requireActivity().resources.displayMetrics
+
+                        val strokeWidthArray = (5 downTo 2).toList().toIntArray()
+                        ObjectAnimator.ofInt(*strokeWidthArray)
+                            .addUpdateViewListener {
+                                val value = TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP,
+                                    (it.animatedValue as Int).toFloat(),
+                                    metrics
+                                )
+                                targetCardView.strokeWidth = value.toInt()
+                            }.apply { startDelay = 1000L }.setDuration(1000L)
+                            .start()
+                    }
+                )
+                TransitionManager.beginDelayedTransition(
+                    binding.viewRatingLayoutContainer,
+                    transitionRatingDefault
+                )
+                constraintSetRatingDefault.applyTo(viewRatingBinding.viewRatingLayout)
+            }
+        }
     }
 
     /*private fun animatorsOfMountColorShift(): List<Animator> {
@@ -281,7 +398,104 @@ class AwardsScreenFragment : Fragment() {
     }*/
 
     private fun animateRangIncrease(state: AwardsScreenState.Second.RankIncreaseState) {
-        Toast.makeText(requireContext(), "animateRangIncrease", Toast.LENGTH_SHORT).show()
+
+        val reductionArray = (42 downTo 0).toList().toIntArray()
+        val increaseArray = (0..42).toList().toIntArray()
+
+        if (state.oldRank != Rank.DEFAULT) {
+            rankTextDisappearance(reductionArray, state, increaseArray)
+        } else {
+            binding.rankTextView.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                (0).toFloat()
+            )
+            rankTextAppearance(state, increaseArray)
+        }
+    }
+
+    private fun rankTextDisappearance(
+        reductionArray: IntArray,
+        state: AwardsScreenState.Second.RankIncreaseState,
+        increaseArray: IntArray,
+    ) {
+        ObjectAnimator.ofInt(*reductionArray)
+            .addUpdateViewListener {
+                binding.rankTextView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    (it.animatedValue as Int).toFloat()
+                )
+            }
+            .addEndListener {
+                rankTextAppearance(state, increaseArray)
+            }
+            .setDuration(1500L)
+            .start()
+    }
+
+    private fun animateChangeStrokeColor(targetCardView: MaterialCardView, colorRes: Int) {
+
+        val metrics = requireActivity().resources.displayMetrics
+        val defStrokeWidth = targetCardView.strokeWidth
+        Timber.i(defStrokeWidth.toString())
+
+        val strokeWidthArray = (5 downTo 0).toList().toIntArray()
+
+        AnimatorSet().playOneAfterAnother(
+            listOf(
+                ObjectAnimator.ofInt(*strokeWidthArray)
+                    .addUpdateViewListener {
+                        val value = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            (it.animatedValue as Int).toFloat(),
+                            metrics
+                        )
+                        targetCardView.strokeWidth = value.toInt()
+                    }
+                    .addEndListener { targetCardView.strokeColor = getColorId(colorRes) }
+                    .setDuration(300L),
+
+                ObjectAnimator.ofInt(*strokeWidthArray.reversedArray())
+                    .addUpdateViewListener {
+                        val value = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            (it.animatedValue as Int).toFloat(),
+                            metrics
+                        )
+                        targetCardView.strokeWidth = value.toInt()
+                    }
+                    .setDuration(300L)
+            )
+        ).start()
+    }
+
+    private fun rankTextAppearance(
+        state: AwardsScreenState.Second.RankIncreaseState,
+        increaseArray: IntArray,
+    ) {
+        /*val color = arrayOf(
+            ColorDrawable(state.oldRank.idBorderRankColor),
+            ColorDrawable(state.newRank.idBorderRankColor)
+        )
+        val colorTransition = TransitionDrawable(color)
+
+        binding.avatar.setBackgroundDrawable(colorTransition)
+        colorTransition.startTransition(2000)*/
+
+        binding.rankTextView.text = state.newRank.name
+        binding.rankTextView.setTextColor(state.newRank.idRankTextColor)
+        //binding.avatar.strokeColor = getColorId(state.newRank.idBorderRankColor)
+        binding.avatar.setStrokeColor(ColorStateList.valueOf(state.newRank.idBorderRankColor))
+
+        ObjectAnimator.ofInt(*increaseArray)
+            .addUpdateViewListener {
+                binding.rankTextView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    (it.animatedValue as Int).toFloat()
+                )
+            }
+            .apply { setStartDelay(1000L) }
+            .setDuration(1500L)
+            .start()
     }
 
     /*private fun animatorsOfDisappearanceRankInFlesh(): List<Animator> {
@@ -332,24 +546,26 @@ class AwardsScreenFragment : Fragment() {
         changePlayerStartScreenState()
         binding.playerNameTextView.text = state.playerName
         imageAvatarLoader.loadImageAvatar(state.playerAvatar, binding.playerAvatarImageView)
-        binding.avatar.strokeColor = state.rank.idBorderRankColor
+        binding.avatar.strokeColor = getColorId(state.rank.idBorderRankColor)
         if (state.rank != Rank.DEFAULT) {
             binding.rankTextView.text = state.rank.name
             binding.rankTextView.setTextColor(state.rank.idRankTextColor)
         }
 
         viewRatingBinding.orangeViewRatingCard.strokeColor =
-            state.orangeViewRating.decoration.idColor
+            getColorId(state.orangeViewRating.decoration.idColor)
         viewRatingBinding.orangeViewRattingTextView.text = "+${state.changeOrangeViewRating}"
 
-        viewRatingBinding.greenViewRatingCard.strokeColor = state.greenViewRating.decoration.idColor
+        viewRatingBinding.greenViewRatingCard.strokeColor =
+            getColorId(state.greenViewRating.decoration.idColor)
         viewRatingBinding.greenViewRattingTextView.text = "+${state.changeGreenViewRating}"
 
-        viewRatingBinding.blueViewRatingCard.strokeColor = state.blueViewRating.decoration.idColor
+        viewRatingBinding.blueViewRatingCard.strokeColor =
+            getColorId(state.blueViewRating.decoration.idColor)
         viewRatingBinding.blueViewRattingTextView.text = "+${state.changeBlueViewRating}"
 
         viewRatingBinding.violetViewRatingCard.strokeColor =
-            state.violetViewRating.decoration.idColor
+            getColorId(state.violetViewRating.decoration.idColor)
         viewRatingBinding.violetViewRattingTextView.text = "+${state.changeVioletViewRating}"
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -464,6 +680,37 @@ class AwardsScreenFragment : Fragment() {
 
         fun newInstance() = AwardsScreenFragment()
     }
+}
+
+private fun Transition.addTransitionListener(
+    onStart: ((Transition) -> Unit)? = null,
+    onEnd: ((Transition) -> Unit)? = null,
+    onCancel: ((Transition) -> Unit)? = null,
+    onPause: ((Transition) -> Unit)? = null,
+    onResume: ((Transition) -> Unit)? = null,
+) {
+    this.addListener(object : Transition.TransitionListener {
+        override fun onTransitionStart(transition: Transition) {
+            onStart?.invoke(transition)
+        }
+
+        override fun onTransitionEnd(transition: Transition) {
+            onEnd?.invoke(transition)
+        }
+
+        override fun onTransitionCancel(transition: Transition) {
+            onCancel?.invoke(transition)
+        }
+
+        override fun onTransitionPause(transition: Transition) {
+            onPause?.invoke(transition)
+        }
+
+        override fun onTransitionResume(transition: Transition) {
+            onResume?.invoke(transition)
+        }
+
+    })
 }
 
 private fun AnimatorSet.playOneAfterAnother(list: List<Animator>): AnimatorSet {
