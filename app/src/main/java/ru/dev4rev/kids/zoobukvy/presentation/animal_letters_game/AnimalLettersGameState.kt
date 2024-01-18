@@ -142,12 +142,11 @@ sealed interface AnimalLettersGameState {
             val wordCard: WordCard,
         ) : ChangingState
 
-        /** Состояние обновления открытых карточек-букв при смене режима их озвучки
-         * Подразумевает изменение цвета карточек-букв (содержиит список изменяемых карточек: позиция
-         * карточки + сама карточка-буква с измененными данными по цвету)
+        /** Состояние обновления карточек-букв при смене режима их озвучки
+         * Подразумевает изменение цвета карточек-букв (содержиит список всех карточек на поле)
          */
-        data class UpdateOpenLettersCards(
-            val updatedLettersCards: List <Pair<Int, LetterCard>>
+        data class UpdateLettersCards(
+            val updatedLettersCards: List <LetterCard>
         ): ChangingState
     }
 }

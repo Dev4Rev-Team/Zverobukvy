@@ -41,29 +41,50 @@ import kotlin.properties.Delegates
 /**
  * Возможные состояния игры GameState:
  * 1. загрузка необходимых для игры данных из репозитория: GameState == null
- * 2. начало игры, или начало раунда игры (новое отгадываемое слово), или в ходе игры, пока не
- * отгадана ни одна из букв в слове: GameState (lettersField - для всех карточек-букв
- * isVisible ==  false, gamingWordCard != null и список отгаданных букв в слове пуст
- * (positionsGuessedLetters.isEmpty == true), players - содержит в себе актуальный счет каждого
- * игрока, walkingPlayer != null, nextWalkingPlayer != null, isActive == true)
- * 3. ход игры, когда отгадана одна или несколько букв в слове, но полностью слово еще не отгадано:
- * GameState (lettersField - для отдельных карточек-букв isVisible == true, gamingWordCard != null и
- * список positionsGuessedLetters содержит позиции отгаданных букв, players - содержит в себе
- * актуальный счет каждого игрока, walkingPlayer != null, nextWalkingPlayer != null, isActive == true)
- * 4. отгадано слово (не последнее): GameState (lettersField - для отдельных карточек-букв
- * isVisible == true, gamingWordCard != null и список positionsGuessedLetters содержит позиции всех
- * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer и
- * nextWalkingPlayer соответствуют предшествующему состоянию, isActive = true)
- * 5. отгадано последнее слово (конец игры):GameState (lettersField - для отдельных карточек-букв
- * isVisible == true, gamingWordCard != null и список positionsGuessedLetters содержит позиции всех
- * букв этого слова, players - содержит в себе актуальный счет каждого игрока, walkingPlayer == null,
- * nextWalkingPlayer == null, isActive = false)
- * 6. конец игры по инициативе пользователя во время загрузки данных из репозитория (состояние 1):
- * GameState == null
- * 7.  конец игры по инициативе пользователя во время хода игры (состояния 2-4): GameState
- * (lettersField - listOf, gamingWordCard == null, players - соответствует предшествующему состоянию,
- * walkingPlayer == null, nextWalkingPlayer == null, isActive = false)
+ * 2. [GameStateName.START_GAME] начало игры: lettersField - для всех карточек-букв
+ * isVisible ==  false и и установлен актуальный цвет, gamingWordCard != null и список отгаданных
+ * букв в слове пуст (positionsGuessedLetters.isEmpty == true), players - содержит в себе актуальный
+ * счет каждого игрока 0, walkingPlayer != null, nextWalkingPlayer != null, isActive == true
+ * 3. [GameStateName.WRONG_LETTER_CARD] выбрана неверная карточка: lettersField - для выбранной
+ * карточки-буквы isVisible ==  true, для остальных - из прошлого состояния, gamingWordCard и
+ * список отгаданных букв в слове positionsGuessedLetters - из прошлого состояния, players -
+ * содержит в себе актуальный счет каждого игрока из прошлого состояния, walkingPlayer и
+ * nextWalkingPlayer - из прошлого состояния, isActive == true
+ * 4. [GameStateName.NEXT_WALKING_PLAYER_AFTER_WRONG_LETTER_CARD] переход хода к следующему игроку
+ * после выбранной неверной карточки: lettersField - для выбранной неверной карточки-буквы
+ * isVisible ==  false, для остальных - из прошлого состояния, gamingWordCard и список отгаданных
+ * букв в слове positionsGuessedLetters - из прошлого состояния, players - содержит в себе
+ * актуальный счет каждого игрока из прошлого состояния, walkingPlayer и nextWalkingPlayer
+ * изменяются на следующих по порядку, isActive == true
+ * 5.[GameStateName.NOT_LAST_CORRECT_LETTER_CARD] выбрана верная карточка не последняя в слове:
+ * lettersField - для выбранной карточки-буквы isVisible ==  true, для остальных - из прошлого
+ * состояния, в gamingWordCard изменен список отгаданных букв в слове positionsGuessedLetters,
+ * players - содержит в себе актуальный счет каждого игрока из прошлого состояния, walkingPlayer и
+ * nextWalkingPlayer - из прошлого состояния, isActive == true
+ * 6. [GameStateName.GUESSED_NOT_LAST_WORD_CARD] выбрана верная карточка последняя в слове, при этом
+ * слово не последнее: lettersField - для выбранной карточки-буквы isVisible ==  true, для
+ * остальных - из прошлого состояния, в gamingWordCard изменен список отгаданных букв в слове
+ * positionsGuessedLetters, players - содержит в себе актуальный счет каждого игрока: для ходящего -
+ * обвновлен (+1), для остальных - из прошлого состояния, walkingPlayer и nextWalkingPlayer - из
+ * прошлого состояния, isActive == true
+ * 7. [GameStateName.NEXT_WORD_CARD_AND_NEXT_WALKING_PLAYER] новое слово и переход хода к следующему
+ * игроку: lettersField - для всех карточек-букв isVisible ==  false и установлен актуальный цвет,
+ * в gamingWordCard - новое слово и список отгаданных букв в слове пуст, players - содержит в себе
+ * актуальный счет каждого игрока из прошлого состояния, walkingPlayer и nextWalkingPlayer изменяются
+ * на следующих по порядку, isActive == true
+ * 8. [GameStateName.END_GAME] отгадана последняя буква в последнем слове, конец игры:
+ * lettersField - для выбранной карточки-буквы isVisible ==  true, для остальных - из прошлого
+ * состояния, в gamingWordCard  изменен список отгаданных букв в слове positionsGuessedLetters,
+ * players - содержит в себе актуальный счет каждого игрока: для ходящего - обвновлен (+1), для
+ * остальных - из прошлого состояния, walkingPlayer == null и nextWalkingPlayer == null,
+ * isActive == false
+ * 9. [GameStateName.END_GAME_BY_USER] игра завершена пользователем (не доиграл): все поля из
+ * прошлого состояния, кроме isActive == false
+ * 10. [GameStateName.UPDATE_LETTER_CARD] обновление цвета карточек из-за смены озвучки букв/звуков:
+ * все поля - из прошлого состояния, кроме lettersField - для всех карточек-букв установлен актуальный
+ * цвет, изменен voiceActingStatus.
  */
+
 class AnimalLettersGameInteractorImpl @Inject constructor(
     private val animalLettersGameRepository: AnimalLettersGameRepository,
     private val changeRatingRepository: ChangeRatingRepository,
@@ -161,7 +182,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
             // gameStateFlow обновляет value, т.к. отличается gameField, walkingPlayer и nextWalkingPlayer
             val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
             gameStateFlow.value = currentGameState.copy(
-                name = GameStateName.NEXT_WORD_CARD,
+                name = GameStateName.NEXT_WORD_CARD_AND_NEXT_WALKING_PLAYER,
                 gameField = GameField(
                     lettersField = mutableListOf<LetterCard>().apply {
                         addAll(currentGameState.gameField.lettersField)
@@ -195,7 +216,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         gameStateFlow.value?.let { currentGameState ->
             val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
             gameStateFlow.value = currentGameState.copy(
-               name = GameStateName.NEXT_WALKING_PLAYER,
+               name = GameStateName.NEXT_WALKING_PLAYER_AFTER_WRONG_LETTER_CARD,
                 gameField = GameField(
                     lettersField = flipLetterCard(
                         currentGameState.gameField.lettersField,
@@ -262,8 +283,9 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
 
     override fun updateVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
         gameStateFlow.value?.let { currentGameState ->
+            // gameStateFlow обновляет value, т.к. отличается voiceActingStatus
             gameStateFlow.value = currentGameState.copy(
-                name = GameStateName.UPDATE_OPEN_LETTER_CARD,
+                name = GameStateName.UPDATE_LETTER_CARD,
                 gameField = GameField(
                     lettersField =
                     currentGameState.gameField.lettersField.also { lettersField ->

@@ -155,9 +155,9 @@ class AnimalLettersGameFragment :
                     game.changingStateNextPlayer(it)
                 }
 
-                is AnimalLettersGameState.ChangingState.UpdateOpenLettersCards -> {
-                    Timber.d("ChangingState.UpdateOpenLettersCards")
-                    game.changingStateUpdateOpenLettersCards(it)
+                is AnimalLettersGameState.ChangingState.UpdateLettersCards -> {
+                    Timber.d("ChangingState.UpdateLettersCards")
+                    game.changingStateUpdateLettersCards(it)
                 }
             }
         }
@@ -536,13 +536,13 @@ class AnimalLettersGameFragment :
             }
         }
 
-        fun changingStateUpdateOpenLettersCards(it: AnimalLettersGameState.ChangingState.UpdateOpenLettersCards) {
-            it.updatedLettersCards.forEach {
-                binding.table.setColorCard(it.second)
-                sound.updateLettersCards(it.first, it.second)
+        fun changingStateUpdateLettersCards(it: AnimalLettersGameState.ChangingState.UpdateLettersCards) {
+            //TODO Изменен UpdateOpenLettersCards
+            it.updatedLettersCards.forEachIndexed { index, letterCard ->
+                binding.table.setColorCard(letterCard)
+                sound.updateLettersCards(index, letterCard)
             }
         }
-
     }
 
     private fun setNumberInGameCards(wordCard: WordCard) {
