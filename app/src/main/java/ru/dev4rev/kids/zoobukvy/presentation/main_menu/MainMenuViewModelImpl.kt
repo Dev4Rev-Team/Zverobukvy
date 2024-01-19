@@ -10,13 +10,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.ResourcesProvider
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
+import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Avatar
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
-import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.repository.main_menu.MainMenuRepository
-import ru.dev4rev.kids.zoobukvy.presentation.customview.AssetsImageCash
-import ru.dev4rev.kids.zoobukvy.presentation.sound.SoundEffectPlayer
 import ru.dev4rev.kids.zoobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
 import javax.inject.Inject
@@ -232,7 +230,7 @@ class MainMenuViewModelImpl @Inject constructor(
             avatarList.removeLast()
 
             val exceptionHandler =
-                CoroutineExceptionHandler { _, throwable ->
+                CoroutineExceptionHandler { _, _ ->
                     liveDataScreenState.value =
                         MainMenuState.ScreenState.ErrorState(
                             resourcesProvider.getString(StringEnum.MAIN_MENU_FRAGMENT_NO_SERVER_CONNECTION)

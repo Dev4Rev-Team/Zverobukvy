@@ -35,7 +35,6 @@ import ru.dev4rev.kids.zoobukvy.utility.ui.WrapContentLinearLayoutManager
 import ru.dev4rev.kids.zoobukvy.utility.ui.viewModelProviderFactoryOf
 import timber.log.Timber
 
-
 class MainMenuFragment :
     ViewBindingFragment<FragmentMainMenuBinding>(FragmentMainMenuBinding::inflate) {
 
