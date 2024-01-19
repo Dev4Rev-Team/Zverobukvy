@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
 }
 
+
 android {
     namespace 'ru.dev4rev.kids.zoobukvy'
     compileSdk 34
@@ -24,6 +25,7 @@ android {
             }
         }
     }
+
     buildFeatures {
         viewBinding true
         buildConfig = true
@@ -38,6 +40,18 @@ android {
             buildConfigField "boolean", "DEBUG_ON", 'true'
         }
     }
+
+    flavorDimensions  = ["store"]
+
+    productFlavors {
+        google {
+            dimension "store"
+        }
+        rustore {
+            dimension "store"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -78,4 +92,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    googleImplementation 'com.google.android.play:review:2.0.1'
+    googleImplementation 'com.google.android.play:review-ktx:2.0.1'
+    implementation 'ru.rustore.sdk:review:1.0.1'
 }

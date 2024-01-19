@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.dev4rev.kids.zoobukvy.animalLettersGameSubcomponentContainer
 import ru.dev4rev.kids.zoobukvy.databinding.DialogFragmentGameIsOverBinding
+import ru.dev4rev.kids.zoobukvy.presentation.review.ReviewImpl
 import ru.dev4rev.kids.zoobukvy.utility.parcelable
 import ru.dev4rev.kids.zoobukvy.utility.ui.ViewBindingFragment
 import ru.dev4rev.kids.zoobukvy.utility.ui.viewModelProviderFactoryOf
@@ -17,8 +18,6 @@ import ru.dev4rev.kids.zoobukvy.utility.ui.viewModelProviderFactoryOf
 class GameIsOverDialogFragment : ViewBindingFragment<DialogFragmentGameIsOverBinding>(
     DialogFragmentGameIsOverBinding::inflate
 ) {
-
-
     val viewModel: GameIsOverDialogViewModel by lazy {
         ViewModelProvider(this,
             viewModelProviderFactoryOf {
@@ -27,6 +26,8 @@ class GameIsOverDialogFragment : ViewBindingFragment<DialogFragmentGameIsOverBin
                     .gameIsOverDialogViewModel
             })[GameIsOverDialogViewModelImpl::class.java]
     }
+
+    private val review by lazy { ReviewImpl(viewModel.getIsUserFeedback()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +53,9 @@ class GameIsOverDialogFragment : ViewBindingFragment<DialogFragmentGameIsOverBin
         }
 
         binding.okButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            review.launchReviewFlow(requireActivity()) {
+                parentFragmentManager.popBackStack()
+            }
             //todo requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
             //parentFragmentManager.popBackStack()
         }
@@ -80,6 +83,8 @@ class GameIsOverDialogFragment : ViewBindingFragment<DialogFragmentGameIsOverBin
             binding.winnerAvatarCustomImageRatingView.show(it.list)
 //            binding.winnerAvatarCustomImageRatingView.show(it.list.sortedByDescending { srt -> srt.scoreInCurrentGame })
         }
+
+        review.requestReviewFlow(requireActivity())
     }
 
     companion object {
