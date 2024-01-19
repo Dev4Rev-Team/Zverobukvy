@@ -352,6 +352,7 @@ class AnimalLettersGameFragment :
                 startGameState.lettersCards.size,
                 layoutParams as ConstraintLayout.LayoutParams
             )
+            setColorCard(startGameState.lettersCards)
         }
     }
 
@@ -400,10 +401,6 @@ class AnimalLettersGameFragment :
             this.voiceActingStatus = voiceActingStatus
         }
 
-        fun updateLettersCards(pos: Int, letterCard: CustomCardTable.LetterCardUI) {
-            letterCardList[pos] = letterCard
-        }
-
         fun initLettersCards(lettersCards: List<CustomCardTable.LetterCardUI>) {
             letterCardList.clear()
             letterCardList.addAll(lettersCards)
@@ -411,21 +408,14 @@ class AnimalLettersGameFragment :
 
         fun playLetter(pos: Int) {
             val letterCard = letterCardList[pos]
-            playLetter(letterCard, false)
+            playLetter(letterCard)
         }
 
-        fun playLetter(letterCard: CustomCardTable.LetterCardUI, isNew: Boolean = true) {
-            if (isNew) {
-                val pos = letterCardList.indexOfFirst { it.letter == letterCard.letter }
-                letterCardList[pos] = letterCard
-            }
-
-            when (voiceActingStatus) {
-                VoiceActingStatus.SOUND -> soundEffectPlayer.play(letterCard.soundName)
-                VoiceActingStatus.LETTER -> soundEffectPlayer.play(letterCard.letterName)
-                VoiceActingStatus.OFF -> return
-            }
+        fun playLetter(letterCard: CustomCardTable.LetterCardUI) {
+            if (voiceActingStatus == VoiceActingStatus.OFF) return
+            soundEffectPlayer.play(letterCard.soundName)
         }
+
 
         fun setEnable(it: Boolean) {
             soundEffectPlayer.setEnable(it)
@@ -537,11 +527,8 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateUpdateLettersCards(it: AnimalLettersGameState.ChangingState.UpdateLettersCards) {
-            //TODO Изменен UpdateOpenLettersCards
-            it.updatedLettersCards.forEachIndexed { index, letterCard ->
-                binding.table.setColorCard(letterCard)
-                sound.updateLettersCards(index, letterCard)
-            }
+            binding.table.setColorCard(it.updatedLettersCards)
+            sound.initLettersCards(it.updatedLettersCards)
         }
     }
 
@@ -555,11 +542,11 @@ class AnimalLettersGameFragment :
     }
 
     private fun soundFlipLetter(
-        effectSoundEnum: SoundEnum, correctLetterCard: LetterCard,
+        effectSoundEnum: SoundEnum, letterCard: LetterCard,
     ) {
         sound.playEffect(SoundEnum.CARD_IS_FLIP)
         delayAndRun(DELAY_SOUND_EFFECT) { sound.playEffect(effectSoundEnum) }
-        delayAndRun(DELAY_SOUND_LETTER) { sound.playLetter(correctLetterCard) }
+        delayAndRun(DELAY_SOUND_LETTER) { sound.playLetter(letterCard) }
     }
 
 
