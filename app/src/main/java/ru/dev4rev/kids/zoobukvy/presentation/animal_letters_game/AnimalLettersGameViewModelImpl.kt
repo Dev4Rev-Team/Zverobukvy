@@ -265,7 +265,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             // TODO проверить!!! Получаем из нового состояния загадываемое слово, ходящего игрока и список карточек-букв
             val nextWord = newState.gameField.gamingWordCard
             val nextPlayer = newState.walkingPlayer
-            val lettersField = newState.gameField.lettersField
+            val updateLettersField = newState.gameField.lettersField
 
             if (nextPlayer != null) {
                 stateList.addFirst(
@@ -279,10 +279,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
 
                 stateList.addFirst(
                     ChangingState.NextGuessWord(
+                        updateLettersField,
                         newWordCard
                     )
                 )
-                stateList.addFirst(ChangingState.UpdateLettersCards(lettersField))
                 initComputerStroke(newState, COMPUTER_DELAY_AFTER_CHANGE_WORD)
             } else {
                 throw IllegalStateException(ERROR_NEXT_GUESSED_WORD_NOT_FOUND)
