@@ -474,6 +474,8 @@ class AnimalLettersGameFragment :
             setWord(it.wordCard)
             binding.table.closeCardAll()
             setNumberInGameCards(it.wordCard)
+            delayAndRun(Conf.DURATION_FLIP) { binding.table.setColorCard(it.updatedLettersCards) }
+            sound.initLettersCards(it.updatedLettersCards)
         }
 
         fun changingStateNextPlayer(it: AnimalLettersGameState.ChangingState.NextPlayer) {
