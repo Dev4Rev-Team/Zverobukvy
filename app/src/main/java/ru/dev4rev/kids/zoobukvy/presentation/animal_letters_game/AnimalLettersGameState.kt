@@ -136,10 +136,12 @@ sealed interface AnimalLettersGameState {
          * 2. Очищение подсветки букв в загаданном слове
          * 3. Смену слова
          *
+         * @param updatedLettersCards Список всех карточек с буквами (с актуальным цветом букв/звуков)
          * @param wordCard Новое загаданное слово
          */
         data class NextGuessWord(
-            val wordCard: WordCard,
+            val updatedLettersCards: List<LetterCard>,
+            val wordCard: WordCard
         ) : ChangingState
 
         /** Состояние обновления карточек-букв при смене режима их озвучки
