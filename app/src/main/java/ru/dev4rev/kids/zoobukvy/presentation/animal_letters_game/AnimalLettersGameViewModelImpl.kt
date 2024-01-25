@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.ResourcesProvider
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
+import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameStateName
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
@@ -22,6 +25,7 @@ import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGa
 import ru.dev4rev.kids.zoobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
 import java.util.LinkedList
+import java.util.Queue
 import javax.inject.Inject
 
 
@@ -83,12 +87,44 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     private val voiceActingStatusLiveData =
         MutableLiveData(soundStatusRepository.getVoiceActingStatus())
 
+    private val statesQueue: Queue<GameState> = LinkedList()
+
     /** Инициализация viewModel :
      */
     init {
         viewModelScope.launch {
             voiceActingStatusLiveData.value?.let { animalLettersGameInteractor.startGame(it) }
-            animalLettersGameInteractor.subscribeToGameState().collect(::collectGameState)
+            animalLettersGameInteractor.subscribeToGameState().collect(::collectState)
+        }
+    }
+
+    private suspend fun calculateDelayBeforeState(newState: GameState) {
+        when (newState.name) {
+            GameStateName.END_GAME, GameStateName.END_GAME_BY_USER -> {
+                delay(1000L)
+            }
+
+            else -> {}
+        }
+    }
+
+    private suspend fun collectState(newState: GameState?) {
+        statesQueue.add(newState)
+        Timber.i("collectStateName ${newState?.name?.name}")
+
+        if (newState?.name == GameStateName.START_GAME) {
+            viewModelScope.launch {
+                withContext(Dispatchers.Default) {
+                    while (true) {
+                        if (statesQueue.isNotEmpty()) {
+                            val newState = statesQueue.poll()
+                            calculateDelayBeforeState(newState!!)
+                            collectGameState(newState)
+                        }
+                        delay(100L)
+                    }
+                }
+            }
         }
     }
 
@@ -98,6 +134,8 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      */
     private suspend fun collectGameState(newState: GameState?) {
         Timber.d("collectGameState ${newState?.name?.name}")
+
+
         mGameState.also { oldState ->
 
             val viewState = convert(oldState, newState)
@@ -107,16 +145,19 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             }
 
             viewState.forEachIndexed { index, state ->
-                updateViewModels(state)
+                withContext(Dispatchers.Main) {
+                    updateViewModels(state)
 
-                initAutoNextPlayerClick(state)
-                initAutoNextWordClick(state)
+                    initAutoNextPlayerClick(state)
+                    initAutoNextWordClick(state)
 
-                calculateDelayBetweenStates(index, viewState)
+                    //calculateDelayBetweenStates(index, viewState)
+                }
             }
         }
 
         updateMGameState(newState)
+
     }
 
     private suspend fun initAutoNextWordClick(state: AnimalLettersGameState) {
@@ -162,7 +203,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         mGameState = newState?.copy(
             gameField = newState.gameField.copy(
                 gamingWordCard = newState.gameField.gamingWordCard?.copy(
-                    positionsGuessedLetters = ArrayList(newState.gameField.gamingWordCard!!.positionsGuessedLetters)
+                    positionsGuessedLetters = ArrayList(newState.gameField.gamingWordCard.positionsGuessedLetters)
                 )
             )
         )
@@ -198,181 +239,204 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             throw IllegalStateException(ERROR_NULL_ARRIVED_GAME_STATE)
         }
 
-        //TODO проверить этот блок!!!
-        if (newState.name == GameStateName.UPDATE_LETTER_CARD) {
-            return listOf(
-                ChangingState.UpdateLettersCards(newState.gameField.lettersField)
-            )
-        }
+        when (newState.name) {
+            GameStateName.START_GAME -> {
+                return listOf(
+                    EntireState.StartGameState(
+                        newState.gameField.lettersField,
+                        newState.gameField.gamingWordCard!!,
+                        newState.players,
+                        newState.walkingPlayer!!,
+                        isGuessedWord,
+                        isWaitingNextPlayer,
+                        provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_DEFAULT_SCREEN_DIMMING)
+                    )
+                ).also {
+                    if (newState.players.any { it.player is Player.ComputerPlayer }) {
+                        viewModelScope.launch {
+                            animalLettersGameInteractor.subscribeToComputer()
+                                .collect(::onComputerClickLetterCard)
+                        }
 
-        /** Проверка на Null oldState :
-         * Срабатывает при первой отправке notNull данных из Interactor
-         */
-        if (oldState == null) {
-            return listOf(
-                EntireState.StartGameState(
-                    newState.gameField.lettersField,
-                    newState.gameField.gamingWordCard!!,
-                    newState.players,
-                    newState.walkingPlayer!!,
-                    isGuessedWord,
-                    isWaitingNextPlayer,
-                    provider.getString(StringEnum.GAME_VIEW_MODEL_TEXT_DEFAULT_SCREEN_DIMMING)
-                )
-            ).also {
-                if (newState.players.any { it.player is Player.ComputerPlayer }) {
-                    viewModelScope.launch {
-                        animalLettersGameInteractor.subscribeToComputer()
-                            .collect(::onComputerClickLetterCard)
                     }
 
+                    initComputerStroke(newState)
                 }
-
-                initComputerStroke(newState)
             }
-        }
 
-        /** Список для хранения нескольких стэйтов
-         * Подразумевается возможность совмещения [EntireState.EndGameState] и одного из :
-         * [ChangingState.CorrectLetter], [ChangingState.InvalidLetter], [ChangingState.GuessedWord]
-         * или [ChangingState.NextGuessWord]
-         *
-         */
-        val stateList = LinkedList<AnimalLettersGameState>()
+            GameStateName.WRONG_LETTER_CARD -> {
+                isCardClick = false
+                isWaitingNextPlayer = true
 
-        /** Ловим событие окончания игры [EntireState.EndGameState]
-         */
-        if (!newState.isActive) {
+                val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
 
-            stateList.addFirst(
-                EntireState.EndGameState(
-                    isFastEndGame(),
-                    newState.players,
-                    gameStopwatch.getGameRunningTime()
+                val screenDimmingText =
+                    textOfInvalidLetter(newState)
+
+                return listOf(
+                    ChangingState.InvalidLetter(lastClickCard, screenDimmingText)
                 )
-            )
-        }
+            }
 
-        // Получаем карточки с загаданными словами из двух состояний
-        val newWordCard = newState.gameField.gamingWordCard!!
-        val oldWordCard = oldState.gameField.gamingWordCard!!
+            /*GameStateName.NEXT_WALKING_PLAYER -> {
+                val nextWalkingPlayer = newState.walkingPlayer
+                val invalidLetterCard = newState.gameField.lettersField[mLastClickCardPosition]
 
-        /** Проверяем равенство загадываемых слов :
-         * Ловим событие [ChangingState.NextGuessWord]
-         */
-        if (newWordCard.word != oldWordCard.word) {
-
-            // TODO проверить!!! Получаем из нового состояния загадываемое слово, ходящего игрока и список карточек-букв
-            val nextWord = newState.gameField.gamingWordCard
-            val nextPlayer = newState.walkingPlayer
-            val updateLettersField = newState.gameField.lettersField
-
-            if (nextPlayer != null) {
-                stateList.addFirst(
+                return listOf(
+                    ChangingState.CloseInvalidLetter(
+                        invalidLetterCard
+                    ),
                     ChangingState.NextPlayer(
-                        nextPlayer
+                        nextWalkingPlayer!!
+                    )
+                ).also {
+                    initComputerStroke(newState)
+                }
+            }*/
+
+            GameStateName.NOT_LAST_CORRECT_LETTER_CARD -> {
+                isCardClick = false
+
+                val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
+                val positionGuessedLetters = positionGuessedLetters(
+                    oldState!!.gameField.gamingWordCard!!.positionsGuessedLetters,
+                    newState.gameField.gamingWordCard!!.positionsGuessedLetters
+                )!!
+
+                return listOf(
+                    ChangingState.CorrectLetter(
+                        lastClickCard,
+                        positionGuessedLetters
+                    )
+                ).apply {
+                    initRepeatComputerStroke(newState)
+                }
+            }
+
+            /*GameStateName.GUESSED_NOT_LAST_WORD_CARD -> {
+                isCardClick = false
+
+                if (newState.isActive) {
+                    isGuessedWord = true
+                }
+                val screenDimmingText = textOfGuessedWord(newState)
+                val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
+                val positionGuessedLetters = positionGuessedLetters(
+                    oldState!!.gameField.gamingWordCard!!.positionsGuessedLetters,
+                    newState.gameField.gamingWordCard!!.positionsGuessedLetters
+                )!!
+
+                return listOf(
+                    ChangingState.GuessedWord(
+                        lastClickCard,
+                        positionGuessedLetters,
+                        newState.players,
+                        newState.isActive,
+                        screenDimmingText
                     )
                 )
-            }
-            if (nextWord != null) {
+            }*/
+
+            /*GameStateName.NEXT_WORD_CARD -> {
                 isGuessedWord = false
 
-                stateList.addFirst(
+                return listOf(
                     ChangingState.NextGuessWord(
-                        updateLettersField,
-                        newWordCard
+                        newState.gameField.gamingWordCard!!
+                    ),
+                    ChangingState.NextPlayer(
+                        newState.walkingPlayer!!
+                    )
+                ).apply {
+                    initComputerStroke(newState, COMPUTER_DELAY_AFTER_CHANGE_WORD)
+                }
+            }*/
+
+            GameStateName.END_GAME -> {
+                return listOf(
+                    EntireState.EndGameState(
+                        false/*isFastEndGame()*/,
+                        newState.players,
+                        gameStopwatch.getGameRunningTime()
                     )
                 )
-                initComputerStroke(newState, COMPUTER_DELAY_AFTER_CHANGE_WORD)
-            } else {
-                throw IllegalStateException(ERROR_NEXT_GUESSED_WORD_NOT_FOUND)
             }
-        }
 
-        if (isClickNextWalkingPlayer) {
-            isClickNextWalkingPlayer = false
-
-            val nextWalkingPlayer = newState.walkingPlayer
-            val invalidLetterCard = newState.gameField.lettersField[mLastClickCardPosition]
-
-            changingLiveData.value = ChangingState.CloseInvalidLetter(
-                invalidLetterCard
-            )
-
-            if (nextWalkingPlayer != null) {
+            GameStateName.END_GAME_BY_USER -> {
                 return listOf(
+                    EntireState.EndGameState(
+                        true/*isFastEndGame()*/,
+                        newState.players,
+                        gameStopwatch.getGameRunningTime()
+                    )
+                )
+            }
+
+            GameStateName.NEXT_WALKING_PLAYER_AFTER_WRONG_LETTER_CARD -> {
+                val nextWalkingPlayer = newState.walkingPlayer
+                val invalidLetterCard = newState.gameField.lettersField[mLastClickCardPosition]
+
+                return listOf(
+                    ChangingState.CloseInvalidLetter(
+                        invalidLetterCard
+                    ),
                     ChangingState.NextPlayer(
-                        nextWalkingPlayer
+                        nextWalkingPlayer!!
                     )
                 ).also {
                     initComputerStroke(newState)
                 }
             }
-        }
 
-        if (isCardClick) {
-
-            isCardClick = false
-
-            // Получем последнюю нажатую карточку
-            val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
-
-            // Вычисляем позицию последней подсвеченой буквы в загаданном слове
-            val positionGuessedLetters = positionGuessedLetters(
-                oldWordCard.positionsGuessedLetters,
-                newWordCard.positionsGuessedLetters
-            )
-
-
-            if (lastClickCard.isVisible && positionGuessedLetters != null) {
-
-                if (newWordCard.word.length == newWordCard.positionsGuessedLetters.size) {
-                    /** Событие отгаданного слова */
-                    isCardClick = false
-
-                    if (newState.isActive) {
-                        isGuessedWord = true
-                    }
-                    val screenDimmingText = textOfGuessedWord(newState)
-
-                    stateList.addFirst(
-                        ChangingState.GuessedWord(
-                            lastClickCard,
-                            positionGuessedLetters,
-                            newState.players,
-                            newState.isActive,
-                            screenDimmingText
-                        )
-                    )
-                } else {
-
-                    /** Событие корректно отгаданной буквы */
-                    isCardClick = false
-                    initRepeatComputerStroke(newState)
-
-                    stateList.addFirst(
-                        ChangingState.CorrectLetter(
-                            lastClickCard,
-                            positionGuessedLetters
-                        )
-                    )
-                }
-
-            } else {
-                /** Событие неверно отгаданной буквы */
-
+            GameStateName.GUESSED_WORD_CARD -> {
                 isCardClick = false
-                isWaitingNextPlayer = true
 
-                val screenDimmingText =
-                    textOfInvalidLetter(newState)
+                if (newState.isActive) {
+                    isGuessedWord = true
+                }
+                val screenDimmingText = textOfGuessedWord(newState)
+                val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
+                val positionGuessedLetters = positionGuessedLetters(
+                    oldState!!.gameField.gamingWordCard!!.positionsGuessedLetters,
+                    newState.gameField.gamingWordCard!!.positionsGuessedLetters
+                )!!
 
-                stateList.addFirst(ChangingState.InvalidLetter(lastClickCard, screenDimmingText))
+                return listOf(
+                    ChangingState.GuessedWord(
+                        lastClickCard,
+                        positionGuessedLetters,
+                        newState.players,
+                        newState.isActive,
+                        screenDimmingText
+                    )
+                )
             }
 
-        }
+            GameStateName.NEXT_WORD_CARD_AND_NEXT_WALKING_PLAYER -> {
+                isGuessedWord = false
 
-        return stateList
+                return listOf(
+                    ChangingState.NextGuessWord(
+                        newState.gameField.lettersField,
+                        newState.gameField.gamingWordCard!!
+                    ),
+                    ChangingState.NextPlayer(
+                        newState.walkingPlayer!!
+                    )
+                ).apply {
+                    initComputerStroke(newState, COMPUTER_DELAY_AFTER_CHANGE_WORD)
+                }
+            }
+
+            GameStateName.UPDATE_LETTER_CARD -> {
+                val updatedLettersCards = newState.gameField.lettersField
+                return listOf(
+                    ChangingState.UpdateLettersCards(
+                        updatedLettersCards
+                    )
+                )
+            }
+        }
     }
 
     private fun isFastEndGame(): Boolean {
@@ -425,7 +489,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             if (guessesWord != null && walkingPlayer != null) {
                 entireLiveData.value = EntireState.StartGameState(
                     state.gameField.lettersField,
-                    state.gameField.gamingWordCard!!,
+                    state.gameField.gamingWordCard,
                     state.players,
                     state.walkingPlayer!!,
                     isGuessedWord,
