@@ -13,7 +13,6 @@ import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.ResourcesProvider
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
-import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameStateName
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
@@ -117,9 +116,9 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 withContext(Dispatchers.Default) {
                     while (true) {
                         if (statesQueue.isNotEmpty()) {
-                            val newState = statesQueue.poll()
-                            calculateDelayBeforeState(newState!!)
-                            collectGameState(newState)
+                            val state = statesQueue.poll()
+                            calculateDelayBeforeState(state!!)
+                            collectGameState(state)
                         }
                         delay(100L)
                     }
@@ -144,14 +143,12 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 Timber.i(it.javaClass.simpleName)
             }
 
-            viewState.forEachIndexed { index, state ->
+            viewState.forEachIndexed { _, state ->
                 withContext(Dispatchers.Main) {
                     updateViewModels(state)
 
                     initAutoNextPlayerClick(state)
                     initAutoNextWordClick(state)
-
-                    //calculateDelayBetweenStates(index, viewState)
                 }
             }
         }
@@ -175,24 +172,6 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     onClickNextWalkingPlayer()
             }
         }
-    }
-
-    /** Метод расчитывает задержку между отправками состояний во View
-     *
-     * @param viewState Список отправляемых состояний
-     * @param index Индекс элемента первого в очереди на отправку
-     */
-    private suspend fun calculateDelayBetweenStates(
-        index: Int,
-        viewState: List<AnimalLettersGameState>,
-    ) {
-        if (index == viewState.lastIndex) {
-            return
-        }
-        if (viewState[index] is ChangingState.NextGuessWord) {
-            return
-        }
-        delay(STATE_DELAY)
     }
 
     /** Метод обновляет значение сохраняемого во viewModel GameState - [mGameState]
@@ -232,9 +211,6 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         newState: GameState?,
     ): List<AnimalLettersGameState> {
 
-        /** Проверка на Null newState :
-         * Срабатывает сразу после подписки на данные в Interactor
-         */
         if (newState == null) {
             throw IllegalStateException(ERROR_NULL_ARRIVED_GAME_STATE)
         }
@@ -278,22 +254,6 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 )
             }
 
-            /*GameStateName.NEXT_WALKING_PLAYER -> {
-                val nextWalkingPlayer = newState.walkingPlayer
-                val invalidLetterCard = newState.gameField.lettersField[mLastClickCardPosition]
-
-                return listOf(
-                    ChangingState.CloseInvalidLetter(
-                        invalidLetterCard
-                    ),
-                    ChangingState.NextPlayer(
-                        nextWalkingPlayer!!
-                    )
-                ).also {
-                    initComputerStroke(newState)
-                }
-            }*/
-
             GameStateName.NOT_LAST_CORRECT_LETTER_CARD -> {
                 isCardClick = false
 
@@ -312,45 +272,6 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     initRepeatComputerStroke(newState)
                 }
             }
-
-            /*GameStateName.GUESSED_NOT_LAST_WORD_CARD -> {
-                isCardClick = false
-
-                if (newState.isActive) {
-                    isGuessedWord = true
-                }
-                val screenDimmingText = textOfGuessedWord(newState)
-                val lastClickCard = newState.gameField.lettersField[mLastClickCardPosition]
-                val positionGuessedLetters = positionGuessedLetters(
-                    oldState!!.gameField.gamingWordCard!!.positionsGuessedLetters,
-                    newState.gameField.gamingWordCard!!.positionsGuessedLetters
-                )!!
-
-                return listOf(
-                    ChangingState.GuessedWord(
-                        lastClickCard,
-                        positionGuessedLetters,
-                        newState.players,
-                        newState.isActive,
-                        screenDimmingText
-                    )
-                )
-            }*/
-
-            /*GameStateName.NEXT_WORD_CARD -> {
-                isGuessedWord = false
-
-                return listOf(
-                    ChangingState.NextGuessWord(
-                        newState.gameField.gamingWordCard!!
-                    ),
-                    ChangingState.NextPlayer(
-                        newState.walkingPlayer!!
-                    )
-                ).apply {
-                    initComputerStroke(newState, COMPUTER_DELAY_AFTER_CHANGE_WORD)
-                }
-            }*/
 
             GameStateName.END_GAME -> {
                 return listOf(
@@ -439,16 +360,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         }
     }
 
-    private fun isFastEndGame(): Boolean {
-        return isNonCardClickStateGame() || isEndGameByUser
-    }
-
     private fun initComputerStroke(currentGameState: GameState, delay: Long = COMPUTER_DELAY) {
 
         if (currentGameState.walkingPlayer!!.player is Player.ComputerPlayer)
             viewModelScope.launch {
-                //isCardClick = true
-
                 delay(delay)
                 animalLettersGameInteractor.getSelectedLetterCardByComputer()
             }
@@ -636,14 +551,12 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     companion object {
         const val INIT_CARD_CLICK_POSITION = -1
 
-        const val STATE_DELAY = Conf.STATE_DELAY
         const val COMPUTER_DELAY = Conf.COMPUTER_DELAY
         const val COMPUTER_DELAY_AFTER_CHANGE_WORD = Conf.COMPUTER_DELAY_AFTER_CHANGE_WORD
         const val REPEAT_COMPUTER_DELAY = Conf.REPEAT_COMPUTER_DELAY
         const val AUTO_NEXT_PLAYER_DELAY = Conf.AUTO_NEXT_PLAYER_DELAY
         const val AUTO_NEXT_WORD_DELAY = Conf.AUTO_NEXT_WORD_DELAY
 
-        const val ERROR_NEXT_GUESSED_WORD_NOT_FOUND = "Следующее загадываемое слово не найдено"
         const val ERROR_NULL_ARRIVED_GAME_STATE = "Обновленное состояние GameState == null"
         const val ERROR_STATE_RESTORE = "Проблема в логике восстановления состояния экрана"
 
