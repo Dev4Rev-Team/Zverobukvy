@@ -318,13 +318,16 @@ class MainMenuViewModelImpl @Inject constructor(
     }
 
     override fun onClickTypeCards(typeCards: TypeCards) {
-        if (!checkEditablePlayer()) return
-        closeEditablePlayer(true)
-        if (typesCardsSelectedForGame.contains(typeCards)) {
-            typesCardsSelectedForGame.remove(typeCards)
-        } else {
-            typesCardsSelectedForGame.add(typeCards)
+        if (checkEditablePlayer()) {
+            closeEditablePlayer(true)
+            if (typesCardsSelectedForGame.contains(typeCards)) {
+                typesCardsSelectedForGame.remove(typeCards)
+            } else {
+                typesCardsSelectedForGame.add(typeCards)
+            }
         }
+        liveDataScreenState.value =
+            MainMenuState.ScreenState.TypesCardsState(typesCardsSelectedForGame)
     }
 
     override fun onStartGame() {

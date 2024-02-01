@@ -22,6 +22,7 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
+import ru.dev4rev.kids.zoobukvy.presentation.customview.CustomAnimatorSoaring
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createAlphaShowAnimation
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createScaleAnimation
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
@@ -171,7 +172,8 @@ class MainMenuFragment :
 
     private fun initPlayersRecycleView() {
         binding.playersRecyclerView.run {
-            layoutManager = WrapContentLinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager =
+                WrapContentLinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = playersAdapter
         }
     }
@@ -226,6 +228,7 @@ class MainMenuFragment :
                 initTypesCardsToggleButtons(
                     mainMenuState.typesCard
                 )
+                animator.changeSelectedCard(mainMenuState.typesCard)
             }
 
             MainMenuState.ScreenState.CloseAppState -> {
@@ -414,6 +417,17 @@ class MainMenuFragment :
 
     private val animator = object {
         private var showHelper: AnimatorSet? = null
+        private var selectCard: MutableMap<TypeCards, CustomAnimatorSoaring?> = mutableMapOf()
+        fun viewCard(typeCard: TypeCards): ToggleButton {
+            val toggleButton = when (typeCard) {
+                TypeCards.ORANGE -> binding.orangeToggleButton
+                TypeCards.GREEN -> binding.greenToggleButton
+                TypeCards.BLUE -> binding.blueToggleButton
+                TypeCards.VIOLET -> binding.violetToggleButton
+            }
+            return toggleButton
+        }
+
 
         fun createShowHelper(): AnimatorSet {
             val animatorSet = AnimatorSet()
@@ -432,12 +446,27 @@ class MainMenuFragment :
             return animatorSet
         }
 
+        fun changeSelectedCard(listCards: List<TypeCards>) {
+            TypeCards.values().forEach { typeCard ->
+                if (typeCard in listCards) {
+                    selectCard[typeCard] =
+                        selectCard[typeCard] ?: CustomAnimatorSoaring(viewCard(typeCard))
+                    selectCard[typeCard]?.enable = true
+                } else {
+                    selectCard[typeCard]?.enable = false
+                }
+            }
+
+        }
+
         fun startShowHelp() {
             showHelper = createShowHelper()
             showHelper?.start()
+
         }
 
         fun end() {
+            selectCard.clear()
             showHelper?.end()
         }
     }
