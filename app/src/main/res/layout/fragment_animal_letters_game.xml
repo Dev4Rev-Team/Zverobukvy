@@ -113,12 +113,6 @@
                 app:radiusCards="@dimen/corner_radius_default" />
         </com.google.android.material.card.MaterialCardView>
 
-
-
-
-
-
-
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/sector_menu_guidline"
             android:layout_width="wrap_content"
@@ -131,7 +125,7 @@
             android:id="@+id/word_custom_card"
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             app:cardCornerRadius="@dimen/corner_radius_default"
             app:cardElevation="@dimen/elevation_default"
             app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
@@ -213,7 +207,7 @@
             android:id="@+id/sound_button_layout"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_default"
             android:layout_marginEnd="@dimen/margin_medium"
             android:clickable="true"
             android:elevation="@dimen/elevation_default"
@@ -239,7 +233,7 @@
             android:id="@+id/letters_sound_button_layout"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_default"
             android:layout_marginEnd="@dimen/margin_medium"
             android:clickable="true"
             android:elevation="@dimen/elevation_default"
