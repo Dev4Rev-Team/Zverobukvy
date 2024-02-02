@@ -117,6 +117,7 @@ class MainMenuFragment :
         initPlayGameButton()
         initRoot()
         initShowInstructionImageView()
+        initInstructionsImageView()
     }
 
     private fun initRoot() {
@@ -196,6 +197,18 @@ class MainMenuFragment :
         }
     }
 
+    private fun initInstructionsImageView() {
+        binding.instructionsImageView.setOnClickListener {
+            hideError()
+            viewModel.onQueryShowInstruction()
+        }
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS,
+            viewLifecycleOwner
+        ) { _, _ ->
+            animator.startShowHelp()
+        }
+    }
     private fun initShowInstructionImageView() {
         binding.showInstructionImageView.setOnClickListener {
             hideError()

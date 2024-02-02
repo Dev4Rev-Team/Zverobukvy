@@ -148,6 +148,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sector_game_cards_guideline" />
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/instructions_image_view"
+        android:layout_width="@dimen/show_instructions_image_button_size"
+        android:layout_height="@dimen/show_instructions_image_button_size"
+        android:layout_marginEnd="@dimen/margin_default"
+        android:layout_marginBottom="@dimen/margin_default"
+        android:background="@color/transparent"
+        android:src="@drawable/tablet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/character_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_default"
+        android:layout_marginBottom="@dimen/margin_default"
+        android:src="?app_season_character"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/avatars_recycler_view_layout"
         android:layout_width="@dimen/auto_layout"
