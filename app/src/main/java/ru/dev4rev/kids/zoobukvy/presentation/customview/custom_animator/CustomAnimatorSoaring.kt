@@ -6,8 +6,7 @@ import android.view.View
 import androidx.core.animation.doOnEnd
 
 class CustomAnimatorSoaring(
-    view: View,
-    durationAnimation: Long = DURATION
+    view: View
 ) : CustomAnimator, CustomAnimatorSyncable {
     override var isSyncable: Boolean = false
     override var listenerChange: ((customAnimator: CustomAnimatorSyncable, enable: Boolean) -> Unit)? =
@@ -51,7 +50,7 @@ class CustomAnimatorSoaring(
             view,
             PropertyValuesHolder.ofFloat(View.SCALE_X, SCALE_NORMAL),
             PropertyValuesHolder.ofFloat(View.SCALE_Y, SCALE_NORMAL)
-        ).apply { duration = durationAnimation }
+        ).apply { duration = DURATION_ACTION }
     }
     private val animatorSoaring by lazy {
         ObjectAnimator.ofPropertyValuesHolder(
@@ -69,7 +68,7 @@ class CustomAnimatorSoaring(
     companion object {
         const val SCALE_NORMAL = 1f
         const val SCALE = 1.07f
-        const val DURATION = 600L
+        const val DURATION_ACTION = 300L
         const val DURATION_SOARING = 1200L
     }
 

@@ -62,9 +62,11 @@ class CustomAnimatorSyncImpl : CustomAnimatorSync {
                 customAnimatorSyncable.startAnimator()
             } else {
                 needStartAnimators.add(customAnimatorSyncable)
+                needStopAnimators.remove(customAnimatorSyncable)
             }
         } else {
             needStopAnimators.add(customAnimatorSyncable)
+            needStartAnimators.remove(customAnimatorSyncable)
         }
     }
 
