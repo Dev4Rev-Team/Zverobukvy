@@ -193,6 +193,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/word_guidline"
             app:layout_constraintVertical_bias="0.5"
+            app:srcClose="@drawable/background_green_transparent"
+            app:srcOpen="@drawable/face"
             app:radiusCards="@dimen/corner_radius_default"
             app:verticalGap="@dimen/margin_default" />
 

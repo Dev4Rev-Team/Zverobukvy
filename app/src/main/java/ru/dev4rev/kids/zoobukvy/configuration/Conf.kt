@@ -78,9 +78,6 @@ class Conf {
         // задержка озвучивания буквы после нажатия на открытую карту
         const val DELAY_SOUND_REPEAT = 0L
 
-        // фон открытой карты с буквой
-        const val IMAGE_CARD_FOREGROUND = "FACE.webp"
-
         // движение карусели
         const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 75f
 
