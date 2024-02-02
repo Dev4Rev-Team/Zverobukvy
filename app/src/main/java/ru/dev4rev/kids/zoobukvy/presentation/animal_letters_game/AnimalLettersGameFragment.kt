@@ -278,9 +278,8 @@ class AnimalLettersGameFragment :
 
     private fun setPictureOfWord(urlPicture: String) {
         val image = assertsImageCash.getImage(urlPicture)
-        binding.wordCustomCard.setImageSide(
-            image, image
-        )
+        binding.wordCustomCard.setImageOpen(image)
+        binding.wordCustomCard.setImageCloseBackground(image)
     }
 
     private fun setWord(wordCard: CustomWordView.WordCardUI) {
@@ -337,7 +336,6 @@ class AnimalLettersGameFragment :
                 CustomCard(requireContext()).apply {
                     enableClickAnimation()
                     elevation = 0f
-                    setImageOpenBackground(assertsImageCash.getImage(IMAGE_CARD_FOREGROUND))
                     setOnClickCorrectCard { pos -> event.onClickCorrectLetter(pos) }
                 }
             }
@@ -366,9 +364,6 @@ class AnimalLettersGameFragment :
     }
 
     private fun initPictureWord(picture: String) {
-        binding.wordCustomCard.apply {
-            setImageOpenBackground(assertsImageCash.getImage(IMAGE_CARD_FOREGROUND))
-        }
         setPictureOfWord(picture)
     }
 
@@ -703,8 +698,6 @@ class AnimalLettersGameFragment :
         private const val DELAY_SOUND_EFFECT = Conf.DELAY_SOUND_EFFECT
         private const val DELAY_SOUND_LETTER = Conf.DELAY_SOUND_LETTER
         private const val DELAY_SOUND_REPEAT = Conf.DELAY_SOUND_REPEAT
-
-        private const val IMAGE_CARD_FOREGROUND = Conf.IMAGE_CARD_FOREGROUND
 
         private const val DURATION_ANIMATOR_NEXT_PLAYER = Conf.DURATION_ANIMATOR_NEXT_PLAYER
         private const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = Conf.SHIFT_ANIMATOR_PLAYER_NEXT_DP
