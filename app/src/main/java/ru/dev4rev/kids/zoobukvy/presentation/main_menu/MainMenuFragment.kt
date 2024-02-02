@@ -22,9 +22,11 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
-import ru.dev4rev.kids.zoobukvy.presentation.customview.CustomAnimatorSoaring
+import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSoaring
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createAlphaShowAnimation
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createScaleAnimation
+import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSync
+import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSyncImpl
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_avatars.AvatarsAdapter
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
@@ -428,6 +430,7 @@ class MainMenuFragment :
             return toggleButton
         }
 
+        private var sync: CustomAnimatorSync = CustomAnimatorSyncImpl()
 
         fun createShowHelper(): AnimatorSet {
             val animatorSet = AnimatorSet()
@@ -449,8 +452,11 @@ class MainMenuFragment :
         fun changeSelectedCard(listCards: List<TypeCards>) {
             TypeCards.values().forEach { typeCard ->
                 if (typeCard in listCards) {
-                    selectCard[typeCard] =
-                        selectCard[typeCard] ?: CustomAnimatorSoaring(viewCard(typeCard))
+                    if (selectCard[typeCard] == null) {
+                        val customAnimatorSoaring = CustomAnimatorSoaring(viewCard(typeCard))
+                        selectCard[typeCard] = customAnimatorSoaring
+                        sync.add(customAnimatorSoaring)
+                    }
                     selectCard[typeCard]?.enable = true
                 } else {
                     selectCard[typeCard]?.enable = false
@@ -466,6 +472,8 @@ class MainMenuFragment :
         }
 
         fun end() {
+            sync.clear()
+            selectCard.forEach { it.value?.end() }
             selectCard.clear()
             showHelper?.end()
         }
