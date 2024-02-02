@@ -27,6 +27,9 @@
         <item name="app_next_player_color">@drawable/background_green_transparent</item>
         <item name="app_wrong_color">@drawable/background_red_transparent</item>
         <item name="app_computer_color">@color/transparent</item>
+
+        <item name="app_cards_back">@drawable/card_background_blue_gradient</item>
+        <item name="app_season_character">@color/transparent</item>
     </style>
 
     <!--Default Theme-->
@@ -87,6 +90,9 @@
         <item name="app_next_player_color">@drawable/background_white_transparent</item>
         <item name="app_wrong_color">@drawable/background_red_transparent</item>
         <item name="app_computer_color">@color/transparent</item>
+
+        <item name="app_cards_back">@drawable/card_background_green_gradient</item>
+        <item name="app_season_character">@drawable/character_snowman</item>
     </style>
 
 </resources>

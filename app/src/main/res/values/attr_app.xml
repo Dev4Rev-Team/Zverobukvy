@@ -20,6 +20,10 @@
     <attr name="app_wrong_color" format="color|reference">#FF0000</attr>
     <attr name="app_computer_color" format="color|reference">#444FCA</attr>
 
+    <attr name="app_cards_back" format="color|reference">#444FCA</attr>
+
+    <attr name="app_season_character" format="reference">@attr/character_snowman</attr>
+
     <!--Elements style-->
     <style name="Button">
         <item name="android:layout_width">wrap_content</item>
