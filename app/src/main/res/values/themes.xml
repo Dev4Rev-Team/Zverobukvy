@@ -95,4 +95,54 @@
         <item name="app_season_character">@drawable/character_snowman</item>
     </style>
 
+    <style name="Theme.Zverobukvy.Spring" parent="Base.Theme.Zverobukvy" >
+        <item name="colorPrimary">#A0E2FE</item>
+
+        <item name="app_background_color">@drawable/app_background_spring</item>
+
+        <item name="app_splashscreen_background">@color/color_blue</item>
+        <item name="app_end_game_background_color">@drawable/app_background_greeen_spring</item>
+
+        <item name="app_flag_color">@color/color_red</item>
+
+        <item name="app_text_color_lvl1">@color/secondary_color</item>
+        <item name="app_text_color_lvl2">@color/secondary_color</item>
+        <item name="app_text_color_lvl3">@color/white</item>
+
+        <item name="app_text_color_button_play">@color/white</item>
+        <item name="app_text_color_button_play_outline">@color/secondary_color</item>
+
+        <item name="app_next_player_color">@drawable/background_green_transparent</item>
+        <item name="app_wrong_color">@drawable/background_red_transparent</item>
+        <item name="app_computer_color">@color/transparent</item>
+
+        <item name="app_season_character">@drawable/character_rabbit</item>
+    </style>
+
+    <style name="Theme.Zverobukvy.Summer" parent="Theme.Zverobukvy.Spring" />
+
+    <style name="Theme.Zverobukvy.Autumn" parent="Base.Theme.Zverobukvy" >
+        <item name="colorPrimary">#A0E2FE</item>
+
+        <item name="app_background_color">@drawable/app_background_autumn</item>
+
+        <item name="app_splashscreen_background">@color/color_blue</item>
+        <item name="app_end_game_background_color">@drawable/app_background_orange_autumn</item>
+
+        <item name="app_flag_color">@color/color_red</item>
+
+        <item name="app_text_color_lvl1">@color/secondary_color</item>
+        <item name="app_text_color_lvl2">@color/secondary_color</item>
+        <item name="app_text_color_lvl3">@color/white</item>
+
+        <item name="app_text_color_button_play">@color/white</item>
+        <item name="app_text_color_button_play_outline">@color/secondary_color</item>
+
+        <item name="app_next_player_color">@drawable/background_green_transparent</item>
+        <item name="app_wrong_color">@drawable/background_red_transparent</item>
+        <item name="app_computer_color">@color/transparent</item>
+
+<!--        <item name="app_season_character">@drawable/character_rabbit</item>-->
+    </style>
+
 </resources>
