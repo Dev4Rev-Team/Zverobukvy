@@ -17,6 +17,8 @@ class CustomCardTable @JvmOverloads constructor(
     defStyle: Int = 0,
 
     ) : ConstraintLayout(context, attrs, defStyle) {
+    private var srcClose: Int = SRC_CLOSE
+    private var srcOpen: Int = SRC_OPEN
 
     private var horizontalGap = HORIZONTAL_GAP
     private var verticalGap = VERTICAL_GAP
@@ -45,6 +47,9 @@ class CustomCardTable @JvmOverloads constructor(
         radiusCard = typedArray.getDimensionPixelSize(
             R.styleable.CustomCardTable_radiusCards, context.dipToPixels(RADIUS_CARD.toFloat())
         )
+
+        srcClose = typedArray.getResourceId(R.styleable.CustomCard_srcClose, SRC_CLOSE)
+        srcOpen = typedArray.getResourceId(R.styleable.CustomCard_srcOpen, SRC_OPEN)
         typedArray.recycle()
     }
 
@@ -102,10 +107,9 @@ class CustomCardTable @JvmOverloads constructor(
                 val letterCard = list[pos]
                 setOpenCard(letterCard.isVisible)
 
-                setImageSide(
-                    assetsImageCash.getImage(letterCard.faceImageName),
-                    assetsImageCash.getImage(letterCard.backImageName)
-                )
+                setImageCloseBackground(srcClose)
+                setImageOpenBackground(srcOpen)
+                setImageOpen(assetsImageCash.getImage(letterCard.faceImageName))
 
                 setOnClickCardListener(pos) {
 
@@ -163,6 +167,8 @@ class CustomCardTable @JvmOverloads constructor(
     }
 
     companion object {
+        private val SRC_CLOSE = R.drawable.back_image
+        private val SRC_OPEN = R.drawable.face
         private const val COUNT_CARDS_FOR_CARDS_HORIZONTALLY_3 = 12
         private const val COUNT_CARDS_FOR_CARDS_HORIZONTALLY_4 = 20
         private const val HORIZONTAL_GAP = 24

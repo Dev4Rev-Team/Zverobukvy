@@ -22,8 +22,11 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
+import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSoaring
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createAlphaShowAnimation
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createScaleAnimation
+import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSync
+import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSyncImpl
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_avatars.AvatarsAdapter
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.adapter.PlayersAdapter
@@ -114,6 +117,7 @@ class MainMenuFragment :
         initPlayGameButton()
         initRoot()
         initShowInstructionImageView()
+        initInstructionsImageView()
     }
 
     private fun initRoot() {
@@ -171,7 +175,8 @@ class MainMenuFragment :
 
     private fun initPlayersRecycleView() {
         binding.playersRecyclerView.run {
-            layoutManager = WrapContentLinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager =
+                WrapContentLinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = playersAdapter
         }
     }
@@ -192,6 +197,18 @@ class MainMenuFragment :
         }
     }
 
+    private fun initInstructionsImageView() {
+        binding.instructionsImageView.setOnClickListener {
+            hideError()
+            viewModel.onQueryShowInstruction()
+        }
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS,
+            viewLifecycleOwner
+        ) { _, _ ->
+            animator.startShowHelp()
+        }
+    }
     private fun initShowInstructionImageView() {
         binding.showInstructionImageView.setOnClickListener {
             hideError()
@@ -226,6 +243,7 @@ class MainMenuFragment :
                 initTypesCardsToggleButtons(
                     mainMenuState.typesCard
                 )
+                animator.changeSelectedCard(mainMenuState.typesCard)
             }
 
             MainMenuState.ScreenState.CloseAppState -> {
@@ -414,6 +432,18 @@ class MainMenuFragment :
 
     private val animator = object {
         private var showHelper: AnimatorSet? = null
+        private var selectCard: MutableMap<TypeCards, CustomAnimatorSoaring?> = mutableMapOf()
+        fun viewCard(typeCard: TypeCards): ToggleButton {
+            val toggleButton = when (typeCard) {
+                TypeCards.ORANGE -> binding.orangeToggleButton
+                TypeCards.GREEN -> binding.greenToggleButton
+                TypeCards.BLUE -> binding.blueToggleButton
+                TypeCards.VIOLET -> binding.violetToggleButton
+            }
+            return toggleButton
+        }
+
+        private var sync: CustomAnimatorSync = CustomAnimatorSyncImpl()
 
         fun createShowHelper(): AnimatorSet {
             val animatorSet = AnimatorSet()
@@ -432,12 +462,32 @@ class MainMenuFragment :
             return animatorSet
         }
 
+        fun changeSelectedCard(listCards: List<TypeCards>) {
+            TypeCards.values().forEach { typeCard ->
+                if (typeCard in listCards) {
+                    if (selectCard[typeCard] == null) {
+                        val customAnimatorSoaring = CustomAnimatorSoaring(viewCard(typeCard))
+                        selectCard[typeCard] = customAnimatorSoaring
+                        sync.add(customAnimatorSoaring)
+                    }
+                    selectCard[typeCard]?.enable = true
+                } else {
+                    selectCard[typeCard]?.enable = false
+                }
+            }
+
+        }
+
         fun startShowHelp() {
             showHelper = createShowHelper()
             showHelper?.start()
+
         }
 
         fun end() {
+            sync.clear()
+            selectCard.forEach { it.value?.end() }
+            selectCard.clear()
             showHelper?.end()
         }
     }

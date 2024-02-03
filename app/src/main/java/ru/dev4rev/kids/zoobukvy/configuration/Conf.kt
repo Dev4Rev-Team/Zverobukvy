@@ -78,9 +78,6 @@ class Conf {
         // задержка озвучивания буквы после нажатия на открытую карту
         const val DELAY_SOUND_REPEAT = 0L
 
-        // фон открытой карты с буквой
-        const val IMAGE_CARD_FOREGROUND = "FACE.webp"
-
         // движение карусели
         const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 75f
 
@@ -166,6 +163,34 @@ class Conf {
         const val START_NEY_YEAR_PERIOD_DAY = 1
         const val END_NEY_YEAR_PERIOD_MONTH = 1
         const val END_NEY_YEAR_PERIOD_DAY = 1
+        /**
+         * Зимний период
+         */
+        const val START_WINTER_PERIOD_MONTH = 2
+        const val START_WINTER_PERIOD_DAY = 1
+        const val END_WINTER_PERIOD_MONTH = 3
+        const val END_WINTER_PERIOD_DAY = 1
+        /**
+         * Весенний период
+         */
+        const val START_SPRING_PERIOD_MONTH = 3
+        const val START_SPRING_PERIOD_DAY = 2
+        const val END_SPRING_PERIOD_MONTH = 5
+        const val END_SPRING_PERIOD_DAY = 31
+        /**
+         * Летний период
+         */
+        const val START_SUMMER_PERIOD_MONTH = 6
+        const val START_SUMMER_PERIOD_DAY = 1
+        const val END_SUMMER_PERIOD_MONTH = 8
+        const val END_SUMMER_PERIOD_DAY = 31
+        /**
+         * Осенний период
+         */
+        const val START_AUTUMN_PERIOD_MONTH = 9
+        const val START_AUTUMN_PERIOD_DAY = 1
+        const val END_AUTUMN_PERIOD_MONTH = 10
+        const val END_AUTUMN_PERIOD_DAY = 31
 
         /**
          * DEBUG
