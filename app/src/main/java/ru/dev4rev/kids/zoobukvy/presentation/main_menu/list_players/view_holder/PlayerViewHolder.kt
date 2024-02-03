@@ -63,9 +63,9 @@ class PlayerViewHolder(
                     rankTextView.visibility = View.GONE
                 else
                     rankTextView.visibility = View.VISIBLE
-                rankTextView.text = itemView.context.getString(it.idRankName)
-                rankTextView.setTextColor(itemView.context.getColor(it.idRankTextColor))
-                avatar.strokeColor = itemView.context.getColor(it.idBorderRankColor)
+                rankTextView.text = itemView.context.getString(it.rankNameId)
+                rankTextView.setTextColor(itemView.context.getColor(it.rankTextColorId))
+                avatar.strokeColor = itemView.context.getColor(it.borderRankColorId)
             }
         }
     }
@@ -109,7 +109,7 @@ class PlayerViewHolder(
             if (it.rating != 0) {
                 ratingCardView.visibility = View.VISIBLE
                 ratingCardView.strokeColor =
-                    itemView.context.getColor(it.decoration.idColor)
+                    itemView.context.getColor(it.decoration.colorId)
                 if (it.decoration == Decoration.DIAMOND) {
                     diamondImageView.visibility = View.VISIBLE
                     ratingTextView.visibility = View.GONE

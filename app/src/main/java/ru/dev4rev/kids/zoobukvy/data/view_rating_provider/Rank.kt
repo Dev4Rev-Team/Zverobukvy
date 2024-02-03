@@ -2,7 +2,7 @@ package ru.dev4rev.kids.zoobukvy.data.view_rating_provider
 
 import ru.dev4rev.kids.zoobukvy.R
 
-enum class Rank(val idRankName: Int, val idRankTextColor: Int, val idBorderRankColor: Int) {
+enum class Rank(val rankNameId: Int, val rankTextColorId: Int, val borderRankColorId: Int) {
     DEFAULT(
         R.string.username_default,
         R.color.transparent,

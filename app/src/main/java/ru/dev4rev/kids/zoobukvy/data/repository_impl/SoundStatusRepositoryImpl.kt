@@ -1,21 +1,21 @@
 package ru.dev4rev.kids.zoobukvy.data.repository_impl
 
-import ru.dev4rev.kids.zoobukvy.data.preferences.SharedPreferencesForGame
+import ru.dev4rev.kids.zoobukvy.data.preferences.SharedPreferencesForSoundStatus
 import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 import ru.dev4rev.kids.zoobukvy.domain.repository.SoundStatusRepository
 import javax.inject.Inject
 
 class SoundStatusRepositoryImpl @Inject constructor(
-    private val sharedPreferencesForGame: SharedPreferencesForGame
+    private val sharedPreferencesForSoundStatus: SharedPreferencesForSoundStatus
 ) : SoundStatusRepository {
     override fun getSoundStatus(): Boolean =
-        sharedPreferencesForGame.readSoundStatus()
+        sharedPreferencesForSoundStatus.readSoundStatus()
 
     override fun saveSoundStatus(soundStatus: Boolean) =
-        sharedPreferencesForGame.saveSoundStatus(soundStatus)
+        sharedPreferencesForSoundStatus.saveSoundStatus(soundStatus)
 
     override fun getVoiceActingStatus(): VoiceActingStatus =
-        when (sharedPreferencesForGame.readVoiceActingStatus()) {
+        when (sharedPreferencesForSoundStatus.readVoiceActingStatus()) {
             VoiceActingStatus.SOUND.name -> VoiceActingStatus.SOUND
             VoiceActingStatus.LETTER.name -> VoiceActingStatus.LETTER
             VoiceActingStatus.OFF.name -> VoiceActingStatus.OFF
@@ -23,6 +23,16 @@ class SoundStatusRepositoryImpl @Inject constructor(
         }
 
     override fun saveVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
-        sharedPreferencesForGame.saveVoiceActingStatus(voiceActingStatus.name)
+        sharedPreferencesForSoundStatus.saveVoiceActingStatus(voiceActingStatus.name)
     }
+
+    override fun getShownVoiceActingStatuses(): Set<VoiceActingStatus> =
+        sharedPreferencesForSoundStatus.readShownVoiceActingStatuses().map {
+            when (it) {
+                VoiceActingStatus.SOUND.name -> VoiceActingStatus.SOUND
+                VoiceActingStatus.LETTER.name -> VoiceActingStatus.LETTER
+                VoiceActingStatus.OFF.name -> VoiceActingStatus.OFF
+                else -> VoiceActingStatus.SOUND
+            }
+        }.toSet()
 }

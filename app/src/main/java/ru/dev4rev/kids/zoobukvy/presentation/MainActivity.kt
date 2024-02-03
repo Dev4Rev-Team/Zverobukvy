@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         actualTheme = viewModel.getTheme()
-        setTheme(actualTheme.idTheme)
+        setTheme(actualTheme.themeId)
         setContentView(R.layout.activity_main)
         loadingData()
         volumeControlStream = AudioManager.STREAM_MUSIC

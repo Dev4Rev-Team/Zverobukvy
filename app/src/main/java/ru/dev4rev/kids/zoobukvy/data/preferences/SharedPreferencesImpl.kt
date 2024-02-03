@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SharedPreferencesImpl @Inject constructor(context: Context) :
-    SharedPreferencesForGame, SharedPreferencesForUserFeedback {
+    SharedPreferencesForSoundStatus, SharedPreferencesForMainMenu, SharedPreferencesForUserFeedback {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE
     )
@@ -16,7 +16,7 @@ class SharedPreferencesImpl @Inject constructor(context: Context) :
     override fun readTypesCardsSelectedForGame(): List<TypeCardsInSharedPreferences> {
         Timber.d("readTypesCardsSelectedForGame")
         return (sharedPreferences.getStringSet(KEY_TYPES_CARDS, null)
-            ?: setOf()).toList().map {
+            ?: emptySet()).toList().map {
             TypeCardsInSharedPreferences(it)
         }
     }
@@ -33,7 +33,7 @@ class SharedPreferencesImpl @Inject constructor(context: Context) :
     override fun readNamesPlayersSelectedForGame(): List<String> {
         Timber.d("readNamesPlayersSelectedForGame")
         return (sharedPreferences.getStringSet(KEY_NAMES_PLAYERS, null)
-            ?: setOf()).toList()
+            ?: emptySet()).toList()
     }
 
     override fun saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame: List<String>) {
@@ -72,9 +72,20 @@ class SharedPreferencesImpl @Inject constructor(context: Context) :
 
     override fun saveVoiceActingStatus(voiceActingStatus: String) {
         Timber.d("saveVoiceActingStatus")
+        val shownVoiceActingStatuses =
+            sharedPreferences.getStringSet(KEY_SHOWN_VOICE_ACTING_STATUSES, null)
+                ?: mutableSetOf<String>().apply {
+                    add(voiceActingStatus)
+                }
         sharedPreferences.edit()
             .putString(KEY_VOICE_ACTING, voiceActingStatus)
+            .putStringSet(KEY_SHOWN_VOICE_ACTING_STATUSES, shownVoiceActingStatuses)
             .apply()
+    }
+
+    override fun readShownVoiceActingStatuses(): Set<String> {
+        Timber.d("readShownVoiceActingStatuses")
+        return sharedPreferences.getStringSet(KEY_SHOWN_VOICE_ACTING_STATUSES, null) ?: emptySet()
     }
 
     override fun isFeedback(): Boolean {
@@ -95,6 +106,7 @@ class SharedPreferencesImpl @Inject constructor(context: Context) :
         private const val KEY_FIRST_LAUNCH = "KeyFirstLaunch"
         private const val KEY_SOUND = "KeySound"
         private const val KEY_VOICE_ACTING = "KeyVoiceActing"
+        private const val KEY_SHOWN_VOICE_ACTING_STATUSES = "KeyShownVoiceActingStatuses"
         private const val KEY_FEEDBACK = "KeyFeedback"
         private const val NAME_SHARED_PREFERENCES = "animal_letters_pref"
     }

@@ -84,7 +84,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
     /** LiveData для отправки состояний озвучки букв (звуки или буквы)
      */
     private val voiceActingStatusLiveData =
-        MutableLiveData(soundStatusRepository.getVoiceActingStatus())
+        MutableLiveData(soundStatusRepository.getVoiceActingStatus() to false)
 
     private val statesQueue: Queue<GameState> = LinkedList()
 
@@ -92,7 +92,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      */
     init {
         viewModelScope.launch {
-            voiceActingStatusLiveData.value?.let { animalLettersGameInteractor.startGame(it) }
+            voiceActingStatusLiveData.value?.let { animalLettersGameInteractor.startGame(it.first) }
             animalLettersGameInteractor.subscribeToGameState().collect(::collectState)
         }
     }
@@ -439,7 +439,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         return soundStatusLiveData
     }
 
-    override fun getVoiceActingStatusLiveData(): LiveData<VoiceActingStatus> {
+    override fun getVoiceActingStatusLiveData(): LiveData<Pair<VoiceActingStatus, Boolean>> {
         Timber.d("getVoiceActingStatusLiveData")
         return voiceActingStatusLiveData
     }
@@ -461,11 +461,22 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
         }
     }
 
+    /**
+     * Метод обновляет текущий статус озвучки букв/звуков во вью, репозитории и интеракторе
+     */
     private fun changeVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
-        voiceActingStatusLiveData.value = voiceActingStatus
+        voiceActingStatusLiveData.value =
+            voiceActingStatus to isShowVoiceActingStatus()
         soundStatusRepository.saveVoiceActingStatus(voiceActingStatus)
         animalLettersGameInteractor.updateVoiceActingStatus(voiceActingStatus)
     }
+
+    /**
+     * Метод определяет, необходимо ли отображать текущий статус озвучки букв/звуков
+     * при нажатии соответствующей кнопки.
+     */
+    private fun isShowVoiceActingStatus() =
+        soundStatusRepository.getShownVoiceActingStatuses().size != VoiceActingStatus.values().size
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
         Timber.d("onClickLetterCard")
