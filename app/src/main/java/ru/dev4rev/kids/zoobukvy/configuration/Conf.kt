@@ -157,40 +157,32 @@ class Conf {
         const val SPAN_COUNT_AVATARS_RECYCLER_VIEW = 4
 
         /**
-         * Новогодний период
+         * Новогодний период (внутри зимнего)
          */
         const val START_NEY_YEAR_PERIOD_MONTH = 11
-        const val START_NEY_YEAR_PERIOD_DAY = 1
-        const val END_NEY_YEAR_PERIOD_MONTH = 1
-        const val END_NEY_YEAR_PERIOD_DAY = 1
+        const val START_NEY_YEAR_PERIOD_DAY = 15
+        const val END_NEY_YEAR_PERIOD_MONTH = 0
+        const val END_NEY_YEAR_PERIOD_DAY = 15
         /**
          * Зимний период
          */
-        const val START_WINTER_PERIOD_MONTH = 2
+        const val START_WINTER_PERIOD_MONTH = 11
         const val START_WINTER_PERIOD_DAY = 1
-        const val END_WINTER_PERIOD_MONTH = 3
-        const val END_WINTER_PERIOD_DAY = 1
         /**
          * Весенний период
          */
-        const val START_SPRING_PERIOD_MONTH = 3
-        const val START_SPRING_PERIOD_DAY = 2
-        const val END_SPRING_PERIOD_MONTH = 5
-        const val END_SPRING_PERIOD_DAY = 31
+        const val START_SPRING_PERIOD_MONTH = 2
+        const val START_SPRING_PERIOD_DAY = 1
         /**
          * Летний период
          */
-        const val START_SUMMER_PERIOD_MONTH = 6
+        const val START_SUMMER_PERIOD_MONTH = 5
         const val START_SUMMER_PERIOD_DAY = 1
-        const val END_SUMMER_PERIOD_MONTH = 8
-        const val END_SUMMER_PERIOD_DAY = 31
         /**
          * Осенний период
          */
-        const val START_AUTUMN_PERIOD_MONTH = 9
+        const val START_AUTUMN_PERIOD_MONTH = 8
         const val START_AUTUMN_PERIOD_DAY = 1
-        const val END_AUTUMN_PERIOD_MONTH = 10
-        const val END_AUTUMN_PERIOD_DAY = 31
 
         /**
          * DEBUG

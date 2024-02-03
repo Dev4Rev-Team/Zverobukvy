@@ -111,14 +111,14 @@ class AnimalLettersGameFragment :
         }
 
         viewModel.getVoiceActingStatusLiveData().observe(viewLifecycleOwner) {
-            val icSoundLetterToggle = when (it) {
+            val icSoundLetterToggle = when (it.first) {
                 VoiceActingStatus.SOUND -> R.drawable.ic_sound_letter_sound
                 VoiceActingStatus.LETTER -> R.drawable.ic_sound_letter_on
                 VoiceActingStatus.OFF -> R.drawable.ic_sound_letter_off
                 else -> R.drawable.ic_sound_letter_off
             }
             binding.lettersSoundButtonImageView.setImageResource(icSoundLetterToggle)
-            sound.setVoiceActingStatus(it)
+            sound.setVoiceActingStatus(it.first)
         }
     }
 
