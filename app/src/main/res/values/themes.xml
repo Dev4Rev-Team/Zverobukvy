@@ -122,7 +122,7 @@
     <style name="Theme.Zverobukvy.Summer" parent="Theme.Zverobukvy.Spring" />
 
     <style name="Theme.Zverobukvy.Autumn" parent="Base.Theme.Zverobukvy" >
-        <item name="colorPrimary">#A0E2FE</item>
+        <item name="colorPrimary">#A1B6FF</item>
 
         <item name="app_background_color">@drawable/app_background_autumn</item>
 
@@ -142,7 +142,6 @@
         <item name="app_wrong_color">@drawable/background_red_transparent</item>
         <item name="app_computer_color">@color/transparent</item>
 
-<!--        <item name="app_season_character">@drawable/character_rabbit</item>-->
     </style>
 
 </resources>
