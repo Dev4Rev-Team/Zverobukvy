@@ -8,7 +8,6 @@ data class LetterCard(
     override val letter: Char,
     override var isVisible: Boolean = false,
     override val faceImageName: String,
-    override val backImageName: String,
     override var soundName: String,
     override val letterName: String,
     val baseSoundName: String,
