@@ -12,8 +12,6 @@ data class LetterCardInDatabase(
     val letter: String,
     @field:ColumnInfo(name = "face")
     val faceImageName: String,
-    @field:ColumnInfo(name = "back")
-    val backImageName: String,
     @field:PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     @field:ColumnInfo(name = "sound")

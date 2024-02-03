@@ -184,7 +184,6 @@ class CustomCardTable @JvmOverloads constructor(
         val letter: Char
         var isVisible: Boolean
         val faceImageName: String
-        val backImageName: String
         val soundName: String
         val letterName: String
         val color: LettersColor
