@@ -1,13 +1,13 @@
 package ru.dev4rev.kids.zoobukvy.presentation.main_menu
 
 import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ToggleButton
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,11 +20,13 @@ import ru.dev4rev.kids.zoobukvy.configuration.Conf.Companion.SPAN_COUNT_AVATARS_
 import ru.dev4rev.kids.zoobukvy.databinding.FragmentMainMenuBinding
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
+import ru.dev4rev.kids.zoobukvy.presentation.InstructionBottomSheetDialogFragment
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameFragment.Companion.TAG_ANIMAL_LETTERS_FRAGMENT
 import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSoaring
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createAlphaShowAnimation
 import ru.dev4rev.kids.zoobukvy.presentation.customview.createScaleAnimation
+import ru.dev4rev.kids.zoobukvy.presentation.customview.createSwayAnimation
 import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSync
 import ru.dev4rev.kids.zoobukvy.presentation.customview.custom_animator.CustomAnimatorSyncImpl
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.RemovePlayerDialogFragment.Companion.TAG_REMOVE_PLAYER_DIALOG_FRAGMENT
@@ -116,7 +118,7 @@ class MainMenuFragment :
         initAvatarsRecycleView()
         initPlayGameButton()
         initRoot()
-        initShowInstructionImageView()
+        initShowBee()
         initInstructionsImageView()
     }
 
@@ -202,23 +204,15 @@ class MainMenuFragment :
             hideError()
             viewModel.onQueryShowInstruction()
         }
-        requireActivity().supportFragmentManager.setFragmentResultListener(
-            TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS,
-            viewLifecycleOwner
-        ) { _, _ ->
-            animator.startShowHelp()
+        InstructionBottomSheetDialogFragment.setOnListenerCloseAnimation(fragment = this) {
+            animator.startSwayTable()
         }
     }
-    private fun initShowInstructionImageView() {
-        binding.showInstructionImageView.setOnClickListener {
+
+    private fun initShowBee() {
+        binding.showBee.setOnClickListener {
             hideError()
-            viewModel.onQueryShowInstruction()
-        }
-        requireActivity().supportFragmentManager.setFragmentResultListener(
-            TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS,
-            viewLifecycleOwner
-        ) { _, _ ->
-            animator.startShowHelp()
+            animator.startShowBee()
         }
     }
 
@@ -389,10 +383,7 @@ class MainMenuFragment :
 
     private fun renderShowInstructionScreenState() {
         Timber.d("renderShowInstructionScreenState")
-        parentFragmentManager.setFragmentResult(
-            TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS,
-            bundleOf()
-        )
+        InstructionBottomSheetDialogFragment.show(fragment = this)
     }
 
     private fun setRemovePlayerDialogFragmentListener() {
@@ -431,7 +422,8 @@ class MainMenuFragment :
     }
 
     private val animator = object {
-        private var showHelper: AnimatorSet? = null
+        private var showBee: AnimatorSet? = null
+        private var swayTable: ObjectAnimator? = null
         private var selectCard: MutableMap<TypeCards, CustomAnimatorSoaring?> = mutableMapOf()
         fun viewCard(typeCard: TypeCards): ToggleButton {
             val toggleButton = when (typeCard) {
@@ -445,7 +437,7 @@ class MainMenuFragment :
 
         private var sync: CustomAnimatorSync = CustomAnimatorSyncImpl()
 
-        fun createShowHelper(): AnimatorSet {
+        fun createShowBee(): AnimatorSet {
             val animatorSet = AnimatorSet()
             val alphaShowAnimation =
                 createAlphaShowAnimation(
@@ -460,6 +452,10 @@ class MainMenuFragment :
             animatorSet.interpolator = DecelerateInterpolator()
             animatorSet.playSequentially(alphaShowAnimation, scaleAnimation)
             return animatorSet
+        }
+
+        fun createSwayTable(): ObjectAnimator {
+            return createSwayAnimation(binding.instructionsImageView, 3000L, 17f)
         }
 
         fun changeSelectedCard(listCards: List<TypeCards>) {
@@ -477,25 +473,26 @@ class MainMenuFragment :
             }
 
         }
+        fun startSwayTable(){
+            swayTable = createSwayTable().apply { start() }
+        }
 
-        fun startShowHelp() {
-            showHelper = createShowHelper()
-            showHelper?.start()
-
+        fun startShowBee() {
+            if(showBee?.isRunning == true) return
+            showBee = createShowBee().apply { start() }
         }
 
         fun end() {
             sync.clear()
             selectCard.forEach { it.value?.end() }
             selectCard.clear()
-            showHelper?.end()
+            showBee?.end()
+            swayTable?.end()
         }
     }
 
     companion object {
         const val TAG_MAIN_MENU_FRAGMENT = "MainMenuFragment"
-        const val TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS = "MainMenuFragmentShowInstructions"
-        const val TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS = "MainMenuFragmentCloseInstructions"
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"
 
@@ -504,21 +501,5 @@ class MainMenuFragment :
 
         @JvmStatic
         fun newInstance() = MainMenuFragment()
-
-        fun setOnListenerShowInstruction(activity: AppCompatActivity, f: (() -> Unit)?) {
-            activity.supportFragmentManager.setFragmentResultListener(
-                TAG_MAIN_MENU_FRAGMENT_SHOW_INSTRUCTIONS,
-                activity
-            ) { _, _ ->
-                f?.invoke()
-            }
-        }
-
-        fun setCloseInstruction(activity: AppCompatActivity) {
-            activity.supportFragmentManager.setFragmentResult(
-                TAG_MAIN_MENU_FRAGMENT_CLOSE_INSTRUCTIONS,
-                bundleOf()
-            )
-        }
     }
 }
