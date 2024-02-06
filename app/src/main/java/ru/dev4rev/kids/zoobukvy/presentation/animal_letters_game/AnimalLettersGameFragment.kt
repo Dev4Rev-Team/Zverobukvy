@@ -122,7 +122,6 @@ class AnimalLettersGameFragment :
                 VoiceActingStatus.SOUND -> R.drawable.ic_sound_letter_sound
                 VoiceActingStatus.LETTER -> R.drawable.ic_sound_letter_on
                 VoiceActingStatus.OFF -> R.drawable.ic_sound_letter_off
-                else -> R.drawable.ic_sound_letter_off
             }
             binding.lettersSoundButtonImageView.setImageResource(icSoundLetterToggle)
             sound.setVoiceActingStatus(it.first)
@@ -396,6 +395,10 @@ class AnimalLettersGameFragment :
         }
     }
 
+    private fun hideSnackbar() {
+        if (snackbar.isShown)
+            snackbar.dismiss()
+    }
 
     private class Sound(val soundEffectPlayer: SoundEffectPlayer) {
 
@@ -567,6 +570,7 @@ class AnimalLettersGameFragment :
         }
 
         fun onBackPressed() {
+            hideSnackbar()
             viewModel.onBackPressed()
         }
 
@@ -579,6 +583,7 @@ class AnimalLettersGameFragment :
         }
 
         fun onClickLetterCard(pos: Int) {
+            hideSnackbar()
             viewModel.onClickLetterCard(pos)
         }
 
