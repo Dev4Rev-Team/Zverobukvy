@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if(newState == BottomSheetBehavior.STATE_HIDDEN){
                     backPressedCallback?.isEnabled = false
-                    MainMenuFragment.setCloseInstruction(this@MainActivity)
+                    InstructionBottomSheetDialogFragment.closeAnimation(this@MainActivity)
                 }
             }
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         })
 
 
-        MainMenuFragment.setOnListenerShowInstruction(this) {
+        InstructionBottomSheetDialogFragment.setOnListenerShowInstruction(this) {
             val bottomFragment =
                 InstructionBottomSheetDialogFragment.instance()
             supportFragmentManager.beginTransaction()

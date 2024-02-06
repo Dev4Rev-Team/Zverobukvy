@@ -18,7 +18,7 @@
         app:layout_constraintGuide_begin="100dp" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/show_instruction_image_view"
+        android:id="@+id/show_bee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-10dp"
@@ -230,10 +230,10 @@
         android:rotation="30"
         android:visibility="invisible"
         tools:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/show_instruction_image_view"
-        app:layout_constraintEnd_toEndOf="@+id/show_instruction_image_view"
-        app:layout_constraintStart_toStartOf="@+id/show_instruction_image_view"
-        app:layout_constraintTop_toTopOf="@+id/show_instruction_image_view"
+        app:layout_constraintBottom_toBottomOf="@+id/show_bee"
+        app:layout_constraintEnd_toEndOf="@+id/show_bee"
+        app:layout_constraintStart_toStartOf="@+id/show_bee"
+        app:layout_constraintTop_toTopOf="@+id/show_bee"
         app:srcCompat="@drawable/avatar_bee" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

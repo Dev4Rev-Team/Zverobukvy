@@ -31,6 +31,22 @@ fun createFlipAnimation(view: View, duration: Long): AnimatorSet {
     return animatorSet
 }
 
+fun createSwayAnimation(view: View, duration: Long, angle: Float): ObjectAnimator {
+    val sway =
+        ObjectAnimator.ofFloat(
+            view,
+            View.ROTATION_Y,
+            OPEN_BEGIN,
+            angle,
+            OPEN_END,
+            -angle * 0.7f,
+            OPEN_BEGIN
+        ).apply {
+            this@apply.duration = duration / 2
+        }
+    return sway
+}
+
 fun createScaleAnimation(view: View, x1: Float, x2: Float): AnimatorSet {
     val animatorSet = AnimatorSet()
     val scaleX = ObjectAnimator.ofFloat(view, View.SCALE_X, x1, x2)
