@@ -10,6 +10,7 @@ import androidx.core.animation.doOnEnd
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,6 +66,12 @@ class AnimalLettersGameFragment :
     }
     var lastStateScreen = StateScreen.NextPlayer
 
+    private val snackbar by lazy {
+        Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
+            setAction(getString(R.string.ok)) { dismiss() }
+        }
+    }
+
     private fun initDagger() {
         imageAvatarLoader = requireContext().appComponent.imageAvatarLoader
         requireContext().animalLettersGameSubcomponentContainer.createAnimalLettersGameSubcomponent(
@@ -119,6 +126,9 @@ class AnimalLettersGameFragment :
             }
             binding.lettersSoundButtonImageView.setImageResource(icSoundLetterToggle)
             sound.setVoiceActingStatus(it.first)
+            if (it.second) {
+                snackbar.setText(it.first.messageId).show()
+            }
         }
     }
 
