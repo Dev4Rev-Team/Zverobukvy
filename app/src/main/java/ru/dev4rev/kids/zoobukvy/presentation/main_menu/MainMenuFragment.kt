@@ -443,11 +443,11 @@ class MainMenuFragment :
                 createAlphaShowAnimation(
                     binding.helpShowInstructionImageView,
                     0L,
-                    DURATION_ANIMATOR_SHOW_HELPER
+                    DURATION_ANIMATOR_SHOW_BEE
                 )
             val scaleAnimation =
                 createScaleAnimation(binding.helpShowInstructionImageView, 1f, 0f).apply {
-                    duration = DURATION_ANIMATOR_SCALE_HELPER
+                    duration = DURATION_ANIMATOR_SCALE_BEE
                 }
             animatorSet.interpolator = DecelerateInterpolator()
             animatorSet.playSequentially(alphaShowAnimation, scaleAnimation)
@@ -455,7 +455,11 @@ class MainMenuFragment :
         }
 
         fun createSwayTable(): ObjectAnimator {
-            return createSwayAnimation(binding.instructionsImageView, 3000L, 17f)
+            return createSwayAnimation(
+                binding.instructionsImageView,
+                DURATION_ANIMATOR_SHOW_INSTRUCTION,
+                ANGLE_SWAY_INSTRUCTION
+            )
         }
 
         fun changeSelectedCard(listCards: List<TypeCards>) {
@@ -473,12 +477,13 @@ class MainMenuFragment :
             }
 
         }
-        fun startSwayTable(){
+
+        fun startSwayTable() {
             swayTable = createSwayTable().apply { start() }
         }
 
         fun startShowBee() {
-            if(showBee?.isRunning == true) return
+            if (showBee?.isRunning == true) return
             showBee = createShowBee().apply { start() }
         }
 
@@ -496,8 +501,10 @@ class MainMenuFragment :
         const val KEY_RESULT_FROM_REMOVE_PLAYER_DIALOG_FRAGMENT =
             "KeyResultFromRemovePlayerDialogFragment"
 
-        private const val DURATION_ANIMATOR_SHOW_HELPER = Conf.DURATION_ANIMATOR_SHOW_HELPER
-        private const val DURATION_ANIMATOR_SCALE_HELPER = Conf.DURATION_ANIMATOR_SCALE_HELPER
+        private const val DURATION_ANIMATOR_SHOW_BEE:Long = Conf.DURATION_ANIMATOR_SHOW_BEE
+        private const val DURATION_ANIMATOR_SCALE_BEE:Long = Conf.DURATION_ANIMATOR_SCALE_BEE
+        private const val DURATION_ANIMATOR_SHOW_INSTRUCTION:Long = Conf.DURATION_ANIMATOR_SHOW_INSTRUCTION
+        private const val ANGLE_SWAY_INSTRUCTION: Float = Conf.ANGLE_SWAY_INSTRUCTION
 
         @JvmStatic
         fun newInstance() = MainMenuFragment()
