@@ -9,5 +9,4 @@ interface SharedPreferencesForSoundStatus {
 
     fun saveVoiceActingStatus(voiceActingStatus: String)
 
-    fun readShownVoiceActingStatuses(): Set<String>
 }
