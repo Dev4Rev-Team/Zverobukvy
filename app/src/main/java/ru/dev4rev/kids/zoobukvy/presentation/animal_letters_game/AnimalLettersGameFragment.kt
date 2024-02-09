@@ -248,20 +248,18 @@ class AnimalLettersGameFragment :
         }
 
         binding.soundButtonLayout.setOnClickListener {
-            isClick {
-                viewModel.onSoundClick()
-            }
+            event.onClickSoundButton()
         }
 
         binding.lettersSoundButtonLayout.setOnClickListener {
-            isClick {
-                viewModel.onVoiceActingClick()
-            }
+            event.onClickLettersSoundButton()
         }
 
         binding.cardLevelView.setCards(gameStart!!.typesCards)
 
         isEnableClick = true
+
+        binding.root.setOnClickListener { hideSnackbar() }
     }
 
     private fun setPositionLetterInWord(pos: Int) {
@@ -387,17 +385,21 @@ class AnimalLettersGameFragment :
         }
     }
 
-    private fun isClick(block: () -> Unit) {
+    private fun isClick(isHideSnackbar: Boolean = true, block: () -> Unit) {
         if (isEnableClick) {
             isEnableClick = false
+            if (isHideSnackbar) hideSnackbar()
             delayAndRun(DELAY_NEXT_CLICK) { isEnableClick = true }
             block.invoke()
         }
     }
 
-    private fun hideSnackbar() {
-        if (snackbar.isShown)
+    private fun hideSnackbar(): Boolean {
+        if (snackbar.isShown) {
             snackbar.dismiss()
+            return true
+        }
+        return false
     }
 
     private class Sound(val soundEffectPlayer: SoundEffectPlayer) {
@@ -570,12 +572,12 @@ class AnimalLettersGameFragment :
         }
 
         fun onBackPressed() {
-            hideSnackbar()
+            if (hideSnackbar()) return
             viewModel.onBackPressed()
         }
 
         fun onClickNextWord() {
-            //viewModel.onClickNextWord()
+            //todo viewModel.onClickNextWord()
         }
 
         fun popBackStack() {
@@ -596,8 +598,21 @@ class AnimalLettersGameFragment :
         }
 
         fun onClickCorrectLetter(position: Int) {
+            hideSnackbar()
             delayAndRun(DELAY_SOUND_REPEAT) {
                 sound.playLetter(position)
+            }
+        }
+
+        fun onClickSoundButton() {
+            isClick {
+                viewModel.onSoundClick()
+            }
+        }
+
+        fun onClickLettersSoundButton() {
+            isClick(false) {
+                viewModel.onVoiceActingClick()
             }
         }
 
