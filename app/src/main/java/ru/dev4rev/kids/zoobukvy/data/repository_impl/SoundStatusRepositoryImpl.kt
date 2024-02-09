@@ -25,14 +25,4 @@ class SoundStatusRepositoryImpl @Inject constructor(
     override fun saveVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
         sharedPreferencesForSoundStatus.saveVoiceActingStatus(voiceActingStatus.name)
     }
-
-    override fun getShownVoiceActingStatuses(): Set<VoiceActingStatus> =
-        sharedPreferencesForSoundStatus.readShownVoiceActingStatuses().map {
-            when (it) {
-                VoiceActingStatus.SOUND.name -> VoiceActingStatus.SOUND
-                VoiceActingStatus.LETTER.name -> VoiceActingStatus.LETTER
-                VoiceActingStatus.OFF.name -> VoiceActingStatus.OFF
-                else -> VoiceActingStatus.SOUND
-            }
-        }.toSet()
 }

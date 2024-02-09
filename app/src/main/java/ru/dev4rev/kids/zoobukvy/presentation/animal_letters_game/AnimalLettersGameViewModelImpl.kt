@@ -466,17 +466,10 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
      */
     private fun changeVoiceActingStatus(voiceActingStatus: VoiceActingStatus) {
         voiceActingStatusLiveData.value =
-            voiceActingStatus to isShowVoiceActingStatus()
+            voiceActingStatus to true
         soundStatusRepository.saveVoiceActingStatus(voiceActingStatus)
         animalLettersGameInteractor.updateVoiceActingStatus(voiceActingStatus)
     }
-
-    /**
-     * Метод определяет, необходимо ли отображать текущий статус озвучки букв/звуков
-     * при нажатии соответствующей кнопки.
-     */
-    private fun isShowVoiceActingStatus() =
-        soundStatusRepository.getShownVoiceActingStatuses().size != VoiceActingStatus.values().size
 
     override fun onClickLetterCard(positionSelectedLetterCard: Int) {
         Timber.d("onClickLetterCard")
@@ -490,18 +483,14 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 mLastClickCardPosition = positionSelectedLetterCard
                 animalLettersGameInteractor.selectionLetterCard(positionSelectedLetterCard)
             }
-
     }
 
     private fun onComputerClickLetterCard(positionSelectedLetterCard: Int) {
         Timber.d("onComputerClickLetterCard by VM")
         isClickNextWalkingPlayer = false
-
         isCardClick = true
         mLastClickCardPosition = positionSelectedLetterCard
         animalLettersGameInteractor.selectionLetterCard(positionSelectedLetterCard)
-
-
     }
 
     private fun onClickNextWalkingPlayer() {

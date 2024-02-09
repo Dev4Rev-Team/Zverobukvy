@@ -10,6 +10,4 @@ interface SoundStatusRepository {
     fun getVoiceActingStatus(): VoiceActingStatus
 
     fun saveVoiceActingStatus(voiceActingStatus: VoiceActingStatus)
-
-    fun getShownVoiceActingStatuses(): Set<VoiceActingStatus>
 }
