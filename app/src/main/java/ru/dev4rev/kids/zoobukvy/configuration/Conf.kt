@@ -140,15 +140,20 @@ class Conf {
         // количество отгаданных карточек определенного цвета, для получения следующей декорации (бронза, серебро и т.д.)
         const val DECORATION_RATING = 100
 
-
         /**
          * Настройка экрана меню
          */
-        //время появление иконки помогающий найти кнопки справки
-        const val DURATION_ANIMATOR_SHOW_HELPER = 300L
+        //время появление пчелы
+        const val DURATION_ANIMATOR_SHOW_BEE = 300L
 
-        //время уменьшения иконки помогающий найти кнопки справки
-        const val DURATION_ANIMATOR_SCALE_HELPER = 2100L
+        //время уменьшения пчелы
+        const val DURATION_ANIMATOR_SCALE_BEE = 2100L
+
+        //время колебания таблички с иструкцией
+        const val DURATION_ANIMATOR_SHOW_INSTRUCTION: Long = 3000L
+
+        //угол колебания таблички с инструкцией
+        const val ANGLE_SWAY_INSTRUCTION: Float = 17f
 
         /**
          * Настройки списка аватарок

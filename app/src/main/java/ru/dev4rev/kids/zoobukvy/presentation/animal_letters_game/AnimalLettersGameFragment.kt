@@ -10,6 +10,7 @@ import androidx.core.animation.doOnEnd
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,6 +66,12 @@ class AnimalLettersGameFragment :
     }
     var lastStateScreen = StateScreen.NextPlayer
 
+    private val snackbar by lazy {
+        Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
+            setAction(getString(R.string.ok)) { dismiss() }
+        }
+    }
+
     private fun initDagger() {
         imageAvatarLoader = requireContext().appComponent.imageAvatarLoader
         requireContext().animalLettersGameSubcomponentContainer.createAnimalLettersGameSubcomponent(
@@ -115,10 +122,12 @@ class AnimalLettersGameFragment :
                 VoiceActingStatus.SOUND -> R.drawable.ic_sound_letter_sound
                 VoiceActingStatus.LETTER -> R.drawable.ic_sound_letter_on
                 VoiceActingStatus.OFF -> R.drawable.ic_sound_letter_off
-                else -> R.drawable.ic_sound_letter_off
             }
             binding.lettersSoundButtonImageView.setImageResource(icSoundLetterToggle)
             sound.setVoiceActingStatus(it.first)
+            if (it.second) {
+                snackbar.setText(it.first.messageId).show()
+            }
         }
     }
 
@@ -386,6 +395,10 @@ class AnimalLettersGameFragment :
         }
     }
 
+    private fun hideSnackbar() {
+        if (snackbar.isShown)
+            snackbar.dismiss()
+    }
 
     private class Sound(val soundEffectPlayer: SoundEffectPlayer) {
 
@@ -557,6 +570,7 @@ class AnimalLettersGameFragment :
         }
 
         fun onBackPressed() {
+            hideSnackbar()
             viewModel.onBackPressed()
         }
 
@@ -569,6 +583,7 @@ class AnimalLettersGameFragment :
         }
 
         fun onClickLetterCard(pos: Int) {
+            hideSnackbar()
             viewModel.onClickLetterCard(pos)
         }
 
