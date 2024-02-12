@@ -44,7 +44,10 @@ class MainActivity : AppCompatActivity() {
         initMainMenu(savedInstanceState)
         initBottomSheet()
         setHideSplashScreen()
+    }
 
+    override fun onResume() {
+        super.onResume()
         setFullScreen()
     }
 
