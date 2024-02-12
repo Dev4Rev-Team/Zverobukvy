@@ -10,21 +10,21 @@
     android:visibility="invisible">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/sector_word_card_image_guidline2"
+        android:id="@+id/sector_word_card_image_guide_line_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.27" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/word_guidline2"
+        android:id="@+id/word_guide_line_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.34" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/sector_menu_guidline2"
+        android:id="@+id/sector_menu_guide_line_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -43,7 +43,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/word_guidline2" />
+        app:layout_constraintTop_toTopOf="@+id/word_guide_line_2" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/next_word_tap_to_screen_text_view"
