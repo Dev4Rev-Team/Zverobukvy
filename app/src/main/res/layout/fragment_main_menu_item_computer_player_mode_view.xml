@@ -73,7 +73,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
                     android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/ic_done" />
+                    app:srcCompat="@drawable/ic_done"
+                    tools:ignore="ImageContrastCheck" />
             </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

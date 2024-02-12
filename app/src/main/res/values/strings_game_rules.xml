@@ -8,7 +8,7 @@
 
     <string name="game_rules_player">Игра</string>
     <string name="game_rules_player_text1">Перед тобой слово и карточки с буквами. Твоя цель – найти все буквы в слове.</string>
-    <string name="game_rules_player_text2">Когда слово отгадано, попробуй отгадать следующее. Все карточки с буквами остаются на своих местах. Запоминай, где расположены буквы!</string>
+    <string name="game_rules_player_text2">Когда слово отгадано, попробуй отгадать следующее. Карточки с буквами остаются на своих местах.</string>
 
     <string name="game_rules_multiplayer">Игра с другом или компьютером</string>
     <string name="game_rules_multiplayer_text1">Внимательно следи за тем, чей сейчас ход. Имя игрока указано в верхней части экрана.</string>

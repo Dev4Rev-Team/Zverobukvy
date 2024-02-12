@@ -93,7 +93,8 @@
             android:rotation="-10"
             android:textColor="@color/white"
             android:textOff="@string/space"
-            android:textOn="@string/choose" />
+            android:textOn="@string/choose"
+            tools:ignore="TextContrastCheck" />
 
         <ToggleButton
             android:id="@+id/green_toggle_button"
@@ -104,7 +105,8 @@
             android:rotation="-5"
             android:textColor="@color/white"
             android:textOff="@string/space"
-            android:textOn="@string/choose" />
+            android:textOn="@string/choose"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ToggleButton
             android:id="@+id/blue_toggle_button"
@@ -115,7 +117,8 @@
             android:rotation="5"
             android:textColor="@color/white"
             android:textOff="@string/space"
-            android:textOn="@string/choose" />
+            android:textOn="@string/choose"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ToggleButton
             android:id="@+id/violet_toggle_button"
@@ -161,13 +164,16 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/character_image_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/auto_layout"
+        android:layout_height="@dimen/auto_layout"
         android:layout_marginStart="@dimen/margin_default"
         android:layout_marginBottom="@dimen/margin_default"
+        android:scaleType="fitCenter"
         android:src="?app_season_character"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/play_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sector_game_cards_guideline" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/avatars_recycler_view_layout"
@@ -234,6 +240,7 @@
         app:layout_constraintEnd_toEndOf="@+id/show_bee"
         app:layout_constraintStart_toStartOf="@+id/show_bee"
         app:layout_constraintTop_toTopOf="@+id/show_bee"
-        app:srcCompat="@drawable/avatar_bee" />
+        app:srcCompat="@drawable/avatar_bee"
+        tools:ignore="VisualLintBounds" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
