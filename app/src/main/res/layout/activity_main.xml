@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:visibility="invisible"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="180dp"
+        app:behavior_peekHeight="@dimen/peek_height_bottom_sheet"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

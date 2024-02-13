@@ -5,7 +5,7 @@
     android:id="@+id/player_constraint_layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp">
+    android:layout_marginVertical="@dimen/margin_small">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/player_card_view"
@@ -23,7 +23,7 @@
         app:strokeColor="@color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/player_card_constraint_view"
+            android:id="@+id/player_card_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_user_card"
@@ -72,7 +72,7 @@
                     android:id="@+id/player_state_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
+                    android:layout_margin="@dimen/margin_tiny"
                     android:scaleType="centerCrop"
                     app:srcCompat="@drawable/ic_done"
                     tools:ignore="ImageContrastCheck" />
@@ -88,7 +88,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_edit"
                 app:tint="?app_text_color_lvl2"
-                tools:ignore="SpeakableTextPresentCheck" />
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/rating_cards_view_container"

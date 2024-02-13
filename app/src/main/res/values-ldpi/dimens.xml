@@ -7,7 +7,7 @@
     <dimen name="text_big">28sp</dimen>
     <dimen name="text_huge">32sp</dimen>
 
-    <dimen name="margin_players_recycler_view">16dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
 
     <!-- RatingCardView -->
     <dimen name="rating_card_view_card_corner_radius">6dp</dimen>
