@@ -388,7 +388,11 @@ class AnimalLettersGameFragment :
     private fun isClick(isHideSnackbar: Boolean = true, block: () -> Unit) {
         if (isEnableClick) {
             isEnableClick = false
-            if (isHideSnackbar) hideSnackbar()
+            if (isHideSnackbar && hideSnackbar()) {
+                isEnableClick = true
+                return
+            }
+
             delayAndRun(DELAY_NEXT_CLICK) { isEnableClick = true }
             block.invoke()
         }
@@ -572,7 +576,6 @@ class AnimalLettersGameFragment :
         }
 
         fun onBackPressed() {
-            if (hideSnackbar()) return
             viewModel.onBackPressed()
         }
 
@@ -585,7 +588,6 @@ class AnimalLettersGameFragment :
         }
 
         fun onClickLetterCard(pos: Int) {
-            hideSnackbar()
             viewModel.onClickLetterCard(pos)
         }
 
@@ -598,7 +600,6 @@ class AnimalLettersGameFragment :
         }
 
         fun onClickCorrectLetter(position: Int) {
-            hideSnackbar()
             delayAndRun(DELAY_SOUND_REPEAT) {
                 sound.playLetter(position)
             }
