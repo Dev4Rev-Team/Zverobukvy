@@ -106,6 +106,9 @@ class CustomCardTable @JvmOverloads constructor(
 
                 val letterCard = list[pos]
                 setOpenCard(letterCard.isVisible)
+                if(letterCard.isVisible){
+                    setCorrectCard()
+                }
 
                 setImageCloseBackground(srcClose)
                 setImageOpenBackground(srcOpen)

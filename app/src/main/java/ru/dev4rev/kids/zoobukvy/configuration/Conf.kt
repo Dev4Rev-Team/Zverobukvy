@@ -4,6 +4,7 @@ import android.graphics.Color
 import ru.dev4rev.kids.zoobukvy.BuildConfig
 
 class Conf {
+
     companion object {
 
         /**
@@ -192,19 +193,26 @@ class Conf {
         /**
          * DEBUG
          */
-        @Suppress("SimplifyBooleanWithConstants")
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
         const val DEBUG = BuildConfig.DEBUG_ON && true
 
         // проверить файлы картинок
-        const val DEBUG_IS_CHECK_IMAGE_FILES = false
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        const val DEBUG_IS_CHECK_IMAGE_FILES = DEBUG && false
 
         // провероверить файлы звука
-        const val DEBUG_IS_CHECK_SOUND_FILE = false
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        const val DEBUG_IS_CHECK_SOUND_FILE = DEBUG && false
 
         // проверить базу данных на корректность
-        const val IS_CHECK_DATA = false
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        const val IS_CHECK_DATA =  DEBUG && false
 
         // показывать фрагмент результатов всегда
-        const val DEBUG_IS_SHOW_GAME_IS_OVER_DIALOG_ANYTIME = DEBUG
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        const val DEBUG_IS_SHOW_GAME_IS_OVER_DIALOG_ANYTIME = DEBUG && true
+
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        val DEBUG_IS_FULL_SCREEN = DEBUG && true
     }
 }

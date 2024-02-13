@@ -7,11 +7,15 @@ import android.view.ViewTreeObserver
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import ru.dev4rev.kids.zoobukvy.R
 import ru.dev4rev.kids.zoobukvy.appComponent
+import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.theme_provider.Theme
 import ru.dev4rev.kids.zoobukvy.presentation.main_menu.MainMenuFragment
 import ru.dev4rev.kids.zoobukvy.utility.ui.viewModelProviderFactoryOf
@@ -42,6 +46,21 @@ class MainActivity : AppCompatActivity() {
         setHideSplashScreen()
     }
 
+    override fun onResume() {
+        super.onResume()
+        setFullScreen()
+    }
+
+    private fun setFullScreen() {
+        if (Conf.DEBUG_IS_FULL_SCREEN) {
+            WindowCompat.getInsetsController(window, window.decorView).apply {
+                hide(WindowInsetsCompat.Type.systemBars())
+                systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+    }
+
     private fun initMainMenu(savedInstanceState: Bundle?) {
         if (savedInstanceState == null)
             supportFragmentManager
@@ -62,13 +81,14 @@ class MainActivity : AppCompatActivity() {
         bottomSheetView.visibility = View.VISIBLE
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        bottomSheetBehavior.addBottomSheetCallback(object :BottomSheetCallback(){
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if(newState == BottomSheetBehavior.STATE_HIDDEN){
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     backPressedCallback?.isEnabled = false
                     InstructionBottomSheetDialogFragment.closeAnimation(this@MainActivity)
                 }
             }
+
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
         })
@@ -90,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            backPressedCallback?.let{onBackPressedDispatcher.addCallback( this, it)}
+            backPressedCallback?.let { onBackPressedDispatcher.addCallback(this, it) }
         }
 
         InstructionBottomSheetDialogFragment.setOnListenerClickHeader(this) {
