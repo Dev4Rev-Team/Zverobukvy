@@ -101,7 +101,7 @@
         <item name="app_background_color">@drawable/app_background_spring</item>
 
         <item name="app_splashscreen_background">@color/color_blue</item>
-        <item name="app_end_game_background_color">@drawable/app_background_greeen_spring</item>
+        <item name="app_end_game_background_color">@drawable/app_background_green_spring</item>
 
         <item name="app_flag_color">@color/color_red</item>
 

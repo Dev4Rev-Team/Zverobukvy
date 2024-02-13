@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ЗооБуквы</string>
 
     <!--Строки в интерфейсе-->
@@ -39,9 +39,9 @@
     <string name="game_view_model_max_players">Превышено максимальное количество игроков</string>
 
     <!--Режим озвучивания букв/звуков -->
-    <string name="voice_acting_status_letter">Включено произношение букв</string>
-    <string name="voice_acting_status_sound">Включено произношение звуков</string>
-    <string name="voice_acting_status_off">Произношение букв и звуков отключено</string>
+    <string name="voice_acting_status_letter">Режим \"БУКВЫ\"</string>
+    <string name="voice_acting_status_sound">Режим \"ЗВУКИ\"</string>
+    <string name="voice_acting_status_off">Режимы отключены</string>
 
     <!--Экран с результатами-->
     <string name="game_end_text">Игра завершена</string>
@@ -69,7 +69,7 @@
     <string name="hero">Герой</string>
     <string name="legend">Легенда</string>
 
-    <string name="about_app">Разработка:\nDev4Rev-Team\n2023 - 2024</string>
+    <string name="about_app" tools:ignore="TypographyDashes">Разработка:\nDev4Rev–Team\n2023 - 2024</string>
     <string name="number_in_game_cards">%1$d/%2$d</string>
 
 

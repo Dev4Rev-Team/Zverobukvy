@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:backgroundTint="@color/white"
     android:elevation="@dimen/elevation_default"
-    app:cardCornerRadius="24dp"
+    app:cardCornerRadius="@dimen/corner_radius_bottom_sheet"
     app:strokeColor="@color/transparent">
 
     <com.google.android.material.circularreveal.CircularRevealLinearLayout
@@ -22,7 +22,7 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/header_image_view"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/height_header_bottom_sheet"
                 android:clickable="true"
                 android:focusable="true"
                 android:scaleType="fitCenter"
@@ -32,7 +32,7 @@
             <Button
                 android:id="@+id/header_button_close"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/height_close_button_bottom_sheet"
                 android:layout_alignParentEnd="true"
                 android:backgroundTint="@color/transparent"
                 android:text="@string/close_rules"
@@ -58,8 +58,8 @@
                     android:id="@+id/rules_text_view"
                     android:layout_width="@dimen/auto_layout"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="@dimen/margin_default"
+                    android:layout_marginEnd="@dimen/margin_default"
                     android:gravity="center_horizontal"
                     android:text="@string/game_rules_name"
                     android:textSize="@dimen/text_medium"
@@ -71,7 +71,7 @@
                     android:id="@+id/prepare_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/margin_default"
                     android:gravity="center_horizontal"
                     android:text="@string/game_rules_prepare"
                     android:textSize="@dimen/text_medium_small"
@@ -93,7 +93,7 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/prepare_image_view"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="@dimen/height_prepare_image_view_bottom_sheet"
                     android:layout_marginTop="@dimen/margin_default"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -126,7 +126,7 @@
                     <ToggleButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginHorizontal="@dimen/margin_toggle_button"
                         android:background="@drawable/background_card_orange"
                         android:checked="true"
                         android:enabled="false"
@@ -138,7 +138,7 @@
                     <ToggleButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginHorizontal="@dimen/margin_toggle_button"
                         android:background="@drawable/background_card_green"
                         android:enabled="false"
                         android:textColor="@color/white"
@@ -149,7 +149,7 @@
                     <ToggleButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginHorizontal="@dimen/margin_toggle_button"
                         android:background="@drawable/background_card_blue"
                         android:enabled="false"
                         android:textColor="@color/white"
@@ -160,7 +160,7 @@
                     <ToggleButton
                         android:layout_width="@dimen/main_menu_toggle_button_width"
                         android:layout_height="@dimen/main_menu_toggle_button_height"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginHorizontal="@dimen/margin_toggle_button"
                         android:background="@drawable/background_card_violet"
                         android:enabled="false"
                         android:textColor="@color/white"
@@ -195,7 +195,7 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_player_one_image_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="350dp"
+                    android:layout_height="@dimen/height_game_player_one_image_view_bottom_sheet"
                     android:layout_marginTop="@dimen/margin_default"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -237,14 +237,15 @@
                     app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_view" />
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/game_multiplayer_card_view"
+                    android:id="@+id/game_multiplayer_image_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/height_game_multiplayer_image_view_bottom_sheet"
                     android:layout_marginTop="@dimen/margin_medium"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_text_part1_text_view"
-                    app:srcCompat="@drawable/game_player">
+                    app:srcCompat="@drawable/game_player"
+                    tools:ignore="ImageContrastCheck">
 
                 </com.google.android.material.imageview.ShapeableImageView>
 
@@ -257,7 +258,7 @@
                     android:text="@string/game_rules_multiplayer_text2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_card_view" />
+                    app:layout_constraintTop_toBottomOf="@+id/game_multiplayer_image_view" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_game_text_view"
@@ -285,9 +286,8 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/end_game_image_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="220dp"
+                    android:layout_height="@dimen/height_end_game_image_view_bottom_sheet"
                     android:layout_marginTop="@dimen/margin_default"
-                    android:maxHeight="50dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/end_game_text_part1_text_view"
@@ -298,7 +298,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:layout_marginBottom="32dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     android:gravity="center_horizontal"
                     android:text="@string/game_rules_end_game_say_goodbye"
                     android:textSize="@dimen/text_medium"

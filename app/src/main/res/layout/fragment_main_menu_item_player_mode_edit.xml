@@ -5,7 +5,7 @@
     android:id="@+id/player_constraint_layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/main_menu_card_vertical_margin">
+    android:layout_marginVertical="@dimen/margin_small">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/player_card_view"
@@ -22,16 +22,17 @@
         app:strokeColor="@color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/player_card_constraint_view"
+            android:id="@+id/edit_player_card_constraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/height_edit_player_card_layout"
             android:layout_margin="@dimen/margin_default">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/player_name_text_input_view"
                 android:layout_width="@dimen/auto_layout"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                app:layout_constraintWidth_max="@dimen/max_width_text_view"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_default"
                 android:layout_marginEnd="44dp"
                 android:gravity="center"
@@ -43,7 +44,8 @@
                 android:textSize="@dimen/text_medium_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/avatar"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/avatar"
@@ -71,6 +73,7 @@
                 style="@style/Button.Tiny.Dark"
                 android:layout_width="@dimen/auto_layout"
                 android:layout_height="wrap_content"
+                app:layout_constraintWidth_max="@dimen/max_width_button"
                 android:layout_marginStart="@dimen/margin_default"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:backgroundTint="@color/color_violet_pastel"
@@ -79,13 +82,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cancel_image_button"
                 app:layout_constraintTop_toBottomOf="@+id/player_name_text_input_view"
-                tools:ignore="VisualLintButtonSize" />
+                tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancel_image_button"
                 style="@style/Button.Tiny.Dark"
                 android:layout_width="@dimen/auto_layout"
                 android:layout_height="wrap_content"
+                app:layout_constraintWidth_max="@dimen/max_width_button"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_default"
                 android:backgroundTint="@color/color_orange_pastel"
@@ -94,17 +98,17 @@
                 app:layout_constraintEnd_toStartOf="@+id/save_image_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/player_name_text_input_view"
-                tools:ignore="VisualLintButtonSize" />
+                tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/delete_button"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="@dimen/width_small_button"
+        android:layout_height="@dimen/height_small_button"
         android:backgroundTint="@color/white"
-        app:cardCornerRadius="14dp"
+        app:cardCornerRadius="@dimen/corner_radius_small_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@color/transparent"
