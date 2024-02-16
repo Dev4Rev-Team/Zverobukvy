@@ -15,19 +15,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/back_to_menu_image_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/back_to_menu_button_layout"
+            android:layout_width="@dimen/size_square_button"
+            android:layout_height="@dimen/size_square_button"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
-            android:background="@drawable/background_white"
+            android:clickable="true"
             android:elevation="@dimen/elevation_default"
-            android:scaleType="center"
-            android:tint="?app_text_color_lvl2"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/corner_radius_default"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_left" />
+            app:strokeWidth="0dp"
+            tools:ignore="DuplicateSpeakableTextCheck,TouchTargetSizeCheck">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:tint="?app_text_color_lvl2"
+                app:srcCompat="@drawable/ic_arrow_left" />
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/player_name_card"
@@ -42,7 +52,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/transparent"
             tools:visibility="visible">
-
 
             <com.google.android.material.circularreveal.CircularRevealLinearLayout
                 android:layout_width="match_parent"
@@ -68,7 +77,8 @@
                         android:layout_gravity="center"
                         android:layout_margin="@dimen/margin_avatar_image"
                         android:layout_weight="1"
-                        app:srcCompat="@drawable/avatar_cat" />
+                        app:srcCompat="@drawable/avatar_cat"
+                        tools:ignore="ImageContrastCheck" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <Space
@@ -88,11 +98,10 @@
             </com.google.android.material.circularreveal.CircularRevealLinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_level"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/size_square_button"
+            android:layout_height="@dimen/size_square_button"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             android:backgroundTint="@color/color_orange_pastel"
@@ -113,51 +122,45 @@
                 app:radiusCards="@dimen/corner_radius_default" />
         </com.google.android.material.card.MaterialCardView>
 
-
-
-
-
-
-
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/sector_menu_guidline"
+            android:id="@+id/sector_menu_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="60dp" />
 
-
         <ru.dev4rev.kids.zoobukvy.presentation.customview.CustomCard
             android:id="@+id/word_custom_card"
             android:layout_width="@dimen/auto_layout"
             android:layout_height="@dimen/auto_layout"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             app:cardCornerRadius="@dimen/corner_radius_default"
             app:cardElevation="@dimen/elevation_default"
-            app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guidline"
+            app:layout_constraintBottom_toTopOf="@id/sector_word_card_image_guideline"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/sector_menu_guidline" />
+            app:layout_constraintTop_toTopOf="@+id/sector_menu_guideline" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/number_in_game_cards_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:elevation = "9dp"
+            android:layout_margin="@dimen/margin_small"
+            android:elevation="@dimen/elevation_default"
             android:gravity="center"
-            tools:text="1/10"
-            app:layout_constraintRight_toRightOf="@+id/word_custom_card"
-            app:layout_constraintBottom_toBottomOf="@+id/word_custom_card"
-            android:textColor="@color/white"
             android:shadowColor="@color/black"
             android:shadowRadius="10"
-            android:textSize="@dimen/text_small" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toBottomOf="@+id/word_custom_card"
+            app:layout_constraintRight_toRightOf="@+id/word_custom_card"
+            tools:ignore="TextContrastCheck"
+            tools:text="1/10" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/sector_word_card_image_guidline"
+            android:id="@+id/sector_word_card_image_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -169,19 +172,18 @@
             android:layout_height="@dimen/auto_layout"
             android:layout_marginTop="@dimen/margin_default"
             android:layout_marginBottom="@dimen/margin_default"
-            android:maxHeight="50dp"
             app:colorGuessed="@color/color_green_pastel"
             app:colorUnsolved="@color/white"
             app:horizontalGap="@dimen/margin_default"
-            app:layout_constraintBottom_toTopOf="@+id/word_guidline"
+            app:layout_constraintBottom_toTopOf="@+id/word_guideline"
             app:layout_constraintDimensionRatio="H,7:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/sector_word_card_image_guidline"
+            app:layout_constraintTop_toTopOf="@+id/sector_word_card_image_guideline"
             app:radiusCards="@dimen/corner_radius_default" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/word_guidline"
+            android:id="@+id/word_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -193,17 +195,19 @@
             android:layout_height="@dimen/auto_layout"
             app:flow_verticalGap="@dimen/margin_default"
             app:horizontalGap="@dimen/margin_default"
-            app:layout_constraintBottom_toTopOf="@+id/word_cards_table_guidline"
+            app:layout_constraintBottom_toTopOf="@+id/word_cards_table_guideline"
             app:layout_constraintDimensionRatio="5:7"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/word_guidline"
+            app:layout_constraintTop_toTopOf="@+id/word_guideline"
             app:layout_constraintVertical_bias="0.5"
+            app:srcClose="?app_cards_back"
+            app:srcOpen="@drawable/face"
             app:radiusCards="@dimen/corner_radius_default"
             app:verticalGap="@dimen/margin_default" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/word_cards_table_guidline"
+            android:id="@+id/word_cards_table_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -211,9 +215,9 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/sound_button_layout"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_width="@dimen/size_square_button"
+            android:layout_height="@dimen/size_square_button"
+            android:layout_marginTop="@dimen/margin_default"
             android:layout_marginEnd="@dimen/margin_medium"
             android:clickable="true"
             android:elevation="@dimen/elevation_default"
@@ -222,7 +226,8 @@
             app:cardCornerRadius="@dimen/corner_radius_default"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_level"
-            app:strokeWidth="0dp">
+            app:strokeWidth="0dp"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,DuplicateSpeakableTextCheck">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/sound_button_image_view"
@@ -232,14 +237,15 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:scaleType="centerCrop"
+                tools:ignore="ImageContrastCheck"
                 tools:src="@drawable/ic_sound_on" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/letters_sound_button_layout"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_width="@dimen/size_square_button"
+            android:layout_height="@dimen/size_square_button"
+            android:layout_marginTop="@dimen/margin_default"
             android:layout_marginEnd="@dimen/margin_medium"
             android:clickable="true"
             android:elevation="@dimen/elevation_default"
@@ -248,7 +254,8 @@
             app:cardCornerRadius="@dimen/corner_radius_default"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sound_button_layout"
-            app:strokeWidth="0dp">
+            app:strokeWidth="0dp"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/letters_sound_button_image_view"

@@ -1,6 +1,6 @@
 package ru.dev4rev.kids.zoobukvy.data.preferences
 
-interface SharedPreferencesForGame {
+interface SharedPreferencesForMainMenu {
     fun readTypesCardsSelectedForGame(): List<TypeCardsInSharedPreferences>
 
     fun saveTypesCardsSelectedForGame(typesCardsSelectedForGame: List<TypeCardsInSharedPreferences>)
@@ -10,12 +10,4 @@ interface SharedPreferencesForGame {
     fun saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame: List<String>)
 
     fun isFirstLaunch(): Boolean
-
-    fun readSoundStatus(): Boolean
-
-    fun saveSoundStatus(soundStatus: Boolean)
-
-    fun readVoiceActingStatus(): String?
-
-    fun saveVoiceActingStatus(voiceActingStatus: String)
 }

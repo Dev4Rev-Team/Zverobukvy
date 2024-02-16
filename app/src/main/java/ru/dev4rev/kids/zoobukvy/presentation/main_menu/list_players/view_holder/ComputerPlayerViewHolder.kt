@@ -20,10 +20,10 @@ class ComputerPlayerViewHolder(
             viewBinding.run {
                 playerNameTextView.text = playerInSetting.player.name
                 if (it.isSelectedForGame) {
-                    playerCardConstraintView.background = getDrawable(itemView.context, R.drawable.background_user_card)
+                    computerPlayerCardConstraintLayout.background = getDrawable(itemView.context, R.drawable.background_user_card)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_green_pastel))
                 } else {
-                    playerCardConstraintView.background = getDrawable(itemView.context, R.color.transparent)
+                    computerPlayerCardConstraintLayout.background = getDrawable(itemView.context, R.color.transparent)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_red_pastel))
                 }
                 playerCardView.setOnClickListener {

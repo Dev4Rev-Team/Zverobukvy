@@ -5,14 +5,14 @@
     android:id="@+id/player_constraint_layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/main_menu_card_vertical_margin"
+    android:layout_marginVertical="@dimen/margin_small"
     android:backgroundTint="@color/white"
     android:elevation="@dimen/elevation_default"
     app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
     app:strokeColor="@color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/player_card_constraint_view"
+        android:id="@+id/computer_player_card_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_default">
@@ -49,7 +49,8 @@
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/margin_avatar_image"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/avatar_buffalo" />
+                app:srcCompat="@drawable/avatar_buffalo"
+                tools:ignore="ImageContrastCheck" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.textview.MaterialTextView
@@ -106,6 +107,7 @@
                     style="@style/RatingTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    tools:ignore="TextContrastCheck"
                     tools:text="+1" />
 
             </com.google.android.material.card.MaterialCardView>
@@ -129,6 +131,7 @@
                     style="@style/RatingTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    tools:ignore="TextContrastCheck"
                     tools:text="+1" />
 
             </com.google.android.material.card.MaterialCardView>
@@ -152,6 +155,7 @@
                     style="@style/RatingTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    tools:ignore="TextContrastCheck"
                     tools:text="+1" />
 
             </com.google.android.material.card.MaterialCardView>
@@ -175,6 +179,7 @@
                     style="@style/RatingTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    tools:ignore="TextContrastCheck"
                     tools:text="+1" />
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>

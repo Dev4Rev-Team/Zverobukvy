@@ -173,13 +173,19 @@ class CustomCard @JvmOverloads constructor(
         this.isCorrect = true
     }
 
-    fun setImageOpenBackground(openBackground: Drawable) {
-        frontBackgroundImageView.setImageDrawable(openBackground)
+    fun setImageOpenBackground(@DrawableRes openBackground: Int) {
+        frontBackgroundImageView.setImageResource(openBackground)
     }
 
-    fun setImageSide(frontSide: Drawable, backSide: Drawable) {
-        frontSideImageView.setImageDrawable(frontSide)
+    fun setImageCloseBackground(@DrawableRes backSide: Int) {
+        backSideImageView.setImageResource(backSide)
+    }
+    fun setImageCloseBackground(backSide: Drawable) {
         backSideImageView.setImageDrawable(backSide)
+    }
+
+    fun setImageOpen(frontSide: Drawable) {
+        frontSideImageView.setImageDrawable(frontSide)
     }
 
     override fun onDetachedFromWindow() {

@@ -42,7 +42,7 @@
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="@dimen/margin_large"
         android:text="@string/game_end_text"
         android:textColor="?app_text_color_lvl3"
         android:textSize="@dimen/text_medium"
@@ -54,13 +54,14 @@
         android:id="@+id/title_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="@dimen/margin_large"
         android:text="@string/game_time_text"
         android:textColor="?app_text_color_lvl3"
         android:textSize="@dimen/text_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/winner_avatar_custom_image_rating_view" />
+        app:layout_constraintTop_toBottomOf="@+id/winner_avatar_custom_image_rating_view"
+        tools:ignore="TextContrastCheck" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/time_text_view"
@@ -71,13 +72,14 @@
         app:layout_constraintEnd_toEndOf="@+id/title_time_text_view"
         app:layout_constraintStart_toStartOf="@+id/title_time_text_view"
         app:layout_constraintTop_toBottomOf="@+id/title_time_text_view"
+        tools:ignore="TextContrastCheck"
         tools:text="45 мин 35 сек" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_medium_large"
         android:text="@string/points_text"
         android:textColor="?app_text_color_lvl3"
         android:textSize="@dimen/text_medium_small"
@@ -107,7 +109,7 @@
         style="@style/Button.Big.Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_big"
         android:text="@string/ok"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

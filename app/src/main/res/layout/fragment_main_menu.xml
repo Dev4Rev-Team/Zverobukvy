@@ -18,7 +18,7 @@
         app:layout_constraintGuide_begin="100dp" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/show_instruction_image_view"
+        android:id="@+id/show_bee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-10dp"
@@ -45,8 +45,8 @@
         android:id="@+id/players_recycler_view"
         android:layout_width="@dimen/auto_layout"
         android:layout_height="@dimen/auto_layout"
-        android:layout_marginStart="@dimen/margin_players_recycler_view"
-        android:layout_marginEnd="@dimen/margin_players_recycler_view"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
         android:layout_marginBottom="@dimen/margin_medium"
         app:layout_constraintBottom_toTopOf="@+id/sector_recycle_view_guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,43 +86,46 @@
             android:id="@+id/orange_toggle_button"
             android:layout_width="@dimen/main_menu_toggle_button_width"
             android:layout_height="@dimen/main_menu_toggle_button_height"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="@dimen/margin_toggle_button"
+            android:layout_marginTop="@dimen/margin_default"
             android:background="@drawable/background_card_orange"
             android:checked="true"
             android:rotation="-10"
             android:textColor="@color/white"
             android:textOff="@string/space"
-            android:textOn="@string/choose" />
+            android:textOn="@string/choose"
+            tools:ignore="TextContrastCheck" />
 
         <ToggleButton
             android:id="@+id/green_toggle_button"
             android:layout_width="@dimen/main_menu_toggle_button_width"
             android:layout_height="@dimen/main_menu_toggle_button_height"
-            android:layout_marginHorizontal="5dp"
+            android:layout_marginHorizontal="@dimen/margin_toggle_button"
             android:background="@drawable/background_card_green"
             android:rotation="-5"
             android:textColor="@color/white"
             android:textOff="@string/space"
-            android:textOn="@string/choose" />
+            android:textOn="@string/choose"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ToggleButton
             android:id="@+id/blue_toggle_button"
             android:layout_width="@dimen/main_menu_toggle_button_width"
             android:layout_height="@dimen/main_menu_toggle_button_height"
-            android:layout_marginHorizontal="5dp"
+            android:layout_marginHorizontal="@dimen/margin_toggle_button"
             android:background="@drawable/background_card_blue"
             android:rotation="5"
             android:textColor="@color/white"
             android:textOff="@string/space"
-            android:textOn="@string/choose" />
+            android:textOn="@string/choose"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ToggleButton
             android:id="@+id/violet_toggle_button"
             android:layout_width="@dimen/main_menu_toggle_button_width"
             android:layout_height="@dimen/main_menu_toggle_button_height"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="@dimen/margin_toggle_button"
+            android:layout_marginTop="@dimen/margin_default"
             android:background="@drawable/background_card_violet"
             android:rotation="10"
             android:textColor="@color/white"
@@ -145,6 +148,30 @@
         android:text="@string/main_menu_fragment_play_game_text_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sector_game_cards_guideline" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/instructions_image_view"
+        android:layout_width="@dimen/show_instructions_image_button_size"
+        android:layout_height="@dimen/show_instructions_image_button_size"
+        android:layout_marginEnd="@dimen/margin_default"
+        android:layout_marginBottom="@dimen/margin_default"
+        android:background="@color/transparent"
+        android:src="@drawable/tablet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/character_image_button"
+        android:layout_width="@dimen/auto_layout"
+        android:layout_height="@dimen/auto_layout"
+        android:layout_marginStart="@dimen/margin_default"
+        android:layout_marginBottom="@dimen/margin_default"
+        android:scaleType="fitCenter"
+        android:src="?app_season_character"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/play_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sector_game_cards_guideline" />
 
@@ -173,14 +200,14 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/close_avatar_recycler_view_layout"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="@dimen/width_small_button"
+        android:layout_height="@dimen/height_small_button"
         android:layout_marginStart="-20dp"
         android:layout_marginBottom="-20dp"
         android:backgroundTint="@color/white"
         android:clickable="true"
         android:focusable="true"
-        app:cardCornerRadius="14dp"
+        app:cardCornerRadius="@dimen/corner_radius_small_button"
         app:layout_constraintBottom_toTopOf="@id/avatars_recycler_view_layout"
         app:layout_constraintStart_toEndOf="@id/avatars_recycler_view_layout"
         app:strokeColor="@color/transparent"
@@ -209,10 +236,11 @@
         android:rotation="30"
         android:visibility="invisible"
         tools:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/show_instruction_image_view"
-        app:layout_constraintEnd_toEndOf="@+id/show_instruction_image_view"
-        app:layout_constraintStart_toStartOf="@+id/show_instruction_image_view"
-        app:layout_constraintTop_toTopOf="@+id/show_instruction_image_view"
-        app:srcCompat="@drawable/avatar_bee" />
+        app:layout_constraintBottom_toBottomOf="@+id/show_bee"
+        app:layout_constraintEnd_toEndOf="@+id/show_bee"
+        app:layout_constraintStart_toStartOf="@+id/show_bee"
+        app:layout_constraintTop_toTopOf="@+id/show_bee"
+        app:srcCompat="@drawable/avatar_bee"
+        tools:ignore="VisualLintBounds" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

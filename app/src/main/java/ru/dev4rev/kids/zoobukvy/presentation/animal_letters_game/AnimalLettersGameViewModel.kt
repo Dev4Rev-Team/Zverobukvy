@@ -36,9 +36,10 @@ interface AnimalLettersGameViewModel {
     fun getSoundStatusLiveData(): LiveData<Boolean>
 
     /**
-     * Метод для подписки view на состояние озвучки букв (буквы или звуки или отключено)
+     * Метод для подписки view на состояние озвучки букв (буквы или звуки или отключено) и на
+     * необходимость отображать сообщение о включенном режиме
      */
-    fun getVoiceActingStatusLiveData(): LiveData<VoiceActingStatus>
+    fun getVoiceActingStatusLiveData(): LiveData<Pair<VoiceActingStatus, Boolean>>
 
     /**
      * Метод вызывается при нажатии на элемент отключения/включения звука

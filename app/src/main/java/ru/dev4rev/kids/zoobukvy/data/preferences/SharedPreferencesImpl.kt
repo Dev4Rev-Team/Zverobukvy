@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SharedPreferencesImpl @Inject constructor(context: Context) :
-    SharedPreferencesForGame, SharedPreferencesForUserFeedback {
+    SharedPreferencesForSoundStatus, SharedPreferencesForMainMenu, SharedPreferencesForUserFeedback {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE
     )
@@ -16,7 +16,7 @@ class SharedPreferencesImpl @Inject constructor(context: Context) :
     override fun readTypesCardsSelectedForGame(): List<TypeCardsInSharedPreferences> {
         Timber.d("readTypesCardsSelectedForGame")
         return (sharedPreferences.getStringSet(KEY_TYPES_CARDS, null)
-            ?: setOf()).toList().map {
+            ?: emptySet()).toList().map {
             TypeCardsInSharedPreferences(it)
         }
     }
@@ -33,7 +33,7 @@ class SharedPreferencesImpl @Inject constructor(context: Context) :
     override fun readNamesPlayersSelectedForGame(): List<String> {
         Timber.d("readNamesPlayersSelectedForGame")
         return (sharedPreferences.getStringSet(KEY_NAMES_PLAYERS, null)
-            ?: setOf()).toList()
+            ?: emptySet()).toList()
     }
 
     override fun saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame: List<String>) {

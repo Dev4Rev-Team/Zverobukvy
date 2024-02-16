@@ -61,23 +61,20 @@ import kotlin.properties.Delegates
  * состояния, в gamingWordCard изменен список отгаданных букв в слове positionsGuessedLetters,
  * players - содержит в себе актуальный счет каждого игрока из прошлого состояния, walkingPlayer и
  * nextWalkingPlayer - из прошлого состояния, isActive == true
- * 6. [GameStateName.GUESSED_NOT_LAST_WORD_CARD] выбрана верная карточка последняя в слове, при этом
- * слово не последнее: lettersField - для выбранной карточки-буквы isVisible ==  true, для
- * остальных - из прошлого состояния, в gamingWordCard изменен список отгаданных букв в слове
- * positionsGuessedLetters, players - содержит в себе актуальный счет каждого игрока: для ходящего -
- * обвновлен (+1), для остальных - из прошлого состояния, walkingPlayer и nextWalkingPlayer - из
- * прошлого состояния, isActive == true
+ * 6. [GameStateName.GUESSED_WORD_CARD] выбрана верная карточка последняя в слове: lettersField -
+ * для выбранной карточки-буквы isVisible ==  true, для остальных - из прошлого состояния,
+ * в gamingWordCard изменен список отгаданных букв в слове positionsGuessedLetters, players -
+ * содержит в себе актуальный счет каждого игрока: для ходящего - обвновлен (+1), для остальных - из
+ * прошлого состояния, walkingPlayer и nextWalkingPlayer - из прошлого состояния, isActive == true
  * 7. [GameStateName.NEXT_WORD_CARD_AND_NEXT_WALKING_PLAYER] новое слово и переход хода к следующему
  * игроку: lettersField - для всех карточек-букв isVisible ==  false и установлен актуальный цвет,
  * в gamingWordCard - новое слово и список отгаданных букв в слове пуст, players - содержит в себе
  * актуальный счет каждого игрока из прошлого состояния, walkingPlayer и nextWalkingPlayer изменяются
  * на следующих по порядку, isActive == true
- * 8. [GameStateName.END_GAME] отгадана последняя буква в последнем слове, конец игры:
- * lettersField - для выбранной карточки-буквы isVisible ==  true, для остальных - из прошлого
- * состояния, в gamingWordCard  изменен список отгаданных букв в слове positionsGuessedLetters,
- * players - содержит в себе актуальный счет каждого игрока: для ходящего - обвновлен (+1), для
- * остальных - из прошлого состояния, walkingPlayer == null и nextWalkingPlayer == null,
- * isActive == false
+ * 8. [GameStateName.END_GAME] больше нет карточек-слов для отгадывания, конец игры:
+ * lettersField - из прошлого состояния, gamingWordCard == null, players - содержит в себе
+ * актуальный счет каждого игрока из прошлого состояния (но отсортирован по убыванию),
+ * walkingPlayer == null и nextWalkingPlayer == null, isActive == false
  * 9. [GameStateName.END_GAME_BY_USER] игра завершена пользователем (не доиграл): все поля из
  * прошлого состояния, кроме isActive == false
  * 10. [GameStateName.UPDATE_LETTER_CARD] обновление цвета карточек из-за смены озвучки букв/звуков:
@@ -179,33 +176,11 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     override fun getNextWordCard() {
         Timber.d("getNextWordCard")
         gameStateFlow.value?.let { currentGameState ->
-            // gameStateFlow обновляет value, т.к. отличается gameField, walkingPlayer и nextWalkingPlayer
-            val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
-            gameStateFlow.value = currentGameState.copy(
-                name = GameStateName.NEXT_WORD_CARD_AND_NEXT_WALKING_PLAYER,
-                gameField = GameField(
-                    lettersField = mutableListOf<LetterCard>().apply {
-                        addAll(currentGameState.gameField.lettersField)
-                        forEach { it.isVisible = false }
-                    },
-                    // в данной ситуации очередь карточек-слов не может быть пустой
-                    gamingWordCard = gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
-                ).also {
-                    computer?.setCurrentGameField(it, positionCurrentLetterCard)
-                    // определяем цвет букв и озвучку звуков (твердые/мягкие) и обновляем lettersField
-                    it.gamingWordCard?.let { wordCard ->
-                        colorLettersCalculator.calculate(
-                            wordCard.word,
-                            it.lettersField,
-                            currentGameState.voiceActingStatus
-                        )
-                    }
-                },
-                walkingPlayer = newWalkingPlayer.also {
-                    currentWalkingPlayer = it
-                },
-                nextWalkingPlayer = getNextWalkingPlayer(players, newWalkingPlayer)
-            )
+            if (isHasGamingWordCard())
+                endGame(currentGameState)
+            else {
+                nextWordCard(currentGameState)
+            }
         }
     }
 
@@ -216,7 +191,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         gameStateFlow.value?.let { currentGameState ->
             val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
             gameStateFlow.value = currentGameState.copy(
-               name = GameStateName.NEXT_WALKING_PLAYER_AFTER_WRONG_LETTER_CARD,
+                name = GameStateName.NEXT_WALKING_PLAYER_AFTER_WRONG_LETTER_CARD,
                 gameField = GameField(
                     lettersField = flipLetterCard(
                         currentGameState.gameField.lettersField,
@@ -237,7 +212,8 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         // gameStateFlow обновляет value, т.к. отличается isActive
         gameStateFlow.value = gameStateFlow.value?.copy(
             name = GameStateName.END_GAME_BY_USER,
-            isActive = false)
+            isActive = false
+        )
                 // если gameState == null, значит завершение игры инициировано пользователем, во время
                 //загрузки данных из репозитория
             ?: GameState(
@@ -400,20 +376,11 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
                     levelAndRatingCalculator.updateRating(it, wordCard)
             }
         }
-        // нет больше карточек-слов для игры
-        if (isLastGamingWordCard())
-            guessedLastGamingWordCard(
-                currentGameState,
-                positionCorrectLetterCard,
-                positionCorrectLetterCardInGamingWordCard
-            )
-        // еще есть карточки-слова для игры
-        else
-            guessedNotLastGamingWordCard(
-                currentGameState,
-                positionCorrectLetterCard,
-                positionCorrectLetterCardInGamingWordCard
-            )
+        guessedGamingWordCard(
+            currentGameState,
+            positionCorrectLetterCard,
+            positionCorrectLetterCardInGamingWordCard
+        )
     }
 
     /**
@@ -446,17 +413,13 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     }
 
     /**
-     * Метод вызывается, когда отгадано последнее слово и соответственно игра завершается
+     * Метод вызывается, когда больше нет карточек-слов для отгадывания
      * @param currentGameState текущее состояние игры
-     * @param positionCorrectLetterCard позиция корректной карточки-буквы в списке карточек-букв
-     * @param positionCorrectLetterCardInGamingWordCard позиция корректной буквы в отгадываемом слове
      */
-    private fun guessedLastGamingWordCard(
-        currentGameState: GameState,
-        positionCorrectLetterCard: Int,
-        positionCorrectLetterCardInGamingWordCard: Int
+    private fun endGame(
+        currentGameState: GameState
     ) {
-        Timber.d("guessedLastGamingWordCard")
+        Timber.d("endGame")
         // в конце игры сохраняем в БД актуальный рейтинг игроков
         CoroutineScope(Dispatchers.IO).launch {
             levelAndRatingCalculator.getUpdatedPlayers().forEach {
@@ -465,21 +428,15 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
         }
         // сохраняем в репозиторий состояние игроков после завершения игры
         changeRatingRepository.setPlayersAfterGame(dealPlayersForGame.extractHumanPlayers(players.map { it.player }))
-        // gameStateFlow обновляет value, т.к. отличается gameField, players, walkingPlayer,
-        //nextWalkingPlayer и isActive
+        // gameStateFlow обновляет value, т.к. отличается gameField, walkingPlayer, nextWalkingPlayer
+        // и isActive
         gameStateFlow.value = currentGameState.copy(
             name = GameStateName.END_GAME,
             gameField = GameField(
-                lettersField = flipLetterCard(
-                    currentGameState.gameField.lettersField,
-                    positionCorrectLetterCard
-                ),
-                gamingWordCard = changeGamingWordCardAfterCorrectLetterCard(
-                    currentGameState.gameField.gamingWordCard,
-                    positionCorrectLetterCardInGamingWordCard
-                )
+                lettersField = currentGameState.gameField.lettersField,
+                gamingWordCard = null
             ),
-            players = changePlayersAfterGuessedGamingWordCard(currentGameState.players).apply {
+            players = currentGameState.players.toMutableList().apply {
                 // сортировка игроков по кол-ву отгаданных слов (по убыванию)
                 sortBy {
                     -it.scoreInCurrentGame
@@ -492,20 +449,55 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     }
 
     /**
-     * Метод вызывается, когда отгадано слово и еще есть слова для продолжения игры
+     * Метод вызывается, когда запрашивается следующая карточка-слово для отгадывания и она есть
+     * @param currentGameState текущее состояние игры
+     */
+    private fun nextWordCard(currentGameState: GameState) {
+        Timber.d("nextWordCard")
+        // gameStateFlow обновляет value, т.к. отличается gameField, walkingPlayer и nextWalkingPlayer
+        val newWalkingPlayer = getNextWalkingPlayer(players, currentWalkingPlayer)
+        gameStateFlow.value = currentGameState.copy(
+            name = GameStateName.NEXT_WORD_CARD_AND_NEXT_WALKING_PLAYER,
+            gameField = GameField(
+                lettersField = mutableListOf<LetterCard>().apply {
+                    addAll(currentGameState.gameField.lettersField)
+                    forEach { it.isVisible = false }
+                },
+                // в данной ситуации очередь карточек-слов не может быть пустой
+                gamingWordCard = gamingWords.remove() // отгадываемая карточка-слово удаляется из очереди
+            ).also {
+                computer?.setCurrentGameField(it, positionCurrentLetterCard)
+                // определяем цвет букв и озвучку звуков (твердые/мягкие) и обновляем lettersField
+                it.gamingWordCard?.let { wordCard ->
+                    colorLettersCalculator.calculate(
+                        wordCard.word,
+                        it.lettersField,
+                        currentGameState.voiceActingStatus
+                    )
+                }
+            },
+            walkingPlayer = newWalkingPlayer.also {
+                currentWalkingPlayer = it
+            },
+            nextWalkingPlayer = getNextWalkingPlayer(players, newWalkingPlayer)
+        )
+    }
+
+    /**
+     * Метод вызывается, когда отгадано слово
      * @param currentGameState текущее состояние игры
      * @param positionCorrectLetterCard позиция корректной карточки-буквы в списке карточек-букв
      * @param positionCorrectLetterCardInGamingWordCard позиция корректной буквы в отгадываемом слове
      */
-    private fun guessedNotLastGamingWordCard(
+    private fun guessedGamingWordCard(
         currentGameState: GameState,
         positionCorrectLetterCard: Int,
         positionCorrectLetterCardInGamingWordCard: Int
     ) {
-        Timber.d("guessedNotLastGamingWordCard")
-        // gameStateFlow обновляет value, т.к. отличается gameField, player
+        Timber.d("guessedGamingWordCard")
+        // gameStateFlow обновляет value, т.к. отличается gameField, players
         gameStateFlow.value = currentGameState.copy(
-            name = GameStateName.GUESSED_NOT_LAST_WORD_CARD,
+            name = GameStateName.GUESSED_WORD_CARD,
             gameField = GameField(
                 lettersField = flipLetterCard(
                     currentGameState.gameField.lettersField,
@@ -591,7 +583,7 @@ class AnimalLettersGameInteractorImpl @Inject constructor(
     /**
      * @return true - если в очереди карточек-слов больше нет слов, false - еще есть слова для игры
      */
-    private fun isLastGamingWordCard() =
+    private fun isHasGamingWordCard() =
         gamingWords.isEmpty()
 
     /**

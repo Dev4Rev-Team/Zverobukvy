@@ -5,7 +5,7 @@
     android:id="@+id/player_constraint_layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp">
+    android:layout_marginVertical="@dimen/margin_small">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/player_card_view"
@@ -23,7 +23,7 @@
         app:strokeColor="@color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/player_card_constraint_view"
+            android:id="@+id/player_card_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_user_card"
@@ -37,7 +37,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/avatar"
                 app:layout_constraintStart_toStartOf="@id/avatar"
-                app:layout_constraintTop_toBottomOf="@id/avatar" />
+                app:layout_constraintTop_toBottomOf="@id/avatar"
+                tools:ignore="TextContrastCheck" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/avatar"
@@ -56,7 +57,8 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/margin_avatar_image"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/avatar_drake" />
+                    app:srcCompat="@drawable/avatar_drake"
+                    tools:ignore="ImageContrastCheck" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -70,10 +72,12 @@
                     android:id="@+id/player_state_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
+                    android:layout_margin="@dimen/margin_tiny"
                     android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/ic_done" />
+                    app:srcCompat="@drawable/ic_done"
+                    tools:ignore="ImageContrastCheck" />
             </com.google.android.material.card.MaterialCardView>
+
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/edit_image_button"
                 android:layout_width="wrap_content"
@@ -83,7 +87,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_edit"
-                app:tint="?app_text_color_lvl2" />
+                app:tint="?app_text_color_lvl2"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/rating_cards_view_container"
@@ -151,6 +156,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:visibility="gone"
+                            tools:ignore="ImageContrastCheck"
                             tools:visibility="visible" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -158,6 +164,7 @@
                             style="@style/RatingTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            tools:ignore="TextContrastCheck"
                             tools:text="1250" />
 
                     </com.google.android.material.card.MaterialCardView>
@@ -182,6 +189,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:visibility="gone"
+                            tools:ignore="ImageContrastCheck"
                             tools:visibility="visible" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -189,6 +197,7 @@
                             style="@style/RatingTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            tools:ignore="TextContrastCheck"
                             tools:text="500" />
 
                     </com.google.android.material.card.MaterialCardView>
@@ -213,6 +222,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:visibility="gone"
+                            tools:ignore="ImageContrastCheck"
                             tools:visibility="visible" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -220,6 +230,7 @@
                             style="@style/RatingTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            tools:ignore="TextContrastCheck"
                             tools:text="10" />
 
                     </com.google.android.material.card.MaterialCardView>
@@ -244,6 +255,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:visibility="gone"
+                            tools:ignore="ImageContrastCheck"
                             tools:visibility="visible" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -251,6 +263,7 @@
                             style="@style/RatingTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            tools:ignore="TextContrastCheck"
                             tools:text="2" />
 
                     </com.google.android.material.card.MaterialCardView>

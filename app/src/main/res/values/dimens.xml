@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!--Main menu settings-->
     <dimen name="main_menu_card_corner_radius">8dp</dimen>
-    <dimen name="main_menu_card_vertical_margin">4dp</dimen>
     <dimen name="main_menu_toggle_button_width">40dp</dimen>
     <dimen name="main_menu_toggle_button_height">60dp</dimen>
+    <dimen name="height_small_button">28dp</dimen>
+    <dimen name="width_small_button">28dp</dimen>
+    <dimen name="corner_radius_small_button">14dp</dimen>
+    <dimen name="height_edit_player_card_layout">104dp</dimen>
+
+    <!-- Instruction-->
+    <dimen name="peek_height_bottom_sheet">180dp</dimen>
+    <dimen name="corner_radius_bottom_sheet">24dp</dimen>
+    <dimen name="height_header_bottom_sheet">40dp</dimen>
+    <dimen name="height_close_button_bottom_sheet">40dp</dimen>
+    <dimen name="height_prepare_image_view_bottom_sheet">80dp</dimen>
+    <dimen name="height_game_player_one_image_view_bottom_sheet">350dp</dimen>
+    <dimen name="height_game_multiplayer_image_view_bottom_sheet">50dp</dimen>
+    <dimen name="height_end_game_image_view_bottom_sheet">220dp</dimen>
+    
+    <!--Dialog base-->
+    <dimen name="height_dialog_base">128dp</dimen>
+    
+    <!--Animal letter game-->
+    <dimen name="size_square_button">40dp</dimen>
 
     <!--Text settings-->
     <dimen name="text_tiny">10sp</dimen>
@@ -21,13 +41,17 @@
     <!--Margin settings-->
     <dimen name="margin_default">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
-    <dimen name="margin_players_recycler_view">32dp</dimen>
+    <dimen name="margin_medium_large">24dp</dimen>
+    <dimen name="margin_large">32dp</dimen>
     <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_big">35dp</dimen>
     <dimen name="margin_avatar_image">8dp</dimen>
     <dimen name="margin_huge_player_cards">60dp</dimen>
+    <dimen name="margin_toggle_button">5dp</dimen>
 
     <dimen name="star_size">30dp</dimen>
     <dimen name="margin_rating_card_horizontal">1dp</dimen>
+    <dimen name="margin_tiny">2dp</dimen>
     <dimen name="avatar_stroke">2dp</dimen>
     <dimen name="winner_avatar_stroke_width">4dp</dimen>
 
@@ -54,7 +78,12 @@
     <dimen name="avatar_size_huge">60dp</dimen>
     <dimen name="avatar_status_size">16dp</dimen>
     <dimen name="avatar_status_corner_radius">8dp</dimen>
-    <dimen name="margin_big">35dp</dimen>
+
     <dimen name="tablet_max_width_player">420dp</dimen>
+    <dimen name="show_instructions_image_button_size">70dp</dimen>
+
+    <!--Max parameters-->
+    <dimen name="max_width_text_view">488dp</dimen>
+    <dimen name="max_width_button">320dp</dimen>
 
 </resources>

@@ -78,9 +78,6 @@ class Conf {
         // задержка озвучивания буквы после нажатия на открытую карту
         const val DELAY_SOUND_REPEAT = 0L
 
-        // фон открытой карты с буквой
-        const val IMAGE_CARD_FOREGROUND = "FACE.webp"
-
         // движение карусели
         const val SHIFT_ANIMATOR_PLAYER_NEXT_DP = 75f
 
@@ -143,15 +140,20 @@ class Conf {
         // количество отгаданных карточек определенного цвета, для получения следующей декорации (бронза, серебро и т.д.)
         const val DECORATION_RATING = 100
 
-
         /**
          * Настройка экрана меню
          */
-        //время появление иконки помогающий найти кнопки справки
-        const val DURATION_ANIMATOR_SHOW_HELPER = 300L
+        //время появление пчелы
+        const val DURATION_ANIMATOR_SHOW_BEE = 300L
 
-        //время уменьшения иконки помогающий найти кнопки справки
-        const val DURATION_ANIMATOR_SCALE_HELPER = 2100L
+        //время уменьшения пчелы
+        const val DURATION_ANIMATOR_SCALE_BEE = 2100L
+
+        //время колебания таблички с иструкцией
+        const val DURATION_ANIMATOR_SHOW_INSTRUCTION: Long = 3000L
+
+        //угол колебания таблички с инструкцией
+        const val ANGLE_SWAY_INSTRUCTION: Float = 17f
 
         /**
          * Настройки списка аватарок
@@ -160,30 +162,56 @@ class Conf {
         const val SPAN_COUNT_AVATARS_RECYCLER_VIEW = 4
 
         /**
-         * Новогодний период
+         * Новогодний период (внутри зимнего)
          */
         const val START_NEY_YEAR_PERIOD_MONTH = 11
-        const val START_NEY_YEAR_PERIOD_DAY = 1
-        const val END_NEY_YEAR_PERIOD_MONTH = 1
-        const val END_NEY_YEAR_PERIOD_DAY = 1
+        const val START_NEY_YEAR_PERIOD_DAY = 15
+        const val END_NEY_YEAR_PERIOD_MONTH = 0
+        const val END_NEY_YEAR_PERIOD_DAY = 15
+        /**
+         * Зимний период
+         */
+        const val START_WINTER_PERIOD_MONTH = 11
+        const val START_WINTER_PERIOD_DAY = 1
+        /**
+         * Весенний период
+         */
+        const val START_SPRING_PERIOD_MONTH = 2
+        const val START_SPRING_PERIOD_DAY = 1
+        /**
+         * Летний период
+         */
+        const val START_SUMMER_PERIOD_MONTH = 5
+        const val START_SUMMER_PERIOD_DAY = 1
+        /**
+         * Осенний период
+         */
+        const val START_AUTUMN_PERIOD_MONTH = 8
+        const val START_AUTUMN_PERIOD_DAY = 1
 
         /**
          * DEBUG
          */
-
-        @Suppress("SimplifyBooleanWithConstants")
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
         const val DEBUG = BuildConfig.DEBUG_ON && true
 
         // проверить файлы картинок
-        const val DEBUG_IS_CHECK_IMAGE_FILES = false
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        const val DEBUG_IS_CHECK_IMAGE_FILES = DEBUG && false
 
         // провероверить файлы звука
-        const val DEBUG_IS_CHECK_SOUND_FILE = false
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        const val DEBUG_IS_CHECK_SOUND_FILE = DEBUG && false
 
         // проверить базу данных на корректность
-        const val IS_CHECK_DATA = false
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        const val IS_CHECK_DATA =  DEBUG && false
 
         // показывать фрагмент результатов всегда
-        const val DEBUG_IS_SHOW_GAME_IS_OVER_DIALOG_ANYTIME = DEBUG
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        const val DEBUG_IS_SHOW_GAME_IS_OVER_DIALOG_ANYTIME = DEBUG && true
+
+        @Suppress( "SimplifyBooleanWithConstants", "KotlinConstantConditions", "RedundantSuppression")
+        val DEBUG_IS_FULL_SCREEN = DEBUG && true
     }
 }

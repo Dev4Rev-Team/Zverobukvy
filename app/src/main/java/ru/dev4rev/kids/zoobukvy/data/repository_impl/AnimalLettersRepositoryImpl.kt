@@ -16,7 +16,7 @@ import ru.dev4rev.kids.zoobukvy.data.mapper.mapper_impl.player.AvatarRoomMapper
 import ru.dev4rev.kids.zoobukvy.data.mapper.mapper_impl.player.PlayerMapperToData
 import ru.dev4rev.kids.zoobukvy.data.mapper.mapper_impl.player.PlayerMapperToDomain
 import ru.dev4rev.kids.zoobukvy.data.network_state.NetworkStatusImpl
-import ru.dev4rev.kids.zoobukvy.data.preferences.SharedPreferencesForGame
+import ru.dev4rev.kids.zoobukvy.data.preferences.SharedPreferencesForMainMenu
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.CardsSet
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
@@ -33,7 +33,7 @@ import javax.inject.Singleton
 class AnimalLettersRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
-    private val sharedPreferencesForGame: SharedPreferencesForGame,
+    private val sharedPreferencesForMainMenu: SharedPreferencesForMainMenu,
     private val networkStatus: NetworkStatusImpl
 ) : AnimalLettersGameRepository, MainMenuRepository, LoadingDataRepository {
     private val letterCardMapperToDomain = LetterCardMapperToDomain()
@@ -136,25 +136,25 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     }
 
     override fun getTypesCardsSelectedForGame(): List<TypeCards> =
-        sharedPreferencesForGame.readTypesCardsSelectedForGame().map {
+        sharedPreferencesForMainMenu.readTypesCardsSelectedForGame().map {
             sharedPreferencesTypeCardsMapper.mapToDomain(it)
         }
 
     override fun saveTypesCardsSelectedForGame(typesCardsSelectedForGame: List<TypeCards>) =
-        sharedPreferencesForGame.saveTypesCardsSelectedForGame(
+        sharedPreferencesForMainMenu.saveTypesCardsSelectedForGame(
             typesCardsSelectedForGame.map {
                 sharedPreferencesTypeCardsMapper.mapToData(it)
             }
         )
 
     override fun getNamesPlayersSelectedForGame(): List<String> =
-        sharedPreferencesForGame.readNamesPlayersSelectedForGame()
+        sharedPreferencesForMainMenu.readNamesPlayersSelectedForGame()
 
     override fun saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame: List<String>) =
-        sharedPreferencesForGame.saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame)
+        sharedPreferencesForMainMenu.saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame)
 
     override fun isFirstLaunch(): Boolean =
-        sharedPreferencesForGame.isFirstLaunch()
+       sharedPreferencesForMainMenu.isFirstLaunch()
 
     override suspend fun getAvatarsFromLocalDataSource(): List<Avatar> =
         withContext(Dispatchers.IO) {

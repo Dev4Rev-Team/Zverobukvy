@@ -53,12 +53,6 @@ class AssetsImageCashImpl @Inject constructor(
             } catch (e: Exception) {
                 throw IllegalStateException("no element image letter ${it.faceImageName}")
             }
-
-            try {
-                addToMap(context, it.backImageName, ASSETS_PATH_IMAGE_SYSTEM + it.backImageName)
-            } catch (e: Exception) {
-                throw IllegalStateException("no element image system ${it.backImageName}")
-            }
         }
     }
 

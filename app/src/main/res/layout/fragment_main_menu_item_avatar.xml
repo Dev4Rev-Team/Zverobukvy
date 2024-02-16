@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.carousel.MaskableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,6 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/margin_default"
+        android:clickable="true"
+        android:focusable="true"
         android:backgroundTint="@color/white"
         app:cardCornerRadius="@dimen/main_menu_card_corner_radius"
         app:strokeColor="@color/transparent">
@@ -26,7 +29,8 @@
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/margin_avatar_image"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/avatar_drake" />
+                app:srcCompat="@drawable/avatar_drake"
+                tools:ignore="ImageContrastCheck" />
         </com.google.android.material.card.MaterialCardView>
 
     </com.google.android.material.card.MaterialCardView>
