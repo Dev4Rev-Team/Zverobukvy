@@ -61,8 +61,7 @@ class EditPlayerViewHolder(
 
                 imageAvatarLoader.loadImageAvatar(it.player.avatar, playerAvatarImageView)
 
-                playerAvatarImageView.apply {
-                    isClickable = true
+                avatar.apply {
                     setOnClickListener {
                         avatarPlayerClickListener()
                     }

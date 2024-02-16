@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="@dimen/mtrl_high_ripple_pressed_alpha" android:color="?app_text_color_button" android:state_pressed="true" tools:ignore="PrivateResource" />
+    <item android:alpha="@dimen/mtrl_high_ripple_focused_alpha" android:color="?app_text_color_button" android:state_focused="true" android:state_hovered="true" tools:ignore="PrivateResource" />
+    <item android:alpha="@dimen/mtrl_high_ripple_focused_alpha" android:color="?app_text_color_button" android:state_focused="true" tools:ignore="PrivateResource" />
+    <item android:alpha="@dimen/mtrl_high_ripple_hovered_alpha" android:color="?app_text_color_button" android:state_hovered="true" tools:ignore="PrivateResource" />
+    <item android:alpha="@dimen/mtrl_high_ripple_default_alpha" android:color="?app_text_color_button" tools:ignore="PrivateResource" />
+</selector>

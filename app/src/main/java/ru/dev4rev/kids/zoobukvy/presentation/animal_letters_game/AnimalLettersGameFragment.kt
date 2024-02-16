@@ -229,7 +229,7 @@ class AnimalLettersGameFragment :
             event.onLoadGame()
         }
 
-        binding.backToMenuImageButton.setOnClickListener {
+        binding.backToMenuButtonLayout.setOnClickListener {
             isClick {
                 event.onBackPressed()
             }
