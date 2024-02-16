@@ -15,19 +15,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/back_to_menu_image_button"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/back_to_menu_button_layout"
             android:layout_width="@dimen/size_square_button"
             android:layout_height="@dimen/size_square_button"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
-            android:background="@drawable/background_white"
+            android:clickable="true"
             android:elevation="@dimen/elevation_default"
-            android:scaleType="center"
-            android:tint="?app_text_color_lvl2"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/corner_radius_default"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_left" />
+            app:strokeWidth="0dp"
+            tools:ignore="DuplicateSpeakableTextCheck,TouchTargetSizeCheck">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:tint="?app_text_color_lvl2"
+                app:srcCompat="@drawable/ic_arrow_left" />
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/player_name_card"
