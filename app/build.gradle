@@ -5,17 +5,29 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     namespace 'ru.dev4rev.kids.zoobukvy'
     compileSdk 34
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     defaultConfig {
         applicationId "ru.dev4rev.kids.zoobukvy"
         minSdk 23
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -35,6 +47,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "DEBUG_ON", 'false'
+            signingConfig signingConfigs.release
         }
         debug{
             buildConfigField "boolean", "DEBUG_ON", 'true'
