@@ -7,6 +7,7 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameViewModelImpl
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.game_is_over_dialog.GameIsOverDialogViewModelImpl
+import ru.dev4rev.kids.zoobukvy.presentation.awards_screen.AwardsScreenViewModelImpl
 import ru.dev4rev.kids.zoobukvy.presentation.customview.AssetsImageCash
 import ru.dev4rev.kids.zoobukvy.presentation.sound.SoundEffectPlayer
 
@@ -15,6 +16,8 @@ import ru.dev4rev.kids.zoobukvy.presentation.sound.SoundEffectPlayer
 interface AnimalLettersGameSubcomponent {
 
     val viewModel: AnimalLettersGameViewModelImpl
+
+    val awardsScreenViewModel: AwardsScreenViewModelImpl
 
     val gameIsOverDialogViewModel: GameIsOverDialogViewModelImpl
 
