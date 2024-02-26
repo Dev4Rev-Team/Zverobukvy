@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.dev4rev.kids.zoobukvy.data.view_rating_provider.ViewRatingProviderFactory
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
@@ -28,15 +30,19 @@ class AwardsScreenViewModelImpl @Inject constructor(
     private var awardIndex: Int = AWARDS_INIT_INDEX
 
     init {
+        //TODO Dispatchers
         viewModelScope.launch {
-            val playerBeforeGame = changeRatingRepository.getPlayersBeforeGame()
-            val playerAfterGame = changeRatingRepository.getPlayersAfterGame()
+            withContext(Dispatchers.Default) {
+                val playerBeforeGame = changeRatingRepository.getPlayersBeforeGame()
+                val playerAfterGame = changeRatingRepository.getPlayersAfterGame()
 
-            listOfAwardedPlayers = convert(playerBeforeGame, playerAfterGame).orEmpty()
+                listOfAwardedPlayers = convert(playerBeforeGame, playerAfterGame).orEmpty()
+            }
 
             if (listOfAwardedPlayers.isEmpty()) mainAwardsLiveData.value =
                 AwardsScreenState.Main.CancelScreen
             else {
+                //onNextClickInVM()
                 mainAwardsLiveData.value = AwardsScreenState.Main.StartScreen
                 isPossibleToClick = false
 
@@ -155,7 +161,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
 
     // TODO Apply awards into PlayerInVM
     private fun onNextClickInVM() {
-        viewModelScope.launch {
+        viewModelScope.launch  {
             if (awardIndex < listOfAwardedPlayers[playerIndex].awardsList.size - 1) {
                 awardIndex++
                 if (playerIndex == 0) {
@@ -164,6 +170,7 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 }
                 secondAwardsLiveData.value =
                     listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
+                autoNextClickWithDelay()
             } else if (playerIndex < listOfAwardedPlayers.size - 1) {
                 playerIndex++
                 awardIndex = 0
@@ -171,12 +178,19 @@ class AwardsScreenViewModelImpl @Inject constructor(
                 delay(1900L)
                 secondAwardsLiveData.value =
                     listOfAwardedPlayers[playerIndex].awardsList[awardIndex]
+                autoNextClickWithDelay()
             } else {
+                delay(1000L)
                 mainAwardsLiveData.value = AwardsScreenState.Main.CancelScreen
             }
             delay(300L)
             isPossibleToClick = true
         }
+    }
+
+    private suspend fun autoNextClickWithDelay() {
+        /*delay(4000L)
+        onNextClickInVM()*/
     }
 
     data class PlayerInVM(

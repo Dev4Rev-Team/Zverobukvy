@@ -5,8 +5,10 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.dev4rev.kids.zoobukvy.R
 import ru.dev4rev.kids.zoobukvy.animalLettersGameSubcomponentContainer
 import ru.dev4rev.kids.zoobukvy.databinding.DialogFragmentGameIsOverBinding
+import ru.dev4rev.kids.zoobukvy.presentation.awards_screen.AwardsScreenFragment
 import ru.dev4rev.kids.zoobukvy.presentation.review.ReviewImpl
 import ru.dev4rev.kids.zoobukvy.utility.parcelable
 import ru.dev4rev.kids.zoobukvy.utility.ui.ViewBindingFragment
@@ -43,8 +45,13 @@ class GameIsOverDialogFragment : ViewBindingFragment<DialogFragmentGameIsOverBin
 
         binding.okButton.setOnClickListener {
             review.launchReviewFlow(requireActivity()) {
-                requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
-                parentFragmentManager.popBackStack()
+                requireActivity().supportFragmentManager.beginTransaction().replace(
+                    R.id.container,
+                    AwardsScreenFragment.newInstance(),
+                    AwardsScreenFragment.TAG
+                ).commit()
+                /*requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
+                parentFragmentManager.popBackStack()*/
             }
         }
 

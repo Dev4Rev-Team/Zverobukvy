@@ -9,6 +9,7 @@ import ru.dev4rev.kids.zoobukvy.domain.use_case.interactor.AnimalLettersGameInte
 import ru.dev4rev.kids.zoobukvy.domain.use_case.interactor.AnimalLettersGameInteractorImpl
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameViewModel
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameViewModelImpl
+import ru.dev4rev.kids.zoobukvy.presentation.awards_screen.ChangeRatingRepositoryFakeImpl
 
 @Module(
     includes = [
@@ -27,5 +28,5 @@ interface AnimalLettersGameModule {
 
     @Binds
     @AnimalLettersGameScope
-    fun bindChangeRatingRepository(changeRatingRepository: ChangeRatingRepositoryImpl): ChangeRatingRepository
+    fun bindChangeRatingRepository(changeRatingRepository: ChangeRatingRepositoryFakeImpl): ChangeRatingRepository
 }

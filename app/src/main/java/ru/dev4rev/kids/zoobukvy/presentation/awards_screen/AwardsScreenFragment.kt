@@ -21,8 +21,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.ChangeBounds
+import androidx.transition.ChangeClipBounds
 import androidx.transition.ChangeTransform
 import androidx.transition.Fade
+import androidx.transition.Scene
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
@@ -104,6 +106,11 @@ class AwardsScreenFragment : Fragment() {
                 }
             }
         }
+
+        binding.okButton.setOnClickListener {
+            requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
+            parentFragmentManager.popBackStack()
+        }
     }
 
     private fun subscribeToViewModelEvents() {
@@ -115,6 +122,7 @@ class AwardsScreenFragment : Fragment() {
         viewModel.getMainAwardsLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is AwardsScreenState.Main.AwardedPlayerState -> {
+                    Timber.i("AwardedPlayerState")
                     changePlayerStartScreenState()
 
                     soundEffectPlayer.play(SoundEnum.NEW_AWARDED_PLAYER)
@@ -122,11 +130,14 @@ class AwardsScreenFragment : Fragment() {
                 }
 
                 is AwardsScreenState.Main.CancelScreen -> {
-                    requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
-                    parentFragmentManager.popBackStack()
+                    Timber.i("CancelScreen")
+                    binding.okButton.visibility = VISIBLE
+                    /*requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
+                    parentFragmentManager.popBackStack()*/
                 }
 
                 is AwardsScreenState.Main.StartScreen -> {
+                    Timber.i("StartScreen")
                     soundEffectPlayer.play(SoundEnum.AWARD_SCREEN_INIT)
                     startScreenState()
                 }
@@ -138,6 +149,7 @@ class AwardsScreenFragment : Fragment() {
         viewModel.getSecondAwardsLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AwardsScreenState.Second.RankIncreaseState -> {
+                    Timber.i("RankIncreaseState")
                     rangAwardScreenState()
 
                     soundEffectPlayer.play(SoundEnum.RANK_INCREASE)
@@ -145,6 +157,7 @@ class AwardsScreenFragment : Fragment() {
                 }
 
                 is AwardsScreenState.Second.ViewRatingIncreaseState -> {
+                    Timber.i("ViewRatingIncreaseState")
                     viewRatingAwardScreenState()
 
                     soundEffectPlayer.play(SoundEnum.VIEW_RATING_INCREASE)
@@ -178,56 +191,7 @@ class AwardsScreenFragment : Fragment() {
             TypeCards.VIOLET -> viewRatingBinding.violetViewRattingTextView
         }
 
-        /*val constraintSetStart = ConstraintSet()
-        constraintSetStart.clone(requireContext(), R.layout.default_view_rating_layout)
-        val transitionStart = TransitionSet().apply {
-            addTransition(ChangeBounds())
-        }
-        transitionStart.duration = 0
-        TransitionManager.beginDelayedTransition(binding.viewRatingLayoutContainer, transitionStart)
-        constraintSetStart.applyTo(viewRatingBinding.viewRatingLayout)*/
-
         animateTransitionToRatingIncrease(state, target, targetTextView, targetCardView)
-
-        /*val sceneLayout = when (state.typeCards) {
-            TypeCards.ORANGE -> R.layout.orange_view_rating_layout
-            TypeCards.GREEN -> R.layout.green_view_rating_layout
-            TypeCards.BLUE -> R.layout.blue_view_rating_layout
-            TypeCards.VIOLET -> R.layout.violet_view_rating_layout
-        }
-
-        val scene = Scene.getSceneForLayout(
-            binding.viewRatingLayoutContainer,
-            sceneLayout,
-            requireContext()
-        )
-
-        TransitionManager.go(scene, TransitionSet().apply {
-            setStartDelay(1000L)
-            setDuration(1200L)
-            addTransition(ChangeBounds())
-            addTransition(ChangeTransform())
-            setOrdering(TransitionSet.ORDERING_TOGETHER)
-        })
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            withContext(Dispatchers.Default) {
-                delay(4000L)
-            }
-            withContext(Dispatchers.Main) {
-                val scene2 = Scene.getSceneForLayout(
-                    binding.viewRatingLayoutContainer,
-                    R.layout.default_view_rating_layout,
-                    requireContext()
-                )
-                TransitionManager.go(scene2, TransitionSet().apply {
-                    setDuration(1200L)
-                    addTransition(ChangeBounds())
-                    addTransition(ChangeTransform())
-                    setOrdering(TransitionSet.ORDERING_TOGETHER)
-                })
-            }
-        }*/
     }
 
     private fun animateTransitionToRatingIncrease(
@@ -247,7 +211,7 @@ class AwardsScreenFragment : Fragment() {
                     TransitionSet()
                         .addTransition(ChangeBounds())
                         .addTransition(ChangeTransform())
-                transitionRatingIncrease.interpolator = AnticipateInterpolator(1.0f)
+                //transitionRatingIncrease.interpolator = AnticipateInterpolator(1.0f)
                 transitionRatingIncrease.duration = 2000
                 transitionRatingIncrease.addTransitionListener(
                     onStart = {
@@ -259,7 +223,7 @@ class AwardsScreenFragment : Fragment() {
                                     TypedValue.COMPLEX_UNIT_SP,
                                     (it.animatedValue as Int).toFloat()
                                 )
-                            }.apply { startDelay = 500L }.setDuration(1500L).start()
+                            }.apply { startDelay = 500L }.setDuration(700L).start()
 
                         val metrics = requireActivity().resources.displayMetrics
 
@@ -288,6 +252,7 @@ class AwardsScreenFragment : Fragment() {
                     binding.viewRatingLayoutContainer,
                     transitionRatingIncrease
                 )
+                Timber.i("${(targetCardView as View).getClipBounds()} as clipBounds")
                 constraintSetRatingIncrease.applyTo(viewRatingBinding.viewRatingLayout)
             }
         }
@@ -311,7 +276,7 @@ class AwardsScreenFragment : Fragment() {
                     TransitionSet()
                         .addTransition(ChangeBounds())
                         .addTransition(ChangeTransform())
-                transitionRatingDefault.interpolator = AnticipateInterpolator(1.0f)
+                //transitionRatingDefault.interpolator = AnticipateInterpolator(1.0f)
                 transitionRatingDefault.duration = 2000
                 transitionRatingDefault.addTransitionListener(
                     onStart = {
@@ -323,7 +288,7 @@ class AwardsScreenFragment : Fragment() {
                                     TypedValue.COMPLEX_UNIT_SP,
                                     (it.animatedValue as Int).toFloat()
                                 )
-                            }.apply { startDelay = 500L }.setDuration(1500L).start()
+                            }.apply { startDelay = 0L }.setDuration(1500L).start()
 
                         val metrics = requireActivity().resources.displayMetrics
 
@@ -336,8 +301,11 @@ class AwardsScreenFragment : Fragment() {
                                     metrics
                                 )
                                 targetCardView.strokeWidth = value.toInt()
-                            }.apply { startDelay = 1000L }.setDuration(1000L)
+                            }.apply { startDelay = 0L }.setDuration(1500L)
                             .start()
+                    },
+                    onEnd = {
+                        nextAwardWithDelay()
                     }
                 )
                 TransitionManager.beginDelayedTransition(
@@ -349,65 +317,23 @@ class AwardsScreenFragment : Fragment() {
         }
     }
 
-    /*private fun animatorsOfMountColorShift(): List<Animator> {
-        return listOf(
-            ObjectAnimator.ofFloat(
-                binding.cardMountCardView,
-                View.ALPHA,
-                1f,
-                0f
-            ),
-            ObjectAnimator.ofFloat(
-                binding.cardMountTwoCardView,
-                View.ALPHA,
-                0f,
-                1f
-            )
-        )
+    private fun nextAwardWithDelay() {
+        /*lifecycleScope.launch {
+            delay(1000L)
+            viewModel.onNextClick()
+        }*/
     }
-
-    private fun animatorsOfHidingCardField(): List<Animator> {
-        return listOf(
-            ObjectAnimator.ofFloat(
-                binding.cardFieldCardView,
-                View.ALPHA,
-                1f,
-                0f
-            ),
-            ObjectAnimator.ofFloat(
-                binding.cardFieldFieldCardView,
-                View.ALPHA,
-                1f,
-                0f
-            )
-        )
-    }
-
-    private fun animatorsOfAppearanceCardField(): List<Animator> {
-        return listOf(
-            ObjectAnimator.ofFloat(
-                binding.cardFieldCardView,
-                View.ALPHA,
-                0f,
-                1f
-            ),
-            ObjectAnimator.ofFloat(
-                binding.cardFieldFieldCardView,
-                View.ALPHA,
-                0f,
-                1f
-            )
-        )
-    }*/
 
     private fun animateRangIncrease(state: AwardsScreenState.Second.RankIncreaseState) {
 
         val reductionArray = (42 downTo 0).toList().toIntArray()
         val increaseArray = (0..42).toList().toIntArray()
 
-        if (state.oldRank != Rank.DEFAULT) {
+        if (state.oldRank.rankNameId != Rank.DEFAULT.rankNameId) {
+            Timber.i("oldRank != Rank.DEFAULT")
             rankTextDisappearance(reductionArray, state, increaseArray)
         } else {
+            Timber.i("oldRank == Rank.DEFAULT")
             binding.rankTextView.setTextSize(
                 TypedValue.COMPLEX_UNIT_SP,
                 (0).toFloat()
@@ -428,10 +354,33 @@ class AwardsScreenFragment : Fragment() {
                     (it.animatedValue as Int).toFloat()
                 )
             }
+            .apply { startDelay = 1000L }
             .addEndListener {
                 rankTextAppearance(state, increaseArray)
             }
-            .setDuration(1500L)
+            .setDuration(1000L)
+            .start()
+    }
+
+    private fun rankTextAppearance(
+        state: AwardsScreenState.Second.RankIncreaseState,
+        increaseArray: IntArray,
+    ) {
+
+        binding.rankTextView.text = state.newRank.name
+        binding.rankTextView.setTextColor(state.newRank.rankTextColorId)
+        binding.avatar.setStrokeColor(ColorStateList.valueOf(state.newRank.borderRankColorId))
+
+        ObjectAnimator.ofInt(*increaseArray)
+            .addUpdateViewListener {
+                binding.rankTextView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    (it.animatedValue as Int).toFloat()
+                )
+            }
+            .apply { startDelay = 1000L }
+            .addEndListener { nextAwardWithDelay() }
+            .setDuration(1000L)
             .start()
     }
 
@@ -439,7 +388,7 @@ class AwardsScreenFragment : Fragment() {
 
         val metrics = requireActivity().resources.displayMetrics
         val defStrokeWidth = targetCardView.strokeWidth
-        Timber.i(defStrokeWidth.toString())
+        Timber.i("${defStrokeWidth.toString()} + defStrokeWidth")
 
         val strokeWidthArray = (5 downTo 0).toList().toIntArray()
 
@@ -470,71 +419,6 @@ class AwardsScreenFragment : Fragment() {
             )
         ).start()
     }
-
-    private fun rankTextAppearance(
-        state: AwardsScreenState.Second.RankIncreaseState,
-        increaseArray: IntArray,
-    ) {
-        /*val color = arrayOf(
-            ColorDrawable(state.oldRank.idBorderRankColor),
-            ColorDrawable(state.newRank.idBorderRankColor)
-        )
-        val colorTransition = TransitionDrawable(color)
-
-        binding.avatar.setBackgroundDrawable(colorTransition)
-        colorTransition.startTransition(2000)*/
-
-        binding.rankTextView.text = state.newRank.name
-        binding.rankTextView.setTextColor(state.newRank.rankTextColorId)
-        //binding.avatar.strokeColor = getColorId(state.newRank.idBorderRankColor)
-        binding.avatar.setStrokeColor(ColorStateList.valueOf(state.newRank.borderRankColorId))
-
-        ObjectAnimator.ofInt(*increaseArray)
-            .addUpdateViewListener {
-                binding.rankTextView.setTextSize(
-                    TypedValue.COMPLEX_UNIT_SP,
-                    (it.animatedValue as Int).toFloat()
-                )
-            }
-            .apply { setStartDelay(1000L) }
-            .setDuration(1500L)
-            .start()
-    }
-
-    /*private fun animatorsOfDisappearanceRankInFlesh(): List<Animator> {
-        return listOf(
-            ObjectAnimator.ofFloat(
-                binding.rangTextView,
-                View.ALPHA,
-                1f,
-                0f
-            ),
-            ObjectAnimator.ofFloat(
-                binding.flashFrameLayout,
-                View.ALPHA,
-                0f,
-                1f
-            )
-        )
-    }
-
-    private fun animatorsOfAppearanceRankFromFlesh(): List<Animator> {
-        return listOf(
-            ObjectAnimator.ofFloat(
-                binding.rangTextView,
-                View.ALPHA,
-                0f,
-                1f
-            ),
-            ObjectAnimator.ofFloat(
-                binding.flashFrameLayout,
-                View.ALPHA,
-                1f,
-                0f
-            )
-        )
-    }*/
-
 
     private fun animatePlayerChange(state: AwardsScreenState.Main.AwardedPlayerState) {
 
@@ -581,36 +465,15 @@ class AwardsScreenFragment : Fragment() {
                 val transitionEnd =
                     TransitionSet().addTransition(ChangeBounds()).addTransition(Fade())
                 transitionEnd.interpolator = AnticipateOvershootInterpolator(1.0f)
+                transitionEnd.addTransitionListener(onEnd = {
+                    nextAwardWithDelay()
+                })
                 transitionEnd.duration = 1200
                 TransitionManager.beginDelayedTransition(binding.rootContainer, transitionEnd)
                 constraintSetEnd.applyTo(binding.rootContainer)
                 changePlayerEndScreenState()
             }
         }
-
-
-        /*ObjectAnimator.ofInt(*reductionArray)
-            .addUpdateViewListener {
-                binding.playerNameTextView.setTextSize(
-                    TypedValue.COMPLEX_UNIT_PX,
-                    (it.animatedValue as Int).toFloat()
-                )
-            }
-            .addEndListener {
-                binding.playerNameTextView.text = state.playerName
-
-                ObjectAnimator.ofInt(*increaseArray)
-                    .addUpdateViewListener {
-                        binding.playerNameTextView.setTextSize(
-                            TypedValue.COMPLEX_UNIT_PX,
-                            (it.animatedValue as Int).toFloat()
-                        )
-                    }
-                    .setDuration(DURATION_OF_PLAYER_APPEARANCE)
-                    .start()
-            }
-            .setDuration(DURATION_OF_PLAYER_DISAPPEARANCE)
-            .start()*/
     }
 
     private fun durationBeforePlayerAward(): Long {
