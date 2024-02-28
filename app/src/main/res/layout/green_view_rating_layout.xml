@@ -17,7 +17,7 @@
         android:id="@+id/green_view_rating_card"
         android:layout_width="100dp"
         android:layout_height="150dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="48dp"
         android:theme="@style/Theme.Material3.Light"
         app:cardBackgroundColor="@color/color_green_pastel"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_guideline"
