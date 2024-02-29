@@ -23,22 +23,26 @@ class PlayerViewHolder(
 ) :
     BasePlayerViewHolder(viewBinding) {
 
-    private val imageAvatarLoader: ImageAvatarLoader = itemView.context.appComponent.imageAvatarLoader
+    private val imageAvatarLoader: ImageAvatarLoader =
+        itemView.context.appComponent.imageAvatarLoader
 
     private lateinit var viewRatingProvider: ViewRatingProvider
 
     override fun bindView(playerInSetting: PlayerInSettings?) {
         playerInSetting?.let {
-            viewRatingProvider = itemView.context.appComponent.getViewRatingProviderFactory().create(it.player.rating)
+            viewRatingProvider = itemView.context.appComponent.getViewRatingProviderFactory()
+                .create(it.player.rating)
             initViewRank()
             initViewRating()
             viewBinding.run {
                 playerNameTextView.text = it.player.name
                 if (it.isSelectedForGame) {
-                    playerCardConstraintLayout.background = getDrawable(itemView.context, R.drawable.background_user_card)
+                    playerCardConstraintLayout.background =
+                        getDrawable(itemView.context, R.drawable.background_user_card)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_green_pastel))
                 } else {
-                    playerCardConstraintLayout.background = getDrawable(itemView.context, R.color.transparent)
+                    playerCardConstraintLayout.background =
+                        getDrawable(itemView.context, R.color.transparent)
                     playerStateCardView.setCardBackgroundColor(itemView.context.getColor(R.color.color_red_pastel))
                 }
                 playerCardView.setOnClickListener {
@@ -106,7 +110,7 @@ class PlayerViewHolder(
         diamondImageView: AppCompatImageView
     ) {
         viewRating.let {
-            if (it.rating != 0) {
+            if (it.rating != 0 || it.decoration != Decoration.DEFAULT) {
                 ratingCardView.visibility = View.VISIBLE
                 ratingCardView.strokeColor =
                     itemView.context.getColor(it.decoration.colorId)
