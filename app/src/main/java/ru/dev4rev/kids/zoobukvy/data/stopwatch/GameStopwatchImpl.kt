@@ -1,10 +1,11 @@
 package ru.dev4rev.kids.zoobukvy.data.stopwatch
 
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 class GameStopwatchImpl @Inject constructor(
-    private val timeStampProvider: TimeStampProvider,
-    private val timeFormatter: TimeFormatter,
+    private val timeStampProvider: TimeStampProvider
 ) : GameStopwatch {
 
     private var currentState: StopwatchState = StopwatchState.Pause(0L)
@@ -17,10 +18,8 @@ class GameStopwatchImpl @Inject constructor(
         currentState = calculatePauseState(currentState)
     }
 
-    override fun getGameRunningTime(): String {
-        val gameRunningTime = calculatePauseState(currentState).elapsedTime
-        return timeFormatter.format(gameRunningTime)
-    }
+    override fun getGameRunningTime(): Duration =
+        calculatePauseState(currentState).elapsedTime.milliseconds
 
     private fun calculateRunningState(currentState: StopwatchState): StopwatchState.Running {
         return when (currentState) {

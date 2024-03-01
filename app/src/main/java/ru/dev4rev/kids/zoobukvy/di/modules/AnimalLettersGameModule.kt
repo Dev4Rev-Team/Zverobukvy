@@ -13,6 +13,7 @@ import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGa
 @Module(
     includes = [
         GameStopwatchModule::class,
+        TimeFormatterModule::class
     ]
 )
 interface AnimalLettersGameModule {
@@ -23,7 +24,7 @@ interface AnimalLettersGameModule {
 
     @Binds
     @AnimalLettersGameScope
-    fun bindAnimalLettersViewModel(interactor: AnimalLettersGameViewModelImpl): AnimalLettersGameViewModel
+    fun bindAnimalLettersViewModel(viewModel: AnimalLettersGameViewModelImpl): AnimalLettersGameViewModel
 
     @Binds
     @AnimalLettersGameScope

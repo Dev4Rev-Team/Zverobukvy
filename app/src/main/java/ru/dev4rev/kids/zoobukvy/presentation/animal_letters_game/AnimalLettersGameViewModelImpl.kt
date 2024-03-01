@@ -13,6 +13,7 @@ import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.ResourcesProvider
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
+import ru.dev4rev.kids.zoobukvy.data.stopwatch.TimeFormatter
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameStateName
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
@@ -31,6 +32,7 @@ import javax.inject.Inject
 class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
+    private val timeFormatter: TimeFormatter,
     private val provider: ResourcesProvider,
     private val soundStatusRepository: SoundStatusRepository,
 ) : AnimalLettersGameViewModel, ViewModel() {
@@ -278,7 +280,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     EntireState.EndGameState(
                         false/*isFastEndGame()*/,
                         newState.players,
-                        gameStopwatch.getGameRunningTime()
+                        timeFormatter.formatToString(gameStopwatch.getGameRunningTime())
                     )
                 )
             }
@@ -288,7 +290,7 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     EntireState.EndGameState(
                         true/*isFastEndGame()*/,
                         newState.players,
-                        gameStopwatch.getGameRunningTime()
+                        timeFormatter.formatToString(gameStopwatch.getGameRunningTime())
                     )
                 )
             }
