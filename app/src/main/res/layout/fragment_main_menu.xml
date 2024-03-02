@@ -240,7 +240,7 @@
         app:layout_constraintEnd_toEndOf="@+id/show_bee"
         app:layout_constraintStart_toStartOf="@+id/show_bee"
         app:layout_constraintTop_toTopOf="@+id/show_bee"
-        app:srcCompat="@drawable/avatar_bee"
+        app:srcCompat="?attr/app_easteregg"
         tools:ignore="VisualLintBounds" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

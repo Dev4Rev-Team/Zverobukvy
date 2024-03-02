@@ -30,6 +30,7 @@
 
         <item name="app_cards_back">@drawable/card_background_blue_gradient</item>
         <item name="app_season_character">@color/transparent</item>
+        <item name="app_easteregg">@drawable/avatar_bee</item>
     </style>
 
     <!--Default Theme-->
@@ -68,6 +69,9 @@
         <item name="app_next_player_color">@drawable/background_white_transparent</item>
         <item name="app_wrong_color">@drawable/background_blue_transparent</item>
         <item name="app_computer_color">@color/transparent</item>
+
+        <item name="app_season_character">@drawable/character_elf</item>
+        <item name="app_easteregg">@drawable/easter_egg_snowball</item>
     </style>
 
     <style name="Theme.Zverobukvy.Winter" parent="Base.Theme.Zverobukvy" >
@@ -93,6 +97,7 @@
 
         <item name="app_cards_back">@drawable/card_background_green_gradient</item>
         <item name="app_season_character">@drawable/character_snowman</item>
+        <item name="app_easteregg">@drawable/easter_egg_snowball</item>
     </style>
 
     <style name="Theme.Zverobukvy.Spring" parent="Base.Theme.Zverobukvy" >
@@ -117,12 +122,14 @@
         <item name="app_computer_color">@color/transparent</item>
 
         <item name="app_season_character">@drawable/character_rabbit</item>
+        <item name="app_easteregg">@drawable/easter_egg_flower</item>
     </style>
 
     <style name="Theme.Zverobukvy.Summer" parent="Theme.Zverobukvy.Spring" >
         <item name="app_background_color">@drawable/app_background_summer</item>
         <item name="app_end_game_background_color">@drawable/app_background_green_summer</item>
         <item name="app_season_character">@drawable/character_bee</item>
+        <item name="app_easteregg">@drawable/easter_egg_sun</item>
     </style>
 
     <style name="Theme.Zverobukvy.Autumn" parent="Base.Theme.Zverobukvy" >
@@ -139,14 +146,15 @@
         <item name="app_text_color_lvl2">@color/secondary_color</item>
         <item name="app_text_color_lvl3">@color/white</item>
 
-        <item name="app_text_color_button_play">@color/white</item>
-        <item name="app_text_color_button_play_outline">@color/secondary_color</item>
+        <item name="app_text_color_button_play">@color/secondary_color</item>
+        <item name="app_text_color_button_play_outline">@color/white</item>
 
         <item name="app_next_player_color">@drawable/background_green_transparent</item>
         <item name="app_wrong_color">@drawable/background_red_transparent</item>
         <item name="app_computer_color">@color/transparent</item>
 
         <item name="app_season_character">@drawable/character_fox</item>
+        <item name="app_easteregg">@drawable/easter_egg_leaf</item>
     </style>
 
 </resources>
