@@ -2,6 +2,7 @@ package ru.dev4rev.kids.zoobukvy.domain.use_case.interactor
 
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import ru.dev4rev.kids.zoobukvy.domain.entity.card.TypeCards
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
 
@@ -11,6 +12,11 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
  * @exception IllegalArgumentException, если в конструктор переданы не корректные данные
  */
 interface AnimalLettersGameInteractor {
+
+    /**
+     * Набор типов карточек для игры
+     */
+    val typesCards: List<TypeCards>
 
     /**
     Метод для подписки viewModel на состояние игры.

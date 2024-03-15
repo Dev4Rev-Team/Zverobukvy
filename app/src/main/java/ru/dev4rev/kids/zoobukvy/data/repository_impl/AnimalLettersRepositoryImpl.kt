@@ -126,7 +126,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
 
     override suspend fun loadingData() {
         if (players == null)
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 players = withContext(Dispatchers.IO) {
                     localDataSource.getPlayers().map {
                         playersMapperDomain.mapToDomain(it)
@@ -154,7 +154,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
         sharedPreferencesForMainMenu.saveNamesPlayersSelectedForGame(namesPlayersSelectedForGame)
 
     override fun isFirstLaunch(): Boolean =
-       sharedPreferencesForMainMenu.isFirstLaunch()
+        sharedPreferencesForMainMenu.isFirstLaunch()
 
     override suspend fun getAvatarsFromLocalDataSource(): List<Avatar> =
         withContext(Dispatchers.IO) {

@@ -85,7 +85,7 @@ import kotlin.properties.Delegates
 class AnimalLettersGameInteractorImpl @Inject constructor(
     private val animalLettersGameRepository: AnimalLettersGameRepository,
     private val changeRatingRepository: ChangeRatingRepository,
-    private val typesCards: List<TypeCards>,
+    override val typesCards: List<TypeCards>,
     private var players: List<PlayerInGame>
 ) : AnimalLettersGameInteractor {
     private lateinit var dealCards: DealCards
