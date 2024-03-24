@@ -16,6 +16,9 @@ interface PlayersDao {
     @Query("SELECT * FROM players, avatars WHERE players.id_avatar=avatars.id")
     suspend fun getPlayers(): List<PlayerWithAvatar>
 
+    @Query("SELECT players.name FROM players WHERE players.id_player=:playersId")
+    suspend fun getPlayersNameById(playersId: Long): String?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlayer(player: PlayerInDatabase): Long
 

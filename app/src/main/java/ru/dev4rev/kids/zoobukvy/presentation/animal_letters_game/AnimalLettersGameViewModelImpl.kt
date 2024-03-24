@@ -13,10 +13,12 @@ import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.ResourcesProvider
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
+import ru.dev4rev.kids.zoobukvy.data.stopwatch.TimeFormatter
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameStateName
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
 import ru.dev4rev.kids.zoobukvy.domain.entity.sound.VoiceActingStatus
+import ru.dev4rev.kids.zoobukvy.domain.repository.BestTimeRepository
 import ru.dev4rev.kids.zoobukvy.domain.repository.SoundStatusRepository
 import ru.dev4rev.kids.zoobukvy.domain.use_case.interactor.AnimalLettersGameInteractor
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
@@ -26,19 +28,24 @@ import timber.log.Timber
 import java.util.LinkedList
 import java.util.Queue
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 
 class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
+    private val timeFormatter: TimeFormatter,
     private val provider: ResourcesProvider,
     private val soundStatusRepository: SoundStatusRepository,
+    private val bestTimeRepository: BestTimeRepository
 ) : AnimalLettersGameViewModel, ViewModel() {
 
     private var isEndGameByUser: Boolean = false
     private var isAutomaticPlayerChange: Boolean = true
 
     private var isClickNextWalkingPlayer: Boolean = false
+
+    private var isRecordTime: Boolean = false
 
     /** Флаг для события нажатия на карточку с буквой :
      * - true - Произошло нажатие на букву/Обрабатывается событие нажатия (новые нажатия не обрабатываются)
@@ -276,9 +283,11 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
             GameStateName.END_GAME -> {
                 return listOf(
                     EntireState.EndGameState(
-                        false/*isFastEndGame()*/,
+                        false,/*isFastEndGame()*/
                         newState.players,
-                        gameStopwatch.getGameRunningTime()
+                        timeFormatter.formatToString(gameStopwatch.getGameRunningTime()),
+                        calculateBestTime(newState)?.let { timeFormatter.formatToString(it.first.seconds) to it.second },
+                        isRecordTime
                     )
                 )
             }
@@ -288,7 +297,9 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     EntireState.EndGameState(
                         true/*isFastEndGame()*/,
                         newState.players,
-                        gameStopwatch.getGameRunningTime()
+                        timeFormatter.formatToString(gameStopwatch.getGameRunningTime()),
+                        calculateBestTime(newState)?.let { timeFormatter.formatToString(it.first.seconds) to it.second },
+                        isRecordTime
                     )
                 )
             }
@@ -358,6 +369,41 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                 )
             }
         }
+    }
+
+    /**
+     * Метод сравнивает текущее время игры с сохраненным лучшим временем и возвращает лучшее из них.
+     * Возвращается null, если играет больше одного игрока или если это первая игра и лучшего
+     * сохраненного времени еще нет.
+     * Если текущее время лучше сохраненного, то текущее время возвращается и сохраняется как лучшее
+     * (при условии, если игра доиграна gameState.name == GameStateName.END_GAME))
+     * Кроме того, если установлен рекорд по времени, то присваивается isRecordTime = true
+     */
+    private suspend fun calculateBestTime(gameState: GameState): Pair<Long, String>? {
+        val currentTime = gameStopwatch.getGameRunningTime().inWholeSeconds
+        return if (gameState.players.size == 1)
+            bestTimeRepository.getBestTime(animalLettersGameInteractor.typesCards).let {
+                if (gameState.name != GameStateName.END_GAME)
+                    it
+                else if (it == null) {
+                    bestTimeRepository.saveBestTime(
+                        animalLettersGameInteractor.typesCards,
+                        currentTime to gameState.players[0].player.name
+                    )
+                    null
+                } else if (it.first > currentTime) {
+                    isRecordTime = true
+                    (currentTime to gameState.players[0].player.name).also { bestTime ->
+                        bestTimeRepository.saveBestTime(
+                            animalLettersGameInteractor.typesCards,
+                            bestTime
+                        )
+                    }
+                } else
+                    it
+            }
+        else
+            null
     }
 
     private fun initComputerStroke(currentGameState: GameState, delay: Long = COMPUTER_DELAY) {

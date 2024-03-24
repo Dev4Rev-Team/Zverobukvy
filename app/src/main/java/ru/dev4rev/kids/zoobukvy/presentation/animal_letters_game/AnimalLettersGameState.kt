@@ -46,11 +46,16 @@ sealed interface AnimalLettersGameState {
          * @param isFastEndGame
          * * true - экран со счетам показывать не нужно,
          * * false - стандартный выход из игры
+         * @param bestTime - лучшее время и имя игрока
+         * * null - еще нет лучшего времени (первая игра), не одиночная игра (с учетом компьютера).
+         * @param isRecordTime - установлен или нет новый рекорд времени
          */
         data class EndGameState(
             val isFastEndGame : Boolean,
             val players: List<PlayerInGame>,
             val gameTime: String,
+            val bestTime: Pair<String, String>?,
+            val isRecordTime: Boolean
         ) : EntireState
     }
 

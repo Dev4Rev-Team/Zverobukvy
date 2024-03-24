@@ -1,7 +1,9 @@
 package ru.dev4rev.kids.zoobukvy.data.stopwatch
 
+import kotlin.time.Duration
+
 interface TimeFormatter {
-    /** Метод форматирует время в миллисекундах в строку
+    /** Метод форматирует время в строку
      */
-    fun format(timeInMillisecond: Long): String
+    fun formatToString(duration: Duration): String
 }
