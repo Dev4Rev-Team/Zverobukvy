@@ -79,13 +79,13 @@
         android:id="@+id/title_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium_large"
+        android:layout_marginTop="6dp"
         android:text="@string/points_text"
         android:textColor="?app_text_color_lvl3"
         android:textSize="@dimen/text_medium_small"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/best_time_text_view" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/players_recycler_view"
@@ -114,5 +114,43 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/title_best_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/auto_layout"
+        android:layout_marginTop="@dimen/margin_default"
+        android:layout_marginEnd="@dimen/auto_layout"
+        android:textColor="?app_text_color_lvl3"
+        android:text="@string/title_new_best_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_text_view" />
+
+    <TextView
+        android:id="@+id/best_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_default"
+        android:layout_marginEnd="@dimen/auto_layout"
+        android:textColor="?app_text_color_lvl3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/best_time_player_name_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/title_best_time_text_view"
+         />
+
+    <TextView
+        android:id="@+id/best_time_player_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/auto_layout"
+        android:layout_marginEnd="@dimen/margin_default"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:textColor="?app_text_color_lvl3"
+        app:layout_constraintEnd_toStartOf="@+id/best_time_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/best_time_text_view"
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
