@@ -23,6 +23,7 @@
     <attr name="app_cards_back" format="color|reference">#444FCA</attr>
 
     <attr name="app_season_character" format="reference">@attr/character_snowman</attr>
+    <attr name="app_easteregg" format="reference">@attr/avatar_bee</attr>
 
     <!--Elements style-->
 
