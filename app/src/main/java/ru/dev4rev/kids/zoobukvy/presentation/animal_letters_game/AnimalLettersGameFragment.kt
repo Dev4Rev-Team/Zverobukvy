@@ -527,14 +527,12 @@ class AnimalLettersGameFragment :
         }
 
         fun changingStateEndGameState(it: AnimalLettersGameState.EntireState.EndGameState) {
-            //TODO
-            Toast.makeText(requireContext(), "Лучшее время: ${it.bestTime?.first}. Это рекорд? ${it.isRecordTime}", Toast.LENGTH_LONG).show()
             if (it.isFastEndGame && !Conf.DEBUG_IS_SHOW_GAME_IS_OVER_DIALOG_ANYTIME) {
                 event.popBackStack()
                 requireContext().animalLettersGameSubcomponentContainer.deleteAnimalLettersGameSubcomponent()
             } else {
                 val players = DataGameIsOverDialog.map(it.players)
-                val data = DataGameIsOverDialog(players, it.gameTime)
+                val data = DataGameIsOverDialog(players, it.gameTime, it.bestTime, it.isRecordTime)
                 requireActivity().supportFragmentManager.beginTransaction().replace(
                     R.id.container,
                     GameIsOverDialogFragment.instance(data),

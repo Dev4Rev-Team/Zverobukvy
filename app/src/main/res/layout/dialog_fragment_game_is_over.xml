@@ -123,10 +123,21 @@
         android:layout_marginTop="@dimen/margin_default"
         android:layout_marginEnd="@dimen/auto_layout"
         android:textColor="?app_text_color_lvl3"
-        android:text="@string/title_new_best_time"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/time_text_view"
+        tools:ignore="TextContrastCheck"
+        tools:text="@string/title_new_best_time"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/best_time_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="best_time_text_view, best_time_player_name_text_view"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/best_time_text_view"
@@ -138,7 +149,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/best_time_player_name_text_view"
         app:layout_constraintTop_toBottomOf="@+id/title_best_time_text_view"
-         />
+        tools:ignore="TextContrastCheck"
+        tools:text="5 мин 13 сек" />
 
     <TextView
         android:id="@+id/best_time_player_name_text_view"
@@ -146,11 +158,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/auto_layout"
         android:layout_marginEnd="@dimen/margin_default"
-        app:layout_constraintHorizontal_chainStyle="packed"
         android:textColor="?app_text_color_lvl3"
         app:layout_constraintEnd_toStartOf="@+id/best_time_text_view"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/best_time_text_view"
-         />
+        tools:ignore="TextContrastCheck"
+        tools:text="Арина" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
