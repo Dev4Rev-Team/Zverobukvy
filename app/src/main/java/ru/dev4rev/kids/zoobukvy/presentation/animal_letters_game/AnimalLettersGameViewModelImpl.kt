@@ -13,7 +13,6 @@ import ru.dev4rev.kids.zoobukvy.configuration.Conf
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.ResourcesProvider
 import ru.dev4rev.kids.zoobukvy.data.resources_provider.StringEnum
 import ru.dev4rev.kids.zoobukvy.data.stopwatch.GameStopwatch
-import ru.dev4rev.kids.zoobukvy.data.stopwatch.TimeFormatter
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameState
 import ru.dev4rev.kids.zoobukvy.domain.entity.game_state.GameStateName
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
@@ -23,6 +22,7 @@ import ru.dev4rev.kids.zoobukvy.domain.repository.SoundStatusRepository
 import ru.dev4rev.kids.zoobukvy.domain.use_case.interactor.AnimalLettersGameInteractor
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameState.ChangingState
 import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGameState.EntireState
+import ru.dev4rev.kids.zoobukvy.utility.formatToString
 import ru.dev4rev.kids.zoobukvy.utility.ui.SingleEventLiveData
 import timber.log.Timber
 import java.util.LinkedList
@@ -34,7 +34,6 @@ import kotlin.time.Duration.Companion.seconds
 class AnimalLettersGameViewModelImpl @Inject constructor(
     private val animalLettersGameInteractor: AnimalLettersGameInteractor,
     private val gameStopwatch: GameStopwatch,
-    private val timeFormatter: TimeFormatter,
     private val provider: ResourcesProvider,
     private val soundStatusRepository: SoundStatusRepository,
     private val bestTimeRepository: BestTimeRepository
@@ -285,8 +284,8 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     EntireState.EndGameState(
                         false,/*isFastEndGame()*/
                         newState.players,
-                        timeFormatter.formatToString(gameStopwatch.getGameRunningTime()),
-                        calculateBestTime(newState)?.let { timeFormatter.formatToString(it.first.seconds) to it.second },
+                        gameStopwatch.getGameRunningTime().formatToString(),
+                        calculateBestTime(newState)?.let { it.first.seconds.formatToString() to it.second },
                         isRecordTime
                     )
                 )
@@ -297,8 +296,8 @@ class AnimalLettersGameViewModelImpl @Inject constructor(
                     EntireState.EndGameState(
                         true/*isFastEndGame()*/,
                         newState.players,
-                        timeFormatter.formatToString(gameStopwatch.getGameRunningTime()),
-                        calculateBestTime(newState)?.let { timeFormatter.formatToString(it.first.seconds) to it.second },
+                        gameStopwatch.getGameRunningTime().formatToString(),
+                        calculateBestTime(newState)?.let { it.first.seconds.formatToString() to it.second },
                         isRecordTime
                     )
                 )

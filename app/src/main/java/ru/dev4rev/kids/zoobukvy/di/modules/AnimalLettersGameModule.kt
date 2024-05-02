@@ -12,8 +12,7 @@ import ru.dev4rev.kids.zoobukvy.presentation.animal_letters_game.AnimalLettersGa
 
 @Module(
     includes = [
-        GameStopwatchModule::class,
-        TimeFormatterModule::class
+        GameStopwatchModule::class
     ]
 )
 interface AnimalLettersGameModule {
