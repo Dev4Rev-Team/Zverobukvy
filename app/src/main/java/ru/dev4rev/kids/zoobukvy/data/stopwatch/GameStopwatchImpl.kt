@@ -58,12 +58,12 @@ class GameStopwatchImpl @Inject constructor(
 
 
     sealed interface StopwatchState {
-        data class Running(
+        class Running(
             val startTime: Long,
             val elapsedTime: Long,
         ) : StopwatchState
 
-        data class Pause(
+        class Pause(
             val elapsedTime: Long,
         ) : StopwatchState
     }

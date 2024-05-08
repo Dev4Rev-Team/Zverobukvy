@@ -711,7 +711,7 @@ class AnimalLettersGameFragment :
     }
 
     @Parcelize
-    data class GameStart(val typesCards: List<TypeCards>, val players: List<PlayerInGame>) :
+    class GameStart(val typesCards: List<TypeCards>, val players: List<PlayerInGame>) :
         Parcelable
 
     companion object {

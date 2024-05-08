@@ -6,7 +6,7 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.player.Player
 import ru.dev4rev.kids.zoobukvy.domain.entity.player.PlayerInGame
 
 @Parcelize
-data class PlayerUI(val player: Player, var scoreInCurrentGame: Int) : Parcelable {
+class PlayerUI(val player: Player, var scoreInCurrentGame: Int) : Parcelable {
     companion object {
         fun map(player: PlayerInGame) = PlayerUI(player.player, player.scoreInCurrentGame)
     }

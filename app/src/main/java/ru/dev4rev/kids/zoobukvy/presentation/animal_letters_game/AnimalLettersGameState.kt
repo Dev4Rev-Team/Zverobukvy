@@ -23,14 +23,14 @@ sealed interface AnimalLettersGameState {
          * @param nextPlayerBtnVisible true - показать кнопку о переходе к следующему игроку
          * @param screenDimmingText Текст для затемненного экрана
          */
-        data class StartGameState(
+       class StartGameState(
             val lettersCards: List<LetterCard>,
             val wordCard: WordCard,
             val players: List<PlayerInGame>,
             val nextWalkingPlayer: PlayerInGame,
             val nextWordBtnVisible: Boolean,
             val nextPlayerBtnVisible: Boolean,
-            val screenDimmingText: String,
+            private val screenDimmingText: String
         ) : EntireState
 
         /** Состояние запроса на прекращение игры, показ диалогового окна
@@ -50,7 +50,7 @@ sealed interface AnimalLettersGameState {
          * * null - еще нет лучшего времени (первая игра), не одиночная игра (с учетом компьютера).
          * @param isRecordTime - установлен или нет новый рекорд времени
          */
-        data class EndGameState(
+        class EndGameState(
             val isFastEndGame : Boolean,
             val players: List<PlayerInGame>,
             val gameTime: String,
@@ -65,7 +65,7 @@ sealed interface AnimalLettersGameState {
          * @param correctLetterCard Карточка, которую нужно перевернуть
          * @param positionLetterInWord Отгаданная буква, которую нужно подсветить
          */
-        data class CorrectLetter(
+        class CorrectLetter(
             val correctLetterCard: LetterCard,
             val positionLetterInWord: Int,
         ) : ChangingState
@@ -79,9 +79,9 @@ sealed interface AnimalLettersGameState {
          * @param invalidLetterCard Невалидную карточку
          * @param screenDimmingText Текст для затемненного экрана
          */
-        data class InvalidLetter(
+        class InvalidLetter(
             val invalidLetterCard: LetterCard,
-            val screenDimmingText: String,
+            private val screenDimmingText: String,
         ) : ChangingState
 
         /** Передача хода следующему игроку.
@@ -92,7 +92,7 @@ sealed interface AnimalLettersGameState {
          *
          * @param nextWalkingPlayer Следующего ходящего игрока
          */
-        data class NextPlayer(
+        class NextPlayer(
             val nextWalkingPlayer: PlayerInGame,
         ) : ChangingState
 
@@ -104,7 +104,7 @@ sealed interface AnimalLettersGameState {
          *
          * @param invalidLetterCard Невалидную карточку
          */
-        data class CloseInvalidLetter(
+        class CloseInvalidLetter(
             val invalidLetterCard: LetterCard,
         ) : ChangingState
 
@@ -126,12 +126,12 @@ sealed interface AnimalLettersGameState {
          * @param hasNextWord true - если следующее слово есть, false - если нет
          * @param screenDimmingText Текст для затемненного экрана
          */
-        data class GuessedWord(
+        class GuessedWord(
             val correctLetterCard: LetterCard,
             val positionLetterInWord: Int,
             val players: List<PlayerInGame>,
             val hasNextWord: Boolean,
-            val screenDimmingText: String,
+            private val screenDimmingText: String,
         ) : ChangingState
 
         /** Состояние смены загадываемого слова
@@ -144,7 +144,7 @@ sealed interface AnimalLettersGameState {
          * @param updatedLettersCards Список всех карточек с буквами (с актуальным цветом букв/звуков)
          * @param wordCard Новое загаданное слово
          */
-        data class NextGuessWord(
+        class NextGuessWord(
             val updatedLettersCards: List<LetterCard>,
             val wordCard: WordCard
         ) : ChangingState
@@ -152,7 +152,7 @@ sealed interface AnimalLettersGameState {
         /** Состояние обновления карточек-букв при смене режима их озвучки
          * Подразумевает изменение цвета карточек-букв (содержиит список всех карточек на поле)
          */
-        data class UpdateLettersCards(
+        class UpdateLettersCards(
             val updatedLettersCards: List <LetterCard>
         ): ChangingState
     }

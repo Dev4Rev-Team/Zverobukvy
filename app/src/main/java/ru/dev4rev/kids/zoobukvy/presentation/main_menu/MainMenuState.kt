@@ -11,14 +11,14 @@ sealed interface MainMenuState {
         /**
          * Состояние для отрисовки всего списка игроков: при создании или пересоздании view.
          */
-        data class PlayersState(
+        class PlayersState(
             val playersInSettings: List<PlayerInSettings?>
         ) : PlayersScreenState
 
         /**
          * Состояние для добавления item нового игрока
          */
-        data class AddPlayerState(
+        class AddPlayerState(
             val playersInSettings: List<PlayerInSettings?>,
             val positionAddPlayer: Int
         ) : PlayersScreenState
@@ -26,7 +26,7 @@ sealed interface MainMenuState {
         /**
          * Состояние для удаления игрока
          */
-        data class RemovePlayerState(
+        class RemovePlayerState(
             val playersInSettings: List<PlayerInSettings?>,
             val positionRemovePlayer: Int
         ) : PlayersScreenState
@@ -41,7 +41,7 @@ sealed interface MainMenuState {
          * - при отказе пользователя на изменение данных игрока: изменяется режим item игрока
          * (inEditingState=false).
          */
-        data class ChangedPlayerState(
+        class ChangedPlayerState(
             val playersInSettings: List<PlayerInSettings?>,
             val positionChangedPlayer: Int
         ) : PlayersScreenState
@@ -53,7 +53,7 @@ sealed interface MainMenuState {
          * Состояние для первичной (при создании и восстановлении View) отрисовки выбранного
          * уровня игры (цвета игры)
          */
-        data class TypesCardsState(
+        class TypesCardsState(
             val typesCard: List<TypeCards>
         ): ScreenState
 
@@ -63,14 +63,14 @@ sealed interface MainMenuState {
          * - не выбраны игроки или выбрано слишком много игроков для игры;
          * - не выбраны уровни игры
          */
-        data class ErrorState(
+        class ErrorState(
             val error: String
         ): ScreenState
 
         /**
          * Состояние для запуска игры "Зверобуквы"
          */
-        data class StartGame(
+        class StartGame(
             val typesCardsSelectedForGame: List<TypeCards>,
             val playersSelectedForGame: List<PlayerInGame>
         ) : ScreenState
@@ -90,7 +90,7 @@ sealed interface MainMenuState {
         /**
          * Состояние, по которому отображается список аватарок для выбора пользователем.
          */
-        data class ShowAvatarsState(
+        class ShowAvatarsState(
             val avatars: List<Avatar>,
             val scrollPosition: Int = 0
         ): AvatarsScreenState

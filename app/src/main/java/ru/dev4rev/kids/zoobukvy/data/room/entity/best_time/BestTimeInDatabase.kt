@@ -8,7 +8,7 @@ import ru.dev4rev.kids.zoobukvy.data.mapper.DataEntity
 @Entity(
     tableName = "best_time"
 )
-data class BestTimeInDatabase(
+class BestTimeInDatabase(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id_types_cards")
     val idTypesCards: Int,
