@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import ru.dev4rev.kids.zoobukvy.data.mapper.DataEntity
 
 @Entity(tableName = "cards_set", indices = [Index(value = ["letters"], unique = true)])
-data class CardsSetInDatabase(
+class CardsSetInDatabase(
     @field:ColumnInfo(name = "color")
     val color: String,
     @PrimaryKey

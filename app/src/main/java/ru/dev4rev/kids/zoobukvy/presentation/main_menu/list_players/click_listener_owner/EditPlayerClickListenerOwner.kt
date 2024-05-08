@@ -1,6 +1,6 @@
 package ru.dev4rev.kids.zoobukvy.presentation.main_menu.list_players.click_listener_owner
 
-data class EditPlayerClickListenerOwner(
+class EditPlayerClickListenerOwner(
     val saveChangedPlayerClickListener: () -> Unit,
     val cancelChangedPlayerClickListener: () -> Unit,
     val editNameChangedPlayerClickListener: (String) -> Unit,

@@ -15,7 +15,7 @@ import ru.dev4rev.kids.zoobukvy.data.mapper.mapper_impl.player.AvatarApiMapper
 import ru.dev4rev.kids.zoobukvy.data.mapper.mapper_impl.player.AvatarRoomMapper
 import ru.dev4rev.kids.zoobukvy.data.mapper.mapper_impl.player.PlayerMapperToData
 import ru.dev4rev.kids.zoobukvy.data.mapper.mapper_impl.player.PlayerMapperToDomain
-import ru.dev4rev.kids.zoobukvy.data.network_state.NetworkStatusImpl
+import ru.dev4rev.kids.zoobukvy.data.network_state.NetworkStatus
 import ru.dev4rev.kids.zoobukvy.data.preferences.SharedPreferencesForMainMenu
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.CardsSet
 import ru.dev4rev.kids.zoobukvy.domain.entity.card.LetterCard
@@ -34,7 +34,7 @@ class AnimalLettersRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val sharedPreferencesForMainMenu: SharedPreferencesForMainMenu,
-    private val networkStatus: NetworkStatusImpl
+    private val networkStatus: NetworkStatus
 ) : AnimalLettersGameRepository, MainMenuRepository, LoadingDataRepository {
     private val letterCardMapperToDomain = LetterCardMapperToDomain()
 

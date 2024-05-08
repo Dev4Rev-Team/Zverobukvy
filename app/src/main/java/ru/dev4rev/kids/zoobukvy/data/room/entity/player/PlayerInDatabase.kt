@@ -17,7 +17,7 @@ import ru.dev4rev.kids.zoobukvy.domain.entity.player.Rating
         onDelete = ForeignKey.SET_DEFAULT
     )]
 )
-data class PlayerInDatabase(
+class PlayerInDatabase(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_player")
     val idPlayer: Long = 0,

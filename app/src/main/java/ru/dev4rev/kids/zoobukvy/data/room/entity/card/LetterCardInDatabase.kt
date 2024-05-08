@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import ru.dev4rev.kids.zoobukvy.data.mapper.DataEntity
 
 @Entity(tableName = "letters", indices = [Index(value = ["letter", "face"], unique = true)])
-data class LetterCardInDatabase(
+class LetterCardInDatabase(
     @field:ColumnInfo(name = "letter")
     val letter: String,
     @field:ColumnInfo(name = "face")
